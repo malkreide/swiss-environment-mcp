@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: swiss-environment-mcp
+    runtime: python
+    buildCommand: pip install -e .
+    startCommand: python -m swiss_environment_mcp.server
+    envVars:
+      - key: MCP_TRANSPORT
+        value: streamable_http
+      - key: PORT
+        value: 8000
+    healthCheckPath: /health
