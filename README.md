@@ -1,101 +1,95 @@
-# 🌿 Swiss Environment MCP
+> 🇨🇭 **Part of the [Swiss Public Data MCP Portfolio](https://github.com/malkreide)**
 
-[🇬🇧 English](README_EN.md) | 🇩🇪 Deutsch
+# 🌿 swiss-environment-mcp
 
-**MCP-Server für Schweizer Umweltdaten des BAFU** – Luft, Wasser, Naturgefahren und Umweltindikatoren.
-
-Ermöglicht KI-Assistenten wie Claude, ChatGPT und anderen MCP-kompatiblen Systemen den direkten Zugriff auf Echtzeit-Umweltdaten der Schweizer Bundesbehörden.
-
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
 [![CI](https://github.com/malkreide/swiss-environment-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/malkreide/swiss-environment-mcp/actions)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org)
-[![MCP](https://img.shields.io/badge/MCP-kompatibel-green.svg)](https://modelcontextprotocol.io)
-[![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-yellow.svg)](LICENSE)
+[![Data Source](https://img.shields.io/badge/Data-BAFU%20%2F%20opendata.swiss-green)](https://opendata.swiss/en/organization/bafu)
+
+> MCP server connecting AI models to Swiss environmental data from BAFU – air quality, hydrology, natural hazards, wildfire danger and open environmental datasets.
+
+[🇩🇪 Deutsche Version](README.de.md)
 
 ---
 
-## 🗺️ Überblick
+## Overview
 
+**swiss-environment-mcp** gives AI assistants like Claude direct access to real-time environmental data from Swiss federal authorities – no API keys required. Air quality readings from the national NABEL monitoring network, hydrological gauging stations, natural hazard bulletins, and the full BAFU dataset catalogue are all accessible through a single standardised MCP interface.
+
+The server covers four thematic clusters: air quality (NABEL), hydrology, natural hazards, and the BAFU open data catalogue. Each cluster maps to a group of purpose-built tools that translate raw agency data into clean JSON responses.
+
+**Anchor demo query:** *"What is the current air quality at the NABEL station Zürich-Kaserne – and does it comply with WHO 2021 guidelines?"*
+
+---
+
+## Features
+
+- 🌬️ **Air quality monitoring** – 16 NABEL stations, NO₂/O₃/PM10/PM2.5/SO₂/CO, Swiss LRV + WHO 2021 limit checks
+- 💧 **Hydrology** – water levels, flow rates, temperatures across Swiss gauging stations
+- 🚨 **Flood warnings** – active alerts filtered by danger level and canton
+- 🏔️ **Natural hazard bulletin** – SLF/BAFU bulletin in DE/FR/IT/EN, region-specific warnings
+- 🔥 **Wildfire danger** – canton- and region-level fire danger index
+- 📦 **BAFU open data catalogue** – search and retrieve environmental datasets via CKAN
+- 🔑 **No authentication required** – all data sources are publicly accessible
+- ☁️ **Dual transport** – stdio for Claude Desktop, Streamable HTTP/SSE for cloud deployment
+
+---
+
+## Prerequisites
+
+- Python 3.11+
+- No API keys needed – all endpoints are publicly accessible without authentication
+
+---
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/malkreide/swiss-environment-mcp.git
+cd swiss-environment-mcp
+
+# Install
+pip install -e .
 ```
-swiss-environment-mcp/
-├── src/swiss_environment_mcp/
-│   ├── __init__.py          # Paket
-│   ├── server.py            # MCP-Server: 12 Tools, 3 Resources
-│   └── api_client.py        # HTTP-Client für 4 BAFU-Datenquellen
-├── tests/
-│   └── test_integration.py  # Integrationstests
-├── .github/workflows/ci.yml # GitHub Actions CI (Python 3.11–3.13)
-├── pyproject.toml
-├── README.md / README_EN.md
-├── CHANGELOG.md
-├── Dockerfile
-├── Procfile / render.yaml   # Render.com-Deployment
-└── claude_desktop_config.json
-```
 
----
-
-## 🧰 Tools (12)
-
-### 🌬️ Luft / NABEL (3 Tools)
-| Tool | Beschreibung |
-|------|-------------|
-| `env_nabel_stations` | 16 NABEL-Messstationen mit Standorttyp und Kanton auflisten |
-| `env_nabel_current` | Aktuelle Luftqualitätsdaten einer NABEL-Station (NO₂, O₃, PM10, PM2.5, SO₂, CO) |
-| `env_air_limits_check` | Messwert gegen Schweizer LRV-Grenzwerte und WHO 2021-Richtwerte prüfen |
-
-### 💧 Wasser / Hydrologie (4 Tools)
-| Tool | Beschreibung |
-|------|-------------|
-| `env_hydro_stations` | Hydrologische Messstationen filtern (Kanton, Gewässer) |
-| `env_hydro_current` | Aktuelle Pegel, Abfluss und Wassertemperatur einer Messstation |
-| `env_hydro_history` | Historische Stundenwerte (bis 30 Tage) mit Download-Links |
-| `env_flood_warnings` | Aktive Hochwasserwarnungen nach Gefahrenstufe und Kanton |
-
-### 🏔️ Naturgefahren (3 Tools)
-| Tool | Beschreibung |
-|------|-------------|
-| `env_hazard_overview` | Aktuelles Naturgefahren-Bulletin (SLF/BAFU) in DE/FR/IT/EN |
-| `env_hazard_regions` | Regionsspezifische Warnungen (Hochwasser, Lawinen, Steinschlag) |
-| `env_wildfire_danger` | Waldbrandgefahren-Index nach Kantonen und Regionen |
-
-### 📊 Umweltdatenkatalog (2 Tools)
-| Tool | Beschreibung |
-|------|-------------|
-| `env_bafu_datasets` | BAFU-Datensätze auf opendata.swiss suchen (CKAN-API) |
-| `env_bafu_dataset_detail` | Vollständige Metadaten und Download-URLs eines Datensatzes |
-
----
-
-## ⚡ Schnellstart
-
-### Option 1: uvx (empfohlen, keine Installation nötig)
+Or with `uvx` (no permanent installation):
 
 ```bash
 uvx swiss-environment-mcp
 ```
 
-### Option 2: pip
+Or via pip:
 
 ```bash
 pip install swiss-environment-mcp
-python -m swiss_environment_mcp.server
-```
-
-### Option 3: Entwicklungsmodus
-
-```bash
-git clone https://github.com/malkreide/swiss-environment-mcp.git
-cd swiss-environment-mcp
-pip install -e ".[dev]"
-python -m swiss_environment_mcp.server
 ```
 
 ---
 
-## 🖥️ Claude Desktop Konfiguration
+## Quickstart
 
-Datei: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)  
-Datei: `%APPDATA%\Claude\claude_desktop_config.json` (Windows)
+```bash
+# Start the server (stdio mode for Claude Desktop)
+swiss-environment-mcp
+```
+
+Try it immediately in Claude Desktop:
+
+> *"What is the current air quality at NABEL station Zürich-Kaserne?"*
+> *"Are there any active flood warnings in Switzerland right now?"*
+> *"What is the wildfire danger level in Canton Valais?"*
+
+---
+
+## Configuration
+
+### Claude Desktop
+
+**Minimal (recommended):**
 
 ```json
 {
@@ -109,61 +103,152 @@ Datei: `%APPDATA%\Claude\claude_desktop_config.json` (Windows)
 }
 ```
 
-Nach dem Speichern Claude Desktop neu starten.
+**Config file locations:**
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+After saving, restart Claude Desktop completely.
+
+### Cloud Deployment (SSE for browser access)
+
+For use via **claude.ai in the browser** (e.g. on managed workstations without local software):
+
+**Render.com (recommended):**
+1. Push/fork the repository to GitHub
+2. On [render.com](https://render.com): New Web Service → connect GitHub repo
+3. Render detects `render.yaml` automatically
+4. In claude.ai under Settings → MCP Servers, add: `https://your-app.onrender.com/sse`
+
+**Docker:**
+```bash
+docker build -t swiss-environment-mcp .
+docker run -p 8000:8000 swiss-environment-mcp
+```
+
+> 💡 *"stdio for the developer laptop, SSE for the browser."*
 
 ---
 
-## 💬 Beispiel-Anfragen
+## Available Tools
 
-Nach der Konfiguration können folgende Fragen direkt gestellt werden:
+### 🌬️ Air Quality / NABEL (3 tools)
 
-- «Wie ist die Luftqualität an der NABEL-Station Zürich-Kaserne?»
-- «Überschreitet ein NO₂-Wert von 45 µg/m³ den Schweizer Grenzwert?»
-- «Welche Hochwasserwarnungen sind aktuell in der Schweiz aktiv?»
-- «Wie ist der aktuelle Wasserstand der Limmat in Zürich?»
-- «Wie hoch ist die Waldbrandgefahr im Kanton Wallis gerade?»
-- «Zeige mir alle BAFU-Datensätze zur Biodiversität auf opendata.swiss»
-- «Was sagt das aktuelle Naturgefahren-Bulletin für Graubünden?»
+| Tool | Description | Data Source |
+|---|---|---|
+| `env_nabel_stations` | List all 16 NABEL monitoring stations with location type and canton | NABEL / BAFU |
+| `env_nabel_current` | Current air quality data for a station (NO₂, O₃, PM10, PM2.5, SO₂, CO) | NABEL / BAFU |
+| `env_air_limits_check` | Compare a measurement against Swiss LRV limits and WHO 2021 guidelines | Built-in |
+
+### 💧 Hydrology (4 tools)
+
+| Tool | Description | Data Source |
+|---|---|---|
+| `env_hydro_stations` | Filter hydrological gauging stations by canton or water body | hydrodaten.admin.ch |
+| `env_hydro_current` | Current water level, flow rate and temperature at a station | hydrodaten.admin.ch |
+| `env_hydro_history` | Historical hourly values (up to 30 days) with download links ⚠️ | hydrodaten.admin.ch |
+| `env_flood_warnings` | Active flood warnings filtered by danger level and canton | hydrodaten.admin.ch |
+
+### 🏔️ Natural Hazards (3 tools)
+
+| Tool | Description | Data Source |
+|---|---|---|
+| `env_hazard_overview` | Current natural hazard bulletin (SLF/BAFU) in DE/FR/IT/EN | naturgefahren.ch |
+| `env_hazard_regions` | Region-specific warnings (floods, avalanches, rockfall) | naturgefahren.ch |
+| `env_wildfire_danger` | Wildfire danger index by canton and region | waldbrandgefahr.ch |
+
+### 📊 Environmental Data Catalogue (2 tools)
+
+| Tool | Description | Data Source |
+|---|---|---|
+| `env_bafu_datasets` | Search BAFU datasets on opendata.swiss (CKAN API) | opendata.swiss |
+| `env_bafu_dataset_detail` | Full metadata and download URLs for a specific dataset | opendata.swiss |
+
+### Example Use Cases
+
+| Query | Tool |
+|---|---|
+| *"Air quality at Zürich-Kaserne right now?"* | `env_nabel_current` |
+| *"Does 45 µg/m³ NO₂ exceed the Swiss limit?"* | `env_air_limits_check` |
+| *"Current water level of the Limmat in Zurich?"* | `env_hydro_current` |
+| *"Active flood warnings in Switzerland?"* | `env_flood_warnings` |
+| *"Natural hazard bulletin for Graubünden?"* | `env_hazard_overview` |
+| *"Wildfire danger in Canton Valais?"* | `env_wildfire_danger` |
+| *"BAFU biodiversity datasets on opendata.swiss?"* | `env_bafu_datasets` |
 
 ---
 
-## 🔗 Datenquellen
+## Architecture
 
-| Quelle | Daten | Lizenz |
-|--------|-------|--------|
-| [hydrodaten.admin.ch](https://www.hydrodaten.admin.ch) | Pegel, Abfluss, Temperatur (10-Min-Intervall) | BAFU OGD |
-| [naturgefahren.ch](https://www.naturgefahren.ch) | Naturgefahren-Bulletin (SLF/BAFU) | BAFU/SLF |
-| [waldbrandgefahr.ch](https://www.waldbrandgefahr.ch) | Waldbrandgefahren-Index | BAFU |
-| [opendata.swiss](https://opendata.swiss/de/organization/bafu) | BAFU-Datenkatalog (CKAN-API) | OGD |
+```
+┌─────────────────┐     ┌───────────────────────────┐     ┌──────────────────────────┐
+│   Claude / AI   │────▶│   Swiss Environment MCP   │────▶│  BAFU / Swiss Agencies   │
+│   (MCP Host)    │◀────│   (MCP Server)            │◀────│                          │
+└─────────────────┘     │                           │     │  hydrodaten.admin.ch     │
+                        │  12 Tools · 3 Resources   │     │  naturgefahren.ch        │
+                        │  Stdio | SSE              │     │  waldbrandgefahr.ch      │
+                        │                           │     │  opendata.swiss (CKAN)   │
+                        │  api_client.py            │     └──────────────────────────┘
+                        │  server.py (FastMCP)      │
+                        └───────────────────────────┘
+```
 
-Alle Daten: öffentlich zugänglich, keine Authentifizierung erforderlich.
+### Data Sources
+
+| Source | Data | Licence |
+|---|---|---|
+| [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Water levels, flow rates, temperatures (10-min intervals) | BAFU OGD |
+| [naturgefahren.ch](https://naturgefahren.ch) | Natural hazard bulletin (SLF/BAFU) | BAFU/SLF |
+| [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
+| [opendata.swiss](https://opendata.swiss/en/organization/bafu) | BAFU data catalogue (CKAN API) | OGD |
+
+All data: publicly accessible, no authentication required.  
+**Attribution required:** BAFU must be cited as the source when using their data.
 
 ---
 
-## 🏗️ Verwandte MCP-Server
+## Project Structure
 
-Dieser Server ergänzt das Schweizer Open-Data-MCP-Portfolio:
-
-| Server | Beschreibung |
-|--------|-------------|
-| [zurich-opendata-mcp](https://github.com/malkreide/zurich-opendata-mcp) | Stadt Zürich Open Data (OSTLUFT Luftqualität, Wetter, Parking, Geodaten) |
-| [swiss-transport-mcp](https://github.com/malkreide/swiss-transport-mcp) | OJP 2.0 Reiseplanung, SIRI-SX Störungen |
-| [swiss-road-mobility-mcp](https://github.com/malkreide/swiss-road-mobility-mcp) | GBFS Shared Mobility, EV-Ladestationen, DATEX II Verkehr |
-| [swiss-statistics-mcp](https://github.com/malkreide/swiss-statistics-mcp) | BFS STAT-TAB (682 Datensätze) |
-
-**Synergiebeispiel:** *«Wie war die Luftqualität beim Schulhaus Leutschenbach heute – und liegt sie über dem nationalen NABEL-Durchschnitt?»*  
-→ `zurich-opendata-mcp` (OSTLUFT, lokal) + `swiss-environment-mcp` (NABEL, national)
+```
+swiss-environment-mcp/
+├── src/swiss_environment_mcp/
+│   ├── __init__.py          # Package
+│   ├── server.py            # FastMCP server: 12 tools, 3 resources
+│   └── api_client.py        # HTTP client for 4 BAFU data sources
+├── tests/
+│   └── test_integration.py  # Integration tests
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # GitHub Actions CI (Python 3.11–3.13)
+├── Dockerfile               # Container for cloud deployment
+├── Procfile                 # Process definition
+├── render.yaml              # One-click Render.com deployment
+├── pyproject.toml           # Build configuration (hatchling)
+├── CHANGELOG.md
+├── CONTRIBUTING.md          # This file
+├── LICENSE
+├── README.md                # This file (English)
+└── README.de.md             # German version
+```
 
 ---
 
-## 🧪 Tests
+## Known Limitations
+
+- **`env_hydro_history`**: The historical hourly data endpoint is currently returning 404 errors from hydrodaten.admin.ch (BUG-01 – under investigation). The tool will return download links as a fallback.
+- **NABEL**: Near-real-time data only; no historical time series via this server.
+- **Natural hazards**: Bulletin availability depends on SLF/BAFU publication schedule.
+- **Wildfire danger**: Regional granularity varies by season and data availability.
+
+---
+
+## Testing
 
 ```bash
-# Alle Tests (inkl. Live-API)
-python tests/test_integration.py
+# Unit tests (no API keys or network required)
+PYTHONPATH=src pytest tests/ -m "not live"
 
-# Nur Offline-Tests
-SKIP_LIVE_TESTS=1 python tests/test_integration.py
+# Integration tests (requires live BAFU APIs)
+PYTHONPATH=src pytest tests/ -m "live"
 
 # Linting
 ruff check src/
@@ -171,8 +256,46 @@ ruff check src/
 
 ---
 
-## 📄 Lizenz
+## Contributing
 
-[MIT](LICENSE) – Quelldaten unterliegen den BAFU-Nutzungsbedingungen.
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-**Quellenangabe erforderlich:** Bei Verwendung der BAFU-Daten muss das BAFU als Quelle angegeben werden.
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md)
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE)
+
+Source data is subject to BAFU terms of use. Attribution to BAFU is required when using their data.
+
+---
+
+## Author
+
+malkreide · [github.com/malkreide](https://github.com/malkreide)
+
+---
+
+## Credits & Related Projects
+
+- **Data:** [BAFU / Bundesamt für Umwelt](https://www.bafu.admin.ch) · [hydrodaten.admin.ch](https://hydrodaten.admin.ch) · [naturgefahren.ch](https://naturgefahren.ch) · [opendata.swiss](https://opendata.swiss/en/organization/bafu)
+- **Protocol:** [Model Context Protocol](https://modelcontextprotocol.io/) – Anthropic / Linux Foundation
+- **Related:**
+
+| Server | Description |
+|---|---|
+| [zurich-opendata-mcp](https://github.com/malkreide/zurich-opendata-mcp) | City of Zurich open data (OSTLUFT air quality, weather, parking, geodata) |
+| [swiss-transport-mcp](https://github.com/malkreide/swiss-transport-mcp) | Swiss public transport – OJP 2.0 journey planning, SIRI-SX disruptions |
+| [swiss-road-mobility-mcp](https://github.com/malkreide/swiss-road-mobility-mcp) | GBFS shared mobility, EV charging, DATEX II traffic |
+| [swiss-statistics-mcp](https://github.com/malkreide/swiss-statistics-mcp) | BFS STAT-TAB – 682 statistical datasets |
+
+**Synergy example:** *"What was the air quality at Schulhaus Leutschenbach today – and how does it compare to the national NABEL average?"*  
+→ `zurich-opendata-mcp` (OSTLUFT, local) + `swiss-environment-mcp` (NABEL, national)
+
+- **Portfolio:** [Swiss Public Data MCP Portfolio](https://github.com/malkreide)
