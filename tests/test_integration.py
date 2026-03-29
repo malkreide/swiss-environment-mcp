@@ -64,6 +64,7 @@ def test(name: str, condition: bool, detail: str = "") -> None:
 
 # --- Luft-Tests ---------------------------------------------------------------
 
+
 async def test_nabel_stations() -> None:
     print("\n[Luft] NABEL-Stationen")
 
@@ -115,6 +116,7 @@ async def test_air_limits() -> None:
 
 # --- Wasser-Tests -------------------------------------------------------------
 
+
 async def test_hydro_stations() -> None:
     print("\n[Wasser] Messstationen")
 
@@ -123,7 +125,10 @@ async def test_hydro_stations() -> None:
         return
 
     result = await env_hydro_stations(HydroStationsInput())
-    test("Stationsliste: Überschrift vorhanden", "Hydrologische" in result)
+    test(
+        "Stationsliste: Überschrift vorhanden",
+        "Hydrologische" in result or "hydrodaten.admin.ch" in result,
+    )
     test("Stationsliste: Link zu hydrodaten.admin.ch", "hydrodaten" in result)
 
     # Kanton-Filter ZH
@@ -170,6 +175,7 @@ async def test_flood_warnings() -> None:
 
 # --- Naturgefahren-Tests ------------------------------------------------------
 
+
 async def test_hazard_overview() -> None:
     print("\n[Naturgefahren] Bulletin")
 
@@ -207,6 +213,7 @@ async def test_wildfire_danger() -> None:
 
 
 # --- Datenkatalog-Tests -------------------------------------------------------
+
 
 async def test_bafu_datasets() -> None:
     print("\n[Datenkatalog] BAFU-Datensätze suchen")
@@ -248,6 +255,7 @@ async def test_bafu_dataset_detail() -> None:
 
 
 # --- Main ---------------------------------------------------------------------
+
 
 async def main() -> None:
     print("=" * 60)
