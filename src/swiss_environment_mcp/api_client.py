@@ -15,23 +15,24 @@ import httpx
 
 # --- Basis-URLs ---------------------------------------------------------------
 
-HYDRO_BASE         = "https://www.hydrodaten.admin.ch"
-HYDRO_JSON_BASE    = f"{HYDRO_BASE}/lhg/az/json"
+HYDRO_BASE = "https://www.hydrodaten.admin.ch"
+HYDRO_JSON_BASE = f"{HYDRO_BASE}/lhg/az/json"
 HYDRO_XML_STATIONS = f"{HYDRO_BASE}/lhg/az/xml/hydroweb.xml"
 
 OPENDATA_SWISS_API = "https://opendata.swiss/api/3/action"
 
 NATURGEFAHREN_BASE = "https://www.naturgefahren.ch"
-NATURGEFAHREN_API  = f"{NATURGEFAHREN_BASE}/api"
+NATURGEFAHREN_API = f"{NATURGEFAHREN_BASE}/api"
 
-WALDBRAND_BASE     = "https://www.waldbrandgefahr.ch"
+WALDBRAND_BASE = "https://www.waldbrandgefahr.ch"
 
-BAFU_WEB           = "https://www.bafu.admin.ch"
-BAFU_GIS           = "https://map.bafu.admin.ch"
+BAFU_WEB = "https://www.bafu.admin.ch"
+BAFU_GIS = "https://map.bafu.admin.ch"
 
 TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 
 # --- Hilfsfunktionen ----------------------------------------------------------
+
 
 def _make_client() -> httpx.AsyncClient:
     """Erstellt einen konfigurierten AsyncClient mit Standard-Headers."""
@@ -64,6 +65,7 @@ def handle_http_error(e: Exception) -> str:
 
 
 # --- Hydrodaten-Client --------------------------------------------------------
+
 
 async def fetch_hydro_stations() -> dict[str, Any]:
     """Ruft die Liste aller aktiven BAFU-Hydromesstationen ab."""
@@ -114,6 +116,7 @@ async def fetch_hydro_station_history(
 
 # --- opendata.swiss CKAN-Client -----------------------------------------------
 
+
 async def search_bafu_datasets(
     query: str = "",
     rows: int = 10,
@@ -149,6 +152,7 @@ async def get_bafu_dataset(dataset_id: str) -> dict[str, Any]:
 
 # --- Naturgefahren-Client -----------------------------------------------------
 
+
 async def fetch_hazard_overview(language: str = "de") -> dict[str, Any]:
     """Ruft das aktuelle Naturgefahren-Bulletin der Schweiz ab."""
     async with _make_client() as client:
@@ -177,6 +181,7 @@ async def fetch_regional_hazards(region: str = "", language: str = "de") -> dict
 
 # --- Waldbrand-Client ---------------------------------------------------------
 
+
 async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
     """Ruft die aktuelle Waldbrandgefahr nach Regionen ab."""
     async with _make_client() as client:
@@ -190,6 +195,7 @@ async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
 
 
 # --- BAFU Webseite (Luftqualität/NABEL) ---------------------------------------
+
 
 async def fetch_nabel_stations() -> dict[str, Any]:
     """Ruft die Metadaten der 16 NABEL-Messstationen von opendata.swiss ab."""

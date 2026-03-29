@@ -34,21 +34,21 @@ from . import api_client as api
 
 # Grenzwerte gemäss Luftreinhalte-Verordnung (LRV) Schweiz, µg/m³
 SWISS_LRV_LIMITS: dict[str, float] = {
-    "NO2":  30.0,   # Jahresmittelwert
-    "PM10": 20.0,   # Jahresmittelwert (WHO 2021: 15)
+    "NO2": 30.0,  # Jahresmittelwert
+    "PM10": 20.0,  # Jahresmittelwert (WHO 2021: 15)
     "PM2.5": 10.0,  # Jahresmittelwert (WHO 2021: 5)
-    "O3":   100.0,  # Stundenmittelwert 98-Perzentil
-    "SO2":  30.0,   # Jahresmittelwert
-    "CO":   8000.0, # Tagesmittelwert
+    "O3": 100.0,  # Stundenmittelwert 98-Perzentil
+    "SO2": 30.0,  # Jahresmittelwert
+    "CO": 8000.0,  # Tagesmittelwert
 }
 
 # WHO 2021 Richtwerte, µg/m³
 WHO_2021_LIMITS: dict[str, float] = {
-    "NO2":  10.0,
+    "NO2": 10.0,
     "PM10": 15.0,
     "PM2.5": 5.0,
-    "O3":   60.0,   # Jahresmittelwert peak season
-    "SO2":  40.0,   # 24-Stunden-Mittelwert
+    "O3": 60.0,  # Jahresmittelwert peak season
+    "SO2": 40.0,  # 24-Stunden-Mittelwert
 }
 
 # NABEL-Stationen mit Standorttyp
@@ -73,20 +73,32 @@ NABEL_STATIONS: dict[str, dict[str, str]] = {
 
 # Hochwasser-Gefahrenstufen
 FLOOD_DANGER_LEVELS: dict[int, dict[str, str]] = {
-    1: {"label": "Keine Gefahr", "color": "grün",   "description": "Normaler Wasserstand"},
-    2: {"label": "Mässige Gefahr", "color": "gelb",  "description": "Erhöhter Wasserstand, lokale Überschwemmungen möglich"},
-    3: {"label": "Erhebliche Gefahr", "color": "orange", "description": "Bedeutende Überschwemmungen"},
-    4: {"label": "Grosse Gefahr", "color": "rot",    "description": "Grosse Überschwemmungen"},
-    5: {"label": "Sehr grosse Gefahr", "color": "lila", "description": "Katastrophale Überschwemmungen"},
+    1: {"label": "Keine Gefahr", "color": "grün", "description": "Normaler Wasserstand"},
+    2: {
+        "label": "Mässige Gefahr",
+        "color": "gelb",
+        "description": "Erhöhter Wasserstand, lokale Überschwemmungen möglich",
+    },
+    3: {
+        "label": "Erhebliche Gefahr",
+        "color": "orange",
+        "description": "Bedeutende Überschwemmungen",
+    },
+    4: {"label": "Grosse Gefahr", "color": "rot", "description": "Grosse Überschwemmungen"},
+    5: {
+        "label": "Sehr grosse Gefahr",
+        "color": "lila",
+        "description": "Katastrophale Überschwemmungen",
+    },
 }
 
 # Waldbrand-Gefahrenstufen
 WILDFIRE_DANGER_LEVELS: dict[int, dict[str, str]] = {
-    1: {"label": "Gering",       "color": "grün"},
-    2: {"label": "Mässig",       "color": "gelb"},
-    3: {"label": "Erheblich",    "color": "orange"},
-    4: {"label": "Gross",        "color": "rot"},
-    5: {"label": "Sehr gross",   "color": "dunkelrot"},
+    1: {"label": "Gering", "color": "grün"},
+    2: {"label": "Mässig", "color": "gelb"},
+    3: {"label": "Erheblich", "color": "orange"},
+    4: {"label": "Gross", "color": "rot"},
+    5: {"label": "Sehr gross", "color": "dunkelrot"},
 }
 
 
@@ -105,6 +117,7 @@ mcp = FastMCP(
 
 
 # --- Pydantic-Eingabemodelle --------------------------------------------------
+
 
 class ResponseFormat(str, Enum):
     MARKDOWN = "markdown"
@@ -286,8 +299,11 @@ class BafuDatasetDetailInput(BaseModel):
 
 # --- Hilfsfunktionen ----------------------------------------------------------
 
+
 def _format_flood_level(level: int) -> str:
-    info = FLOOD_DANGER_LEVELS.get(level, {"label": "Unbekannt", "color": "grau", "description": ""})
+    info = FLOOD_DANGER_LEVELS.get(
+        level, {"label": "Unbekannt", "color": "grau", "description": ""}
+    )
     return f"Stufe {level} ({info['label']}, {info['color']})"
 
 
@@ -323,7 +339,9 @@ def _format_assessment_markdown(assessment: dict[str, Any]) -> str:
 
     if lrv["limit"]:
         status = "⚠️ **ÜBERSCHRITTEN**" if lrv["exceeded"] else "✅ Eingehalten"
-        lines.append(f"**Schweizer LRV-Grenzwert:** {lrv['limit']} µg/m³ → {status} ({lrv['ratio']}×)")
+        lines.append(
+            f"**Schweizer LRV-Grenzwert:** {lrv['limit']} µg/m³ → {status} ({lrv['ratio']}×)"
+        )
 
     if who["limit"]:
         status = "⚠️ **ÜBERSCHRITTEN**" if who["exceeded"] else "✅ Eingehalten"
@@ -333,6 +351,7 @@ def _format_assessment_markdown(assessment: dict[str, Any]) -> str:
 
 
 # --- TOOLS: LUFT / NABEL ------------------------------------------------------
+
 
 @mcp.tool(
     name="env_nabel_stations",
@@ -524,6 +543,7 @@ async def env_air_limits_check(params: AirLimitsCheckInput) -> str:
 
 # --- TOOLS: WASSER / HYDROLOGIE -----------------------------------------------
 
+
 @mcp.tool(
     name="env_hydro_stations",
     annotations={
@@ -571,8 +591,9 @@ async def env_hydro_stations(params: HydroStationsInput) -> str:
             "|------------|------|--------|---------|",
         ]
         for s in fallback_stations:
-            if (not params.canton or params.canton.upper() == s["canton"]) and \
-               (not params.water_body or params.water_body.lower() in s["water"].lower()):
+            if (not params.canton or params.canton.upper() == s["canton"]) and (
+                not params.water_body or params.water_body.lower() in s["water"].lower()
+            ):
                 lines.append(f"| {s['id']} | {s['name']} | {s['canton']} | {s['water']} |")
         lines.append("\n*→ Vollständige Stationsliste: https://www.hydrodaten.admin.ch*")
         return "\n".join(lines)
@@ -667,9 +688,9 @@ async def env_hydro_current(params: HydroCurrentInput) -> str:
 
     if params.response_format == ResponseFormat.JSON:
         return json.dumps(
-            {"station_id": params.station_id, "daten": data,
-             "quelle": "BAFU Hydrodaten"},
-            ensure_ascii=False, indent=2,
+            {"station_id": params.station_id, "daten": data, "quelle": "BAFU Hydrodaten"},
+            ensure_ascii=False,
+            indent=2,
         )
 
     # Werte extrahieren (flexible Struktur je nach API-Version)
@@ -869,6 +890,7 @@ async def env_flood_warnings(params: FloodWarningsInput) -> str:
 
 # --- TOOLS: NATURGEFAHREN -----------------------------------------------------
 
+
 @mcp.tool(
     name="env_hazard_overview",
     annotations={
@@ -1056,8 +1078,12 @@ async def env_wildfire_danger(params: WildfireDangerInput) -> str:
                 name = r.get("name", r.get("region", canton))
                 level = int(r.get("danger_level", r.get("level", 0)))
                 level_info = WILDFIRE_DANGER_LEVELS.get(level, {"label": "–", "color": "–"})
-                icon = "🟢" if level <= 1 else ("🟡" if level == 2 else ("🟠" if level == 3 else "🔴"))
-                lines.append(f"| {name} | {canton} | {icon} Stufe {level} | {level_info['label']} |")
+                icon = (
+                    "🟢" if level <= 1 else ("🟡" if level == 2 else ("🟠" if level == 3 else "🔴"))
+                )
+                lines.append(
+                    f"| {name} | {canton} | {icon} Stufe {level} | {level_info['label']} |"
+                )
         else:
             lines.append("*Keine Regionaldaten verfügbar.*")
 
@@ -1079,6 +1105,7 @@ async def env_wildfire_danger(params: WildfireDangerInput) -> str:
 
 
 # --- TOOLS: UMWELTDATEN / BAFU-DATENKATALOG -----------------------------------
+
 
 @mcp.tool(
     name="env_bafu_datasets",
@@ -1190,7 +1217,9 @@ async def env_bafu_dataset_detail(params: BafuDatasetDetailInput) -> str:
         title = result.get("title", {})
         name = title.get("de") or title.get("en") or result.get("name", "–")
         desc = result.get("notes", {})
-        desc_text = (desc.get("de") or desc.get("en") or "") if isinstance(desc, dict) else str(desc)
+        desc_text = (
+            (desc.get("de") or desc.get("en") or "") if isinstance(desc, dict) else str(desc)
+        )
         license_val = result.get("license_title", result.get("license_id", "–"))
         modified = result.get("metadata_modified", "–")[:10]
         frequency = result.get("accrual_periodicity", "–")
@@ -1210,7 +1239,11 @@ async def env_bafu_dataset_detail(params: BafuDatasetDetailInput) -> str:
 
         for r in resources:
             r_name = r.get("name", {})
-            r_label = (r_name.get("de") or r_name.get("en") or "") if isinstance(r_name, dict) else str(r_name)
+            r_label = (
+                (r_name.get("de") or r_name.get("en") or "")
+                if isinstance(r_name, dict)
+                else str(r_name)
+            )
             r_format = r.get("format", "–")
             r_url = r.get("download_url", r.get("url", "–"))
             lines.append(f"- **{r_label}** ({r_format}): {r_url}")
@@ -1232,18 +1265,13 @@ async def env_bafu_dataset_detail(params: BafuDatasetDetailInput) -> str:
 
 # --- Resources ----------------------------------------------------------------
 
+
 @mcp.resource("env://grenzwerte/luft")
 async def get_air_limits() -> str:
     """Schweizer LRV-Grenzwerte und WHO 2021-Richtwerte für Luftschadstoffe."""
     data = {
-        "schweizer_lrv": {
-            k: {"wert": v, "einheit": "µg/m³"}
-            for k, v in SWISS_LRV_LIMITS.items()
-        },
-        "who_2021": {
-            k: {"wert": v, "einheit": "µg/m³"}
-            for k, v in WHO_2021_LIMITS.items()
-        },
+        "schweizer_lrv": {k: {"wert": v, "einheit": "µg/m³"} for k, v in SWISS_LRV_LIMITS.items()},
+        "who_2021": {k: {"wert": v, "einheit": "µg/m³"} for k, v in WHO_2021_LIMITS.items()},
         "rechtsgrundlage": "Luftreinhalte-Verordnung (LRV), SR 814.318.142.1",
         "quelle_who": "WHO Global Air Quality Guidelines 2021",
     }
@@ -1276,6 +1304,7 @@ async def get_flood_levels_resource() -> str:
 
 
 # --- Entry Point --------------------------------------------------------------
+
 
 def main() -> None:
     port = int(os.environ.get("PORT", 8000))
