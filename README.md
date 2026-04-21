@@ -26,6 +26,7 @@
 The server covers four thematic clusters: air quality (NABEL), hydrology, natural hazards, and the BAFU open data catalogue. Each cluster maps to a group of purpose-built tools that translate raw agency data into clean JSON responses.
 
 **Anchor demo query:** *"What is the current air quality at the NABEL station Zürich-Kaserne – and does it comply with WHO 2021 guidelines?"*
+→ [More use cases by audience](./EXAMPLES.md) →
 
 ---
 
