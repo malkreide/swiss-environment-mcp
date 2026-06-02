@@ -1,0 +1,15 @@
+### tool count
+12
+### tool names
+env_nabel_stations
+env_nabel_current
+env_air_limits_check
+env_hydro_stations
+env_hydro_current
+env_hydro_history
+env_flood_warnings
+env_hazard_overview
+env_hazard_regions
+env_wildfire_danger
+env_bafu_datasets
+env_bafu_dataset_detail
