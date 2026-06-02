@@ -64,28 +64,41 @@ class SecurityError(Exception):
 
 # --- Egress-Guard (SSRF-Schutz, Audit SEC-004) --------------------------------
 
+# DNS-Pinning aktiv (Audit SEC-005). In der Test-Suite deaktiviert, damit das
+# respx-Mocking nicht durch URL-zu-IP-Umschreibung umgangen wird.
+dns_pin_enabled = True
 
-def _assert_public_ip(host: str) -> None:
-    """Prüft, dass keine der aufgelösten IPs eines Hosts intern/privat ist.
 
-    Best-effort: Schlägt die DNS-Auflösung fehl (z.B. offline), wird nicht
-    blockiert — der nachfolgende httpx-Connect scheitert dann ohnehin sauber.
+def _is_blocked_ip(ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    return (
+        ip.is_private
+        or ip.is_loopback
+        or ip.is_link_local
+        or ip.is_reserved
+        or ip.is_multicast
+        or ip.is_unspecified
+    )
+
+
+def _resolve_and_check(host: str) -> str | None:
+    """Löst den Host **einmalig** auf, blockt interne IPs und liefert die erste
+    öffentliche IP zurück (DNS-Pin-Anker, Audit SEC-004/SEC-005).
+
+    Best-effort: Schlägt die Auflösung fehl (z.B. offline), wird nicht blockiert
+    und None zurückgegeben — der httpx-Connect scheitert dann ohnehin sauber.
     """
     try:
         infos = socket.getaddrinfo(host, 443, proto=socket.IPPROTO_TCP)
     except socket.gaierror:
-        return
+        return None
+    first: str | None = None
     for info in infos:
         ip = ipaddress.ip_address(info[4][0])
-        if (
-            ip.is_private
-            or ip.is_loopback
-            or ip.is_link_local
-            or ip.is_reserved
-            or ip.is_multicast
-            or ip.is_unspecified
-        ):
+        if _is_blocked_ip(ip):
             raise SecurityError(f"Aufgelöste IP {ip} für Host '{host}' ist blockiert (SSRF-Schutz)")
+        if first is None:
+            first = str(ip)
+    return first
 
 
 def assert_host_allowed(url: str) -> None:
@@ -99,7 +112,28 @@ def assert_host_allowed(url: str) -> None:
     host = parsed.hostname or ""
     if host not in ALLOWED_HOSTS:
         raise SecurityError(f"Host '{host}' ist nicht in der Egress-Allow-List")
-    _assert_public_ip(host)
+    _resolve_and_check(host)
+
+
+class _PinnedTransport(httpx.AsyncHTTPTransport):
+    """DNS-Pinning-Transport (Audit SEC-005).
+
+    Löst den Hostnamen einmalig auf, prüft die IP gegen die Blocklist und
+    verbindet sich mit genau dieser IP — während SNI und Zertifikatsprüfung
+    weiterhin gegen den Original-Hostnamen laufen (`sni_hostname`). Damit gibt
+    es kein TOCTOU-Fenster zwischen Prüfung und Connect (DNS-Rebinding).
+    """
+
+    async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+        host = request.url.host
+        if dns_pin_enabled and request.url.scheme == "https" and host:
+            ip = _resolve_and_check(host)  # SecurityError propagiert (Block)
+            if ip:
+                request.extensions = {**request.extensions, "sni_hostname": host}
+                # Host-Header bleibt der Original-Hostname; nur das Connect-Ziel
+                # wird auf die gepinnte IP gesetzt.
+                request.url = request.url.copy_with(host=ip)
+        return await super().handle_async_request(request)
 
 
 # --- Geteilter HTTP-Client (Lifecycle via Lifespan, Audit SDK-001) ------------
@@ -108,8 +142,9 @@ _client: httpx.AsyncClient | None = None
 
 
 def _new_client() -> httpx.AsyncClient:
-    """Erstellt einen konfigurierten AsyncClient mit Standard-Headers."""
+    """Erstellt einen konfigurierten AsyncClient mit DNS-Pinning-Transport."""
     return httpx.AsyncClient(
+        transport=_PinnedTransport(),
         timeout=TIMEOUT,
         headers={
             "User-Agent": "swiss-environment-mcp/0.1.0 (https://github.com/malkreide/swiss-environment-mcp)",

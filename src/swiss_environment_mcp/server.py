@@ -34,6 +34,7 @@ from starlette.responses import JSONResponse
 
 from . import api_client as api
 from .logging_setup import configure_logging, get_logger
+from .tracing import configure_tracing, trace_tool
 
 # --- Konfiguration ------------------------------------------------------------
 
@@ -63,6 +64,9 @@ settings = Settings()
 # Strukturiertes Logging nach stderr initialisieren (Audit OBS-003/OBS-004).
 configure_logging()
 logger = get_logger(server="swiss-environment-mcp")
+
+# OpenTelemetry-Tracing initialisieren (Audit OBS-006). No-op ohne OTLP-Endpoint.
+configure_tracing()
 
 
 async def _handle_tool_error(
@@ -368,6 +372,7 @@ class FloodWarningsInput(BaseModel):
         pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
         strict=True,
     )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
 
 
 class HazardOverviewInput(BaseModel):
@@ -426,6 +431,7 @@ class BafuDatasetsInput(BaseModel):
         description="Offset für Paginierung",
         ge=0,
     )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
 
 
 class BafuDatasetDetailInput(BaseModel):
@@ -506,6 +512,7 @@ def _format_assessment_markdown(assessment: dict[str, Any]) -> str:
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_nabel_stations(params: NabelStationsInput, ctx: Context | None = None) -> str:
     """
     Listet alle 16 NABEL-Messstationen des nationalen Luftmessnetzes (BAFU) auf.
@@ -573,6 +580,7 @@ async def env_nabel_stations(params: NabelStationsInput, ctx: Context | None = N
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_nabel_current(params: NabelCurrentInput, ctx: Context | None = None) -> str:
     """
     Ruft aktuelle und historische Luftqualitätsdaten einer NABEL-Station ab.
@@ -661,6 +669,7 @@ async def env_nabel_current(params: NabelCurrentInput, ctx: Context | None = Non
         "openWorldHint": False,
     },
 )
+@trace_tool
 async def env_air_limits_check(params: AirLimitsCheckInput, ctx: Context | None = None) -> str:
     """
     Bewertet einen gemessenen Luftschadstoffwert gegen Schweizer LRV-Grenzwerte
@@ -705,6 +714,7 @@ async def env_air_limits_check(params: AirLimitsCheckInput, ctx: Context | None 
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = None) -> str:
     """
     Listet hydrologische Messstationen des BAFU an Schweizer Flüssen und Seen auf.
@@ -824,6 +834,7 @@ async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = N
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = None) -> str:
     """
     Ruft aktuelle Messwerte einer hydrologischen BAFU-Messstation ab.
@@ -916,6 +927,7 @@ async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = Non
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = None) -> str:
     """
     Ruft historische Stundenwerte einer BAFU-Hydromesstations ab.
@@ -992,6 +1004,7 @@ async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = Non
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = None) -> str:
     """
     Ruft aktuelle Hochwasserwarnungen aller BAFU-Messstationen in der Schweiz ab.
@@ -1031,6 +1044,20 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
 
         # Sortieren nach Gefahrenstufe absteigend
         warnings.sort(key=lambda x: x["parsed_level"], reverse=True)
+
+        if params.response_format == ResponseFormat.JSON:
+            return _envelope_json(
+                source="BAFU Hydrodaten – Hochwasserwarnungen",
+                provenance="https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
+                results=warnings,
+                match_type="none" if not warnings else "exact",
+                note=(
+                    f"Keine aktiven Warnungen (Stufe >= {params.min_level})."
+                    if not warnings
+                    else None
+                ),
+                query={"min_level": params.min_level, "canton": params.canton},
+            )
 
         if not warnings:
             return (
@@ -1087,6 +1114,7 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None = None) -> str:
     """
     Ruft das aktuelle Naturgefahren-Bulletin für die Schweiz ab.
@@ -1162,6 +1190,7 @@ async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None =
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = None) -> str:
     """
     Ruft regionsspezifische Naturgefahrenwarnungen ab.
@@ -1236,6 +1265,7 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None = None) -> str:
     """
     Ruft den aktuellen Waldbrandgefahren-Index nach Regionen ab.
@@ -1320,6 +1350,7 @@ async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None =
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = None) -> str:
     """
     Sucht BAFU-Datensätze auf dem Schweizer Open-Data-Portal opendata.swiss.
@@ -1347,6 +1378,20 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
         result = data.get("result", {})
         total = result.get("count", 0)
         datasets = result.get("results", [])
+
+        if params.response_format == ResponseFormat.JSON:
+            return _envelope_json(
+                source="BAFU – opendata.swiss (CKAN)",
+                provenance="https://opendata.swiss/de/organization/bafu",
+                results=datasets,
+                match_type="none" if not datasets else "exact",
+                note=(
+                    f"Keine Treffer für '{params.query}'. Breitere Begriffe versuchen."
+                    if not datasets
+                    else None
+                ),
+                query={"query": params.query, "rows": params.rows, "offset": params.offset},
+            )
 
         # ARCH-003: leeres Resultat mit actionable Hinweis statt blanker Liste
         if not datasets:
@@ -1415,6 +1460,7 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
         "openWorldHint": True,
     },
 )
+@trace_tool
 async def env_bafu_dataset_detail(
     params: BafuDatasetDetailInput, ctx: Context | None = None
 ) -> str:

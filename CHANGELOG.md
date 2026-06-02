@@ -5,6 +5,23 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Neu (Audit-Remediation — verbleibende Findings)
+- **OpenTelemetry-Tracing** (OBS-006, opt-in via `pip install '.[otel]'` +
+  `OTEL_EXPORTER_OTLP_ENDPOINT`): pro Tool-Call ein Span `mcp.tool.<name>` mit
+  `mcp.tool.name`/`mcp.tool.result.is_error`, httpx-Auto-Instrumentation, keine
+  sensitiven Daten in Span-Attributen.
+- **DNS-Pinning** für ausgehende Requests (SEC-005): Hostname wird einmalig
+  aufgelöst, IP gegen Blocklist geprüft und das Connect-Ziel auf diese IP gepinnt
+  (SNI/Cert weiterhin gegen den Hostnamen) — kein TOCTOU/DNS-Rebinding-Fenster.
+- **JSON-Response-Envelope** zusätzlich für `env_bafu_datasets` und
+  `env_flood_warnings` (SDK-002) — `response_format=json` liefert jetzt bei allen
+  Such-/Listen-Tools den typisierten Envelope inkl. `match_type`.
+
+### Geändert
+- MCP-SDK auf Major-Version gepinnt (`mcp[cli]>=1.27,<2`) — legt die
+  ausgehandelte Protokoll-Version deterministisch fest (ARCH-012).
+- `docker-compose.yml` mit expliziten Memory/CPU/FD-Limits ergänzt (SCALE-006).
+
 ### Neu (Audit-Remediation)
 - **CORS-Middleware für den HTTP-Transport** (SDK-004): `Mcp-Session-Id` wird via
   `expose_headers` für Browser-/SSE-Clients exponiert und in `allow_headers`
