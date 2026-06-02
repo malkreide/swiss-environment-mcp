@@ -7,9 +7,22 @@ Quellen:
   - naturgefahren.ch      – Naturgefahren-Bulletin (SLF/BAFU)
   - waldbrandgefahr.ch    – Waldbrandgefahr Schweiz
   - map.bafu.admin.ch     – BAFU Web-GIS (Gefahrenkarten)
+
+Sicherheit (siehe Audit SEC-004 / SEC-021):
+  - Egress-Allow-List auf Code-Ebene (nur die fest definierten Gov-Hosts)
+  - HTTPS wird vor jedem Request erzwungen
+  - Aufgelöste IPs werden gegen private/link-local/loopback geprüft (SSRF)
+  - follow_redirects=False — kein Redirect auf interne Ziele
+
+Der HTTP-Client ist ein einzelner, wiederverwendeter AsyncClient (siehe
+Audit SDK-001). Er wird über startup()/shutdown() im FastMCP-Lifespan
+verwaltet, statt pro Tool-Call neu erzeugt zu werden.
 """
 
+import ipaddress
+import socket
 from typing import Any
+from urllib.parse import urlparse
 
 import httpx
 
@@ -31,10 +44,70 @@ BAFU_GIS = "https://map.bafu.admin.ch"
 
 TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 
-# --- Hilfsfunktionen ----------------------------------------------------------
+# Egress-Allow-List (Code-Layer, Audit SEC-021). Nur diese Hosts dürfen
+# kontaktiert werden — frozenset, damit zur Laufzeit nicht mutierbar.
+ALLOWED_HOSTS: frozenset[str] = frozenset(
+    {
+        "www.hydrodaten.admin.ch",
+        "opendata.swiss",
+        "www.naturgefahren.ch",
+        "www.waldbrandgefahr.ch",
+        "www.bafu.admin.ch",
+        "map.bafu.admin.ch",
+    }
+)
 
 
-def _make_client() -> httpx.AsyncClient:
+class SecurityError(Exception):
+    """Ausgehender Request verletzt die Egress-/SSRF-Richtlinie."""
+
+
+# --- Egress-Guard (SSRF-Schutz, Audit SEC-004) --------------------------------
+
+
+def _assert_public_ip(host: str) -> None:
+    """Prüft, dass keine der aufgelösten IPs eines Hosts intern/privat ist.
+
+    Best-effort: Schlägt die DNS-Auflösung fehl (z.B. offline), wird nicht
+    blockiert — der nachfolgende httpx-Connect scheitert dann ohnehin sauber.
+    """
+    try:
+        infos = socket.getaddrinfo(host, 443, proto=socket.IPPROTO_TCP)
+    except socket.gaierror:
+        return
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0])
+        if (
+            ip.is_private
+            or ip.is_loopback
+            or ip.is_link_local
+            or ip.is_reserved
+            or ip.is_multicast
+            or ip.is_unspecified
+        ):
+            raise SecurityError(f"Aufgelöste IP {ip} für Host '{host}' ist blockiert (SSRF-Schutz)")
+
+
+def assert_host_allowed(url: str) -> None:
+    """Validiert eine Ziel-URL gegen Schema-, Allow-List- und IP-Regeln.
+
+    Wird vor *jedem* ausgehenden Request aufgerufen.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme != "https":
+        raise SecurityError(f"Nur HTTPS-Requests erlaubt (war: '{parsed.scheme}')")
+    host = parsed.hostname or ""
+    if host not in ALLOWED_HOSTS:
+        raise SecurityError(f"Host '{host}' ist nicht in der Egress-Allow-List")
+    _assert_public_ip(host)
+
+
+# --- Geteilter HTTP-Client (Lifecycle via Lifespan, Audit SDK-001) ------------
+
+_client: httpx.AsyncClient | None = None
+
+
+def _new_client() -> httpx.AsyncClient:
     """Erstellt einen konfigurierten AsyncClient mit Standard-Headers."""
     return httpx.AsyncClient(
         timeout=TIMEOUT,
@@ -42,12 +115,44 @@ def _make_client() -> httpx.AsyncClient:
             "User-Agent": "swiss-environment-mcp/0.1.0 (https://github.com/malkreide/swiss-environment-mcp)",
             "Accept": "application/json, application/xml, */*",
         },
-        follow_redirects=True,
+        follow_redirects=False,
     )
+
+
+def get_client() -> httpx.AsyncClient:
+    """Liefert den geteilten AsyncClient (lazy erzeugt, einmalig)."""
+    global _client
+    if _client is None or _client.is_closed:
+        _client = _new_client()
+    return _client
+
+
+async def startup() -> None:
+    """Initialisiert den geteilten Client (vom Lifespan aufgerufen)."""
+    get_client()
+
+
+async def shutdown() -> None:
+    """Schliesst den geteilten Client (vom Lifespan aufgerufen)."""
+    global _client
+    if _client is not None and not _client.is_closed:
+        await _client.aclose()
+    _client = None
+
+
+async def _get_json(url: str, params: dict[str, Any] | None = None) -> httpx.Response:
+    """Gemeinsamer GET-Pfad: Egress-Guard + geteilter Client + raise_for_status."""
+    assert_host_allowed(url)
+    client = get_client()
+    response = await client.get(url, params=params)
+    response.raise_for_status()
+    return response
 
 
 def handle_http_error(e: Exception) -> str:
     """Einheitliche Fehlerformatierung für alle Tools."""
+    if isinstance(e, SecurityError):
+        return f"Fehler: Anfrage durch Sicherheitsrichtlinie blockiert ({e})."
     if isinstance(e, httpx.HTTPStatusError):
         code = e.response.status_code
         if code == 404:
@@ -69,27 +174,20 @@ def handle_http_error(e: Exception) -> str:
 
 async def fetch_hydro_stations() -> dict[str, Any]:
     """Ruft die Liste aller aktiven BAFU-Hydromesstationen ab."""
-    async with _make_client() as client:
-        # Öffentlicher JSON-Endpoint mit Stationsliste
-        response = await client.get(f"{HYDRO_JSON_BASE}/mobile_stations.json")
-        response.raise_for_status()
-        return response.json()
+    response = await _get_json(f"{HYDRO_JSON_BASE}/mobile_stations.json")
+    return response.json()
 
 
 async def fetch_hydro_station_data(station_id: str) -> dict[str, Any]:
     """Ruft aktuelle Messwerte für eine einzelne Messstation ab."""
-    async with _make_client() as client:
-        response = await client.get(f"{HYDRO_JSON_BASE}/{station_id}.json")
-        response.raise_for_status()
-        return response.json()
+    response = await _get_json(f"{HYDRO_JSON_BASE}/{station_id}.json")
+    return response.json()
 
 
 async def fetch_hydro_warnings() -> dict[str, Any]:
     """Ruft aktuelle Hochwasserwarnungen aller Messstationen ab."""
-    async with _make_client() as client:
-        response = await client.get(f"{HYDRO_JSON_BASE}/warnings.json")
-        response.raise_for_status()
-        return response.json()
+    response = await _get_json(f"{HYDRO_JSON_BASE}/warnings.json")
+    return response.json()
 
 
 async def fetch_hydro_station_history(
@@ -98,20 +196,14 @@ async def fetch_hydro_station_history(
     days: int = 7,
 ) -> dict[str, Any]:
     """Ruft historische Stundenwerte einer Messstation ab."""
-    async with _make_client() as client:
-        # CSV-Endpoint für historische Daten
-        params = {
-            "station": station_id,
-            "parameter": parameter,
-            "period": f"P{days}D",
-            "format": "json",
-        }
-        response = await client.get(
-            f"{HYDRO_BASE}/lhg/az/csv/Hydrological_Data.csv",
-            params=params,
-        )
-        response.raise_for_status()
-        return {"raw": response.text, "station": station_id, "days": days}
+    params = {
+        "station": station_id,
+        "parameter": parameter,
+        "period": f"P{days}D",
+        "format": "json",
+    }
+    response = await _get_json(f"{HYDRO_BASE}/lhg/az/csv/Hydrological_Data.csv", params=params)
+    return {"raw": response.text, "station": station_id, "days": days}
 
 
 # --- opendata.swiss CKAN-Client -----------------------------------------------
@@ -123,31 +215,21 @@ async def search_bafu_datasets(
     start: int = 0,
 ) -> dict[str, Any]:
     """Sucht BAFU-Datensätze auf opendata.swiss via CKAN-API."""
-    async with _make_client() as client:
-        params: dict[str, Any] = {
-            "q": query,
-            "fq": "organization:bafu",
-            "rows": rows,
-            "start": start,
-            "sort": "score desc, metadata_modified desc",
-        }
-        response = await client.get(
-            f"{OPENDATA_SWISS_API}/package_search",
-            params=params,
-        )
-        response.raise_for_status()
-        return response.json()
+    params: dict[str, Any] = {
+        "q": query,
+        "fq": "organization:bafu",
+        "rows": rows,
+        "start": start,
+        "sort": "score desc, metadata_modified desc",
+    }
+    response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
+    return response.json()
 
 
 async def get_bafu_dataset(dataset_id: str) -> dict[str, Any]:
     """Ruft die vollständigen Metadaten eines BAFU-Datensatzes ab."""
-    async with _make_client() as client:
-        response = await client.get(
-            f"{OPENDATA_SWISS_API}/package_show",
-            params={"id": dataset_id},
-        )
-        response.raise_for_status()
-        return response.json()
+    response = await _get_json(f"{OPENDATA_SWISS_API}/package_show", params={"id": dataset_id})
+    return response.json()
 
 
 # --- Naturgefahren-Client -----------------------------------------------------
@@ -155,28 +237,19 @@ async def get_bafu_dataset(dataset_id: str) -> dict[str, Any]:
 
 async def fetch_hazard_overview(language: str = "de") -> dict[str, Any]:
     """Ruft das aktuelle Naturgefahren-Bulletin der Schweiz ab."""
-    async with _make_client() as client:
-        # Öffentliche JSON-API von naturgefahren.ch (SLF/BAFU)
-        response = await client.get(
-            f"{NATURGEFAHREN_API}/v1/warnings/overview/ch",
-            params={"lang": language},
-        )
-        response.raise_for_status()
-        return response.json()
+    response = await _get_json(
+        f"{NATURGEFAHREN_API}/v1/warnings/overview/ch", params={"lang": language}
+    )
+    return response.json()
 
 
 async def fetch_regional_hazards(region: str = "", language: str = "de") -> dict[str, Any]:
     """Ruft regionsspezifische Naturgefahrenwarnungen ab."""
-    async with _make_client() as client:
-        params: dict[str, Any] = {"lang": language}
-        if region:
-            params["region"] = region
-        response = await client.get(
-            f"{NATURGEFAHREN_API}/v1/warnings/regions",
-            params=params,
-        )
-        response.raise_for_status()
-        return response.json()
+    params: dict[str, Any] = {"lang": language}
+    if region:
+        params["region"] = region
+    response = await _get_json(f"{NATURGEFAHREN_API}/v1/warnings/regions", params=params)
+    return response.json()
 
 
 # --- Waldbrand-Client ---------------------------------------------------------
@@ -184,14 +257,8 @@ async def fetch_regional_hazards(region: str = "", language: str = "de") -> dict
 
 async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
     """Ruft die aktuelle Waldbrandgefahr nach Regionen ab."""
-    async with _make_client() as client:
-        # waldbrandgefahr.ch publiziert eine JSON-API für die interaktive Karte
-        response = await client.get(
-            f"{WALDBRAND_BASE}/api/danger",
-            params={"lang": language},
-        )
-        response.raise_for_status()
-        return response.json()
+    response = await _get_json(f"{WALDBRAND_BASE}/api/danger", params={"lang": language})
+    return response.json()
 
 
 # --- BAFU Webseite (Luftqualität/NABEL) ---------------------------------------
@@ -199,14 +266,11 @@ async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
 
 async def fetch_nabel_stations() -> dict[str, Any]:
     """Ruft die Metadaten der 16 NABEL-Messstationen von opendata.swiss ab."""
-    async with _make_client() as client:
-        # NABEL-Stationsdaten sind auf opendata.swiss verfügbar
-        response = await client.get(
-            f"{OPENDATA_SWISS_API}/package_show",
-            params={"id": "nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"},
-        )
-        response.raise_for_status()
-        return response.json()
+    response = await _get_json(
+        f"{OPENDATA_SWISS_API}/package_show",
+        params={"id": "nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"},
+    )
+    return response.json()
 
 
 async def fetch_nabel_data(
@@ -220,15 +284,10 @@ async def fetch_nabel_data(
     NABEL-Daten sind via opendata.swiss als downloadbare Ressourcen verfügbar.
     Diese Funktion gibt die Metadaten inkl. Download-URLs zurück.
     """
-    async with _make_client() as client:
-        params: dict[str, Any] = {
-            "q": f"NABEL {station_abbreviation} {parameter}",
-            "fq": "organization:bafu",
-            "rows": 5,
-        }
-        response = await client.get(
-            f"{OPENDATA_SWISS_API}/package_search",
-            params=params,
-        )
-        response.raise_for_status()
-        return response.json()
+    params: dict[str, Any] = {
+        "q": f"NABEL {station_abbreviation} {parameter}",
+        "fq": "organization:bafu",
+        "rows": 5,
+    }
+    response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
+    return response.json()

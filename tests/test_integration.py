@@ -15,6 +15,13 @@ import json
 import os
 import sys
 
+import pytest
+
+# Diese Datei trifft echte BAFU-Live-APIs. Alle hier gesammelten Tests werden
+# als `live` markiert und in der Standard-CI via `pytest -m "not live"`
+# übersprungen (Audit OPS-001). Mocked Unit-Tests siehe tests/test_unit.py.
+pytestmark = pytest.mark.live
+
 # Lokales Paket importieren
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
