@@ -166,7 +166,9 @@ def handle_http_error(e: Exception) -> str:
         return "Fehler: Anfrage-Timeout. Der Server antwortet nicht. Bitte erneut versuchen."
     if isinstance(e, httpx.ConnectError):
         return "Fehler: Verbindung nicht möglich. Netzwerkverbindung oder Dienststatus prüfen."
-    return f"Fehler: Unerwarteter Fehler ({type(e).__name__}): {e}"
+    # Keine internen Details (Exception-Typ/-Text) ans LLM leaken (Audit OBS-002).
+    # Der konkrete Fehler wird serverseitig strukturiert geloggt.
+    return "Fehler: Unerwarteter interner Fehler. Bitte erneut versuchen."
 
 
 # --- Hydrodaten-Client --------------------------------------------------------

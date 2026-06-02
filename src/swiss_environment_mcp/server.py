@@ -26,13 +26,14 @@ from contextlib import asynccontextmanager
 from enum import Enum
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import Context, FastMCP
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from . import api_client as api
+from .logging_setup import configure_logging, get_logger
 
 # --- Konfiguration ------------------------------------------------------------
 
@@ -52,6 +53,36 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# Strukturiertes Logging nach stderr initialisieren (Audit OBS-003/OBS-004).
+configure_logging()
+logger = get_logger(server="swiss-environment-mcp")
+
+
+async def _handle_tool_error(
+    tool: str, exc: Exception, ctx: Context | None = None, **fields: object
+) -> str:
+    """Zentrale Fehlerbehandlung für Tools (Audit OBS-001/OBS-002/SDK-003).
+
+    - Liefert eine maskierte, user-freundliche Meldung (keine Internals ans LLM).
+    - Loggt die echten Fehlerdetails strukturiert nach stderr (Server-Log).
+    - Meldet den Fehler zusätzlich über den MCP-Context (ctx.warning), falls vorhanden.
+    """
+    msg = api.handle_http_error(exc)
+    logger.warning(
+        "tool_error",
+        tool=tool,
+        error_type=type(exc).__name__,
+        detail=str(exc),
+        **fields,
+    )
+    if ctx is not None:
+        try:
+            await ctx.warning(f"{tool}: {msg}")
+        except Exception:  # ctx-Logging darf den Tool-Call nie zum Absturz bringen
+            pass
+    return msg
+
 
 # --- Konstanten ---------------------------------------------------------------
 
@@ -189,6 +220,8 @@ class NabelCurrentInput(BaseModel):
         description="NABEL-Stationskürzel (z.B. 'ZUE' für Zürich-Kaserne, 'DUB' für Dübendorf)",
         min_length=2,
         max_length=10,
+        pattern=r"^[A-Za-z]{2,10}$",  # Whitelist (SEC-018)
+        strict=True,
     )
 
     @field_validator("station")
@@ -226,6 +259,8 @@ class HydroStationsInput(BaseModel):
         default="",
         description="Kantonskürzel zum Filtern (z.B. 'ZH', 'BE', 'GR') – leer = alle Kantone",
         max_length=2,
+        pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
+        strict=True,
     )
     water_body: str = Field(
         default="",
@@ -242,6 +277,8 @@ class HydroCurrentInput(BaseModel):
         description="BAFU-Stationsnummer (z.B. '2099' für Zürich/Limmat-Unterwerk, '2243' für Sihl/Zürich)",
         min_length=2,
         max_length=10,
+        pattern=r"^[0-9]{2,10}$",  # Whitelist: nur Ziffern (SEC-018)
+        strict=True,
     )
     response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
 
@@ -253,6 +290,8 @@ class HydroHistoryInput(BaseModel):
         description="BAFU-Stationsnummer",
         min_length=2,
         max_length=10,
+        pattern=r"^[0-9]{2,10}$",  # Whitelist: nur Ziffern (SEC-018)
+        strict=True,
     )
     parameter: str = Field(
         default="Abfluss",
@@ -278,6 +317,8 @@ class FloodWarningsInput(BaseModel):
         default="",
         description="Kantonskürzel zum Filtern (z.B. 'ZH') – leer = ganze Schweiz",
         max_length=2,
+        pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
+        strict=True,
     )
 
 
@@ -314,6 +355,8 @@ class WildfireDangerInput(BaseModel):
         default="",
         description="Kantonskürzel zum Filtern (z.B. 'ZH', 'VS', 'TI')",
         max_length=2,
+        pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
+        strict=True,
     )
 
 
@@ -344,6 +387,8 @@ class BafuDatasetDetailInput(BaseModel):
         description="Dataset-ID oder Slug von opendata.swiss (z.B. 'nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen')",
         min_length=3,
         max_length=200,
+        pattern=r"^[A-Za-z0-9_-]{3,200}$",  # Whitelist: Slug-Zeichen (SEC-018)
+        strict=True,
     )
 
 
@@ -413,7 +458,7 @@ def _format_assessment_markdown(assessment: dict[str, Any]) -> str:
         "openWorldHint": True,
     },
 )
-async def env_nabel_stations(params: NabelStationsInput) -> str:
+async def env_nabel_stations(params: NabelStationsInput, ctx: Context | None = None) -> str:
     """
     Listet alle 16 NABEL-Messstationen des nationalen Luftmessnetzes (BAFU) auf.
 
@@ -481,7 +526,7 @@ async def env_nabel_stations(params: NabelStationsInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_nabel_current(params: NabelCurrentInput) -> str:
+async def env_nabel_current(params: NabelCurrentInput, ctx: Context | None = None) -> str:
     """
     Ruft aktuelle und historische Luftqualitätsdaten einer NABEL-Station ab.
 
@@ -512,7 +557,7 @@ async def env_nabel_current(params: NabelCurrentInput) -> str:
         datasets = result.get("result", {}).get("results", [])
     except Exception as e:
         datasets = []
-        api.handle_http_error(e)
+        await _handle_tool_error("env_nabel_current", e, ctx, station=code)
 
     data_url = f"https://www.bafu.admin.ch/de/datenabfrage-nabel?station={code}"
     opendata_url = "https://opendata.swiss/de/organization/bafu"
@@ -565,7 +610,7 @@ async def env_nabel_current(params: NabelCurrentInput) -> str:
         "openWorldHint": False,
     },
 )
-async def env_air_limits_check(params: AirLimitsCheckInput) -> str:
+async def env_air_limits_check(params: AirLimitsCheckInput, ctx: Context | None = None) -> str:
     """
     Bewertet einen gemessenen Luftschadstoffwert gegen Schweizer LRV-Grenzwerte
     und WHO 2021-Richtwerte.
@@ -604,7 +649,7 @@ async def env_air_limits_check(params: AirLimitsCheckInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_hydro_stations(params: HydroStationsInput) -> str:
+async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = None) -> str:
     """
     Listet hydrologische Messstationen des BAFU an Schweizer Flüssen und Seen auf.
 
@@ -624,7 +669,7 @@ async def env_hydro_stations(params: HydroStationsInput) -> str:
     try:
         data = await api.fetch_hydro_stations()
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error("env_hydro_stations", e, ctx, canton=params.canton)
         # Fallback: Bekannte Zürcher Stationen als Beispiel
         fallback_stations = [
             {"id": "2099", "name": "Limmat – Zürich/Unterwerk", "canton": "ZH", "water": "Limmat"},
@@ -705,7 +750,7 @@ async def env_hydro_stations(params: HydroStationsInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_hydro_current(params: HydroCurrentInput) -> str:
+async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = None) -> str:
     """
     Ruft aktuelle Messwerte einer hydrologischen BAFU-Messstation ab.
 
@@ -728,7 +773,9 @@ async def env_hydro_current(params: HydroCurrentInput) -> str:
     try:
         data = await api.fetch_hydro_station_data(params.station_id)
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error(
+            "env_hydro_current", e, ctx, station_id=params.station_id
+        )
         portal_url = f"https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{params.station_id}"
         return (
             f"⚠️ Aktuelle Daten für Station {params.station_id} nicht abrufbar: {error_msg}\n\n"
@@ -791,7 +838,7 @@ async def env_hydro_current(params: HydroCurrentInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_hydro_history(params: HydroHistoryInput) -> str:
+async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = None) -> str:
     """
     Ruft historische Stundenwerte einer BAFU-Hydromesstations ab.
 
@@ -814,7 +861,7 @@ async def env_hydro_history(params: HydroHistoryInput) -> str:
         raw = result.get("raw", "")
     except Exception as e:
         raw = ""
-        api.handle_http_error(e)
+        await _handle_tool_error("env_hydro_history", e, ctx, station_id=params.station_id)
 
     # Direktlinks für historische Daten
     portal_url = f"https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{params.station_id}"
@@ -863,7 +910,7 @@ async def env_hydro_history(params: HydroHistoryInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_flood_warnings(params: FloodWarningsInput) -> str:
+async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = None) -> str:
     """
     Ruft aktuelle Hochwasserwarnungen aller BAFU-Messstationen in der Schweiz ab.
 
@@ -929,7 +976,9 @@ async def env_flood_warnings(params: FloodWarningsInput) -> str:
         return "\n".join(lines)
 
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error(
+            "env_flood_warnings", e, ctx, min_level=params.min_level
+        )
         return (
             f"⚠️ Warnungsdaten nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang zu aktuellen Warnungen:**\n"
@@ -951,7 +1000,7 @@ async def env_flood_warnings(params: FloodWarningsInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_hazard_overview(params: HazardOverviewInput) -> str:
+async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None = None) -> str:
     """
     Ruft das aktuelle Naturgefahren-Bulletin für die Schweiz ab.
 
@@ -999,7 +1048,9 @@ async def env_hazard_overview(params: HazardOverviewInput) -> str:
         return "\n".join(lines)
 
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error(
+            "env_hazard_overview", e, ctx, language=params.language
+        )
         return (
             f"⚠️ Bulletin nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:**\n"
@@ -1020,7 +1071,7 @@ async def env_hazard_overview(params: HazardOverviewInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_hazard_regions(params: HazardRegionsInput) -> str:
+async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = None) -> str:
     """
     Ruft regionsspezifische Naturgefahrenwarnungen ab.
 
@@ -1070,7 +1121,7 @@ async def env_hazard_regions(params: HazardRegionsInput) -> str:
         return "\n".join(lines)
 
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error("env_hazard_regions", e, ctx, region=params.region)
         return (
             f"⚠️ Regionaldaten nicht abrufbar: {error_msg}\n\n"
             "**Manuelle Abfrage:**\n"
@@ -1089,7 +1140,7 @@ async def env_hazard_regions(params: HazardRegionsInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_wildfire_danger(params: WildfireDangerInput) -> str:
+async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None = None) -> str:
     """
     Ruft den aktuellen Waldbrandgefahren-Index nach Regionen ab.
 
@@ -1145,7 +1196,9 @@ async def env_wildfire_danger(params: WildfireDangerInput) -> str:
         return "\n".join(lines)
 
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error(
+            "env_wildfire_danger", e, ctx, language=params.language
+        )
         return (
             f"⚠️ Waldbranddaten nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:**\n"
@@ -1167,7 +1220,7 @@ async def env_wildfire_danger(params: WildfireDangerInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_bafu_datasets(params: BafuDatasetsInput) -> str:
+async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = None) -> str:
     """
     Sucht BAFU-Datensätze auf dem Schweizer Open-Data-Portal opendata.swiss.
 
@@ -1227,7 +1280,7 @@ async def env_bafu_datasets(params: BafuDatasetsInput) -> str:
         return "\n".join(lines)
 
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error("env_bafu_datasets", e, ctx, query=params.query)
         return (
             f"⚠️ Datensatzsuche fehlgeschlagen: {error_msg}\n\n"
             "**Direktzugang zum BAFU-Datenkatalog:**\n"
@@ -1246,7 +1299,9 @@ async def env_bafu_datasets(params: BafuDatasetsInput) -> str:
         "openWorldHint": True,
     },
 )
-async def env_bafu_dataset_detail(params: BafuDatasetDetailInput) -> str:
+async def env_bafu_dataset_detail(
+    params: BafuDatasetDetailInput, ctx: Context | None = None
+) -> str:
     """
     Ruft vollständige Metadaten und Download-URLs eines BAFU-Datensatzes ab.
 
@@ -1305,7 +1360,9 @@ async def env_bafu_dataset_detail(params: BafuDatasetDetailInput) -> str:
         return "\n".join(lines)
 
     except Exception as e:
-        error_msg = api.handle_http_error(e)
+        error_msg = await _handle_tool_error(
+            "env_bafu_dataset_detail", e, ctx, dataset_id=params.dataset_id
+        )
         return (
             f"⚠️ Datensatz '{params.dataset_id}' nicht gefunden: {error_msg}\n\n"
             "**Tipp:** Nutze `env_bafu_datasets` um gültige Dataset-IDs zu finden.\n"
