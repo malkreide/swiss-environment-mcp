@@ -36,6 +36,11 @@ jobs:
       - name: Import-Test
         run: python -c "from swiss_environment_mcp.server import mcp; print('Import OK')"
 
+      - name: Tool-Snapshot-Check (Rug-Pull-Schutz, SEC-022)
+        run: python scripts/tool_snapshot.py check
+        env:
+          PYTHONPATH: src
+
       - name: Unit-Tests (gemockt, ohne Netzwerk)
         run: pytest -m "not live" -v
         env:

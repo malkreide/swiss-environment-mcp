@@ -1,0 +1,18 @@
+{
+  "tool_count": 12,
+  "tool_names": [
+    "env_air_limits_check",
+    "env_bafu_dataset_detail",
+    "env_bafu_datasets",
+    "env_flood_warnings",
+    "env_hazard_overview",
+    "env_hazard_regions",
+    "env_hydro_current",
+    "env_hydro_history",
+    "env_hydro_stations",
+    "env_nabel_current",
+    "env_nabel_stations",
+    "env_wildfire_danger"
+  ],
+  "sha256": "e30ccea52592b046a01d066736db37b7182aa1daef12a7dfb7f47a81143219f4"
+}
