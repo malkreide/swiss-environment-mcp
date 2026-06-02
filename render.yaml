@@ -2,11 +2,16 @@ services:
   - type: web
     name: swiss-environment-mcp
     runtime: python
+    plan: starter
     buildCommand: pip install -e .
     startCommand: python -m swiss_environment_mcp.server
     envVars:
       - key: MCP_TRANSPORT
-        value: streamable_http
+        value: streamable-http
+      # MCP_HOST=0.0.0.0 ist auf Render zwingend, damit der Dienst erreichbar
+      # ist (Code-Default ist 127.0.0.1 — Audit SEC-016).
+      - key: MCP_HOST
+        value: 0.0.0.0
       - key: PORT
         value: 8000
     healthCheckPath: /health
