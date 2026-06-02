@@ -30,4 +30,4 @@ jobs:
           gitleaks version
 
       - name: Secret-Scan (History + Working Tree)
-        run: gitleaks detect --source . --redact --verbose
+        run: gitleaks detect --source . --config .gitleaks.toml --redact --verbose
