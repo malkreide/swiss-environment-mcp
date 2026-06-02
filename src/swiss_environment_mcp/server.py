@@ -21,14 +21,37 @@ Lizenz der Quelldaten: BAFU-Nutzungsbedingungen / Open Government Data (OGD)
 """
 
 import json
-import os
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from enum import Enum
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from . import api_client as api
+
+# --- Konfiguration ------------------------------------------------------------
+
+
+class Settings(BaseSettings):
+    """Server-Konfiguration. Transport-agnostisch, via Env-Vars (Audit ARCH-004).
+
+    Default-Host ist 127.0.0.1 (Audit SEC-016 — kein 0.0.0.0-Default).
+    Im Container wird MCP_HOST=0.0.0.0 explizit gesetzt (Dockerfile/render.yaml).
+    """
+
+    model_config = SettingsConfigDict(env_prefix="", extra="ignore")
+
+    mcp_transport: str = "stdio"  # "stdio" | "streamable-http"
+    mcp_host: str = "127.0.0.1"
+    port: int = 8000
+
+
+settings = Settings()
 
 # --- Konstanten ---------------------------------------------------------------
 
@@ -104,6 +127,21 @@ WILDFIRE_DANGER_LEVELS: dict[int, dict[str, str]] = {
 
 # --- Server-Initialisierung ---------------------------------------------------
 
+
+@asynccontextmanager
+async def lifespan(_server: FastMCP) -> AsyncIterator[None]:
+    """Gemeinsames Lifecycle-Management für alle Transports (Audit SDK-001).
+
+    Erzeugt den geteilten HTTP-Client beim Start und schliesst ihn beim
+    Shutdown — statt pro Tool-Call einen neuen Client zu öffnen.
+    """
+    await api.startup()
+    try:
+        yield
+    finally:
+        await api.shutdown()
+
+
 mcp = FastMCP(
     "swiss_environment_mcp",
     instructions="""
@@ -113,7 +151,19 @@ mcp = FastMCP(
     Alle Daten stammen von Schweizer Bundesbehörden und sind öffentlich zugänglich.
     Zeitzone: Schweiz (CET/CEST). Masseinheiten: µg/m³ (Luft), m (Pegel), m³/s (Abfluss).
     """,
+    lifespan=lifespan,
+    host=settings.mcp_host,
+    port=settings.port,
 )
+
+
+# --- Health-Endpoint (für Cloud-Load-Balancer, Audit SCALE-004/SEC-016) -------
+
+
+@mcp.custom_route("/health", methods=["GET"])
+async def health(_request: Request) -> JSONResponse:
+    """Liveness-Check für Render/Railway (render.yaml: healthCheckPath: /health)."""
+    return JSONResponse({"status": "ok", "service": "swiss-environment-mcp"})
 
 
 # --- Pydantic-Eingabemodelle --------------------------------------------------
@@ -1307,13 +1357,17 @@ async def get_flood_levels_resource() -> str:
 
 
 def main() -> None:
-    port = int(os.environ.get("PORT", 8000))
-    transport = os.environ.get("MCP_TRANSPORT", "stdio")
+    # Transport via Settings (Env-Vars). Default ist stdio (Audit SEC-006).
+    transport = settings.mcp_transport.replace("_", "-")
 
-    if transport == "streamable_http":
-        mcp.run(transport="streamable_http", port=port)
+    if transport in ("streamable-http", "sse"):
+        # Host/Port wurden bereits am FastMCP-Konstruktor gesetzt; hier nochmals
+        # synchronisieren, falls Env-Vars erst spät gesetzt wurden.
+        mcp.settings.host = settings.mcp_host
+        mcp.settings.port = settings.port
+        mcp.run(transport=transport)
     else:
-        mcp.run()
+        mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":
