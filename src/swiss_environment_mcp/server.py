@@ -24,7 +24,7 @@ import json
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from enum import Enum
-from typing import Any
+from typing import Any, Literal
 
 from mcp.server.fastmcp import Context, FastMCP
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -203,6 +203,48 @@ async def health(_request: Request) -> JSONResponse:
 class ResponseFormat(str, Enum):
     MARKDOWN = "markdown"
     JSON = "json"
+
+
+# Match-Typ für Such-/Listen-Resultate (Audit ARCH-003).
+MatchType = Literal["exact", "fuzzy", "none"]
+
+
+class ResponseEnvelope(BaseModel):
+    """Konsistenter Response-Envelope für Such-/Listen-Tools (Audit SDK-002).
+
+    Markdown bleibt das menschenlesbare Default-Format; der JSON-Modus liefert
+    diesen typisierten Envelope mit Quelle, Provenance, Count und match_type.
+    """
+
+    source: str
+    provenance: str
+    count: int
+    match_type: MatchType = "exact"
+    results: list[dict[str, Any]] = Field(default_factory=list)
+    note: str | None = None
+    query: dict[str, Any] | None = None
+
+
+def _envelope_json(
+    *,
+    source: str,
+    provenance: str,
+    results: list[dict[str, Any]],
+    match_type: MatchType = "exact",
+    note: str | None = None,
+    query: dict[str, Any] | None = None,
+) -> str:
+    """Serialisiert einen ResponseEnvelope als JSON-String (Audit SDK-002)."""
+    envelope = ResponseEnvelope(
+        source=source,
+        provenance=provenance,
+        count=len(results),
+        match_type=match_type,
+        results=results,
+        note=note,
+        query=query,
+    )
+    return envelope.model_dump_json(indent=2, exclude_none=True)
 
 
 class NabelStationsInput(BaseModel):
@@ -466,6 +508,10 @@ async def env_nabel_stations(params: NabelStationsInput, ctx: Context | None = N
     kontinuierlich an 16 Standorten in der Schweiz: NO₂, O₃, PM10, PM2.5,
     SO₂, CO, Russ und weitere Parameter.
 
+    <use_case>Einstieg in Luftqualitätsdaten: Stationsübersicht, um danach mit
+    `env_nabel_current` die Messwerte einer konkreten Station zu holen.</use_case>
+    <important_notes>16 feste NABEL-Stationen (statisch, kein Live-Call).</important_notes>
+
     Args:
         params (NabelStationsInput):
             - response_format: 'markdown' oder 'json'
@@ -485,16 +531,11 @@ async def env_nabel_stations(params: NabelStationsInput, ctx: Context | None = N
     ]
 
     if params.response_format == ResponseFormat.JSON:
-        return json.dumps(
-            {
-                "nabel_stationen": stations_list,
-                "total": len(stations_list),
-                "datenabfrage_url": "https://www.bafu.admin.ch/de/datenabfrage-nabel",
-                "opendata_swiss": "https://opendata.swiss/de/dataset/nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen",
-                "quelle": "BAFU – Nationales Beobachtungsnetz für Luftfremdstoffe (NABEL)",
-            },
-            ensure_ascii=False,
-            indent=2,
+        return _envelope_json(
+            source="BAFU – Nationales Beobachtungsnetz für Luftfremdstoffe (NABEL)",
+            provenance="https://opendata.swiss/de/dataset/nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen",
+            results=stations_list,
+            match_type="exact",
         )
 
     lines = [
@@ -533,6 +574,10 @@ async def env_nabel_current(params: NabelCurrentInput, ctx: Context | None = Non
     Liefert Metadaten, Download-Links für Messdaten (CSV) sowie direkte
     Abfrage-URLs für den BAFU-Datenbrowser. Gemessene Parameter: NO₂, O₃,
     PM10, PM2.5, SO₂, CO, Russ (BC).
+
+    <use_case>Aktuelle Luftqualität / Datenzugang einer konkreten NABEL-Station.</use_case>
+    <important_notes>Liefert Metadaten + Datenlinks, keine Echtzeit-Rohwerte.
+    Stationskürzel via `env_nabel_stations` ermitteln.</important_notes>
 
     Args:
         params (NabelCurrentInput):
@@ -618,6 +663,11 @@ async def env_air_limits_check(params: AirLimitsCheckInput, ctx: Context | None 
     Unterstützte Schadstoffe: NO2, PM10, PM2.5, O3, SO2, CO.
     Grenzwerte gemäss Schweizer Luftreinhalte-Verordnung (LRV, SR 814.318.142.1).
 
+    <use_case>Einen gemessenen Schadstoffwert gegen Schweizer LRV + WHO 2021
+    einordnen (Überschreitung ja/nein, Verhältnis zum Grenzwert).</use_case>
+    <important_notes>Rein lokale Berechnung (kein Netzwerk). Unterstützt
+    NO2, PM10, PM2.5, O3, SO2, CO.</important_notes>
+
     Args:
         params (AirLimitsCheckInput):
             - pollutant: Schadstoffkürzel ('NO2', 'PM10', 'PM2.5', 'O3', 'SO2', 'CO')
@@ -656,6 +706,11 @@ async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = N
     Das BAFU betreibt ca. 260 Messstationen in der Schweiz. Stationen messen
     Wasserstand (Pegel), Abfluss (m³/s), Wassertemperatur und weitere Parameter
     in einem 10-Minuten-Intervall.
+
+    <use_case>Hydromessstationen finden (nach Kanton/Gewässer), um danach mit
+    `env_hydro_current` Pegel/Abfluss abzurufen.</use_case>
+    <important_notes>Bei API-Ausfall Fallback mit Beispielstationen.
+    Leeres Filterresultat → match_type "none".</important_notes>
 
     Args:
         params (HydroStationsInput):
@@ -710,15 +765,21 @@ async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = N
         filtered.append(props)
 
     if params.response_format == ResponseFormat.JSON:
-        return json.dumps(
-            {
-                "stationen": filtered[:100],
-                "total": len(filtered),
-                "filter": {"canton": params.canton, "water_body": params.water_body},
-                "quelle": "BAFU Hydrodaten – https://www.hydrodaten.admin.ch",
-            },
-            ensure_ascii=False,
-            indent=2,
+        note = None
+        if not filtered:
+            note = (
+                f"Keine Stationen für Filter (Kanton={params.canton or '–'}, "
+                f"Gewässer={params.water_body or '–'}). Filter weglassen für die "
+                f"vollständige Liste, oder `env_hydro_current` mit einer bekannten "
+                f"Station-ID (z.B. '2099') aufrufen."
+            )
+        return _envelope_json(
+            source="BAFU Hydrodaten",
+            provenance="https://www.hydrodaten.admin.ch",
+            results=filtered[:100],
+            match_type="none" if not filtered else "exact",
+            note=note,
+            query={"canton": params.canton, "water_body": params.water_body},
         )
 
     lines = [
@@ -736,6 +797,13 @@ async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = N
 
     if len(filtered) > 50:
         lines.append(f"\n*…und {len(filtered) - 50} weitere Stationen.*")
+    if not filtered:
+        # ARCH-003: leeres Resultat mit actionable Hinweis statt blanker Tabelle
+        lines.append(
+            "\n*Keine Treffer für diesen Filter (match_type: none). "
+            "Filter weglassen für die vollständige Liste, oder `env_hydro_current` "
+            "mit einer bekannten Station-ID (z.B. '2099' Limmat/Zürich) aufrufen.*"
+        )
     lines.append("\n**Datenportal:** https://www.hydrodaten.admin.ch")
     return "\n".join(lines)
 
@@ -761,6 +829,10 @@ async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = Non
       - 2099: Limmat – Zürich/Unterwerk
       - 2243: Sihl – Zürich
       - 2034: Zürichsee – Zürich/Tiefenbrunnen (Pegel)
+
+    <use_case>Aktueller Pegel/Abfluss/Temperatur einer Station, z.B. für einen
+    Hochwasser-Lagecheck.</use_case>
+    <important_notes>Station-ID via `env_hydro_stations`. 10-Minuten-Aktualisierung.</important_notes>
 
     Args:
         params (HydroCurrentInput):
@@ -845,6 +917,10 @@ async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = Non
     Ermöglicht zeitliche Analysen von Wasserstand, Abfluss und Temperatur
     über bis zu 30 Tage. Ideal für Trendanalysen und Extremereignis-Recherche.
 
+    <use_case>Trend- oder Extremereignis-Analyse über bis zu 30 Tage.</use_case>
+    <important_notes>Liefert Datenlinks + CSV-Vorschau, keine vollständige
+    Zeitreihe inline.</important_notes>
+
     Args:
         params (HydroHistoryInput):
             - station_id: BAFU-Stationsnummer
@@ -916,6 +992,11 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
 
     Das BAFU gibt Hochwasserwarnungen in 5 Gefahrenstufen aus:
     1=Keine, 2=Mässig, 3=Erheblich, 4=Gross, 5=Sehr gross.
+
+    <use_case>Aktive Hochwasserwarnungen schweizweit oder kantonal für eine
+    Lagebeurteilung.</use_case>
+    <important_notes>5 Gefahrenstufen. "Keine Warnung" ist eine explizite
+    Entwarnung, kein Fehler.</important_notes>
 
     Args:
         params (FloodWarningsInput):
@@ -1008,6 +1089,10 @@ async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None =
     und BAFU herausgegeben und umfasst: Hochwasser, Lawinen, Steinschlag,
     Rutschungen und Sturm.
 
+    <use_case>Tagesaktuelles Naturgefahren-Bulletin (Lawinen, Hochwasser,
+    Sturm, Rutschungen) für die ganze Schweiz.</use_case>
+    <important_notes>Quelle SLF/BAFU, mehrsprachig (de/fr/it/en).</important_notes>
+
     Args:
         params (HazardOverviewInput):
             - language: Sprache ('de', 'fr', 'it', 'en')
@@ -1078,6 +1163,11 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
     Ermöglicht gezielte Abfragen für Schulausflüge, Events oder
     Infrastrukturplanung in einem spezifischen Gebiet der Schweiz.
 
+    <use_case>Regionsspezifische Gefahren für Events, Schulausflüge oder
+    Infrastrukturplanung.</use_case>
+    <important_notes>Region + optional Gefahrentyp filtern; bei leerem Resultat
+    werden Karten-Links geliefert.</important_notes>
+
     Args:
         params (HazardRegionsInput):
             - region: Regionsname (z.B. 'Zürich', 'Graubünden', 'Wallis')
@@ -1147,6 +1237,10 @@ async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None =
     Die Waldbrandgefahr wird täglich durch das BAFU berechnet und auf
     einer 5-stufigen Skala (gering bis sehr gross) kommuniziert.
     Relevant für Schulausflüge, Events und Forstbetriebe.
+
+    <use_case>Waldbrandgefahr-Index pro Region/Kanton, z.B. für Forstbetriebe
+    oder Event-Planung.</use_case>
+    <important_notes>5-stufige Skala, tagesaktuell (de/fr/it).</important_notes>
 
     Args:
         params (WildfireDangerInput):
@@ -1228,6 +1322,11 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
     Lärm, Klima, Wald und weiteren Umweltthemen als offene Daten (OGD).
     Ergebnisse enthalten Titel, Beschreibung und Download-URLs (CSV, JSON, WMS).
 
+    <use_case>BAFU-Open-Data auf opendata.swiss durchsuchen (CSV/JSON/WMS), um
+    danach mit `env_bafu_dataset_detail` Details/Download-URLs zu holen.</use_case>
+    <important_notes>Paginierung via offset/rows. 0 Treffer → match_type "none",
+    dann breitere Begriffe versuchen.</important_notes>
+
     Args:
         params (BafuDatasetsInput):
             - query: Suchbegriff ('Luftqualität', 'Hochwasser', 'NABEL', etc.)
@@ -1242,6 +1341,17 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
         result = data.get("result", {})
         total = result.get("count", 0)
         datasets = result.get("results", [])
+
+        # ARCH-003: leeres Resultat mit actionable Hinweis statt blanker Liste
+        if not datasets:
+            return (
+                f"## BAFU-Datensätze auf opendata.swiss\n\n"
+                f"**0 Treffer** für '{params.query or 'alle BAFU-Datensätze'}' "
+                f"(match_type: none).\n\n"
+                f"*Tipp: Breitere Begriffe nutzen (z.B. 'Luft', 'Wasser', 'Wald'), "
+                f"die Schreibweise prüfen, oder ohne `query` alle BAFU-Datensätze listen.*\n\n"
+                f"**Direktzugang:** https://opendata.swiss/de/organization/bafu"
+            )
 
         lines = [
             "## BAFU-Datensätze auf opendata.swiss\n",
@@ -1307,6 +1417,9 @@ async def env_bafu_dataset_detail(
 
     Liefert: Titel, Beschreibung, Ressourcen mit Direktlinks (CSV, JSON, WMS/WFS),
     Lizenz, Aktualisierungsintervall und Kontaktinformationen.
+
+    <use_case>Vollständige Metadaten + Download-URLs eines konkreten Datensatzes.</use_case>
+    <important_notes>dataset_id/Slug zuerst via `env_bafu_datasets` ermitteln.</important_notes>
 
     Args:
         params (BafuDatasetDetailInput):
