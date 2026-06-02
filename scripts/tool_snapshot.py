@@ -41,10 +41,13 @@ async def _collect_tools() -> list[dict]:
         schema = t.inputSchema or {}
         params = sorted((schema.get("properties") or {}).keys())
         required = sorted(schema.get("required") or [])
+        # Whitespace kollabieren: Python 3.13 dedentet Docstrings anders als 3.11/3.12,
+        # wodurch die Description sonst pro Python-Version unterschiedlich wäre.
+        description = " ".join((t.description or "").split())
         result.append(
             {
                 "name": t.name,
-                "description": (t.description or "").strip(),
+                "description": description,
                 "params": params,
                 "required": required,
             }
