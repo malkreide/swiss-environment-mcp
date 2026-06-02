@@ -1,0 +1,45 @@
+# Audit-Profil — swiss-environment-mcp
+# Inferiert aus Repo-Inhalt (Weg C, SKILL.md Schritt 1)
+name: swiss-environment-mcp
+repo: https://github.com/malkreide/swiss-environment-mcp
+
+# Transport: server.py:1309-1316 unterstützt stdio (default) UND streamable_http
+# (MCP_TRANSPORT=streamable_http in Dockerfile/render.yaml/Procfile) → dual
+transport: dual
+
+# Keine Auth im Code, ausschliesslich öffentliche Daten
+auth_model: none
+
+# Python-SDK (FastMCP + pydantic), siehe src/swiss_environment_mcp/server.py
+sdk_language: Python
+
+# BAFU-Umweltdaten, opendata.swiss OGD, keine PII
+data_class: Public Open Data
+
+# Alle 12 Tools haben readOnlyHint=True, keine schreibenden Operationen
+write_capable: false
+
+# Cloud-Deployments: Render (render.yaml), Docker (Dockerfile), Railway/Heroku (Procfile)
+deployment:
+  - local-stdio
+  - Render
+  - Docker
+  - Railway
+is_cloud_deployed: true
+
+# Kein ctx.sample / sequential-thinking im Code
+uses_sampling: false
+uses_sequential_thinking: false
+
+# Keine Filesystem-Tools; alle Tools machen ausgehende HTTP-Requests (httpx → *.admin.ch etc.)
+tools_include_filesystem: false
+tools_make_external_requests: true
+
+# Kein Stadt-Zürich-/Schulamt-/Volksschule-/Enterprise-Kontext (eidgenössischer BAFU-Datenserver)
+stadt_zuerich_context: false
+schulamt_context: false
+volksschule_context: false
+enterprise_context: false
+
+data_source:
+  is_swiss_open_data: true
