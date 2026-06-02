@@ -1,0 +1,14 @@
+# gitleaks-Konfiguration für swiss-environment-mcp.
+# Erweitert die Default-Regeln und schliesst die generierten Audit-Artefakte aus:
+# diese enthalten in Remediation-Snippets bewusst Beispiel-/Platzhalter-Secrets
+# (z.B. `OAUTH_CLIENT_SECRET=at-least-32-characters-long-secret` im ARCH-005-Check)
+# — das sind keine echten Geheimnisse, sondern Doku.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Audit-Reports/Findings enthalten Beispiel-Secrets in Remediation-Snippets"
+paths = [
+  '''audits/.*''',
+]
