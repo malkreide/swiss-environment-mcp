@@ -19,7 +19,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Atmospheric Science",
 ]
 dependencies = [
-    "mcp[cli]>=1.0.0",
+    # Major-Version gepinnt: legt die ausgehandelte MCP-Protokoll-Version fest
+    # (Audit ARCH-012). Updates kommen via Dependabot.
+    "mcp[cli]>=1.27,<2",
     "httpx>=0.27.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
@@ -32,6 +34,12 @@ dev = [
     "pytest-asyncio>=0.23.0",
     "respx>=0.21.0",
     "ruff>=0.4.0",
+]
+# OpenTelemetry-Tracing (Audit OBS-006), opt-in: pip install '.[otel]'
+otel = [
+    "opentelemetry-sdk>=1.20.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.20.0",
+    "opentelemetry-instrumentation-httpx>=0.41b0",
 ]
 
 [project.urls]

@@ -36,10 +36,16 @@ from swiss_environment_mcp.server import (  # noqa: E402
 
 @pytest.fixture(autouse=True)
 async def _reset_client():
-    """Frischen geteilten Client je Test, sauber schliessen (SDK-001)."""
+    """Frischen geteilten Client je Test, sauber schliessen (SDK-001).
+
+    DNS-Pinning (SEC-005) wird in Tests deaktiviert, damit die respx-Mocks
+    nicht durch die URL-zu-IP-Umschreibung umgangen werden.
+    """
+    api.dns_pin_enabled = False
     await api.shutdown()
     yield
     await api.shutdown()
+    api.dns_pin_enabled = True
 
 
 # --- Reine Logik (kein Netzwerk) ----------------------------------------------
@@ -147,6 +153,30 @@ async def test_client_is_reused_singleton():
     c1 = api.get_client()
     c2 = api.get_client()
     assert c1 is c2
+
+
+def test_dns_pin_blocks_internal_ip(monkeypatch):
+    """DNS-Pin-Anker: aufgelöste interne IP wird blockiert (SEC-005)."""
+
+    def fake_getaddrinfo(host, port, *a, **k):
+        return [(2, 1, 6, "", ("169.254.169.254", 443))]
+
+    monkeypatch.setattr(api.socket, "getaddrinfo", fake_getaddrinfo)
+    with pytest.raises(api.SecurityError):
+        api._resolve_and_check("opendata.swiss")
+
+
+def test_dns_pin_returns_public_ip(monkeypatch):
+    def fake_getaddrinfo(host, port, *a, **k):
+        return [(2, 1, 6, "", ("185.27.134.1", 443))]
+
+    monkeypatch.setattr(api.socket, "getaddrinfo", fake_getaddrinfo)
+    assert api._resolve_and_check("opendata.swiss") == "185.27.134.1"
+
+
+def test_client_uses_pinned_transport():
+    c = api._new_client()
+    assert isinstance(c._transport, api._PinnedTransport)
 
 
 # --- Health-Endpoint (SCALE-004 / SEC-016) ------------------------------------
@@ -290,6 +320,25 @@ async def test_hydro_stations_json_match_type_none():
 
 
 @respx.mock
+async def test_bafu_datasets_json_envelope():
+    """SDK-002: env_bafu_datasets liefert im JSON-Modus den typisierten Envelope."""
+    import json
+
+    respx.get("https://opendata.swiss/api/3/action/package_search").mock(
+        return_value=httpx.Response(
+            200, json={"result": {"count": 1, "results": [{"name": "x", "title": {"de": "X"}}]}}
+        )
+    )
+    out = await env_bafu_datasets(
+        BafuDatasetsInput(query="luft", response_format=ResponseFormat.JSON)
+    )
+    env = json.loads(out)
+    assert env["source"].startswith("BAFU")
+    assert env["count"] == 1 and env["match_type"] == "exact"
+    assert env["count"] == len(env["results"])
+
+
+@respx.mock
 async def test_bafu_datasets_empty_note():
     """0 Treffer -> actionable Hinweis statt blanker Liste (ARCH-003)."""
     respx.get("https://opendata.swiss/api/3/action/package_search").mock(
@@ -313,6 +362,34 @@ async def test_all_tools_have_use_case_tag():
 
 
 # --- CORS / Mcp-Session-Id (SDK-004) ------------------------------------------
+
+
+def test_tracing_creates_tool_span(monkeypatch):
+    """OBS-006: ein Tool-Call erzeugt einen Span mit mcp.tool.name + is_error."""
+    pytest.importorskip("opentelemetry.sdk")
+    import asyncio
+
+    from opentelemetry import trace
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+    from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+    from swiss_environment_mcp import tracing
+    from swiss_environment_mcp.server import AirLimitsCheckInput, env_air_limits_check
+
+    exporter = InMemorySpanExporter()
+    provider = TracerProvider()
+    provider.add_span_processor(SimpleSpanProcessor(exporter))
+    trace.set_tracer_provider(provider)
+    monkeypatch.setattr(tracing, "_TRACING_ON", True)
+
+    asyncio.run(env_air_limits_check(AirLimitsCheckInput(pollutant="NO2", value=45.0)))
+
+    spans = exporter.get_finished_spans()
+    assert any(s.name == "mcp.tool.env_air_limits_check" for s in spans)
+    span = next(s for s in spans if s.name == "mcp.tool.env_air_limits_check")
+    assert span.attributes["mcp.tool.name"] == "env_air_limits_check"
+    assert span.attributes["mcp.tool.result.is_error"] is False
 
 
 def test_cors_exposes_and_allows_session_id_header():

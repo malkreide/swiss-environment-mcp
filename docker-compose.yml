@@ -1,0 +1,29 @@
+# Beispiel-Deployment mit expliziten Resource-Limits (Audit SCALE-006).
+# Start: docker compose up --build
+services:
+  swiss-environment-mcp:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      MCP_TRANSPORT: streamable-http
+      MCP_HOST: 0.0.0.0
+      PORT: "8000"
+      # In Produktion explizite Origins setzen (Audit SDK-004):
+      # MCP_CORS_ALLOW_ORIGINS: https://app.example.ch
+    # Harte Resource-Limits gegen Resource-Exhaustion / Noisy-Neighbour (SCALE-006)
+    mem_limit: 256m
+    mem_reservation: 128m
+    cpus: 0.5
+    # FD-Limit für viele ausgehende Connections (SCALE-006)
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

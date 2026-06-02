@@ -25,7 +25,7 @@ jobs:
         run: pip install uv
 
       - name: Abhängigkeiten installieren
-        run: uv pip install -e ".[dev]" --system
+        run: uv pip install -e ".[dev,otel]" --system
 
       - name: Linting mit ruff
         run: ruff check src/
