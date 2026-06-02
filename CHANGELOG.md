@@ -3,59 +3,62 @@
 Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
-## [Unreleased]
+## [0.2.0] – 2026-06-02
 
-### Neu (Audit-Remediation — verbleibende Findings)
+Erstveröffentlichung nach vollständiger Audit-Remediation (mcp-audit-skill):
+31 Findings → 0, `production_ready: true`.
+
+### Neu
+- **CORS-Middleware** für den HTTP-Transport (SDK-004): `Mcp-Session-Id` via
+  `expose_headers` für Browser-/SSE-Clients exponiert und in `allow_headers`
+  zugelassen. Origins via `MCP_CORS_ALLOW_ORIGINS` konfigurierbar (Default `*`
+  für Dev, in Produktion explizite Liste; Wildcard wird geloggt).
 - **OpenTelemetry-Tracing** (OBS-006, opt-in via `pip install '.[otel]'` +
   `OTEL_EXPORTER_OTLP_ENDPOINT`): pro Tool-Call ein Span `mcp.tool.<name>` mit
   `mcp.tool.name`/`mcp.tool.result.is_error`, httpx-Auto-Instrumentation, keine
   sensitiven Daten in Span-Attributen.
-- **DNS-Pinning** für ausgehende Requests (SEC-005): Hostname wird einmalig
-  aufgelöst, IP gegen Blocklist geprüft und das Connect-Ziel auf diese IP gepinnt
-  (SNI/Cert weiterhin gegen den Hostnamen) — kein TOCTOU/DNS-Rebinding-Fenster.
-- **JSON-Response-Envelope** zusätzlich für `env_bafu_datasets` und
-  `env_flood_warnings` (SDK-002) — `response_format=json` liefert jetzt bei allen
-  Such-/Listen-Tools den typisierten Envelope inkl. `match_type`.
+- **Strukturiertes Logging** (OBS-003) via `structlog` nach **stderr** (JSON).
+- **Typisierter JSON-Response-Envelope** (SDK-002) für alle Such-/Listen-Tools
+  (`env_nabel_stations`, `env_hydro_stations`, `env_bafu_datasets`,
+  `env_flood_warnings`): `source`, `provenance`, `count`, `match_type`,
+  `results`, `note`. Markdown bleibt Default-Format.
+- Leere Such-/Listen-Resultate liefern `match_type: none` + actionable Hinweis
+  statt blanker Tabelle (ARCH-003).
+- `<use_case>`/`<important_notes>`-Tags in allen 12 Tool-Beschreibungen (ARCH-002).
+- `/health`-Endpoint für Cloud-Load-Balancer (SCALE-004/SEC-016).
+- Gemockte Unit-Tests (respx) getrennt von Live-Tests (`live`-Marker); CI läuft
+  `pytest -m "not live"`, nightly Live-Workflow (OPS-001).
+- Tool-Definition-Snapshot + CI-Gate gegen «Rug Pull» (SEC-022).
+- Docs: `docs/security.md` (Trifecta-Bewertung SEC-019, Secret-Mgmt SEC-013,
+  Session-Modell SEC-009, Egress SEC-021), `docs/scaling.md` (SCALE-002/003/006),
+  `docs/roadmap.md` (Phasenarchitektur OPS-003).
+- `.env.example`, `.github/dependabot.yml` (ARCH-012),
+  `.github/workflows/security.yml` (gitleaks, ARCH-005), `docker-compose.yml`
+  mit expliziten Resource-Limits (SCALE-006).
 
 ### Geändert
-- MCP-SDK auf Major-Version gepinnt (`mcp[cli]>=1.27,<2`) — legt die
-  ausgehandelte Protokoll-Version deterministisch fest (ARCH-012).
-- `docker-compose.yml` mit expliziten Memory/CPU/FD-Limits ergänzt (SCALE-006).
+- **Tool-Definitionen geändert** (SEC-022, Tool-Snapshot aktualisiert).
+- Korrekter Cloud-Transport `streamable-http` (vorher ungültiges
+  `streamable_http`) + behobenes Host-Binding (`MCP_HOST`, SEC-016) — macht das
+  Cloud-Deployment erstmals lauffähig.
+- Geteilter `httpx.AsyncClient` via FastMCP-Lifespan statt pro Tool-Call (SDK-001).
+- Pydantic-Settings + transport-agnostische Server-Logik (ARCH-004).
+- `ctx: Context` an allen Tools für Logging/Fehler über den MCP-Context (SDK-003).
+- MCP-SDK auf Major-Version gepinnt (`mcp[cli]>=1.27,<2`, ARCH-012).
+- Multi-Stage-Dockerfile, non-root User, HEALTHCHECK (SEC-007/SCALE-004).
 
-### Neu (Audit-Remediation)
-- **CORS-Middleware für den HTTP-Transport** (SDK-004): `Mcp-Session-Id` wird via
-  `expose_headers` für Browser-/SSE-Clients exponiert und in `allow_headers`
-  zugelassen. Origins konfigurierbar über `MCP_CORS_ALLOW_ORIGINS` (Default `*`
-  für Dev, in Produktion explizite Liste; Wildcard wird geloggt).
+### Sicherheit
+- **SSRF-Härtung** (SEC-004): Egress-Allow-List (frozenset) + `assert_host_allowed`,
+  HTTPS-Zwang, IP-Blocklist, `follow_redirects=False`.
+- **DNS-Pinning** (SEC-005): Host einmalig auflösen, IP gegen Blocklist prüfen,
+  Connect auf gepinnte IP (SNI/Cert gegen Hostnamen) — kein TOCTOU-Fenster.
+- **Input-Whitelisting** (SEC-018): Regex-Pattern + `strict` auf Identifier-Inputs.
+- **Fehler-Maskierung** (OBS-002): keine internen Details ans LLM; Detail nur im
+  Server-Log.
 
-### Neu (Hardening / Dokumentation — Audit-Remediation Sprint 3)
-- `docs/security.md`: Bedrohungsmodell, Lethal-Trifecta-Bewertung (SEC-019),
-  Secret-Management (SEC-013), Session-Modell (SEC-009), Tool-Poisoning/Gateway
-  (SEC-015), Egress-Kontrolle (SEC-021).
-- `docs/scaling.md`: Single-Instance- und Scale-out-Strategie, Sticky-Sessions /
-  Shared State (SCALE-002/003), Resource-Limits (SCALE-006).
-- `docs/roadmap.md`: Phasenarchitektur (Phase 1 read-only) und Phasenübergänge (OPS-003).
-- `.env.example` (nicht-geheime Konfig-Vorlage), `.github/dependabot.yml`
-  (monatliche Updates, ARCH-012), `.github/workflows/security.yml`
-  (gitleaks Secret-Scan, ARCH-005).
-- README: Sektionen «MCP Protocol Version & Maintenance» (ARCH-012),
-  «Lifecycle Phase» (OPS-003) und Begründung des Single-Modul-Layouts (ARCH-011);
-  aktualisierter Projektstruktur-Baum (DE + EN).
-
-## [0.2.0] – 2026-06-02
-
-### Geändert
-- **Tool-Definitionen geändert** (SEC-022, Tool-Snapshot aktualisiert): Alle 12
-  Tool-Beschreibungen um `<use_case>`/`<important_notes>`-Tags ergänzt (ARCH-002).
-- **JSON-Modus liefert neu einen typisierten Response-Envelope** mit Feldern
-  `source`, `provenance`, `count`, `match_type`, `results`, `note` (SDK-002).
-  Markdown bleibt das Default-Format. *Hinweis:* Wer den JSON-Output von
-  `env_nabel_stations` / `env_hydro_stations` parst, muss auf die neuen
-  Envelope-Keys umstellen.
-
-### Neu
-- Leere Such-/Listen-Resultate liefern `match_type: none` plus einen actionable
-  Hinweis statt einer blanken Tabelle (ARCH-003).
+> **Breaking (JSON-Konsument:innen):** Der JSON-Output von `env_nabel_stations` /
+> `env_hydro_stations` nutzt neu die Envelope-Keys (`results`/`count`/… statt
+> `nabel_stationen`/`total`). Markdown-Konsument:innen sind nicht betroffen.
 
 ## [0.1.0] – 2026-03-12
 

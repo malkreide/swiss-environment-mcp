@@ -147,7 +147,7 @@ def _new_client() -> httpx.AsyncClient:
         transport=_PinnedTransport(),
         timeout=TIMEOUT,
         headers={
-            "User-Agent": "swiss-environment-mcp/0.1.0 (https://github.com/malkreide/swiss-environment-mcp)",
+            "User-Agent": "swiss-environment-mcp/0.2.0 (https://github.com/malkreide/swiss-environment-mcp)",
             "Accept": "application/json, application/xml, */*",
         },
         follow_redirects=False,
