@@ -50,6 +50,12 @@ class Settings(BaseSettings):
     mcp_transport: str = "stdio"  # "stdio" | "streamable-http"
     mcp_host: str = "127.0.0.1"
     port: int = 8000
+    # CORS-Origins für den HTTP-Transport (Audit SDK-004). Komma-separiert.
+    # Default "*" für Dev; in Produktion auf eine explizite Liste setzen.
+    mcp_cors_allow_origins: str = "*"
+
+    def cors_origins(self) -> list[str]:
+        return [o.strip() for o in self.mcp_cors_allow_origins.split(",") if o.strip()]
 
 
 settings = Settings()
@@ -1526,16 +1532,53 @@ async def get_flood_levels_resource() -> str:
 # --- Entry Point --------------------------------------------------------------
 
 
+def build_cors_app(origins: list[str] | None = None):
+    """Streamable-HTTP-App mit CORS-Middleware (Audit SDK-004).
+
+    Browser-/SSE-Clients müssen den `Mcp-Session-Id`-Header lesen können
+    (`expose_headers`) und in Folge-Requests senden dürfen (`allow_headers`).
+    `allow_origins` ist konfigurierbar (MCP_CORS_ALLOW_ORIGINS); in Produktion
+    eine explizite Liste statt der `*`-Wildcard verwenden.
+    """
+    from starlette.middleware.cors import CORSMiddleware
+
+    origins = origins if origins is not None else settings.cors_origins()
+    if origins == ["*"]:
+        logger.warning(
+            "cors_wildcard_origin",
+            detail="MCP_CORS_ALLOW_ORIGINS='*' — in Produktion auf explizite Origins setzen",
+        )
+    return CORSMiddleware(
+        mcp.streamable_http_app(),
+        allow_origins=origins,
+        allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+        allow_headers=["*", "Mcp-Session-Id"],
+        expose_headers=["Mcp-Session-Id"],
+        # Keine Auth/Credentials in diesem Server -> False (zulässig mit "*").
+        allow_credentials=False,
+    )
+
+
 def main() -> None:
     # Transport via Settings (Env-Vars). Default ist stdio (Audit SEC-006).
     transport = settings.mcp_transport.replace("_", "-")
 
-    if transport in ("streamable-http", "sse"):
-        # Host/Port wurden bereits am FastMCP-Konstruktor gesetzt; hier nochmals
-        # synchronisieren, falls Env-Vars erst spät gesetzt wurden.
+    if transport == "streamable-http":
+        # Host/Port am FastMCP-Konstruktor gesetzt; hier synchronisieren.
         mcp.settings.host = settings.mcp_host
         mcp.settings.port = settings.port
-        mcp.run(transport=transport)
+        import uvicorn
+
+        uvicorn.run(
+            build_cors_app(),
+            host=settings.mcp_host,
+            port=settings.port,
+            log_level="info",
+        )
+    elif transport == "sse":
+        mcp.settings.host = settings.mcp_host
+        mcp.settings.port = settings.port
+        mcp.run(transport="sse")
     else:
         mcp.run(transport="stdio")
 

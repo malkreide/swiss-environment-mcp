@@ -5,6 +5,12 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Neu (Audit-Remediation)
+- **CORS-Middleware für den HTTP-Transport** (SDK-004): `Mcp-Session-Id` wird via
+  `expose_headers` für Browser-/SSE-Clients exponiert und in `allow_headers`
+  zugelassen. Origins konfigurierbar über `MCP_CORS_ALLOW_ORIGINS` (Default `*`
+  für Dev, in Produktion explizite Liste; Wildcard wird geloggt).
+
 ### Neu (Hardening / Dokumentation — Audit-Remediation Sprint 3)
 - `docs/security.md`: Bedrohungsmodell, Lethal-Trifecta-Bewertung (SEC-019),
   Secret-Management (SEC-013), Session-Modell (SEC-009), Tool-Poisoning/Gateway
