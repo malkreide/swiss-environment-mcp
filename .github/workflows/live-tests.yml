@@ -1,0 +1,28 @@
+name: Live API Tests
+
+# Live-Tests gegen echte BAFU-APIs (Audit OPS-001). Laufen NICHT auf jedem PR,
+# sondern nächtlich und auf manuellen Trigger — Netzwerk-/Dienst-Verfügbarkeit
+# darf den normalen CI-Lauf nicht flaky machen.
+on:
+  schedule:
+    - cron: "0 4 * * *"  # täglich 04:00 UTC
+  workflow_dispatch:
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Abhängigkeiten installieren
+        run: pip install -e ".[dev]"
+
+      - name: Live-Tests
+        run: pytest -m live -v
+        env:
+          PYTHONPATH: src
+        timeout-minutes: 10

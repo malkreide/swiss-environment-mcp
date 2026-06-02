@@ -36,9 +36,8 @@ jobs:
       - name: Import-Test
         run: python -c "from swiss_environment_mcp.server import mcp; print('Import OK')"
 
-      - name: Integrationstests (nur Python 3.11)
-        if: matrix.python-version == '3.11'
-        run: python tests/test_integration.py
+      - name: Unit-Tests (gemockt, ohne Netzwerk)
+        run: pytest -m "not live" -v
         env:
           PYTHONPATH: src
         timeout-minutes: 5
