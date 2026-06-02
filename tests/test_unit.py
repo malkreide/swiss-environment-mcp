@@ -159,3 +159,100 @@ async def test_health_endpoint():
     resp = await health(Request(scope))
     assert resp.status_code == 200
     assert b"ok" in resp.body
+
+
+# --- Fehlerbehandlung / Observability (OBS-001 / OBS-002 / SDK-003) -----------
+
+
+class _FakeContext:
+    """Minimaler Context-Doppelgänger, der ctx.warning-Aufrufe sammelt."""
+
+    def __init__(self):
+        self.warnings: list[str] = []
+
+    async def warning(self, msg: str) -> None:
+        self.warnings.append(msg)
+
+
+def test_error_detail_is_masked():
+    """handle_http_error darf keine internen Details ans LLM leaken (OBS-002)."""
+    msg = api.handle_http_error(ValueError("geheimes internes Detail xyz"))
+    assert "geheimes internes Detail" not in msg
+    assert "interner Fehler" in msg
+
+
+@respx.mock
+async def test_execution_error_path_logs_and_reports():
+    """Execution-Error-Pfad: maskiertes Result, ctx.warning, strukturiertes Log (OBS-001)."""
+    from structlog.testing import capture_logs
+
+    from swiss_environment_mcp.server import env_bafu_datasets
+
+    respx.get("https://opendata.swiss/api/3/action/package_search").mock(
+        return_value=httpx.Response(500)
+    )
+    ctx = _FakeContext()
+    with capture_logs() as logs:
+        out = await env_bafu_datasets(BafuDatasetsInput(query="x"), ctx=ctx)
+    # User-Result enthält keine Internals, aber den Fallback-Hinweis
+    assert "fehlgeschlagen" in out
+    assert "Traceback" not in out and "500 Internal" not in out
+    # Fehler wurde über den Context gemeldet ...
+    assert ctx.warnings and "env_bafu_datasets" in ctx.warnings[0]
+    # ... und strukturiert geloggt (Event tool_error mit tool-Feld)
+    assert any(
+        e.get("event") == "tool_error" and e.get("tool") == "env_bafu_datasets" for e in logs
+    )
+
+
+async def test_protocol_error_invalid_args():
+    """Protocol-Error-Pfad: ungültige Tool-Argumente -> ValidationError (OBS-001)."""
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        BafuDatasetsInput(rows=999)  # ueberschreitet le=50
+
+
+# --- Input-Whitelisting (SEC-018) ---------------------------------------------
+
+
+def test_station_id_rejects_non_numeric():
+    from pydantic import ValidationError
+
+    from swiss_environment_mcp.server import HydroCurrentInput
+
+    with pytest.raises(ValidationError):
+        HydroCurrentInput(station_id="2099; DROP TABLE")
+
+
+def test_dataset_id_rejects_path_traversal():
+    from pydantic import ValidationError
+
+    from swiss_environment_mcp.server import BafuDatasetDetailInput
+
+    with pytest.raises(ValidationError):
+        BafuDatasetDetailInput(dataset_id="../../etc/passwd")
+
+
+def test_station_accepts_lowercase_and_uppercases():
+    out = NabelCurrentInput(station="zue")
+    assert out.station == "ZUE"
+
+
+# --- Tool-Snapshot / Rug-Pull-Schutz (SEC-022) --------------------------------
+
+
+def test_tool_snapshot_is_current():
+    """Committeter tool-snapshot.json muss den aktuellen Tool-Definitionen entsprechen."""
+    import json
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+    from tool_snapshot import SNAPSHOT_PATH, build_snapshot
+
+    committed = json.loads(SNAPSHOT_PATH.read_text(encoding="utf-8"))
+    current = build_snapshot()
+    assert current["sha256"] == committed["sha256"], (
+        "tool-snapshot.json ist veraltet — `python scripts/tool_snapshot.py` ausführen, "
+        "CHANGELOG-Eintrag + Versions-Bump nicht vergessen (SEC-022)."
+    )
