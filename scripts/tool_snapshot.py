@@ -26,11 +26,30 @@ SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "tool-snapshot.json"
 
 
 async def _collect_tools() -> list[dict]:
+    """Normalisierte, versions-stabile Repräsentation der Tool-Definitionen.
+
+    Bewusst NICHT das rohe inputSchema-JSON hashen: dessen Serialisierung variiert
+    zwischen Pydantic-/MCP-Versionen (CI 3.11 vs 3.13) und machte den Hash
+    nicht-reproduzierbar. Stattdessen die stabilen, von uns definierten Merkmale:
+    Tool-Name, Description sowie Parameter-Namen und Pflichtfelder. Das erkennt
+    weiterhin Rug-Pulls (neue/entfernte/umbenannte Tools oder Parameter,
+    geänderte Descriptions).
+    """
     tools = await mcp.list_tools()
-    return [
-        {"name": t.name, "description": t.description, "input_schema": t.inputSchema}
-        for t in sorted(tools, key=lambda x: x.name)
-    ]
+    result = []
+    for t in sorted(tools, key=lambda x: x.name):
+        schema = t.inputSchema or {}
+        params = sorted((schema.get("properties") or {}).keys())
+        required = sorted(schema.get("required") or [])
+        result.append(
+            {
+                "name": t.name,
+                "description": (t.description or "").strip(),
+                "params": params,
+                "required": required,
+            }
+        )
+    return result
 
 
 def _compute_hash(tools: list[dict]) -> str:
