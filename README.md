@@ -232,22 +232,50 @@ swiss-environment-mcp/
 ├── src/swiss_environment_mcp/
 │   ├── __init__.py          # Package
 │   ├── server.py            # FastMCP server: 12 tools, 3 resources
-│   └── api_client.py        # HTTP client for 4 BAFU data sources
+│   ├── api_client.py        # HTTP client + egress allow-list (SSRF guard)
+│   └── logging_setup.py     # structlog -> stderr
 ├── tests/
-│   └── test_integration.py  # Integration tests
+│   ├── test_unit.py         # Mocked unit tests (no network) — CI default
+│   ├── test_integration.py  # Live API tests (marker: live)
+│   └── test_20_scenarios.py # Live scenario coverage
+├── scripts/tool_snapshot.py # Tool-definition hash snapshot (rug-pull guard)
+├── docs/                    # security.md, scaling.md, roadmap.md
 ├── .github/
-│   └── workflows/
-│       └── ci.yml           # GitHub Actions CI (Python 3.11–3.13)
-├── Dockerfile               # Container for cloud deployment
-├── Procfile                 # Process definition
-├── render.yaml              # One-click Render.com deployment
-├── pyproject.toml           # Build configuration (hatchling)
-├── CHANGELOG.md
-├── CONTRIBUTING.md          # This file
-├── LICENSE
-├── README.md                # This file (English)
-└── README.de.md             # German version
+│   ├── dependabot.yml       # Monthly dependency/action updates
+│   └── workflows/           # ci.yml, security.yml (gitleaks), live-tests.yml, publish.yml
+├── Dockerfile               # Multi-stage, non-root container
+├── render.yaml / Procfile   # Cloud deployment
+├── tool-snapshot.json       # Committed tool-definition snapshot
+├── .env.example             # Non-secret config template
+└── pyproject.toml           # Build configuration (hatchling)
 ```
+
+> **Single-module layout (rationale, audit ARCH-011):** the 12 tools live in one
+> `server.py` rather than a `tools/` package. They are thin, uniform wrappers over
+> `api_client.py` sharing the same input/response patterns, so a single
+> well-sectioned module stays more navigable than 4 near-identical files. This is a
+> deliberate, documented deviation; a split is revisited if tool logic grows non-uniform.
+
+---
+
+## MCP Protocol Version & Maintenance
+
+- **MCP protocol:** negotiated at `initialize` time and handled by the pinned MCP
+  SDK (`mcp[cli]`). The SDK version is the canonical pin; SDK/protocol updates land
+  via Dependabot PRs (`.github/dependabot.yml`, monthly).
+- **Tool-definition stability (audit SEC-022):** any change to a tool's name,
+  description or parameters changes `tool-snapshot.json`; CI fails until the snapshot
+  is regenerated and a `CHANGELOG` entry + version bump are added.
+- **Update policy:** review Dependabot PRs monthly; bump the version (semver) on any
+  tool-definition or behaviour change.
+
+## Lifecycle Phase
+
+This server is in **Phase 1 (read-only)** — all tools read-only, no auth, no side
+effects. The phase model and prerequisites for Phase 2 (write/auth) are in
+[`docs/roadmap.md`](docs/roadmap.md). Security architecture (SSRF/egress, secret
+management, lethal-trifecta assessment): [`docs/security.md`](docs/security.md).
+Scaling/session strategy: [`docs/scaling.md`](docs/scaling.md).
 
 ---
 

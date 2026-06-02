@@ -1,0 +1,33 @@
+name: Security
+
+# Secret-Scanning auf jedem Push/PR (Audit ARCH-005). gitleaks wird als Binary
+# installiert (kein Action-Lizenz-Gate) und scannt die gesamte Git-History.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks installieren
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Neuestes linux_x64-Asset dynamisch ermitteln (keine fragile Versions-URL).
+          url=$(curl -sSL -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
+            | grep -oE 'https://[^"]*gitleaks_[0-9.]+_linux_x64\.tar\.gz' | head -1)
+          echo "Downloading $url"
+          curl -sSL "$url" | tar -xz -C /tmp gitleaks
+          sudo install /tmp/gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Secret-Scan (History + Working Tree)
+        run: gitleaks detect --source . --redact --verbose

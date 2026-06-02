@@ -3,6 +3,22 @@
 Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
+## [Unreleased]
+
+### Neu (Hardening / Dokumentation — Audit-Remediation Sprint 3)
+- `docs/security.md`: Bedrohungsmodell, Lethal-Trifecta-Bewertung (SEC-019),
+  Secret-Management (SEC-013), Session-Modell (SEC-009), Tool-Poisoning/Gateway
+  (SEC-015), Egress-Kontrolle (SEC-021).
+- `docs/scaling.md`: Single-Instance- und Scale-out-Strategie, Sticky-Sessions /
+  Shared State (SCALE-002/003), Resource-Limits (SCALE-006).
+- `docs/roadmap.md`: Phasenarchitektur (Phase 1 read-only) und Phasenübergänge (OPS-003).
+- `.env.example` (nicht-geheime Konfig-Vorlage), `.github/dependabot.yml`
+  (monatliche Updates, ARCH-012), `.github/workflows/security.yml`
+  (gitleaks Secret-Scan, ARCH-005).
+- README: Sektionen «MCP Protocol Version & Maintenance» (ARCH-012),
+  «Lifecycle Phase» (OPS-003) und Begründung des Single-Modul-Layouts (ARCH-011);
+  aktualisierter Projektstruktur-Baum (DE + EN).
+
 ## [0.2.0] – 2026-06-02
 
 ### Geändert
