@@ -3,6 +3,21 @@
 Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
+## [0.2.0] – 2026-06-02
+
+### Geändert
+- **Tool-Definitionen geändert** (SEC-022, Tool-Snapshot aktualisiert): Alle 12
+  Tool-Beschreibungen um `<use_case>`/`<important_notes>`-Tags ergänzt (ARCH-002).
+- **JSON-Modus liefert neu einen typisierten Response-Envelope** mit Feldern
+  `source`, `provenance`, `count`, `match_type`, `results`, `note` (SDK-002).
+  Markdown bleibt das Default-Format. *Hinweis:* Wer den JSON-Output von
+  `env_nabel_stations` / `env_hydro_stations` parst, muss auf die neuen
+  Envelope-Keys umstellen.
+
+### Neu
+- Leere Such-/Listen-Resultate liefern `match_type: none` plus einen actionable
+  Hinweis statt einer blanken Tabelle (ARCH-003).
+
 ## [0.1.0] – 2026-03-12
 
 ### Neu

@@ -256,3 +256,57 @@ def test_tool_snapshot_is_current():
         "tool-snapshot.json ist veraltet — `python scripts/tool_snapshot.py` ausführen, "
         "CHANGELOG-Eintrag + Versions-Bump nicht vergessen (SEC-022)."
     )
+
+
+# --- Response-Envelope & match_type (SDK-002 / ARCH-003) ----------------------
+
+
+async def test_nabel_stations_json_envelope():
+    """JSON-Modus liefert den typisierten Envelope (SDK-002)."""
+    import json
+
+    out = await env_nabel_stations(NabelStationsInput(response_format=ResponseFormat.JSON))
+    env = json.loads(out)
+    assert set(["source", "provenance", "count", "match_type", "results"]) <= env.keys()
+    assert env["count"] == 16 and env["match_type"] == "exact"
+    assert env["count"] == len(env["results"])
+
+
+@respx.mock
+async def test_hydro_stations_json_match_type_none():
+    """Leeres Filterresultat -> match_type 'none' + actionable note (ARCH-003)."""
+    import json
+
+    respx.get("https://www.hydrodaten.admin.ch/lhg/az/json/mobile_stations.json").mock(
+        return_value=httpx.Response(200, json={"stations": []})
+    )
+    out = await env_hydro_stations(
+        HydroStationsInput(canton="ZH", response_format=ResponseFormat.JSON)
+    )
+    env = json.loads(out)
+    assert env["match_type"] == "none"
+    assert env["count"] == 0
+    assert env["note"] and "2099" in env["note"]
+
+
+@respx.mock
+async def test_bafu_datasets_empty_note():
+    """0 Treffer -> actionable Hinweis statt blanker Liste (ARCH-003)."""
+    respx.get("https://opendata.swiss/api/3/action/package_search").mock(
+        return_value=httpx.Response(200, json={"result": {"count": 0, "results": []}})
+    )
+    out = await env_bafu_datasets(BafuDatasetsInput(query="zzznotarealquery"))
+    assert "match_type: none" in out
+    assert "0 Treffer" in out
+
+
+# --- Use-Case-Tags in Tool-Descriptions (ARCH-002) ----------------------------
+
+
+async def test_all_tools_have_use_case_tag():
+    from swiss_environment_mcp.server import mcp
+
+    tools = await mcp.list_tools()
+    assert len(tools) == 12
+    missing = [t.name for t in tools if "<use_case>" not in (t.description or "")]
+    assert not missing, f"Tools ohne <use_case>-Tag: {missing}"
