@@ -1,0 +1,62 @@
+{
+  "audit_meta": {
+    "server_name": "swiss-environment-mcp",
+    "run_id": "2026-06-02T174650-Z-swiss-environment-mcp",
+    "skill_version": "1.0.0",
+    "catalog_hash": "091f446b27965044ce658a1d5f4b2cabe2b0ab5661dcc1a53b6be8f1f2e093c0",
+    "policy": "fail-or-partial",
+    "note": "Re-Audit nach Remediation Sprint 1-3 + WP6b (main @ 15d7ee8). Vergleich zum Erstaudit 2026-06-02T085128."
+  },
+  "results": {
+    "ARCH-001": {"status": "pass", "category": "ARCH", "severity": "medium", "evidence": ["12 Tools snake_case, konsistent"], "gaps": []},
+    "ARCH-002": {"status": "pass", "category": "ARCH", "severity": "medium", "evidence": ["<use_case>/<important_notes>-Tags in allen 12 Tool-Descriptions (WP6b, #7)"], "gaps": []},
+    "ARCH-003": {"status": "pass", "category": "ARCH", "severity": "medium", "evidence": ["match_type (exact/fuzzy/none) + actionable note bei leeren Resultaten in JSON-Envelope und Markdown (env_hydro_stations, env_bafu_datasets) (#7)"], "gaps": []},
+    "ARCH-004": {"status": "pass", "category": "ARCH", "severity": "high", "evidence": ["Pydantic-Settings-Objekt + gemeinsamer Lifespan für stdio/streamable-http (server.py, #5/#6)", "Keine Transport-Internals in Handlern"], "gaps": []},
+    "ARCH-005": {"status": "pass", "category": "ARCH", "severity": "critical", "evidence": [".gitignore (#5), .env.example, .github/workflows/security.yml (gitleaks) (#8), keine Hardcoded Secrets"], "gaps": []},
+    "ARCH-006": {"status": "pass", "category": "ARCH", "severity": "high", "evidence": ["12 Tools, use-case-orientiert"], "gaps": []},
+    "ARCH-007": {"status": "pass", "category": "ARCH", "severity": "medium", "evidence": ["Atomare, abgeschlossene Tool-Resultate"], "gaps": []},
+    "ARCH-008": {"status": "pass", "category": "ARCH", "severity": "medium", "evidence": ["Tools + 3 Resources"], "gaps": []},
+    "ARCH-009": {"status": "pass", "category": "ARCH", "severity": "high", "evidence": ["Vollständige Tool-Annotations"], "gaps": []},
+    "ARCH-011": {"status": "pass", "category": "ARCH", "severity": "medium", "evidence": ["Standard-Repo-Struktur; Single-Modul-Layout im README begründet (dokumentierte Abweichung, #8)"], "gaps": []},
+    "ARCH-012": {"status": "partial", "category": "ARCH", "severity": "medium", "evidence": ["Dependabot aktiv (monatlich) + bereits gemergte Action-Update-PRs (#9-#12)", "README-Sektion 'MCP Protocol Version & Maintenance' + Update-Policy (#8)", "CHANGELOG Keep-a-Changelog + Tool-Snapshot-Disziplin"], "gaps": ["Kein expliziter protocolVersion-Pin im Code (vom MCP-SDK ausgehandelt; SDK-Version ist der Pin) — dokumentiert, aber nicht code-seitig fixiert"]},
+
+    "SDK-001": {"status": "pass", "category": "SDK", "severity": "high", "evidence": ["Geteilter httpx.AsyncClient via startup/shutdown im FastMCP-Lifespan statt pro Call (api_client.py/server.py, #5/#6)"], "gaps": []},
+    "SDK-002": {"status": "partial", "category": "SDK", "severity": "medium", "evidence": ["Typisierter ResponseEnvelope (source/provenance/count/match_type/results/note, Literal) im JSON-Modus von env_nabel_stations/env_hydro_stations (#7)"], "gaps": ["Tools geben weiterhin str zurück (Markdown-Default); Envelope nur im JSON-Pfad und nicht für alle Such-/Listen-Tools (z.B. env_bafu_datasets hat keinen JSON-Modus)"]},
+    "SDK-003": {"status": "pass", "category": "SDK", "severity": "medium", "evidence": ["ctx: Context an allen 12 Tools; Fehler via ctx.warning + structlog; keine print()-Statements (#6)"], "gaps": ["ctx.report_progress nicht genutzt (Tools sind kurze Single-Calls)"]},
+    "SDK-004": {"status": "fail", "category": "SDK", "severity": "high", "evidence": ["Transport korrekt auf streamable-http umgestellt (#5)"], "gaps": ["KEINE CORS-Middleware konfiguriert (grep ohne Treffer in src/)", "FastMCP.streamable_http_app setzt per Default kein expose_headers — verifiziert", "Mcp-Session-Id wird Browser-Clients nicht via CORS exponiert. Im Erstaudit als 'adressiert' deklariert, tatsächlich NICHT umgesetzt — bleibt offen."]},
+
+    "SEC-004": {"status": "pass", "category": "SEC", "severity": "critical", "evidence": ["Egress-Allow-List (frozenset) + assert_host_allowed, HTTPS-Zwang, IP-Blocklist, follow_redirects=False (api_client.py, #5)"], "gaps": []},
+    "SEC-005": {"status": "partial", "category": "SEC", "severity": "high", "evidence": ["IP-Blocklist gegen private/loopback/link-local; follow_redirects=False reduziert Rebinding-Fläche (#5)"], "gaps": ["Kein echtes DNS-Pinning (Custom-Resolver) — getaddrinfo-Auflösung und httpx-Connect bleiben getrennt (TOCTOU theoretisch offen, durch feste Hosts entschärft)"]},
+    "SEC-006": {"status": "pass", "category": "SEC", "severity": "high", "evidence": ["Default-Transport stdio; HTTP nur via MCP_TRANSPORT"], "gaps": []},
+    "SEC-007": {"status": "pass", "category": "SEC", "severity": "high", "evidence": ["Multi-Stage-Dockerfile, non-root USER (uid 10001), HEALTHCHECK (#5)"], "gaps": []},
+    "SEC-008": {"status": "pass", "category": "SEC", "severity": "medium", "evidence": ["OIDC Trusted Publisher; transparenter Install"], "gaps": []},
+    "SEC-009": {"status": "pass", "category": "SEC", "severity": "critical", "evidence": ["Session-Modell in docs/security.md dokumentiert: kein Auth -> kein User-Session-Binding nötig; Vorgaben für künftiges OAuth festgehalten (#8)"], "gaps": []},
+    "SEC-013": {"status": "pass", "category": "SEC", "severity": "high", "evidence": ["docs/security.md: Stufe-1-Entscheidung (keine Secrets, Public Open Data) begründet; gitleaks-CI (#8)"], "gaps": []},
+    "SEC-014": {"status": "pass", "category": "SEC", "severity": "medium", "evidence": ["Kein enterprise_context; read-only öffentliche Tools"], "gaps": []},
+    "SEC-015": {"status": "pass", "category": "SEC", "severity": "medium", "evidence": ["docs/security.md: kein Gateway (standalone read-only Public-Server) dokumentiert; Tool-Integrität via Snapshot-Gate (#8)"], "gaps": []},
+    "SEC-016": {"status": "pass", "category": "SEC", "severity": "critical", "evidence": ["MCP_HOST-Handling, Default 127.0.0.1, 0.0.0.0 nur im Container; /health-Endpoint; Deploy-Bind-Bug behoben (#5/#6)"], "gaps": []},
+    "SEC-018": {"status": "pass", "category": "SEC", "severity": "high", "evidence": ["Whitelist-Regex + field-level strict auf station/station_id/dataset_id/canton; extra='forbid'; ge/le; Tests gegen Injection/Path-Traversal (#6)"], "gaps": []},
+    "SEC-019": {"status": "pass", "category": "SEC", "severity": "critical", "evidence": ["docs/security.md: dokumentierte Lethal-Trifecta-Bewertung — max. 1 Fähigkeit, kein exfiltrierbarer Kanal (#8)"], "gaps": []},
+    "SEC-020": {"status": "pass", "category": "SEC", "severity": "critical", "evidence": ["Kein os.system/subprocess/eval/exec"], "gaps": []},
+    "SEC-021": {"status": "pass", "category": "SEC", "severity": "high", "evidence": ["frozenset ALLOWED_HOSTS + assert_host_allowed vor jedem Request (#5); Network-Layer-Egress in docs/security.md (#8)"], "gaps": []},
+    "SEC-022": {"status": "pass", "category": "SEC", "severity": "high", "evidence": ["tool-snapshot.json + CI-Gate (scripts/tool_snapshot.py) gegen Rug-Pull; konsistentes env_-Präfix; CHANGELOG-Disziplin + Version-Bump bei Tool-Änderung (#6/#7)"], "gaps": []},
+
+    "SCALE-001": {"status": "pass", "category": "SCALE", "severity": "high", "evidence": ["ENV-Transport-Selektion; Cloud nutzt streamable-http"], "gaps": []},
+    "SCALE-002": {"status": "pass", "category": "SCALE", "severity": "high", "evidence": ["docs/scaling.md: Single-Instance + Scale-out-Strategie (Sticky-Sessions / Shared-State) dokumentiert (#8)"], "gaps": []},
+    "SCALE-003": {"status": "pass", "category": "SCALE", "severity": "high", "evidence": ["docs/scaling.md: Mcp-Session-Id-Routing via Edge-LB (HAProxy Stick-Table) für Scale-out dokumentiert (#8)"], "gaps": []},
+    "SCALE-004": {"status": "pass", "category": "SCALE", "severity": "medium", "evidence": ["Multi-Stage-Build, HEALTHCHECK, /health-Endpoint, non-root (#5)"], "gaps": []},
+    "SCALE-006": {"status": "partial", "category": "SCALE", "severity": "medium", "evidence": ["render.yaml plan: starter; Resource-Limit-Strategie in docs/scaling.md dokumentiert (#8); httpx-Timeouts gesetzt"], "gaps": ["Keine harten Memory/CPU-Limits in render.yaml/Docker explizit gesetzt — nur dokumentiert"]},
+
+    "OBS-001": {"status": "pass", "category": "OBS", "severity": "high", "evidence": ["Fehler gefangen, maskiert, strukturiert geloggt und via ctx gemeldet; Tests für Execution- und Protocol-Error-Pfad (#6)"], "gaps": ["isError-Mechanismus bewusst zugunsten dokumentierter Graceful-Degradation (Fallback-Links) nicht genutzt"]},
+    "OBS-002": {"status": "pass", "category": "OBS", "severity": "high", "evidence": ["handle_http_error maskiert generisch (kein type/str-Leak); Detail nur im Server-Log (#6)"], "gaps": ["FastMCP dieser Version hat kein mask_error_details-Init-Flag; Maskierung daher explizit im Code"]},
+    "OBS-003": {"status": "pass", "category": "OBS", "severity": "medium", "evidence": ["structlog -> stderr (JSON), 4 Severity-Stufen, bound context (tool/session) (logging_setup.py, #6)"], "gaps": []},
+    "OBS-004": {"status": "pass", "category": "OBS", "severity": "critical", "evidence": ["Keine print()-Statements; Logging ausschliesslich stderr"], "gaps": []},
+    "OBS-006": {"status": "fail", "category": "OBS", "severity": "medium", "evidence": ["Als geplante Verbesserung in docs/roadmap.md vermerkt (#8)"], "gaps": ["Kein OpenTelemetry/OTLP/Tracing implementiert — unverändert offen seit Erstaudit"]},
+
+    "OPS-001": {"status": "pass", "category": "OPS", "severity": "high", "evidence": ["tests/test_unit.py mit respx-Mocking (ohne Netz); live-Marker; CI 'pytest -m \"not live\"'; nightly live-tests.yml (#6)"], "gaps": []},
+    "OPS-002": {"status": "pass", "category": "OPS", "severity": "medium", "evidence": ["Vollständiger bilingualer README + ASCII-Diagramm + Limits; CHANGELOG; CONTRIBUTING (bilingual)"], "gaps": []},
+    "OPS-003": {"status": "pass", "category": "OPS", "severity": "high", "evidence": ["Phase 1 (read-only) explizit in README + docs/roadmap.md deklariert; Phasenübergänge dokumentiert (#8)"], "gaps": []},
+
+    "CH-004": {"status": "pass", "category": "CH", "severity": "medium", "evidence": ["Lizenz/Attribution im README; source/provenance-Felder (inkl. typisiertem Envelope)"], "gaps": []}
+  }
+}
