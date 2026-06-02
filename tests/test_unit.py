@@ -310,3 +310,33 @@ async def test_all_tools_have_use_case_tag():
     assert len(tools) == 12
     missing = [t.name for t in tools if "<use_case>" not in (t.description or "")]
     assert not missing, f"Tools ohne <use_case>-Tag: {missing}"
+
+
+# --- CORS / Mcp-Session-Id (SDK-004) ------------------------------------------
+
+
+def test_cors_exposes_and_allows_session_id_header():
+    """HTTP-Transport exponiert Mcp-Session-Id via CORS für Browser-Clients."""
+    from starlette.testclient import TestClient
+
+    from swiss_environment_mcp.server import build_cors_app
+
+    origin = "https://example.com"
+    app = build_cors_app(origins=[origin])
+    with TestClient(app) as client:
+        # Aktuelle Response: expose-headers enthält Mcp-Session-Id
+        resp = client.get("/health", headers={"Origin": origin})
+        assert resp.status_code == 200
+        assert "Mcp-Session-Id" in resp.headers.get("access-control-expose-headers", "")
+
+        # Preflight: expliziter Origin wird gespiegelt (keine Wildcard), Header erlaubt
+        pre = client.options(
+            "/mcp",
+            headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "mcp-session-id",
+            },
+        )
+        assert pre.headers.get("access-control-allow-origin") == origin
+        assert "mcp-session-id" in pre.headers.get("access-control-allow-headers", "").lower()
