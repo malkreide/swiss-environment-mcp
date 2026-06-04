@@ -311,6 +311,13 @@ Siehe [CONTRIBUTING.md](CONTRIBUTING.md) (Englisch) · [CONTRIBUTING.de.md](CONT
 
 ---
 
+## Sicherheit
+
+Sicherheitsrichtlinie und Sicherheitslage: [SECURITY.md](SECURITY.md) (Englisch) · [SECURITY.de.md](SECURITY.de.md) (Deutsch).
+Vollständige Sicherheitsarchitektur: [`docs/security.md`](docs/security.md).
+
+---
+
 ## Changelog
 
 Siehe [CHANGELOG.md](CHANGELOG.md)

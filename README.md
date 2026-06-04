@@ -305,7 +305,14 @@ ruff check src/
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md) (English) · [CONTRIBUTING.de.md](CONTRIBUTING.de.md) (German)
+
+---
+
+## Security
+
+Security policy and posture: [SECURITY.md](SECURITY.md) (English) · [SECURITY.de.md](SECURITY.de.md) (German).
+Full security architecture: [`docs/security.md`](docs/security.md).
 
 ---
 

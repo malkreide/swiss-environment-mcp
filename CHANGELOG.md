@@ -3,6 +3,14 @@
 Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
+## [Unreleased]
+
+### Geändert / Changed
+- Dokumentation an die einheitliche Portfolio-Struktur angeglichen: Root-Level
+  `SECURITY.md` (Englisch) mit verlinkter `SECURITY.de.md` (Deutsch) ergänzt;
+  README verweist nun auf die Security-Policy. LICENSE-Copyright auf
+  «Hayal Oezkan» korrigiert.
+
 ## [0.2.0] – 2026-06-02
 
 Erstveröffentlichung nach vollständiger Audit-Remediation (mcp-audit-skill):
