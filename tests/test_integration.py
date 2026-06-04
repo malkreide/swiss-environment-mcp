@@ -59,7 +59,7 @@ _pass = 0
 _fail = 0
 
 
-def test(name: str, condition: bool, detail: str = "") -> None:
+def check(name: str, condition: bool, detail: str = "") -> None:
     global _pass, _fail
     if condition:
         print(f"  ✅ {name}")
@@ -77,16 +77,16 @@ async def test_nabel_stations() -> None:
 
     # Markdown
     result = await env_nabel_stations(NabelStationsInput())
-    test("Enthält Tabellenheader", "| Kürzel |" in result)
-    test("Enthält ZUE (Zürich-Kaserne)", "ZUE" in result)
-    test("Enthält DUB (Dübendorf)", "DUB" in result)
-    test("Link zu BAFU vorhanden", "bafu.admin.ch" in result)
+    check("Enthält Tabellenheader", "| Kürzel |" in result)
+    check("Enthält ZUE (Zürich-Kaserne)", "ZUE" in result)
+    check("Enthält DUB (Dübendorf)", "DUB" in result)
+    check("Link zu BAFU vorhanden", "bafu.admin.ch" in result)
 
     # JSON
     result_json = await env_nabel_stations(NabelStationsInput(response_format=ResponseFormat.JSON))
     data = json.loads(result_json)
-    test("JSON: 16 Stationen", data.get("total") == 16)
-    test("JSON: nabel_stationen vorhanden", "nabel_stationen" in data)
+    check("JSON: 16 Stationen", data.get("total") == 16)
+    check("JSON: nabel_stationen vorhanden", "nabel_stationen" in data)
 
 
 async def test_nabel_current() -> None:
@@ -94,14 +94,14 @@ async def test_nabel_current() -> None:
 
     # Gültige Station
     result = await env_nabel_current(NabelCurrentInput(station="ZUE"))
-    test("Station ZUE: Name vorhanden", "Zürich-Kaserne" in result)
-    test("Station ZUE: Parameter-Tabelle", "NO₂" in result)
-    test("Station ZUE: BAFU-Link", "bafu.admin.ch" in result)
+    check("Station ZUE: Name vorhanden", "Zürich-Kaserne" in result)
+    check("Station ZUE: Parameter-Tabelle", "NO₂" in result)
+    check("Station ZUE: BAFU-Link", "bafu.admin.ch" in result)
 
     # Ungültige Station
     result_invalid = await env_nabel_current(NabelCurrentInput(station="XXX"))
-    test("Ungültige Station: Fehlermeldung", "nicht gefunden" in result_invalid)
-    test("Ungültige Station: Stationsliste als Hilfe", "ZUE" in result_invalid)
+    check("Ungültige Station: Fehlermeldung", "nicht gefunden" in result_invalid)
+    check("Ungültige Station: Stationsliste als Hilfe", "ZUE" in result_invalid)
 
 
 async def test_air_limits() -> None:
@@ -109,16 +109,16 @@ async def test_air_limits() -> None:
 
     # NO2 unter Grenzwert
     result = await env_air_limits_check(AirLimitsCheckInput(pollutant="NO2", value=15.0))
-    test("NO2=15: LRV eingehalten", "Eingehalten" in result)
-    test("NO2=15: WHO überschritten", "ÜBERSCHRITTEN" in result)
+    check("NO2=15: LRV eingehalten", "Eingehalten" in result)
+    check("NO2=15: WHO überschritten", "ÜBERSCHRITTEN" in result)
 
     # PM2.5 über beiden Grenzwerten
     result2 = await env_air_limits_check(AirLimitsCheckInput(pollutant="PM2.5", value=25.0))
-    test("PM2.5=25: LRV überschritten", "ÜBERSCHRITTEN" in result2)
+    check("PM2.5=25: LRV überschritten", "ÜBERSCHRITTEN" in result2)
 
     # Unbekannter Schadstoff
     result3 = await env_air_limits_check(AirLimitsCheckInput(pollutant="XYZ", value=100.0))
-    test("Unbekannter Schadstoff: Fehlermeldung", "nicht erkannt" in result3)
+    check("Unbekannter Schadstoff: Fehlermeldung", "nicht erkannt" in result3)
 
 
 # --- Wasser-Tests -------------------------------------------------------------
@@ -132,15 +132,15 @@ async def test_hydro_stations() -> None:
         return
 
     result = await env_hydro_stations(HydroStationsInput())
-    test(
+    check(
         "Stationsliste: Überschrift vorhanden",
         "Hydrologische" in result or "hydrodaten.admin.ch" in result,
     )
-    test("Stationsliste: Link zu hydrodaten.admin.ch", "hydrodaten" in result)
+    check("Stationsliste: Link zu hydrodaten.admin.ch", "hydrodaten" in result)
 
     # Kanton-Filter ZH
     result_zh = await env_hydro_stations(HydroStationsInput(canton="ZH"))
-    test("Kanton-Filter ZH: Filterinfo vorhanden", "ZH" in result_zh)
+    check("Kanton-Filter ZH: Filterinfo vorhanden", "ZH" in result_zh)
 
 
 async def test_hydro_current() -> None:
@@ -152,16 +152,16 @@ async def test_hydro_current() -> None:
 
     # Station 2099 = Limmat Zürich/Unterwerk
     result = await env_hydro_current(HydroCurrentInput(station_id="2099"))
-    test("Station 2099: Kein Python-Traceback", "Traceback" not in result)
-    test("Station 2099: Datenportal-Link", "hydrodaten.admin.ch" in result)
+    check("Station 2099: Kein Python-Traceback", "Traceback" not in result)
+    check("Station 2099: Datenportal-Link", "hydrodaten.admin.ch" in result)
 
 
 async def test_hydro_history() -> None:
     print("\n[Wasser] Historische Daten")
 
     result = await env_hydro_history(HydroHistoryInput(station_id="2099", days=7))
-    test("Verlaufsdaten: Portal-Link vorhanden", "hydrodaten" in result)
-    test("Verlaufsdaten: opendata.swiss erwähnt", "opendata.swiss" in result)
+    check("Verlaufsdaten: Portal-Link vorhanden", "hydrodaten" in result)
+    check("Verlaufsdaten: opendata.swiss erwähnt", "opendata.swiss" in result)
 
 
 async def test_flood_warnings() -> None:
@@ -172,12 +172,12 @@ async def test_flood_warnings() -> None:
         return
 
     result = await env_flood_warnings(FloodWarningsInput(min_level=1))
-    test("Warnungen: Kein Python-Traceback", "Traceback" not in result)
-    test("Warnungen: Link zu Hochwasser-Portal", "hydrodaten" in result or "Direktzugang" in result)
+    check("Warnungen: Kein Python-Traceback", "Traceback" not in result)
+    check("Warnungen: Link zu Hochwasser-Portal", "hydrodaten" in result or "Direktzugang" in result)
 
     # Stufe 5 = meist leer
     result_high = await env_flood_warnings(FloodWarningsInput(min_level=5))
-    test("Stufe 5: Rückmeldung vorhanden", len(result_high) > 20)
+    check("Stufe 5: Rückmeldung vorhanden", len(result_high) > 20)
 
 
 # --- Naturgefahren-Tests ------------------------------------------------------
@@ -191,8 +191,8 @@ async def test_hazard_overview() -> None:
         return
 
     result = await env_hazard_overview(HazardOverviewInput(language="de"))
-    test("Bulletin: Kein Python-Traceback", "Traceback" not in result)
-    test("Bulletin: naturgefahren.ch erwähnt", "naturgefahren.ch" in result)
+    check("Bulletin: Kein Python-Traceback", "Traceback" not in result)
+    check("Bulletin: naturgefahren.ch erwähnt", "naturgefahren.ch" in result)
 
 
 async def test_hazard_regions() -> None:
@@ -203,8 +203,8 @@ async def test_hazard_regions() -> None:
         return
 
     result = await env_hazard_regions(HazardRegionsInput(region="Zürich"))
-    test("Zürich-Region: Kein Traceback", "Traceback" not in result)
-    test("Zürich-Region: GIS-Link", "map.bafu.admin.ch" in result or "naturgefahren" in result)
+    check("Zürich-Region: Kein Traceback", "Traceback" not in result)
+    check("Zürich-Region: GIS-Link", "map.bafu.admin.ch" in result or "naturgefahren" in result)
 
 
 async def test_wildfire_danger() -> None:
@@ -215,8 +215,8 @@ async def test_wildfire_danger() -> None:
         return
 
     result = await env_wildfire_danger(WildfireDangerInput(language="de"))
-    test("Waldbrand: Kein Traceback", "Traceback" not in result)
-    test("Waldbrand: Gefahrenstufen erklärt", "Gering" in result or "waldbrandgefahr" in result)
+    check("Waldbrand: Kein Traceback", "Traceback" not in result)
+    check("Waldbrand: Gefahrenstufen erklärt", "Gering" in result or "waldbrandgefahr" in result)
 
 
 # --- Datenkatalog-Tests -------------------------------------------------------
@@ -231,12 +231,12 @@ async def test_bafu_datasets() -> None:
 
     # Suche nach Luftqualität
     result = await env_bafu_datasets(BafuDatasetsInput(query="Luftqualität", rows=5))
-    test("Suche Luftqualität: Kein Traceback", "Traceback" not in result)
-    test("Suche Luftqualität: Ergebnisse", "opendata.swiss" in result)
+    check("Suche Luftqualität: Kein Traceback", "Traceback" not in result)
+    check("Suche Luftqualität: Ergebnisse", "opendata.swiss" in result)
 
     # Leere Suche (alle BAFU-Datensätze)
     result_all = await env_bafu_datasets(BafuDatasetsInput(query="", rows=3))
-    test("Leere Suche: Rückmeldung", len(result_all) > 50)
+    check("Leere Suche: Rückmeldung", len(result_all) > 50)
 
 
 async def test_bafu_dataset_detail() -> None:
@@ -251,14 +251,14 @@ async def test_bafu_dataset_detail() -> None:
             dataset_id="nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"
         )
     )
-    test("NABEL-Datensatz: Kein Traceback", "Traceback" not in result)
-    test("NABEL-Datensatz: Ressourcen-Liste", "Ressourcen" in result or "opendata" in result)
+    check("NABEL-Datensatz: Kein Traceback", "Traceback" not in result)
+    check("NABEL-Datensatz: Ressourcen-Liste", "Ressourcen" in result or "opendata" in result)
 
     # Ungültige ID
     result_invalid = await env_bafu_dataset_detail(
         BafuDatasetDetailInput(dataset_id="gibts-nicht-xyzabc")
     )
-    test("Ungültige ID: Fehlermeldung mit Hilfehinweis", "env_bafu_datasets" in result_invalid)
+    check("Ungültige ID: Fehlermeldung mit Hilfehinweis", "env_bafu_datasets" in result_invalid)
 
 
 # --- Main ---------------------------------------------------------------------
