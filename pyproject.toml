@@ -43,6 +43,7 @@ otel = [
 ]
 
 [project.urls]
+"mcp-name" = "io.github.malkreide/swiss-environment-mcp"
 Homepage = "https://github.com/malkreide/swiss-environment-mcp"
 Repository = "https://github.com/malkreide/swiss-environment-mcp"
 
