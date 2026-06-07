@@ -353,3 +353,5 @@ Hayal Oezkan · [github.com/malkreide](https://github.com/malkreide)
 → `zurich-opendata-mcp` (OSTLUFT, local) + `swiss-environment-mcp` (NABEL, national)
 
 - **Portfolio:** [Swiss Public Data MCP Portfolio](https://github.com/malkreide)
+
+<!-- mcp-name: io.github.malkreide/swiss-environment-mcp -->
