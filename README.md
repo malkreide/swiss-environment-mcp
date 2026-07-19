@@ -38,6 +38,7 @@ The server covers four thematic clusters: air quality (NABEL), hydrology, natura
 - 🏔️ **Natural hazard bulletin** – SLF/BAFU bulletin in DE/FR/IT/EN, region-specific warnings
 - 🔥 **Wildfire danger** – canton- and region-level fire danger index
 - ❄️ **Snow & avalanches (SLF)** – snow depth, new snow per IMIS station; avalanche danger levels (EAWS)
+- 🦌 **Hunting statistics** – cull & game-loss figures per species, canton and year (federal hunting statistics)
 - 📦 **BAFU open data catalogue** – search and retrieve environmental datasets via CKAN
 - 🔑 **No authentication required** – all data sources are publicly accessible
 - ☁️ **Dual transport** – stdio for Claude Desktop, Streamable HTTP/SSE for cloud deployment
@@ -170,6 +171,13 @@ docker run -p 8000:8000 swiss-environment-mcp
 | `env_snow_current` | Current snow depth (HS) and 24 h new snow (HN_1D) per station, in cm | measurement-api.slf.ch |
 | `env_avalanche_bulletin` | Avalanche danger levels (EAWS 1–5) per warning region, seasonal | aws.slf.ch |
 
+### 🦌 Hunting & Wildlife (2 tools)
+
+| Tool | Description | Data Source |
+|---|---|---|
+| `env_hunting_species` | List the 36 species tracked by the federal hunting statistics (with codes) | jagdstatistik.ch (embedded) |
+| `env_hunting_stats` | Cull / game-loss / population figures per species, canton and year (2015–2024) | jagdstatistik.ch |
+
 ### 📊 Environmental Data Catalogue (2 tools)
 
 | Tool | Description | Data Source |
@@ -229,6 +237,7 @@ docker run -p 8000:8000 swiss-environment-mcp
 | [naturgefahren.ch](https://naturgefahren.ch) | Natural hazard bulletin (SLF/BAFU) | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
 | [SLF data service](https://www.slf.ch/en/services-and-products/slf-data-service/) | Snow depth, new snow (IMIS); avalanche bulletin | SLF (WSL) CC BY 4.0 |
+| [jagdstatistik.ch](https://www.jagdstatistik.ch/de/home) | Federal hunting statistics (cull, game loss, population) | BAFU (licence tbc) |
 | [opendata.swiss](https://opendata.swiss/en/organization/bafu) | BAFU data catalogue (CKAN API) | OGD |
 
 All data: publicly accessible, no authentication required.  
@@ -297,6 +306,7 @@ Scaling/session strategy: [`docs/scaling.md`](docs/scaling.md).
 - **NABEL**: Near-real-time data only; no historical time series via this server.
 - **Natural hazards**: Bulletin availability depends on SLF/BAFU publication schedule.
 - **Wildfire danger**: Regional granularity varies by season and data availability.
+- **Hunting statistics (`env_hunting_stats`)**: The `jagdstatistik.ch` backend is **undocumented** (a content-negotiated web-app endpoint). A schema-guard degrades gracefully if the structure changes. Species/canton/datatype lookups are embedded (harvested 2026-07-19); figures are fetched live for 2015–2024. **Licence is not stated on the source site** — data belongs to BAFU; confirm terms before production use. See [`docs/probe-jagdstatistik.md`](docs/probe-jagdstatistik.md).
 
 ### Responsibility matrix — snow & precipitation (delineation vs. `meteoswiss-mcp`)
 

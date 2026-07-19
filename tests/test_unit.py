@@ -21,6 +21,8 @@ from swiss_environment_mcp.server import (  # noqa: E402
     AvalancheBulletinInput,
     BafuDatasetsInput,
     FloodWarningsInput,
+    HuntingSpeciesInput,
+    HuntingStatsInput,
     HydroCurrentInput,
     HydroStationsInput,
     NabelCurrentInput,
@@ -32,6 +34,8 @@ from swiss_environment_mcp.server import (  # noqa: E402
     env_avalanche_bulletin,
     env_bafu_datasets,
     env_flood_warnings,
+    env_hunting_species,
+    env_hunting_stats,
     env_hydro_current,
     env_hydro_stations,
     env_nabel_current,
@@ -364,7 +368,7 @@ async def test_all_tools_have_use_case_tag():
     from swiss_environment_mcp.server import mcp
 
     tools = await mcp.list_tools()
-    assert len(tools) == 15
+    assert len(tools) == 17
     missing = [t.name for t in tools if "<use_case>" not in (t.description or "")]
     assert not missing, f"Tools ohne <use_case>-Tag: {missing}"
 
@@ -693,3 +697,91 @@ async def test_avalanche_bulletin_winter_danger():
 def test_slf_hosts_allowed():
     api.assert_host_allowed(_SLF_STATIONS_URL)
     api.assert_host_allowed(_SLF_BULLETIN_URL)
+
+
+# --- Jagdstatistik (Phase 3, Inkrement 3) -------------------------------------
+
+_JAGD_URL = "https://www.jagdstatistik.ch/de/statistics"
+
+
+def _jagd_chart(years, series):
+    """Baut eine Jagdstatistik-Antwort (controls → Highcharts-ctrldata)."""
+    return {
+        "controls": {
+            "fi-chart-or-table": {
+                "ctrltype": "bs4chart",
+                "ctrldata": {
+                    "title": {"text": "Testart, 2015 bis 2024"},
+                    "subtitle": {"text": "Abschuss, Zürich"},
+                    "xAxis": {"categories": years},
+                    "series": [{"name": n, "data": [[v] for v in vals]} for n, vals in series],
+                },
+            }
+        }
+    }
+
+
+async def test_hunting_species_local():
+    """env_hunting_species ist rein lokal (kein Netzwerk) und listet alle Arten."""
+    out = await env_hunting_species(HuntingSpeciesInput())
+    assert "Reh" in out and "Rothirsch" in out
+    assert "36 Arten" in out
+
+
+@respx.mock
+async def test_hunting_stats_happy():
+    respx.get(_JAGD_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_jagd_chart(["2015", "2016"], [("Kitz", [10, 20]), ("Bock", [5, 7])]),
+        )
+    )
+    out = await env_hunting_stats(
+        HuntingStatsInput(species="Reh", canton="ZH", data_type="abschuss")
+    )
+    assert "Reh" in out and "Abschuss" in out
+    assert "15" in out and "27" in out  # Totals je Jahr (10+5, 20+7)
+
+
+@respx.mock
+async def test_hunting_stats_species_by_code():
+    respx.get(_JAGD_URL).mock(
+        return_value=httpx.Response(200, json=_jagd_chart(["2015"], [("Total", [42])]))
+    )
+    out = await env_hunting_stats(HuntingStatsInput(species="1", canton="GR", data_type="fallwild"))
+    assert "Rothirsch" in out and "42" in out
+
+
+async def test_hunting_stats_unknown_species():
+    out = await env_hunting_stats(HuntingStatsInput(species="Einhorn", canton="CH"))
+    assert "nicht erkannt" in out
+
+
+@respx.mock
+async def test_hunting_stats_schema_guard():
+    """Fehlt das erwartete Chart-Control, greift die Graceful Degradation."""
+    respx.get(_JAGD_URL).mock(
+        return_value=httpx.Response(
+            200, json={"controls": {"ja-news": {"ctrltype": "bs4messages"}}}
+        )
+    )
+    out = await env_hunting_stats(HuntingStatsInput(species="Reh", canton="ZH"))
+    assert "nicht ausgelesen" in out
+
+
+@respx.mock
+async def test_hunting_stats_retry_then_success(monkeypatch):
+    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    route = respx.get(_JAGD_URL).mock(
+        side_effect=[
+            httpx.Response(503),
+            httpx.Response(200, json=_jagd_chart(["2015"], [("Total", [99])])),
+        ]
+    )
+    out = await env_hunting_stats(HuntingStatsInput(species="Reh", canton="ZH"))
+    assert route.call_count == 2
+    assert "99" in out
+
+
+def test_jagd_host_allowed():
+    api.assert_host_allowed(_JAGD_URL)

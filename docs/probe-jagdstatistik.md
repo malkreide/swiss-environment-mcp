@@ -123,3 +123,38 @@ und fragil ist, wird **nicht** direkt live pro Tool-Call abgefragt. Stattdessen:
 - Vollständige `sp`-Codeliste (Tierarten-Baum) und `ar`-Codeliste extrahieren und
   als statische Lookup-Tabellen ablegen.
 - Semantik `dt=3 Aussetzung` (Wiederansiedlung) dokumentieren.
+
+---
+
+## 7. Architektur-Entscheid (Phase 3, Implementierung 2026-07-19)
+
+**Umgesetzt: Live-Wrapper mit eingebetteten Lookups + Schema-Guard** — eine
+**bewusste Abweichung** von der ursprünglichen Dump-first-Empfehlung (Abschnitt 5).
+
+**Begründung:**
+- Der Ziel-Runtime ist ein **ephemerer Container** (Cloud/stdio) ohne persistenten
+  Datenträger — ein lokal gecachtes Bulk-Dump überlebt einen Neustart nicht und
+  brächte gegenüber dem Live-Abruf keinen Robustheitsgewinn.
+- Die Payload pro Abfrage ist **klein** (eine Art × Kanton × Datentyp, ~10 Jahre)
+  und der Endpoint antwortet zuverlässig < 1 s.
+- Die **stabilen Dimensionen** (36 Tierarten, 27 Kantone, Datentypen) sind als
+  statische Lookups **eingebettet** (`JAGD_SPECIES`/`JAGD_CANTONS`/`JAGD_DATATYPES`,
+  Stand 2026-07-19) — das ist der «Dump-Anteil». Nur die **volatilen Zahlen**
+  werden live geholt.
+
+**Fragilität abgesichert (statt durch Dump):**
+- **Schema-Guard** in `fetch_jagd_statistics`: fehlt `controls.fi-chart-or-table.
+  ctrldata`, liefert die Funktion `found=False` und das Tool degradiert sauber
+  («unerwartete Datenstruktur»), statt einen Stacktrace zu werfen.
+- **Retry** (429/5xx, Timeout) mit exponentiellem Backoff über `_get_json_retry`.
+- Pflicht-Header `X-Requested-With: XMLHttpRequest` zentral in
+  `JAGD_AJAX_HEADERS`.
+
+**Verifizierte Parameter-Korrektur gegenüber Abschnitt 2:**
+Der Datentyp-Parameter ist **`th`** (nicht `dt`); erst mit `th` greift auch der
+Kanton-Filter `ar`. Tierart-Codes sind klein (Reh=`2`, Rothirsch=`1`). Der
+Jahresbereich-Parameter (`yr`) verhält sich unzuverlässig und wird **nicht**
+exponiert — die Tools liefern die volle Reihe (2015–2024).
+
+**Bleibt offen:** Lizenz schriftlich bestätigen (BAFU-Terms/OGD) vor einem
+produktiven Release — in den READMEs unter «Known Limitations» vermerkt.

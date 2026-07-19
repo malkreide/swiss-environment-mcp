@@ -1,5 +1,5 @@
 {
-  "tool_count": 15,
+  "tool_count": 17,
   "tool_names": [
     "env_air_limits_check",
     "env_avalanche_bulletin",
@@ -8,6 +8,8 @@
     "env_flood_warnings",
     "env_hazard_overview",
     "env_hazard_regions",
+    "env_hunting_species",
+    "env_hunting_stats",
     "env_hydro_current",
     "env_hydro_history",
     "env_hydro_stations",
@@ -17,5 +19,5 @@
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "6d54979d1d97322b4bb909bb32e0be022f8732ac87a4d33eaa28d45b96d066f0"
+  "sha256": "17399db16011b41fcdc83f4df537e3b9c4af4044614eb59b35dc446e11da16cf"
 }
