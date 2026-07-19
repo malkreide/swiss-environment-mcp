@@ -47,12 +47,15 @@ Connections; restart-policy aktiv für sauberes OOM-Verhalten.
 Der SPARQL-/JSON-Retry-Client ist in `sparql_client.py` isoliert: abhängigkeitsarm
 (nur `httpx`/`asyncio`), Egress-Guard als Callback, HTTP-Client vom Aufrufer.
 `api_client.run_sparql` / `_get_json_retry` sind dünne Bindungen. Der Baustein
-stammt ursprünglich aus `fedlex-mcp` (`_execute_sparql`) und ist bewusst so
-geschnitten, dass er ohne Änderung in ein gemeinsames Paket (`swiss-mcp-commons`)
-gehoben werden kann.
+stammt ursprünglich aus `fedlex-mcp` (`_execute_sparql`).
 
-**Offener Folgeschritt (Cross-Repo):** ein installierbares Paket
-`swiss-mcp-commons` publizieren und `fedlex-mcp` + `swiss-environment-mcp` darauf
-umstellen, um die aktuell noch pro Server vorhandene Duplikation endgültig
-aufzulösen. Erfordert eine Paketierungs-Entscheidung (Name, PyPI/OIDC) und berührt
-mehrere Repos — daher als separater, abgestimmter Schritt geplant.
+**Aktueller Stand — Vendoring:** `sparql_client.py` liegt **byte-identisch** in
+`swiss-environment-mcp` und `fedlex-mcp` (beide Server binden dünn daran). Damit
+ist die *Logik* vereinheitlicht (eine kanonische Datei, kopiert). Änderungen sind
+in beiden Kopien synchron zu halten — der Moduldocstring weist darauf hin.
+
+**Offener Folgeschritt (Cross-Repo, echte De-Duplikation):** ein installierbares
+Paket `swiss-mcp-commons` publizieren und beide Server darauf umstellen, sodass es
+nur noch **eine** Quelle gibt. Erfordert eine Paketierungs-Entscheidung (Name,
+PyPI/OIDC Trusted Publisher — Letzteres kann nur der Repo-/PyPI-Owner einrichten)
+und berührt mehrere Repos — daher als separater, abgestimmter Schritt offen.

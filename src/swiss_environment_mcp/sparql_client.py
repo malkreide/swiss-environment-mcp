@@ -1,17 +1,22 @@
 """
-Wiederverwendbarer SPARQL-/JSON-Client mit Retry (Portfolio-Baustein).
+swiss-mcp-commons — wiederverwendbarer SPARQL-/JSON-Client mit Retry.
 
-Dieses Modul kapselt den gemeinsamen Client-Aufbau, der ursprünglich im
-`fedlex-mcp` (`_execute_sparql`) entstand und in mehreren `*-mcp`-Servern
-dupliziert wurde: GET mit `format=application/sparql-results+json`, Retry
+VENDORED COPY (v1.1.0). Dieses Modul wird **byte-identisch** in mehreren
+`*-mcp`-Servern des Portfolios vorgehalten (aktuell `swiss-environment-mcp` und
+`fedlex-mcp`). Kanonische Quelle ist genau diese Datei — Änderungen hier und in
+den Schwesterkopien **synchron** halten, bis ein installierbares Paket
+`swiss-mcp-commons` (PyPI/OIDC Trusted Publisher) existiert; dann ersetzt der
+Paket-Import diese Kopien.
+
+Das Modul kapselt den gemeinsamen Client-Aufbau (ursprünglich aus `fedlex-mcp`,
+`_execute_sparql`): GET mit `format=application/sparql-results+json`, Retry
 ausschliesslich bei transienten Fehlern (429/5xx, Timeout/Netzwerk) mit
 exponentiellem Backoff, deterministische 4xx sofort durchgereicht.
 
 **Bewusst abhängigkeitsarm** (nur `httpx`, `asyncio`) und ohne Bezug auf
-server-spezifische Egress-/Client-Details — der Egress-Guard wird als optionales
-Callback übergeben, der HTTP-Client vom Aufrufer. Damit ist das Modul 1:1 in ein
-gemeinsames Portfolio-Paket (`swiss-mcp-commons`) hebbar; `fedlex-mcp` wäre der
-zweite Konsument (siehe docs/scaling.md, «SPARQL-Client»).
+server-spezifische Egress-/Client-/Logging-Details — der Egress-Guard und das
+Retry-Logging werden als optionale Callbacks übergeben, der HTTP-Client vom
+Aufrufer. Damit bleibt das Modul 1:1 in ein gemeinsames Paket hebbar.
 """
 
 import asyncio
@@ -57,6 +62,7 @@ async def _request_with_retry(
     base_delay: float,
     max_attempts: int,
     egress_check: Callable[[str], None] | None,
+    on_retry: Callable[[int, str, Exception], None] | None,
 ) -> httpx.Response:
     """Gemeinsamer Retry-Kern für GET-Requests (SPARQL + JSON)."""
     if egress_check is not None:
@@ -74,6 +80,8 @@ async def _request_with_retry(
         except (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError) as e:
             last_exc = e
         if attempt < max_attempts - 1:
+            if on_retry is not None:
+                on_retry(attempt + 1, url, last_exc)
             await asyncio.sleep(base_delay * (2**attempt))
     assert last_exc is not None  # pragma: no cover - Schleife garantiert gesetzt
     raise last_exc
@@ -87,6 +95,7 @@ async def get_bindings(
     base_delay: float = DEFAULT_BASE_DELAY,
     max_attempts: int = DEFAULT_MAX_ATTEMPTS,
     egress_check: Callable[[str], None] | None = None,
+    on_retry: Callable[[int, str, Exception], None] | None = None,
 ) -> list[dict[str, Any]]:
     """Führt eine SPARQL-Abfrage aus und liefert die Result-Bindings."""
     params = {"query": query, "format": "application/sparql-results+json"}
@@ -100,6 +109,7 @@ async def get_bindings(
         base_delay=base_delay,
         max_attempts=max_attempts,
         egress_check=egress_check,
+        on_retry=on_retry,
     )
     return response.json().get("results", {}).get("bindings", [])
 
@@ -113,6 +123,7 @@ async def get_json(
     base_delay: float = DEFAULT_BASE_DELAY,
     max_attempts: int = DEFAULT_MAX_ATTEMPTS,
     egress_check: Callable[[str], None] | None = None,
+    on_retry: Callable[[int, str, Exception], None] | None = None,
 ) -> Any:
     """GET-JSON mit derselben Retry-Semantik wie `get_bindings`."""
     response = await _request_with_retry(
@@ -124,5 +135,6 @@ async def get_json(
         base_delay=base_delay,
         max_attempts=max_attempts,
         egress_check=egress_check,
+        on_retry=on_retry,
     )
     return response.json()
