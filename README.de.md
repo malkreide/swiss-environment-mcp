@@ -288,6 +288,36 @@ Skalierungs-/Session-Strategie: [`docs/scaling.md`](docs/scaling.md).
 - **Naturgefahren**: Bulletins hängen vom Publikationsrhythmus von SLF/BAFU ab.
 - **Waldbrandgefahr**: Regionale Granularität variiert je nach Saison und Datenverfügbarkeit.
 
+### Zuständigkeitsmatrix — Schnee & Niederschlag (Abgrenzung zu `meteoswiss-mcp`)
+
+Damit sich **Schnee- und Niederschlagsdaten** im Portfolio nicht duplizieren, sind
+die Zuständigkeiten wie folgt aufgeteilt. `meteoswiss-mcp` verantwortet den
+atmosphärischen Niederschlag und das Wetter; `swiss-environment-mcp` (SLF-Domäne)
+verantwortet Schnee am Boden und Lawinengefahr.
+
+| Grösse | swiss-environment-mcp (BAFU / SLF) | meteoswiss-mcp (MeteoSchweiz) |
+|---|---|---|
+| Schneehöhe am Boden (`HS`) | ✅ SLF IMIS / Beobachtungsfeld ¹ | ❌ |
+| Neuschnee 24 h (`HN_1D`) | ✅ SLF ¹ | ❌ |
+| Lawinenwarnstufe | ✅ SLF-Lawinenbulletin ¹ | ❌ |
+| Schneefall als aktuelle Wetterlage | ❌ | ✅ `meteo_current` / `meteo_forecast` (Wettercode) |
+| Niederschlagsmenge (mm): Messnetz, Prognose, Klimanormwerte | ❌ | ✅ `meteo_current` / `meteo_forecast` / `meteo_climate_normals` |
+| Niederschlag an SLF-IMIS-Bergstationen | ✅ nur als Schneedecken-Kontext, **kein eigenes Niederschlags-Tool** | (MeteoSchweiz-Messnetz) |
+| Wetterwarnungen (Sturm, Gewitter, Hitze) | ❌ | ✅ `meteo_warnings` |
+| Naturgefahren-Warnungen (Hochwasser, Lawine, Waldbrand) | ✅ `env_flood_warnings`, `env_hazard_*`, `env_wildfire_danger` | ❌ |
+
+**Regel:** Schnee **am Boden** und **Lawinengefahr** gehören zu
+`swiss-environment-mcp` (SLF); **atmosphärischer Niederschlag** (Regen/Schneefall
+als mm) sowie Wetter, Prognose, Warnungen und Klimanormwerte gehören zu
+`meteoswiss-mcp`. Der IMIS-Niederschlagssensor des SLF dient nur als Kontext zur
+Schneedecke und wird nie als Niederschlags-Tool exponiert — damit keine
+Duplikation mit MeteoSchweiz.
+
+¹ SLF-/Schnee-Tools sind in Vorbereitung (Phase-1-Live-Probe abgeschlossen am
+2026-07-19, siehe [`docs/probe-slf.md`](docs/probe-slf.md) und
+[`docs/tool-inventory.md`](docs/tool-inventory.md)); die Abgrenzung wird bereits
+jetzt fixiert, damit die beiden Server bei der Umsetzung nicht kollidieren.
+
 ---
 
 ## Tests
