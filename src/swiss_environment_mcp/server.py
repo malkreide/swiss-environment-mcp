@@ -1269,61 +1269,56 @@ async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = Non
     Ermöglicht zeitliche Analysen von Wasserstand, Abfluss und Temperatur
     über bis zu 30 Tage. Ideal für Trendanalysen und Extremereignis-Recherche.
 
-    <use_case>Trend- oder Extremereignis-Analyse über bis zu 30 Tage.</use_case>
-    <important_notes>Liefert Datenlinks + CSV-Vorschau, keine vollständige
-    Zeitreihe inline.</important_notes>
+    <use_case>Aktuellsten Messwert einer Station holen und den Zugang zu echten
+    historischen Zeitreihen (Tages-/Langzeitmittel) aufzeigen.</use_case>
+    <important_notes>LINDAS liefert nur den aktuellen Wert (keine Zeitreihe).
+    Historische Tages-/Langzeitmittel sind NICHT frei per API verfügbar und
+    müssen bei der BAFU-Abfragezentrale bezogen werden.</important_notes>
 
     Args:
         params (HydroHistoryInput):
             - station_id: BAFU-Stationsnummer
-            - parameter: 'Abfluss', 'Pegel' oder 'Temperatur'
-            - days: Anzahl Tage (1–30)
+            - parameter: 'Abfluss', 'Pegel' oder 'Temperatur' (Kontext)
+            - days: Anzahl Tage (Kontext)
 
     Returns:
-        str: Link zu historischen Daten und Hinweise zum Datenzugang.
+        str: Aktuellster Messwert (LINDAS) + Bezugsweg für historische Reihen.
     """
+    # BUG-01: Der frühere CSV-Endpoint (hydrodaten.admin.ch/.../Hydrological_Data.csv)
+    # ist stillgelegt (404). LINDAS liefert nur den aktuellen Wert; echte
+    # historische Zeitreihen sind order-basiert (BAFU-Abfragezentrale).
+    latest = None
     try:
-        result = await api.fetch_hydro_station_history(
-            params.station_id, params.parameter, params.days
-        )
-        raw = result.get("raw", "")
+        latest = await api.fetch_hydro_current_lindas(params.station_id)
     except Exception as e:
-        raw = ""
         await _handle_tool_error("env_hydro_history", e, ctx, station_id=params.station_id)
 
-    # Direktlinks für historische Daten
     portal_url = f"https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{params.station_id}"
-    chart_url = f"https://www.hydrodaten.admin.ch/graphs/{params.station_id}/{params.parameter.lower()}_7days.png"
-
     lines = [
-        f"## Historische Hydrodaten: Station {params.station_id}\n",
-        f"- **Parameter:** {params.parameter}",
-        f"- **Zeitraum:** letzte {params.days} Tage",
-        "",
-        "### Datenzugang",
-        f"- **Interaktives Portal:** {portal_url}",
-        f"- **7-Tage-Grafik:** {chart_url}",
-        "- **Langzeitdaten (opendata.swiss):** https://opendata.swiss/de/organization/bafu",
+        f"## Hydrodaten Station {params.station_id} – Historie & Zugang\n",
+        f"- **Angefragter Parameter:** {params.parameter}",
         "",
     ]
 
-    if raw:
-        # Rohdaten kurz zusammenfassen (CSV-Preview)
-        lines_raw = raw.strip().split("\n")
-        preview = lines_raw[:5]
+    if latest and latest.get("found"):
         lines += [
-            f"### Datenvorschau (erste {len(preview)} Zeilen)",
-            "```",
-            *preview,
-            "```",
-            f"\n*Gesamte Daten: {len(lines_raw)} Zeilen*",
+            f"### Aktuellster Messwert ({latest.get('name', '–')}, {latest.get('water') or '–'})",
+            f"- **Stand:** {latest.get('time', '–')}",
+            f"- **Abfluss:** {latest.get('discharge') or '–'} m³/s",
+            f"- **Pegel:** {latest.get('level') or '–'} m ü.M.",
+            f"- **Wassertemperatur:** {latest.get('temperature') or '–'} °C",
+            "",
         ]
 
     lines += [
-        "",
-        "**Tipp für historische Längsschnittanalysen:**",
-        "Die BAFU-Hydrologie-Abteilung stellt Tagesmittelwerte ab 1900 via opendata.swiss als CSV zur Verfügung.",
-        "→ https://opendata.swiss/de/dataset?q=hydrologie+tages",
+        "### Historische Zeitreihen (Tages-/Langzeitmittel)",
+        "> **Nicht frei per API verfügbar.** LINDAS (`env_hydro_current`) liefert nur "
+        "den *aktuellen* Wert. Historische Tagesmittel und langjährige Mittelwerte "
+        "(z.B. für einen Vergleich «Sommer 2024 vs. langjähriges Mittel») müssen bei "
+        "der **BAFU Hydrologischen Abfragezentrale** bezogen werden:",
+        "- **E-Mail:** abfragezentrale@bafu.admin.ch",
+        f"- **Interaktives Portal (Kurzverlauf/Grafik):** {portal_url}",
+        "- **Datenkatalog:** https://opendata.swiss/de/organization/bafu",
     ]
     return "\n".join(lines)
 
@@ -1357,72 +1352,19 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
             - canton: Kantonskürzel zum Filtern
 
     Returns:
-        str: Aktuell aktive Hochwasserwarnungen, gefiltert nach Gefahrenstufe und Kanton.
+        str: Aktuell aktive Hochwasserwarnungen, gefiltert nach Gefahrenstufe.
     """
+    # Datenquelle: LINDAS `dangerLevel` (der frühere REST-Endpoint
+    # hydrodaten.admin.ch/.../warnings.json ist stillgelegt / 404).
+    # LINDAS führt keinen Kanton-Code → der canton-Filter ist hier nicht wirksam.
+    canton_note = (
+        f" (Hinweis: Kantonsfilter '{params.canton}' via LINDAS nicht verfügbar — "
+        "es werden alle Stationen gezeigt)"
+        if params.canton
+        else ""
+    )
     try:
-        data = await api.fetch_hydro_warnings()
-        stations = data if isinstance(data, list) else data.get("stations", [])
-
-        # Filter
-        warnings = []
-        for s in stations:
-            props = s.get("properties", s)
-            level = int(props.get("warning_level", props.get("gefahrenstufe", 1)))
-            canton = str(props.get("canton", props.get("kanton", ""))).upper()
-
-            if level < params.min_level:
-                continue
-            if params.canton and params.canton.upper() != canton:
-                continue
-            warnings.append({**props, "parsed_level": level})
-
-        # Sortieren nach Gefahrenstufe absteigend
-        warnings.sort(key=lambda x: x["parsed_level"], reverse=True)
-
-        if params.response_format == ResponseFormat.JSON:
-            return _envelope_json(
-                source="BAFU Hydrodaten – Hochwasserwarnungen",
-                provenance="https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
-                results=warnings,
-                match_type="none" if not warnings else "exact",
-                note=(
-                    f"Keine aktiven Warnungen (Stufe >= {params.min_level})."
-                    if not warnings
-                    else None
-                ),
-                query={"min_level": params.min_level, "canton": params.canton},
-            )
-
-        if not warnings:
-            return (
-                f"✅ **Keine aktiven Hochwasserwarnungen** "
-                f"(Stufe ≥ {params.min_level}"
-                f"{', Kanton ' + params.canton if params.canton else ''}).\n\n"
-                f"**Aktuelle Übersicht:** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen"
-            )
-
-        lines = [
-            f"## ⚠️ Aktive Hochwasserwarnungen ({len(warnings)} Stationen)\n",
-            f"*Filter: Stufe ≥ {params.min_level}"
-            f"{', Kanton ' + params.canton if params.canton else ''}*\n",
-            "| Station | Gewässer | Kanton | Gefahrenstufe |",
-            "|---------|---------|--------|---------------|",
-        ]
-        for w in warnings:
-            name = w.get("name", "–")
-            water = w.get("water_body_name", w.get("water", "–"))
-            c = w.get("canton", w.get("kanton", "–"))
-            level = w["parsed_level"]
-            level_text = _format_flood_level(level)
-            lines.append(f"| {name} | {water} | {c} | {level_text} |")
-
-        lines += [
-            "",
-            "**Gefahrenstufen:** 1=Keine | 2=Mässig | 3=Erheblich | 4=Gross | 5=Sehr gross",
-            "**Quelle:** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
-        ]
-        return "\n".join(lines)
-
+        warnings = await api.fetch_hydro_warnings_lindas(params.min_level)
     except Exception as e:
         error_msg = await _handle_tool_error(
             "env_flood_warnings", e, ctx, min_level=params.min_level
@@ -1433,6 +1375,44 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
             "- https://www.hydrodaten.admin.ch/de/hochwasserwarnungen\n"
             "- https://www.naturgefahren.ch (Übersichtsseite Naturgefahren)"
         )
+
+    if params.response_format == ResponseFormat.JSON:
+        return _envelope_json(
+            source="BAFU Hydrodaten via LINDAS – Gefahrenstufen",
+            provenance="live_api",
+            results=warnings,
+            match_type="none" if not warnings else "exact",
+            note=(
+                f"Keine aktiven Warnungen (Stufe ≥ {params.min_level})."
+                if not warnings
+                else (canton_note.strip() or None)
+            ),
+            query={"min_level": params.min_level, "canton": params.canton},
+        )
+
+    if not warnings:
+        return (
+            f"✅ **Keine aktiven Hochwasserwarnungen** (Stufe ≥ {params.min_level}).\n\n"
+            f"*Quelle: BAFU via LINDAS.*{canton_note}\n\n"
+            "**Aktuelle Übersicht:** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen"
+        )
+
+    lines = [
+        f"## ⚠️ Aktive Hochwasserwarnungen ({len(warnings)} Stationen)\n",
+        f"*Filter: Stufe ≥ {params.min_level} | Quelle: BAFU via LINDAS*{canton_note}\n",
+        "| Station | Gewässer | Gefahrenstufe |",
+        "|---------|---------|---------------|",
+    ]
+    for w in warnings:
+        lines.append(
+            f"| {w['name']} | {w['water'] or '–'} | {_format_flood_level(w['danger_level'])} |"
+        )
+    lines += [
+        "",
+        "**Gefahrenstufen:** 1=Keine | 2=Mässig | 3=Erheblich | 4=Gross | 5=Sehr gross",
+        "**Quelle:** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
+    ]
+    return "\n".join(lines)
 
 
 # --- TOOLS: NATURGEFAHREN -----------------------------------------------------
@@ -1994,7 +1974,7 @@ async def env_avalanche_bulletin(params: AvalancheBulletinInput, ctx: Context | 
 
 # --- TOOLS: JAGD & WILDTIERE / Eidg. Jagdstatistik ----------------------------
 
-_JAGD_ATTRIBUTION = "BAFU – Eidg. Jagdstatistik (jagdstatistik.ch)"
+_JAGD_ATTRIBUTION = "BAFU – Eidg. Jagdstatistik (jagdstatistik.ch), Quellenangabe erforderlich"
 
 
 @mcp.tool(

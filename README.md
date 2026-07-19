@@ -237,7 +237,7 @@ docker run -p 8000:8000 swiss-environment-mcp
 | [naturgefahren.ch](https://naturgefahren.ch) | Natural hazard bulletin (SLF/BAFU) | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
 | [SLF data service](https://www.slf.ch/en/services-and-products/slf-data-service/) | Snow depth, new snow (IMIS); avalanche bulletin | SLF (WSL) CC BY 4.0 |
-| [jagdstatistik.ch](https://www.jagdstatistik.ch/de/home) | Federal hunting statistics (cull, game loss, population) | BAFU (licence tbc) |
+| [jagdstatistik.ch](https://www.jagdstatistik.ch/de/home) | Federal hunting statistics (cull, game loss, population) | BAFU — source attribution required (no explicit licence published) |
 | [opendata.swiss](https://opendata.swiss/en/organization/bafu) | BAFU data catalogue (CKAN API) | OGD |
 
 All data: publicly accessible, no authentication required.  
@@ -301,12 +301,13 @@ Scaling/session strategy: [`docs/scaling.md`](docs/scaling.md).
 
 ## Known Limitations
 
-- **Hydrology via LINDAS**: `env_hydro_current` and `env_hydro_stations` query the BAFU LINDAS SPARQL endpoint first (typed live values: level, discharge, water temperature, danger level) and fall back to the `hydrodaten.admin.ch` REST path on error. LINDAS holds **current values only** (one observation per station) — it is **not** a historical time series. Long-term means / past periods (e.g. summer 2024) come from `env_hydro_history` / opendata.swiss, not LINDAS. See [`docs/probe-lindas-hydro.md`](docs/probe-lindas-hydro.md).
-- **`env_hydro_history`**: The historical hourly data endpoint is currently returning 404 errors from hydrodaten.admin.ch (BUG-01 – under investigation). The tool will return download links as a fallback.
+- **Hydrology via LINDAS**: `env_hydro_current`, `env_hydro_stations` and `env_flood_warnings` query the BAFU LINDAS SPARQL endpoint (typed live values: level, discharge, water temperature, danger level). LINDAS holds **current values only** (one observation per station) — it is **not** a historical time series. See [`docs/probe-lindas-hydro.md`](docs/probe-lindas-hydro.md).
+- **Historical hydrology / `env_hydro_history` (BUG-01 resolved)**: the old `hydrodaten.admin.ch/lhg/az/*` REST endpoints (hourly CSV, `warnings.json`, station JSON) are **decommissioned (404)**. `env_flood_warnings` now uses LINDAS `dangerLevel` instead. Real historical time series (daily / long-term means — e.g. *summer 2024 vs. long-term average*) are **not freely available via API**; they must be ordered from the **BAFU Hydrological Enquiry Service** (abfragezentrale@bafu.admin.ch). `env_hydro_history` returns the latest LINDAS value plus this access path.
+- **Flood warnings**: `env_flood_warnings` reads LINDAS `dangerLevel`; a canton filter is not available there (LINDAS carries no canton code), so it is reported but not applied.
 - **NABEL**: Near-real-time data only; no historical time series via this server.
 - **Natural hazards**: Bulletin availability depends on SLF/BAFU publication schedule.
 - **Wildfire danger**: Regional granularity varies by season and data availability.
-- **Hunting statistics (`env_hunting_stats`)**: The `jagdstatistik.ch` backend is **undocumented** (a content-negotiated web-app endpoint). A schema-guard degrades gracefully if the structure changes. Species/canton/datatype lookups are embedded (harvested 2026-07-19); figures are fetched live for 2015–2024. **Licence is not stated on the source site** — data belongs to BAFU; confirm terms before production use. See [`docs/probe-jagdstatistik.md`](docs/probe-jagdstatistik.md).
+- **Hunting statistics (`env_hunting_stats`)**: The `jagdstatistik.ch` backend is **undocumented** (a content-negotiated web-app endpoint). A schema-guard degrades gracefully if the structure changes. Species/canton/datatype lookups are embedded (harvested 2026-07-19); figures are fetched live for 2015–2024. **Licence (researched 2026-07-19):** the data is owned by **BAFU** (compiled from cantonal offices; site tech by Wildtier Schweiz) and is **not** published as a licensed dataset on opendata.swiss; **no explicit licence is stated on the source**. Responses therefore require source attribution to BAFU; formal licence confirmation from BAFU is still pending. See [`docs/probe-jagdstatistik.md`](docs/probe-jagdstatistik.md).
 
 ### Responsibility matrix — snow & precipitation (delineation vs. `meteoswiss-mcp`)
 
