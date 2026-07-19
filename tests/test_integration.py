@@ -196,6 +196,21 @@ async def test_slf_snow() -> None:
     check("SLF: Bulletin ist FeatureCollection", bulletin.get("type") == "FeatureCollection")
 
 
+async def test_hunting_stats() -> None:
+    print("\n[Jagd] Eidg. Jagdstatistik — Rothirsch Abschuss Graubünden")
+
+    if SKIP_LIVE:
+        print("  ⏭️  Live-Test übersprungen")
+        return
+
+    from swiss_environment_mcp import api_client as api
+
+    data = await api.fetch_jagd_statistics("1", "1", "GR")  # Rothirsch, Abschuss, GR
+    check("Jagd: Chart-Daten gefunden (Schema-Guard)", data.get("found") is True)
+    check("Jagd: Jahre vorhanden", len(data.get("years", [])) > 0)
+    check("Jagd: Serien mit Werten", len(data.get("series", [])) > 0)
+
+
 async def test_hydro_history() -> None:
     print("\n[Wasser] Historische Daten")
 
@@ -317,6 +332,7 @@ async def main() -> None:
     await test_hydro_history()
     await test_hydro_current_lindas()
     await test_slf_snow()
+    await test_hunting_stats()
     await test_flood_warnings()
     await test_hazard_overview()
     await test_hazard_regions()

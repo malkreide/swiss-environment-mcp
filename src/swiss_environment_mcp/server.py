@@ -2,12 +2,13 @@
 Swiss Environment MCP Server
 
 MCP-Server für Schweizer Umweltdaten des BAFU (Bundesamt für Umwelt) und SLF.
-Bietet 15 Tools in 5 thematischen Clustern:
+Bietet 17 Tools in 6 thematischen Clustern:
 
   Luft (3):        env_nabel_stations, env_nabel_current, env_air_limits_check
   Wasser (4):      env_hydro_stations, env_hydro_current, env_hydro_history, env_flood_warnings
   Naturgefahren (3): env_hazard_overview, env_hazard_regions, env_wildfire_danger
   Schnee/SLF (3):  env_snow_stations, env_snow_current, env_avalanche_bulletin
+  Jagd (2):        env_hunting_species, env_hunting_stats
   Umweltdaten (2): env_bafu_datasets, env_bafu_dataset_detail
 
 Datenquellen:
@@ -17,6 +18,7 @@ Datenquellen:
   - naturgefahren.ch (Naturgefahren-Bulletin SLF/BAFU)
   - waldbrandgefahr.ch (Waldbrandgefahren-Index)
   - SLF-Datenservice (Schnee/Lawinen: measurement-api.slf.ch, aws.slf.ch)
+  - jagdstatistik.ch (Eidg. Jagdstatistik, BAFU)
   - opendata.swiss CKAN (BAFU-Datenkatalog)
 
 Alle Daten: öffentlich, keine Authentifizierung erforderlich.
@@ -186,6 +188,104 @@ _AVALANCHE_WORD_TO_LEVEL: dict[str, int] = {
     "very_high": 5,
     "very high": 5,
 }
+
+# --- Jagdstatistik-Lookups (statisch, aus Live-Probe 2026-07-19 geharvestet) ---
+# Stabile Dimensionen werden eingebettet; die volatilen Zahlen live abgefragt
+# (siehe docs/probe-jagdstatistik.md, «Architektur-Entscheid»).
+
+# Datentyp `th`
+JAGD_DATATYPES: dict[str, str] = {
+    "abschuss": "1",
+    "bestand": "2",
+    "aussetzung": "3",
+    "fallwild": "4",
+}
+
+# Kanton `ar` (CH = ganze Schweiz + 26 Kantone)
+JAGD_CANTONS: dict[str, str] = {
+    "CH": "Ganze Schweiz",
+    "AG": "Aargau",
+    "AR": "Appenzell A.Rh.",
+    "AI": "Appenzell I.Rh.",
+    "BS": "Basel Stadt",
+    "BL": "Baselland",
+    "BE": "Bern",
+    "FR": "Freiburg",
+    "GE": "Genf",
+    "GL": "Glarus",
+    "GR": "Graubünden",
+    "JU": "Jura",
+    "LU": "Luzern",
+    "NE": "Neuenburg",
+    "NW": "Nidwalden",
+    "OW": "Obwalden",
+    "SH": "Schaffhausen",
+    "SZ": "Schwyz",
+    "SO": "Solothurn",
+    "SG": "St. Gallen",
+    "TI": "Tessin",
+    "TG": "Thurgau",
+    "UR": "Uri",
+    "VD": "Waadt",
+    "VS": "Wallis",
+    "ZG": "Zug",
+    "ZH": "Zürich",
+}
+
+# Tierart `sp`-Code → Name (36 Arten)
+JAGD_SPECIES: dict[str, str] = {
+    "2": "Reh",
+    "1": "Rothirsch",
+    "3": "Gämse",
+    "7": "Wildschwein",
+    "4": "Steinbock",
+    "8": "Mufflon",
+    "5": "Sikahirsch",
+    "6": "Damhirsch",
+    "401": "Jagdbare Huftiere",
+    "15": "Rotfuchs",
+    "16": "Dachs",
+    "18": "Baummarder",
+    "17": "Steinmarder",
+    "28": "Bär",
+    "21": "Fischotter",
+    "29": "Goldschakal",
+    "20": "Hermelin / Mauswiesel",
+    "19": "Iltis",
+    "26": "Mauswiesel",
+    "22": "Luchs",
+    "23": "Wildkatze",
+    "27": "Wolf",
+    "50": "Marderhund",
+    "51": "Waschbär",
+    "402": "Raubtiere",
+    "30": "Feldhase",
+    "31": "Schneehase",
+    "32": "Wildkaninchen",
+    "33": "Murmeltier",
+    "55": "Biber",
+    "34": "Eichhörnchen",
+    "52": "Bisamratte",
+    "53": "Nutria",
+    "37": "Baumwollschwanzkaninchen",
+    "35": "Grauhörnchen",
+    "36": "Streifenhörnchen",
+}
+
+
+def _resolve_species(value: str) -> str | None:
+    """Löst eine Tierart-Eingabe (Code oder Name) zu einem `sp`-Code auf."""
+    v = value.strip()
+    if v in JAGD_SPECIES:
+        return v
+    low = v.lower()
+    for code, name in JAGD_SPECIES.items():
+        if name.lower() == low:
+            return code
+    for code, name in JAGD_SPECIES.items():  # Teilstring-Fallback
+        if low and low in name.lower():
+            return code
+    return None
 
 
 # --- Server-Initialisierung ---------------------------------------------------
@@ -485,6 +585,46 @@ class AvalancheBulletinInput(BaseModel):
         description="Regionsname/-code zum Filtern (Teilstring) – leer = alle Warnregionen",
         max_length=60,
     )
+
+
+class HuntingSpeciesInput(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
+
+
+class HuntingStatsInput(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    species: str = Field(
+        ...,
+        description="Tierart als Name oder sp-Code (z.B. 'Reh', 'Rothirsch', '2')",
+        min_length=1,
+        max_length=40,
+        pattern=r"^[A-Za-zÀ-ÿ0-9 /]{1,40}$",  # Whitelist (SEC-018)
+    )
+    canton: str = Field(
+        default="CH",
+        description="Kantonskürzel oder 'CH' für die ganze Schweiz (z.B. 'GR', 'ZH')",
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",  # Whitelist (SEC-018)
+        strict=True,
+    )
+    data_type: str = Field(
+        default="abschuss",
+        description="Datentyp: 'abschuss', 'bestand', 'aussetzung', 'fallwild'",
+        max_length=12,
+        pattern=r"^[a-z]{5,12}$",  # Whitelist (SEC-018)
+    )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
+
+    @field_validator("canton")
+    @classmethod
+    def _upper_canton(cls, v: str) -> str:
+        return v.upper()
+
+    @field_validator("data_type")
+    @classmethod
+    def _lower_dt(cls, v: str) -> str:
+        return v.lower()
 
 
 class BafuDatasetsInput(BaseModel):
@@ -1849,6 +1989,199 @@ async def env_avalanche_bulletin(params: AvalancheBulletinInput, ctx: Context | 
     lines.append(
         "\n**Vollständiges Bulletin:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/"
     )
+    return "\n".join(lines)
+
+
+# --- TOOLS: JAGD & WILDTIERE / Eidg. Jagdstatistik ----------------------------
+
+_JAGD_ATTRIBUTION = "BAFU – Eidg. Jagdstatistik (jagdstatistik.ch)"
+
+
+@mcp.tool(
+    name="env_hunting_species",
+    annotations={
+        "title": "Jagdbare Tierarten auflisten",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+)
+@trace_tool
+async def env_hunting_species(params: HuntingSpeciesInput, ctx: Context | None = None) -> str:
+    """
+    Listet die in der Eidg. Jagdstatistik erfassten Tierarten mit ihren Codes auf.
+
+    Die Liste ist statisch eingebettet (aus der Live-Probe) und dient als
+    Nachschlagewerk für `env_hunting_stats` (Parameter `species`).
+
+    <use_case>Verfügbare Tierarten + Codes nachschlagen, bevor mit
+    `env_hunting_stats` Abschuss-/Fallwildzahlen abgefragt werden.</use_case>
+    <important_notes>Rein lokal (kein Netzwerk). 36 Arten (Huftiere, Raubtiere,
+    weitere Säuger).</important_notes>
+
+    Args:
+        params (HuntingSpeciesInput):
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Liste der Tierarten mit sp-Code und Name.
+    """
+    species = [{"code": c, "name": n} for c, n in sorted(JAGD_SPECIES.items(), key=lambda x: x[1])]
+
+    if params.response_format == ResponseFormat.JSON:
+        return _envelope_json(
+            source=_JAGD_ATTRIBUTION,
+            provenance="cached",
+            results=species,
+            match_type="exact",
+        )
+
+    lines = [
+        f"## Jagdbare Tierarten (Eidg. Jagdstatistik) – {len(species)} Arten\n",
+        f"*Quelle: {_JAGD_ATTRIBUTION}*\n",
+        "| Name | Code | | Name | Code |",
+        "|------|------|---|------|------|",
+    ]
+    half = (len(species) + 1) // 2
+    left, right = species[:half], species[half:]
+    for i in range(half):
+        li = left[i]
+        ri = right[i] if i < len(right) else {"name": "", "code": ""}
+        lines.append(
+            f"| {li['name']} | `{li['code']}` | | {ri['name']} | {('`' + ri['code'] + '`') if ri['code'] else ''} |"
+        )
+    lines.append("\n*Datentypen für `env_hunting_stats`: abschuss, bestand, aussetzung, fallwild.*")
+    return "\n".join(lines)
+
+
+@mcp.tool(
+    name="env_hunting_stats",
+    annotations={
+        "title": "Jagdstatistik: Abschuss/Fallwild je Art & Kanton",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": True,
+    },
+)
+@trace_tool
+async def env_hunting_stats(params: HuntingStatsInput, ctx: Context | None = None) -> str:
+    """
+    Ruft Zeitreihen der Eidg. Jagdstatistik ab: Abschuss-, Bestand-, Aussetzungs-
+    oder Fallwildzahlen je Tierart und Kanton (Jahre 2015–2024).
+
+    Datenherr ist das BAFU. Der zugrundeliegende Endpoint ist undokumentiert
+    (Web-App-Backend); ein Schema-Guard fängt Strukturänderungen ab.
+
+    <use_case>Entwicklung der Abschuss- oder Fallwildzahlen einer Tierart in
+    einem Kanton über die Zeit.</use_case>
+    <important_notes>Tierart via Name oder Code (siehe `env_hunting_species`).
+    Werte je Alters-/Geschlechtsklasse; Total = Summe. Jagdjahr meist 1. Apr.–31. März.</important_notes>
+
+    Args:
+        params (HuntingStatsInput):
+            - species: Tierart (Name oder sp-Code)
+            - canton: Kantonskürzel oder 'CH'
+            - data_type: 'abschuss', 'bestand', 'aussetzung', 'fallwild'
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Jahreswerte (Total + Klassen) oder aktionabler Hinweis bei Problemen.
+    """
+    sp_code = _resolve_species(params.species)
+    if sp_code is None:
+        return (
+            f"Fehler: Tierart '{params.species}' nicht erkannt.\n"
+            "Tipp: `env_hunting_species` für die vollständige Liste aufrufen."
+        )
+    if params.canton not in JAGD_CANTONS:
+        known = ", ".join(sorted(JAGD_CANTONS))
+        return f"Fehler: Kanton '{params.canton}' unbekannt. Erlaubt: {known}"
+    th = JAGD_DATATYPES.get(params.data_type)
+    if th is None:
+        return (
+            f"Fehler: Datentyp '{params.data_type}' unbekannt. "
+            f"Erlaubt: {', '.join(JAGD_DATATYPES)}."
+        )
+
+    try:
+        data = await api.fetch_jagd_statistics(sp_code, th, params.canton)
+    except Exception as e:
+        error_msg = await _handle_tool_error(
+            "env_hunting_stats", e, ctx, species=sp_code, canton=params.canton
+        )
+        return (
+            f"⚠️ Jagdstatistik nicht abrufbar: {error_msg}\n\n"
+            "**Direktzugang:** https://www.jagdstatistik.ch/de/home\n"
+        )
+
+    # Schema-Guard (Graceful Degradation): Struktur hat sich geändert.
+    if not data.get("found"):
+        return (
+            "⚠️ Die Jagdstatistik-Auswertung konnte nicht ausgelesen werden "
+            "(unerwartete Datenstruktur des Backends).\n\n"
+            "**Direktzugang:** https://www.jagdstatistik.ch/de/home"
+        )
+
+    years = data["years"]
+    series = data["series"]
+    species_name = JAGD_SPECIES[sp_code]
+    canton_name = JAGD_CANTONS[params.canton]
+
+    # Total je Jahr über alle Klassen.
+    totals: list[int | float] = []
+    for i in range(len(years)):
+        total: float = 0
+        for s in series:
+            vals = s["values"]
+            v = vals[i] if i < len(vals) else 0
+            if isinstance(v, (int, float)):
+                total += v
+        totals.append(int(total) if float(total).is_integer() else total)
+
+    if params.response_format == ResponseFormat.JSON:
+        results = [
+            {
+                "jahr": years[i],
+                "total": totals[i],
+                "klassen": {
+                    s["name"]: (s["values"][i] if i < len(s["values"]) else None) for s in series
+                },
+            }
+            for i in range(len(years))
+        ]
+        return _envelope_json(
+            source=_JAGD_ATTRIBUTION,
+            provenance="live_api",
+            results=results,
+            match_type="exact" if results else "none",
+            query={
+                "species": species_name,
+                "canton": params.canton,
+                "data_type": params.data_type,
+            },
+        )
+
+    dt_label = params.data_type.capitalize()
+    lines = [
+        f"## Jagdstatistik: {species_name} – {dt_label} ({canton_name})\n",
+        f"*Zeitraum: {years[0] if years else '–'}–{years[-1] if years else '–'} "
+        f"| Quelle: {_JAGD_ATTRIBUTION}*\n",
+    ]
+    # Klassen als Spalten (max 6), plus Total.
+    shown_classes = series[:6]
+    header = "| Jahr | Total | " + " | ".join(s["name"] for s in shown_classes) + " |"
+    sep = "|------|-------|" + "|".join(["------"] * len(shown_classes)) + "|"
+    lines += [header, sep]
+    for i, yr in enumerate(years):
+        cells = " | ".join(
+            str(s["values"][i]) if i < len(s["values"]) else "–" for s in shown_classes
+        )
+        lines.append(f"| {yr} | **{totals[i]}** | {cells} |")
+    if len(series) > 6:
+        lines.append(f"\n*…und {len(series) - 6} weitere Klassen (JSON-Modus für alle).*")
+    lines.append("\n**Quelle/Details:** https://www.jagdstatistik.ch/de/home")
     return "\n".join(lines)
 
 

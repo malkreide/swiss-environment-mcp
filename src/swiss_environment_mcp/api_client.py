@@ -65,6 +65,12 @@ RETRY_BASE_DELAY = 0.5  # Sekunden; exp. Backoff 0.5s, 1.0s. Tests setzen 0.
 SLF_MEASUREMENT_API = "https://measurement-api.slf.ch/public/api"
 SLF_BULLETIN_API = "https://aws.slf.ch/api/bulletin"
 
+# --- Eidg. Jagdstatistik (BAFU) — content-negotiiertes JSON-Backend ----------
+# Undokumentierter Vertrag: dieselbe Seiten-URL liefert JSON statt HTML, wenn der
+# AJAX-Header gesetzt ist. Fragil (Highcharts-zentriert) → Schema-Guard im Tool.
+JAGD_STATISTICS_URL = "https://www.jagdstatistik.ch/de/statistics"
+JAGD_AJAX_HEADERS = {"X-Requested-With": "XMLHttpRequest", "Accept": "application/json"}
+
 TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 
 # Egress-Allow-List (Code-Layer, Audit SEC-021). Nur diese Hosts dürfen
@@ -80,6 +86,7 @@ ALLOWED_HOSTS: frozenset[str] = frozenset(
         "lindas.admin.ch",
         "measurement-api.slf.ch",
         "aws.slf.ch",
+        "www.jagdstatistik.ch",
     }
 )
 
@@ -501,7 +508,11 @@ async def fetch_nabel_data(
 # --- SLF-Client (Schnee & Lawinen) --------------------------------------------
 
 
-async def _get_json_retry(url: str, params: dict[str, Any] | None = None) -> Any:
+async def _get_json_retry(
+    url: str,
+    params: dict[str, Any] | None = None,
+    headers: dict[str, str] | None = None,
+) -> Any:
     """GET-JSON mit Egress-Guard + Retry bei transienten Fehlern.
 
     Gleiche Retry-Semantik wie `run_sparql` (RETRYABLE_STATUS, Timeout/Netzwerk,
@@ -512,7 +523,7 @@ async def _get_json_retry(url: str, params: dict[str, Any] | None = None) -> Any
     last_exc: Exception | None = None
     for attempt in range(RETRY_MAX_ATTEMPTS):
         try:
-            response = await client.get(url, params=params)
+            response = await client.get(url, params=params, headers=headers)
             response.raise_for_status()
             return response.json()
         except httpx.HTTPStatusError as e:
@@ -557,3 +568,44 @@ async def fetch_slf_avalanche_bulletin(language: str = "de") -> dict[str, Any]:
     lang = language if language in {"de", "fr", "it", "en"} else "de"
     data = await _get_json_retry(f"{SLF_BULLETIN_API}/caaml/{lang}/geojson")
     return data if isinstance(data, dict) else {"type": "FeatureCollection", "features": []}
+
+
+# --- Jagdstatistik-Client -----------------------------------------------------
+
+
+async def fetch_jagd_statistics(species: str, datatype: str, canton: str) -> dict[str, Any]:
+    """Ruft eine Auswertung der Eidg. Jagdstatistik ab (content-negotiiertes JSON).
+
+    Args:
+        species: `sp`-Code der Tierart (z.B. '2' für Reh).
+        datatype: `th`-Code (1=Abschuss, 2=Bestand, 3=Aussetzung, 4=Fallwild).
+        canton: `ar`-Code (Kantonskürzel oder 'CH' für die ganze Schweiz).
+
+    Returns:
+        Normalisiertes Dict mit title/subtitle/years/series oder `found=False`,
+        falls das erwartete Highcharts-Control fehlt (Schema-Guard).
+    """
+    params = {"tt": "0", "sp": species, "th": datatype, "ar": canton}
+    data = await _get_json_retry(JAGD_STATISTICS_URL, params=params, headers=JAGD_AJAX_HEADERS)
+
+    # Schema-Guard: undokumentierter, Highcharts-zentrierter Vertrag (siehe
+    # docs/probe-jagdstatistik.md). Ändert sich die Struktur, greift dieser Pfad.
+    control = (data or {}).get("controls", {}).get("fi-chart-or-table", {})
+    cd = control.get("ctrldata")
+    if not isinstance(cd, dict) or "series" not in cd:
+        return {"found": False}
+
+    years = cd.get("xAxis", {}).get("categories", [])
+    series: list[dict[str, Any]] = []
+    for s in cd.get("series", []):
+        # Highcharts-Werte kommen als [[v], [v], …] oder [v, v, …] → flach ziehen.
+        values = [v[0] if isinstance(v, list) and v else v for v in s.get("data", [])]
+        series.append({"name": s.get("name", "–"), "values": values})
+
+    return {
+        "found": True,
+        "title": cd.get("title", {}).get("text", ""),
+        "subtitle": cd.get("subtitle", {}).get("text", ""),
+        "years": years,
+        "series": series,
+    }

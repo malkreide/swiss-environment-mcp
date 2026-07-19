@@ -6,6 +6,22 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 ## [Unreleased]
 
 ### Neu / Added
+- **Jagdstatistik-Tools** (Phase 3, Inkrement 3), Cluster «Jagd»:
+  - `env_hunting_species` — 36 Tierarten mit sp-Codes (statisch eingebettet, lokal).
+  - `env_hunting_stats` — Abschuss-/Fallwild-/Bestand-/Aussetzungszahlen je
+    Tierart, Kanton und Jahr (2015–2024) aus dem `jagdstatistik.ch`-Backend.
+  - **Architektur-Entscheid** (Abweichung von Dump-first): Live-Wrapper mit
+    **eingebetteten statischen Lookups** (Tierart/Kanton/Datentyp) + **Schema-Guard**
+    (Graceful Degradation), da der Container ephemer ist und kein persistenter Dump
+    sinnvoll ist. Host `www.jagdstatistik.ch` in der Egress-Allow-List, AJAX-Header
+    für den content-negotiierten JSON-Zugang. Tool-Anzahl 15 → 17.
+
+### Known findings
+- Jagdstatistik-Backend (`/de/statistics`) undokumentiert, Highcharts-zentriert:
+  Datentyp-Param ist `th` (nicht `dt`), erst mit `th` greift der Kanton-Filter `ar`;
+  Werte kommen als `[[v], …]` (verschachtelt). Lizenz auf der Quelle nicht
+  ausgewiesen (BAFU-Terms anzunehmen, vor Release bestätigen).
+
 - **SLF-Schnee- & Lawinen-Tools** (Phase 3, Inkrement 2), Cluster «Schnee/SLF»:
   - `env_snow_stations` — automatische IMIS-Schneemessstationen (Filter Kanton).
   - `env_snow_current` — aktuelle Schneehöhe (HS) & Neuschnee 24 h (HN_1D) in cm,
