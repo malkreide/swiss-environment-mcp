@@ -41,3 +41,18 @@ Session-Neuaufbau.
 Pro Container Memory-/CPU-Limits setzen (Multi-Tenant-Scheduling-Schutz);
 Requests < Limits für Burst-Spielraum; `ulimit -n` ≥ 4096 wegen ausgehender
 Connections; restart-policy aktiv für sauberes OOM-Verhalten.
+
+## SPARQL-Client (Portfolio-Baustein)
+
+Der SPARQL-/JSON-Retry-Client ist in `sparql_client.py` isoliert: abhängigkeitsarm
+(nur `httpx`/`asyncio`), Egress-Guard als Callback, HTTP-Client vom Aufrufer.
+`api_client.run_sparql` / `_get_json_retry` sind dünne Bindungen. Der Baustein
+stammt ursprünglich aus `fedlex-mcp` (`_execute_sparql`) und ist bewusst so
+geschnitten, dass er ohne Änderung in ein gemeinsames Paket (`swiss-mcp-commons`)
+gehoben werden kann.
+
+**Offener Folgeschritt (Cross-Repo):** ein installierbares Paket
+`swiss-mcp-commons` publizieren und `fedlex-mcp` + `swiss-environment-mcp` darauf
+umstellen, um die aktuell noch pro Server vorhandene Duplikation endgültig
+aufzulösen. Erfordert eine Paketierungs-Entscheidung (Name, PyPI/OIDC) und berührt
+mehrere Repos — daher als separater, abgestimmter Schritt geplant.

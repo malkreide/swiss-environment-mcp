@@ -19,13 +19,14 @@ Audit SDK-001). Er wird über startup()/shutdown() im FastMCP-Lifespan
 verwaltet, statt pro Tool-Call neu erzeugt zu werden.
 """
 
-import asyncio
 import ipaddress
 import socket
 from typing import Any
 from urllib.parse import unquote, urlparse
 
 import httpx
+
+from . import sparql_client
 
 # --- Basis-URLs ---------------------------------------------------------------
 
@@ -53,11 +54,11 @@ LINDAS_HYDRO_GRAPH = "https://lindas.admin.ch/foen/hydro"
 _HYDRO_STATION_CLASS = "http://example.com/HydroMeasuringStation"
 _HYDRO_DIM = "https://environment.ld.admin.ch/foen/hydro/dimension/"
 
-# Transiente HTTP-Status → Retry. 4xx (ausser 429) sind deterministisch → sofort
-# durchreichen (Audit-Prinzip; identisch zu fedlex-mcp).
-RETRYABLE_STATUS: frozenset[int] = frozenset({429, 502, 503, 504})
-RETRY_MAX_ATTEMPTS = 3
-RETRY_BASE_DELAY = 0.5  # Sekunden; exp. Backoff 0.5s, 1.0s. Tests setzen 0.
+# Retry-Parameter für den geteilten SPARQL-/JSON-Client (siehe sparql_client).
+# 4xx (ausser 429) sind deterministisch → sofort durchreichen. Diese Werte werden
+# bei jedem Aufruf an sparql_client übergeben (Tests monkeypatchen RETRY_BASE_DELAY).
+RETRY_MAX_ATTEMPTS = sparql_client.DEFAULT_MAX_ATTEMPTS
+RETRY_BASE_DELAY = sparql_client.DEFAULT_BASE_DELAY  # Sekunden. Tests setzen 0.
 
 # --- SLF-Datenservice (WSL) — öffentliche No-Auth-APIs, CC BY 4.0 -------------
 # Schnee (Schneehöhe/Neuschnee) + Lawinenbulletin. Niederschlag bewusst NICHT
@@ -242,58 +243,25 @@ def handle_http_error(e: Exception) -> str:
 # --- LINDAS SPARQL-Client (wiederverwendet aus fedlex-mcp-Pattern) ------------
 
 
-def sparql_escape(value: str) -> str:
-    """Escaped einen String für die sichere Interpolation in ein SPARQL-Literal.
-
-    Defense-in-Depth zusätzlich zur Pydantic-Pattern-Validierung (SEC-018) —
-    verhindert das Ausbrechen aus doppelt-gequoteten SPARQL-Literalen.
-    Übernommen aus fedlex-mcp (`sparql_escape`).
-    """
-    return (
-        value.replace("\\", "\\\\")
-        .replace('"', '\\"')
-        .replace("\n", "\\n")
-        .replace("\r", "\\r")
-        .replace("\t", "\\t")
-    )
-
-
-def _binding_val(binding: dict[str, Any], key: str, default: str = "") -> str:
-    """Extrahiert sicher den String-Wert aus einem SPARQL-Result-Binding."""
-    entry = binding.get(key)
-    return entry.get("value", default) if entry else default
+# SPARQL-Helfer aus dem wiederverwendbaren Modul re-exportiert (Rückwärtskompat.).
+sparql_escape = sparql_client.sparql_escape
+_binding_val = sparql_client.binding_val
 
 
 async def run_sparql(query: str) -> list[dict[str, Any]]:
-    """Führt eine SPARQL-Abfrage gegen den LINDAS-Endpoint aus und liefert die
-    Result-Bindings.
+    """Führt eine SPARQL-Abfrage gegen den LINDAS-Endpoint aus (Bindings).
 
-    Client-Aufbau wiederverwendet vom fedlex-mcp (`_execute_sparql`): GET mit
-    `format=application/sparql-results+json`, Egress-Guard vor jedem Versuch,
-    Retry ausschliesslich bei transienten Fehlern (RETRYABLE_STATUS,
-    Timeout/Netzwerk) mit exponentiellem Backoff. Deterministische Fehler wie
-    HTTP 400 (fehlerhafte Query) werden sofort durchgereicht.
+    Dünne Bindung an den geteilten `sparql_client` (Egress-Guard, Retry,
+    Backoff). `RETRY_BASE_DELAY` wird zur Laufzeit gelesen (Tests monkeypatchen).
     """
-    assert_host_allowed(LINDAS_ENDPOINT)
-    client = get_client()
-    params = {"query": query, "format": "application/sparql-results+json"}
-    headers = {"Accept": "application/sparql-results+json"}
-    last_exc: Exception | None = None
-    for attempt in range(RETRY_MAX_ATTEMPTS):
-        try:
-            response = await client.get(LINDAS_ENDPOINT, params=params, headers=headers)
-            response.raise_for_status()
-            return response.json().get("results", {}).get("bindings", [])
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code not in RETRYABLE_STATUS:
-                raise
-            last_exc = e
-        except (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError) as e:
-            last_exc = e
-        if attempt < RETRY_MAX_ATTEMPTS - 1:
-            await asyncio.sleep(RETRY_BASE_DELAY * (2**attempt))
-    assert last_exc is not None  # pragma: no cover - Schleife garantiert gesetzt
-    raise last_exc
+    return await sparql_client.get_bindings(
+        get_client(),
+        LINDAS_ENDPOINT,
+        query,
+        base_delay=RETRY_BASE_DELAY,
+        max_attempts=RETRY_MAX_ATTEMPTS,
+        egress_check=assert_host_allowed,
+    )
 
 
 async def fetch_hydro_stations_lindas() -> list[dict[str, Any]]:
@@ -327,6 +295,52 @@ WHERE {{
             }
         )
     return stations
+
+
+async def fetch_hydro_warnings_lindas(min_level: int = 2) -> list[dict[str, Any]]:
+    """Ruft aktuelle Hochwasser-/Gefahrenwarnungen via LINDAS-SPARQL ab.
+
+    Ersetzt den stillgelegten REST-Endpoint `hydrodaten.admin.ch/.../warnings.json`
+    (404). Nutzt die `dangerLevel`-Dimension des Hydro-Cubes; `cube.link/Undefined`
+    wird über `isNumeric` herausgefiltert.
+    """
+    query = f"""
+PREFIX s: <http://schema.org/>
+PREFIX hd: <{_HYDRO_DIM}>
+SELECT ?id ?name ?water ?danger ?level ?discharge ?time
+FROM <{LINDAS_HYDRO_GRAPH}>
+WHERE {{
+  ?st a <{_HYDRO_STATION_CLASS}> ;
+      s:identifier ?id ;
+      s:name ?name .
+  OPTIONAL {{
+    ?st s:containedInPlace ?wb .
+    BIND(REPLACE(STR(?wb), ".*/waterbody/", "") AS ?water)
+  }}
+  ?obs hd:station ?st ;
+       hd:dangerLevel ?danger ;
+       hd:measurementTime ?time .
+  OPTIONAL {{ ?obs hd:waterLevel ?level }}
+  OPTIONAL {{ ?obs hd:discharge ?discharge }}
+  FILTER(isNumeric(?danger) && ?danger >= {int(min_level)})
+}}
+"""
+    bindings = await run_sparql(query)
+    warnings: list[dict[str, Any]] = []
+    for b in bindings:
+        warnings.append(
+            {
+                "id": _binding_val(b, "id"),
+                "name": _binding_val(b, "name"),
+                "water": unquote(_binding_val(b, "water")),
+                "danger_level": int(float(_binding_val(b, "danger", "0"))),
+                "level": _binding_val(b, "level") or None,
+                "discharge": _binding_val(b, "discharge") or None,
+                "time": _binding_val(b, "time"),
+            }
+        )
+    warnings.sort(key=lambda w: w["danger_level"], reverse=True)
+    return warnings
 
 
 async def fetch_hydro_current_lindas(station_id: str) -> dict[str, Any]:
@@ -396,26 +410,11 @@ async def fetch_hydro_station_data(station_id: str) -> dict[str, Any]:
     return response.json()
 
 
-async def fetch_hydro_warnings() -> dict[str, Any]:
-    """Ruft aktuelle Hochwasserwarnungen aller Messstationen ab."""
-    response = await _get_json(f"{HYDRO_JSON_BASE}/warnings.json")
-    return response.json()
-
-
-async def fetch_hydro_station_history(
-    station_id: str,
-    parameter: str,
-    days: int = 7,
-) -> dict[str, Any]:
-    """Ruft historische Stundenwerte einer Messstation ab."""
-    params = {
-        "station": station_id,
-        "parameter": parameter,
-        "period": f"P{days}D",
-        "format": "json",
-    }
-    response = await _get_json(f"{HYDRO_BASE}/lhg/az/csv/Hydrological_Data.csv", params=params)
-    return {"raw": response.text, "station": station_id, "days": days}
+# Hinweis: Die früheren REST-Fetcher `fetch_hydro_warnings` (warnings.json) und
+# `fetch_hydro_station_history` (Hydrological_Data.csv) wurden entfernt — beide
+# Endpoints unter hydrodaten.admin.ch/lhg/az/* sind stillgelegt (404). Ersatz:
+# LINDAS (`fetch_hydro_warnings_lindas`) bzw. der Abfragezentrale-Bezugsweg in
+# `env_hydro_history`.
 
 
 # --- opendata.swiss CKAN-Client -----------------------------------------------
@@ -513,29 +512,16 @@ async def _get_json_retry(
     params: dict[str, Any] | None = None,
     headers: dict[str, str] | None = None,
 ) -> Any:
-    """GET-JSON mit Egress-Guard + Retry bei transienten Fehlern.
-
-    Gleiche Retry-Semantik wie `run_sparql` (RETRYABLE_STATUS, Timeout/Netzwerk,
-    exponentielles Backoff); deterministische 4xx werden sofort durchgereicht.
-    """
-    assert_host_allowed(url)
-    client = get_client()
-    last_exc: Exception | None = None
-    for attempt in range(RETRY_MAX_ATTEMPTS):
-        try:
-            response = await client.get(url, params=params, headers=headers)
-            response.raise_for_status()
-            return response.json()
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code not in RETRYABLE_STATUS:
-                raise
-            last_exc = e
-        except (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError) as e:
-            last_exc = e
-        if attempt < RETRY_MAX_ATTEMPTS - 1:
-            await asyncio.sleep(RETRY_BASE_DELAY * (2**attempt))
-    assert last_exc is not None  # pragma: no cover
-    raise last_exc
+    """GET-JSON mit Egress-Guard + Retry (dünne Bindung an sparql_client)."""
+    return await sparql_client.get_json(
+        get_client(),
+        url,
+        params=params,
+        headers=headers,
+        base_delay=RETRY_BASE_DELAY,
+        max_attempts=RETRY_MAX_ATTEMPTS,
+        egress_check=assert_host_allowed,
+    )
 
 
 async def fetch_slf_snow_stations() -> list[dict[str, Any]]:

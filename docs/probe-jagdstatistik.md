@@ -156,5 +156,19 @@ Kanton-Filter `ar`. Tierart-Codes sind klein (Reh=`2`, Rothirsch=`1`). Der
 Jahresbereich-Parameter (`yr`) verhält sich unzuverlässig und wird **nicht**
 exponiert — die Tools liefern die volle Reihe (2015–2024).
 
-**Bleibt offen:** Lizenz schriftlich bestätigen (BAFU-Terms/OGD) vor einem
+### Lizenz-Recherche (2026-07-19)
+Nachgeschlagen im Rahmen der Nacharbeiten:
+- **Datenherr:** BAFU. Laut Impressum stammen die Daten «von spezialisierten
+  kantonalen Stellen»; Programmierung/Applikation durch **Wildtier Schweiz**,
+  Betrieb durch das BAFU.
+- **Keine explizite Lizenz** auf `jagdstatistik.ch` (Impressum enthält keinen
+  Lizenz-/Copyright-/Nutzungshinweis für die Daten).
+- **Nicht als lizenzierter Datensatz auf opendata.swiss** publiziert — dort finden
+  sich unter dem BAFU nur Jagd-*Geodaten* (Jagdbanngebiete), nicht die
+  Abschuss-/Fallwild-*Statistik*.
+- **Folge für den Server:** Jede Antwort trägt die Quellenangabe zum BAFU
+  (`_JAGD_ATTRIBUTION`). Eine formelle Lizenzbestätigung (BAFU-Terms/OGD) kann nur
+  das BAFU selbst geben und bleibt offen (Kontakt: über bafu.admin.ch).
+
+**Bleibt offen:** Formelle Lizenzbestätigung durch das BAFU (BAFU-Terms/OGD) vor einem
 produktiven Release — in den READMEs unter «Known Limitations» vermerkt.

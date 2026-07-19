@@ -133,11 +133,34 @@ async def test_hydro_stations_fallback_on_error():
 
 @respx.mock
 async def test_flood_warnings_none_active():
-    respx.get("https://www.hydrodaten.admin.ch/lhg/az/json/warnings.json").mock(
-        return_value=httpx.Response(200, json={"stations": []})
-    )
+    """Keine Station >= min_level (LINDAS liefert leere Bindings)."""
+    respx.get(_LINDAS_URL).mock(return_value=httpx.Response(200, json=_sparql_bindings([])))
     out = await env_flood_warnings(FloodWarningsInput(min_level=2))
     assert "Keine aktiven Hochwasserwarnungen" in out
+
+
+@respx.mock
+async def test_flood_warnings_active_via_lindas():
+    """Aktive Warnung (dangerLevel 3) wird aus LINDAS gelesen und gezeigt."""
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_sparql_bindings(
+                [
+                    {
+                        "id": "2099",
+                        "name": "Zürich Unterhard",
+                        "water": "Limmat",
+                        "danger": "3",
+                        "level": "399.7",
+                        "time": "t",
+                    },
+                ]
+            ),
+        )
+    )
+    out = await env_flood_warnings(FloodWarningsInput(min_level=2))
+    assert "Zürich Unterhard" in out and "Erheblich" in out
 
 
 # --- Sicherheits-Guard (SSRF / Egress, SEC-004 / SEC-021) ---------------------
@@ -785,3 +808,51 @@ async def test_hunting_stats_retry_then_success(monkeypatch):
 
 def test_jagd_host_allowed():
     api.assert_host_allowed(_JAGD_URL)
+
+
+# --- Wiederverwendbarer sparql_client (Portfolio-Baustein) --------------------
+
+from swiss_environment_mcp import sparql_client as sc  # noqa: E402
+
+_SC_URL = "https://example.test/query"
+
+
+def test_sparql_escape_reused():
+    assert sc.sparql_escape('a"b\\c') == 'a\\"b\\\\c'
+    assert api.sparql_escape is sc.sparql_escape  # api_client re-exportiert
+
+
+@respx.mock
+async def test_sc_get_bindings_happy():
+    respx.get(_SC_URL).mock(return_value=httpx.Response(200, json=_sparql_bindings([{"x": "1"}])))
+    async with httpx.AsyncClient() as c:
+        b = await sc.get_bindings(c, _SC_URL, "SELECT ?x {}")
+    assert sc.binding_val(b[0], "x") == "1"
+
+
+@respx.mock
+async def test_sc_retry_on_503():
+    route = respx.get(_SC_URL).mock(
+        side_effect=[httpx.Response(503), httpx.Response(200, json=_sparql_bindings([]))]
+    )
+    async with httpx.AsyncClient() as c:
+        await sc.get_bindings(c, _SC_URL, "q", base_delay=0)
+    assert route.call_count == 2
+
+
+@respx.mock
+async def test_sc_no_retry_on_400():
+    route = respx.get(_SC_URL).mock(return_value=httpx.Response(400))
+    async with httpx.AsyncClient() as c:
+        with pytest.raises(httpx.HTTPStatusError):
+            await sc.get_bindings(c, _SC_URL, "q", base_delay=0)
+    assert route.call_count == 1
+
+
+async def test_sc_egress_check_blocks():
+    def block(url):
+        raise api.SecurityError("blocked")
+
+    async with httpx.AsyncClient() as c:
+        with pytest.raises(api.SecurityError):
+            await sc.get_bindings(c, _SC_URL, "q", egress_check=block)

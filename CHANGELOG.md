@@ -5,6 +5,32 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Refactor
+- **Wiederverwendbarer SPARQL-/JSON-Client extrahiert** (`sparql_client.py`):
+  der aus `fedlex-mcp` stammende Retry-/Escape-/Binding-Aufbau ist jetzt ein
+  abhängigkeitsarmes Modul (nur `httpx`/`asyncio`, Egress-Guard als Callback,
+  HTTP-Client vom Aufrufer). `api_client.run_sparql` und `_get_json_retry` sind
+  dünne Bindungen darauf; öffentliche Namen unverändert. So ist der Baustein 1:1
+  in ein gemeinsames Portfolio-Paket hebbar (Cross-Repo-Paketierung als
+  Folgeschritt, siehe `docs/scaling.md`).
+
+### Behoben / Fixed
+- **BUG-01 (historische Hydrodaten):** Die stillgelegten REST-Endpoints unter
+  `hydrodaten.admin.ch/lhg/az/*` (Stunden-CSV, `warnings.json`, Stations-JSON,
+  alle 404) werden nicht mehr aufgerufen. `env_flood_warnings` liest neu LINDAS
+  `dangerLevel` (`fetch_hydro_warnings_lindas`); `env_hydro_history` liefert den
+  aktuellsten LINDAS-Wert + den Bezugsweg für echte historische Reihen
+  (BAFU-Abfragezentrale). Tote Fetcher `fetch_hydro_warnings` /
+  `fetch_hydro_station_history` entfernt. (Tool-Definitionen geändert →
+  `tool-snapshot.json` neu erzeugt.)
+
+### Dokumentation
+- **Jagdstatistik-Lizenz recherchiert (2026-07-19):** Daten BAFU-eigen (aus
+  kantonalen Stellen; Technik Wildtier Schweiz), **nicht** als lizenzierter
+  opendata.swiss-Datensatz publiziert, **keine explizite Lizenz** auf der Quelle.
+  Attribution in jeder Antwort («Quellenangabe erforderlich»); formelle
+  BAFU-Bestätigung bleibt offen. READMEs + `docs/probe-jagdstatistik.md` präzisiert.
+
 ### Neu / Added
 - **Jagdstatistik-Tools** (Phase 3, Inkrement 3), Cluster «Jagd»:
   - `env_hunting_species` — 36 Tierarten mit sp-Codes (statisch eingebettet, lokal).
