@@ -6,6 +6,12 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 ## [Unreleased]
 
 ### Refactor
+- **`sparql_client.py` als Portfolio-Baustein vereinheitlicht (Vendoring):** die
+  Datei ist jetzt **byte-identisch** zur Kopie in `fedlex-mcp` (dortiger
+  `_execute_sparql` bindet neu dünn daran). Ergänzt um einen optionalen
+  `on_retry`-Callback (generisches Retry-Logging), rückwärtskompatibel. Der echte
+  Single-Source-Schritt (`swiss-mcp-commons`-Paket) bleibt offen — siehe
+  `docs/scaling.md`.
 - **Wiederverwendbarer SPARQL-/JSON-Client extrahiert** (`sparql_client.py`):
   der aus `fedlex-mcp` stammende Retry-/Escape-/Binding-Aufbau ist jetzt ein
   abhängigkeitsarmes Modul (nur `httpx`/`asyncio`, Egress-Guard als Callback,
