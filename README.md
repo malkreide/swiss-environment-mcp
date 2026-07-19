@@ -286,6 +286,34 @@ Scaling/session strategy: [`docs/scaling.md`](docs/scaling.md).
 - **Natural hazards**: Bulletin availability depends on SLF/BAFU publication schedule.
 - **Wildfire danger**: Regional granularity varies by season and data availability.
 
+### Responsibility matrix — snow & precipitation (delineation vs. `meteoswiss-mcp`)
+
+To avoid duplicating **snow and precipitation** data across the portfolio,
+responsibilities are split as follows. `meteoswiss-mcp` owns atmospheric
+precipitation and weather; `swiss-environment-mcp` (SLF domain) owns snow on the
+ground and avalanche danger.
+
+| Data | swiss-environment-mcp (BAFU / SLF) | meteoswiss-mcp (MeteoSwiss) |
+|---|---|---|
+| Snow depth on the ground (`HS`) | ✅ SLF IMIS / study-plot ¹ | ❌ |
+| Fresh snow 24 h (`HN_1D`) | ✅ SLF ¹ | ❌ |
+| Avalanche danger level | ✅ SLF avalanche bulletin ¹ | ❌ |
+| Snowfall as a current weather condition | ❌ | ✅ `meteo_current` / `meteo_forecast` (weather code) |
+| Precipitation amount (mm): measurement network, forecast, climate normals | ❌ | ✅ `meteo_current` / `meteo_forecast` / `meteo_climate_normals` |
+| Precipitation at SLF IMIS mountain stations | ✅ only as snow-cover context, **no standalone precipitation tool** | (MeteoSwiss network) |
+| Weather warnings (storm, thunderstorm, heat) | ❌ | ✅ `meteo_warnings` |
+| Natural-hazard warnings (flood, avalanche, wildfire) | ✅ `env_flood_warnings`, `env_hazard_*`, `env_wildfire_danger` | ❌ |
+
+**Rule:** snow **on the ground** and **avalanche** danger belong to
+`swiss-environment-mcp` (SLF); **atmospheric precipitation** (rain/snowfall as mm)
+plus weather, forecast, warnings and climate normals belong to `meteoswiss-mcp`.
+The SLF IMIS precipitation sensor is used only as context for the snowpack and is
+never exposed as a precipitation tool, so it does not duplicate MeteoSwiss.
+
+¹ SLF/snow tools are in preparation (Phase-1 live-probe completed 2026-07-19, see
+[`docs/probe-slf.md`](docs/probe-slf.md) and [`docs/tool-inventory.md`](docs/tool-inventory.md));
+the demarcation is fixed now so the two servers do not collide once implemented.
+
 ---
 
 ## Testing
