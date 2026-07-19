@@ -5,6 +5,24 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Neu / Added
+- **LINDAS-SPARQL-Anbindung für Hydrodaten** (Phase 3). `env_hydro_current` und
+  `env_hydro_stations` fragen primär den BAFU-LINDAS-Endpoint
+  (`lindas.admin.ch/query`, Graph `foen/hydro`, `cube.link`-Data-Cube) ab und
+  liefern typisierte Live-Werte (Pegel, Abfluss, Wassertemperatur,
+  Gefahrenstufe) statt des fragilen `hydrodaten.admin.ch`-JSON-Scrapings. Der
+  REST-Pfad bleibt als Fallback erhalten.
+- SPARQL-Client (`run_sparql`, `sparql_escape`, `fetch_hydro_*_lindas`) mit
+  Egress-Guard, Retry bei transienten Fehlern (429/502/503/504) und
+  exponentiellem Backoff — Client-Aufbau bewusst aus `fedlex-mcp`
+  wiederverwendet. `lindas.admin.ch` in die Egress-Allow-List aufgenommen.
+
+### Known findings
+- LINDAS `foen/hydro` enthält **nur aktuelle Werte** (eine Observation pro
+  Station), keine historische Zeitreihe. `schema:identifier` ist `xsd:integer`
+  → Stationsvergleich datentyp-robust über `STR(?id)`. Historische Längsschnitte
+  weiterhin via `env_hydro_history` / opendata.swiss.
+
 ### Geändert / Changed
 - Dokumentation an die einheitliche Portfolio-Struktur angeglichen: Root-Level
   `SECURITY.md` (Englisch) mit verlinkter `SECURITY.de.md` (Deutsch) ergänzt;

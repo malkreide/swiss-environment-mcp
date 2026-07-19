@@ -20,6 +20,7 @@ from swiss_environment_mcp.server import (  # noqa: E402
     AirLimitsCheckInput,
     BafuDatasetsInput,
     FloodWarningsInput,
+    HydroCurrentInput,
     HydroStationsInput,
     NabelCurrentInput,
     NabelStationsInput,
@@ -27,6 +28,7 @@ from swiss_environment_mcp.server import (  # noqa: E402
     env_air_limits_check,
     env_bafu_datasets,
     env_flood_warnings,
+    env_hydro_current,
     env_hydro_stations,
     env_nabel_current,
     env_nabel_stations,
@@ -417,3 +419,140 @@ def test_cors_exposes_and_allows_session_id_header():
         )
         assert pre.headers.get("access-control-allow-origin") == origin
         assert "mcp-session-id" in pre.headers.get("access-control-allow-headers", "").lower()
+
+
+# --- LINDAS SPARQL-Pfad (Hydro, Phase 3) --------------------------------------
+
+_LINDAS_URL = "https://lindas.admin.ch/query"
+
+
+def _sparql_bindings(rows: list[dict]) -> dict:
+    """Baut eine SPARQL-results+json-Antwort aus einfachen {key: value}-Zeilen."""
+    return {
+        "results": {"bindings": [{k: {"value": str(v)} for k, v in row.items()} for row in rows]}
+    }
+
+
+@respx.mock
+async def test_hydro_current_lindas_happy():
+    """env_hydro_current nutzt primär LINDAS und zeigt typisierte Live-Werte."""
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_sparql_bindings(
+                [
+                    {
+                        "name": "Zürich Unterhard",
+                        "water": "Limmat",
+                        "time": "2026-07-19T14:20:00+01:00",
+                        "discharge": "34.997",
+                        "level": "399.716",
+                    }
+                ]
+            ),
+        )
+    )
+    out = await env_hydro_current(HydroCurrentInput(station_id="2099"))
+    assert "Limmat" in out
+    assert "34.997" in out
+    assert "Abfluss" in out
+    assert "LINDAS" in out
+
+
+@respx.mock
+async def test_hydro_current_lindas_json_provenance():
+    """JSON-Modus liefert provenance 'live_api' für den LINDAS-Pfad."""
+    import json
+
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_sparql_bindings(
+                [{"name": "Zürich Unterhard", "water": "Limmat", "time": "t", "discharge": "34.9"}]
+            ),
+        )
+    )
+    out = await env_hydro_current(
+        HydroCurrentInput(station_id="2099", response_format=ResponseFormat.JSON)
+    )
+    data = json.loads(out)
+    assert data["provenance"] == "live_api"
+    assert data["gewaesser"] == "Limmat"
+
+
+@respx.mock
+async def test_hydro_current_lindas_retry_then_success(monkeypatch):
+    """Transienter 503 wird retried; zweiter Versuch erfolgreich (Resilienz)."""
+    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    route = respx.get(_LINDAS_URL).mock(
+        side_effect=[
+            httpx.Response(503),
+            httpx.Response(
+                200,
+                json=_sparql_bindings(
+                    [
+                        {
+                            "name": "Zürich Unterhard",
+                            "water": "Limmat",
+                            "time": "t",
+                            "discharge": "34.9",
+                        }
+                    ]
+                ),
+            ),
+        ]
+    )
+    out = await env_hydro_current(HydroCurrentInput(station_id="2099"))
+    assert route.call_count == 2
+    assert "34.9" in out
+
+
+@respx.mock
+async def test_hydro_current_lindas_timeout_falls_back_to_rest(monkeypatch):
+    """LINDAS-Totalausfall → sauberer Fallback auf den REST-Pfad."""
+    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    respx.get(_LINDAS_URL).mock(side_effect=httpx.ConnectError("boom"))
+    respx.get("https://www.hydrodaten.admin.ch/lhg/az/json/2099.json").mock(
+        return_value=httpx.Response(
+            200,
+            json={"name": "Limmat REST", "water_body_name": "Limmat", "parameters": []},
+        )
+    )
+    out = await env_hydro_current(HydroCurrentInput(station_id="2099"))
+    assert "Limmat REST" in out  # REST-Pfad hat übernommen
+
+
+@respx.mock
+async def test_hydro_stations_lindas_water_body_filter():
+    """env_hydro_stations (ohne Kanton) nutzt LINDAS und filtert nach Gewässer."""
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_sparql_bindings(
+                [
+                    {"id": "2099", "name": "Zürich Unterhard", "water": "Limmat"},
+                    {"id": "2243", "name": "Baden, Limmatpromenade", "water": "Limmat"},
+                    {"id": "2030", "name": "Basel", "water": "Rhein"},
+                ]
+            ),
+        )
+    )
+    out = await env_hydro_stations(HydroStationsInput(water_body="Limmat"))
+    assert "2099" in out and "2243" in out
+    assert "2030" not in out  # Rhein herausgefiltert
+    assert "LINDAS" in out
+
+
+@respx.mock
+async def test_run_sparql_400_no_retry(monkeypatch):
+    """Deterministischer 400 (fehlerhafte Query) wird NICHT retried."""
+    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    route = respx.get(_LINDAS_URL).mock(return_value=httpx.Response(400, text="MALFORMED"))
+    with pytest.raises(httpx.HTTPStatusError):
+        await api.run_sparql("SELECT ?x WHERE { ?x")
+    assert route.call_count == 1  # kein Retry bei 4xx
+
+
+def test_lindas_host_is_allowed():
+    """LINDAS-Endpoint steht auf der Egress-Allow-List (Phase 3)."""
+    api.assert_host_allowed(api.LINDAS_ENDPOINT)

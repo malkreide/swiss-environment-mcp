@@ -148,8 +148,8 @@ docker run -p 8000:8000 swiss-environment-mcp
 
 | Tool | Beschreibung | Datenquelle |
 |---|---|---|
-| `env_hydro_stations` | Hydrologische Messstationen nach Kanton oder Gewässer filtern | hydrodaten.admin.ch |
-| `env_hydro_current` | Aktueller Pegel, Abfluss und Wassertemperatur einer Station | hydrodaten.admin.ch |
+| `env_hydro_stations` | Hydrologische Messstationen nach Kanton oder Gewässer filtern | **LINDAS SPARQL** → hydrodaten.admin.ch (Fallback) |
+| `env_hydro_current` | Aktueller Pegel, Abfluss und Wassertemperatur einer Station | **LINDAS SPARQL** → hydrodaten.admin.ch (Fallback) |
 | `env_hydro_history` | Historische Stundenwerte (bis 30 Tage) mit Download-Links ⚠️ | hydrodaten.admin.ch |
 | `env_flood_warnings` | Aktive Hochwasserwarnungen nach Gefahrenstufe und Kanton | hydrodaten.admin.ch |
 
@@ -283,6 +283,7 @@ Skalierungs-/Session-Strategie: [`docs/scaling.md`](docs/scaling.md).
 
 ## Bekannte Einschränkungen
 
+- **Hydrologie via LINDAS**: `env_hydro_current` und `env_hydro_stations` fragen primär den BAFU-LINDAS-SPARQL-Endpoint ab (typisierte Live-Werte: Pegel, Abfluss, Wassertemperatur, Gefahrenstufe) und fallen bei Fehler auf den `hydrodaten.admin.ch`-REST-Pfad zurück. LINDAS enthält **nur aktuelle Werte** (eine Observation pro Station) — **keine** historische Zeitreihe. Langjährige Mittel / vergangene Zeiträume (z.B. Sommer 2024) kommen über `env_hydro_history` / opendata.swiss, nicht über LINDAS. Siehe [`docs/probe-lindas-hydro.md`](docs/probe-lindas-hydro.md).
 - **`env_hydro_history`**: Der historische Stundenwert-Endpunkt liefert aktuell 404-Fehler von hydrodaten.admin.ch (BUG-01 – in Abklärung). Das Tool gibt Download-Links als Fallback zurück.
 - **NABEL**: Nur Nahzeit-Daten; keine historischen Zeitreihen über diesen Server.
 - **Naturgefahren**: Bulletins hängen vom Publikationsrhythmus von SLF/BAFU ab.
