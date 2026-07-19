@@ -156,6 +156,24 @@ async def test_hydro_current() -> None:
     check("Station 2099: Datenportal-Link", "hydrodaten.admin.ch" in result)
 
 
+async def test_hydro_current_lindas() -> None:
+    print("\n[Wasser] LINDAS SPARQL — aktueller Limmat-Abfluss (Anchor)")
+
+    if SKIP_LIVE:
+        print("  ⏭️  Live-Test übersprungen")
+        return
+
+    from swiss_environment_mcp import api_client as api
+
+    data = await api.fetch_hydro_current_lindas("2099")
+    check("LINDAS: Station 2099 gefunden", data.get("found") is True)
+    check("LINDAS: Gewässer Limmat", "limmat" in (data.get("water") or "").lower())
+    check("LINDAS: Abfluss-Wert vorhanden", data.get("discharge") is not None)
+
+    stations = await api.fetch_hydro_stations_lindas()
+    check("LINDAS: >200 Stationen", len(stations) > 200)
+
+
 async def test_hydro_history() -> None:
     print("\n[Wasser] Historische Daten")
 
@@ -275,6 +293,7 @@ async def main() -> None:
     await test_hydro_stations()
     await test_hydro_current()
     await test_hydro_history()
+    await test_hydro_current_lindas()
     await test_flood_warnings()
     await test_hazard_overview()
     await test_hazard_regions()

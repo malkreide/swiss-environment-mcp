@@ -19,10 +19,11 @@ Audit SDK-001). Er wird über startup()/shutdown() im FastMCP-Lifespan
 verwaltet, statt pro Tool-Call neu erzeugt zu werden.
 """
 
+import asyncio
 import ipaddress
 import socket
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 import httpx
 
@@ -42,6 +43,22 @@ WALDBRAND_BASE = "https://www.waldbrandgefahr.ch"
 BAFU_WEB = "https://www.bafu.admin.ch"
 BAFU_GIS = "https://map.bafu.admin.ch"
 
+# --- LINDAS (Linked Data Service des Bundes) — SPARQL -------------------------
+# Aktuelle hydrologische Messwerte des BAFU als RDF-Data-Cube (cube.link).
+# Client-Aufbau bewusst wiederverwendet vom bestehenden fedlex-mcp
+# (run_lindas/_execute_sparql), statt neu gebaut: GET mit
+# format=application/sparql-results+json, Retry nur bei transienten Fehlern.
+LINDAS_ENDPOINT = "https://lindas.admin.ch/query"
+LINDAS_HYDRO_GRAPH = "https://lindas.admin.ch/foen/hydro"
+_HYDRO_STATION_CLASS = "http://example.com/HydroMeasuringStation"
+_HYDRO_DIM = "https://environment.ld.admin.ch/foen/hydro/dimension/"
+
+# Transiente HTTP-Status → Retry. 4xx (ausser 429) sind deterministisch → sofort
+# durchreichen (Audit-Prinzip; identisch zu fedlex-mcp).
+RETRYABLE_STATUS: frozenset[int] = frozenset({429, 502, 503, 504})
+RETRY_MAX_ATTEMPTS = 3
+RETRY_BASE_DELAY = 0.5  # Sekunden; exp. Backoff 0.5s, 1.0s. Tests setzen 0.
+
 TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 
 # Egress-Allow-List (Code-Layer, Audit SEC-021). Nur diese Hosts dürfen
@@ -54,6 +71,7 @@ ALLOWED_HOSTS: frozenset[str] = frozenset(
         "www.waldbrandgefahr.ch",
         "www.bafu.admin.ch",
         "map.bafu.admin.ch",
+        "lindas.admin.ch",
     }
 )
 
@@ -204,6 +222,148 @@ def handle_http_error(e: Exception) -> str:
     # Keine internen Details (Exception-Typ/-Text) ans LLM leaken (Audit OBS-002).
     # Der konkrete Fehler wird serverseitig strukturiert geloggt.
     return "Fehler: Unerwarteter interner Fehler. Bitte erneut versuchen."
+
+
+# --- LINDAS SPARQL-Client (wiederverwendet aus fedlex-mcp-Pattern) ------------
+
+
+def sparql_escape(value: str) -> str:
+    """Escaped einen String für die sichere Interpolation in ein SPARQL-Literal.
+
+    Defense-in-Depth zusätzlich zur Pydantic-Pattern-Validierung (SEC-018) —
+    verhindert das Ausbrechen aus doppelt-gequoteten SPARQL-Literalen.
+    Übernommen aus fedlex-mcp (`sparql_escape`).
+    """
+    return (
+        value.replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+        .replace("\t", "\\t")
+    )
+
+
+def _binding_val(binding: dict[str, Any], key: str, default: str = "") -> str:
+    """Extrahiert sicher den String-Wert aus einem SPARQL-Result-Binding."""
+    entry = binding.get(key)
+    return entry.get("value", default) if entry else default
+
+
+async def run_sparql(query: str) -> list[dict[str, Any]]:
+    """Führt eine SPARQL-Abfrage gegen den LINDAS-Endpoint aus und liefert die
+    Result-Bindings.
+
+    Client-Aufbau wiederverwendet vom fedlex-mcp (`_execute_sparql`): GET mit
+    `format=application/sparql-results+json`, Egress-Guard vor jedem Versuch,
+    Retry ausschliesslich bei transienten Fehlern (RETRYABLE_STATUS,
+    Timeout/Netzwerk) mit exponentiellem Backoff. Deterministische Fehler wie
+    HTTP 400 (fehlerhafte Query) werden sofort durchgereicht.
+    """
+    assert_host_allowed(LINDAS_ENDPOINT)
+    client = get_client()
+    params = {"query": query, "format": "application/sparql-results+json"}
+    headers = {"Accept": "application/sparql-results+json"}
+    last_exc: Exception | None = None
+    for attempt in range(RETRY_MAX_ATTEMPTS):
+        try:
+            response = await client.get(LINDAS_ENDPOINT, params=params, headers=headers)
+            response.raise_for_status()
+            return response.json().get("results", {}).get("bindings", [])
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code not in RETRYABLE_STATUS:
+                raise
+            last_exc = e
+        except (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError) as e:
+            last_exc = e
+        if attempt < RETRY_MAX_ATTEMPTS - 1:
+            await asyncio.sleep(RETRY_BASE_DELAY * (2**attempt))
+    assert last_exc is not None  # pragma: no cover - Schleife garantiert gesetzt
+    raise last_exc
+
+
+async def fetch_hydro_stations_lindas() -> list[dict[str, Any]]:
+    """Ruft alle hydrologischen Messstationen via LINDAS-SPARQL ab.
+
+    Liefert typisierte Stationsmetadaten (id = BAFU-Stationsnummer, Name,
+    Gewässer) statt des fragilen JSON-Scrapings von hydrodaten.admin.ch.
+    """
+    query = f"""
+PREFIX s: <http://schema.org/>
+SELECT ?id ?name ?water
+FROM <{LINDAS_HYDRO_GRAPH}>
+WHERE {{
+  ?st a <{_HYDRO_STATION_CLASS}> ;
+      s:identifier ?id ;
+      s:name ?name .
+  OPTIONAL {{
+    ?st s:containedInPlace ?wb .
+    BIND(REPLACE(STR(?wb), ".*/waterbody/", "") AS ?water)
+  }}
+}}
+"""
+    bindings = await run_sparql(query)
+    stations: list[dict[str, Any]] = []
+    for b in bindings:
+        stations.append(
+            {
+                "id": _binding_val(b, "id"),
+                "name": _binding_val(b, "name"),
+                "water": unquote(_binding_val(b, "water")),
+            }
+        )
+    return stations
+
+
+async def fetch_hydro_current_lindas(station_id: str) -> dict[str, Any]:
+    """Ruft den aktuellen Messwert einer Station via LINDAS-SPARQL ab.
+
+    Liefert Pegel (m ü.M.), Abfluss (m³/s), Wassertemperatur (°C) und
+    Gefahrenstufe als typisierte Werte. `found` ist False, wenn die Station-ID
+    im Graph nicht existiert (⇒ Aufrufer kann auf REST zurückfallen).
+    """
+    sid = sparql_escape(station_id)
+    query = f"""
+PREFIX s: <http://schema.org/>
+PREFIX hd: <{_HYDRO_DIM}>
+SELECT ?name ?water ?time ?level ?discharge ?temp ?danger
+FROM <{LINDAS_HYDRO_GRAPH}>
+WHERE {{
+  ?st a <{_HYDRO_STATION_CLASS}> ;
+      s:identifier ?id ;
+      s:name ?name .
+  # schema:identifier ist xsd:integer → über STR() datentyp-robust vergleichen.
+  FILTER(STR(?id) = "{sid}")
+  OPTIONAL {{
+    ?st s:containedInPlace ?wb .
+    BIND(REPLACE(STR(?wb), ".*/waterbody/", "") AS ?water)
+  }}
+  ?obs hd:station ?st ;
+       hd:measurementTime ?time .
+  OPTIONAL {{ ?obs hd:waterLevel ?level }}
+  OPTIONAL {{ ?obs hd:discharge ?discharge }}
+  OPTIONAL {{ ?obs hd:waterTemperature ?temp }}
+  OPTIONAL {{ ?obs hd:dangerLevel ?danger }}
+}}
+LIMIT 1
+"""
+    bindings = await run_sparql(query)
+    if not bindings:
+        return {"found": False, "station_id": station_id}
+    b = bindings[0]
+    danger_raw = _binding_val(b, "danger")
+    # dangerLevel ist entweder eine Zahl 1–5 oder cube.link/Undefined.
+    danger = danger_raw if danger_raw and "Undefined" not in danger_raw else None
+    return {
+        "found": True,
+        "station_id": station_id,
+        "name": _binding_val(b, "name"),
+        "water": unquote(_binding_val(b, "water")),
+        "time": _binding_val(b, "time"),
+        "level": _binding_val(b, "level") or None,
+        "discharge": _binding_val(b, "discharge") or None,
+        "temperature": _binding_val(b, "temp") or None,
+        "danger_level": danger,
+    }
 
 
 # --- Hydrodaten-Client --------------------------------------------------------

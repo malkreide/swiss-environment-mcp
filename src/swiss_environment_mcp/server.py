@@ -456,6 +456,70 @@ def _format_flood_level(level: int) -> str:
     return f"Stufe {level} ({info['label']}, {info['color']})"
 
 
+# LINDAS-Dimension → (Anzeigename, Einheit) für die aktuelle Messwert-Tabelle.
+_LINDAS_HYDRO_PARAMS: list[tuple[str, str, str]] = [
+    ("discharge", "Abfluss", "m³/s"),
+    ("level", "Pegel", "m ü.M."),
+    ("temperature", "Wassertemperatur", "°C"),
+]
+
+
+def _format_hydro_current_lindas(d: dict[str, Any], response_format: ResponseFormat) -> str:
+    """Formatiert einen aktuellen LINDAS-Messwert (SPARQL) als Markdown/JSON.
+
+    Provenance ist `live_api` (LINDAS liefert typisierte Werte, im Gegensatz zum
+    REST-Fallback-Pfad von hydrodaten.admin.ch).
+    """
+    rows: list[dict[str, Any]] = []
+    for key, label, unit in _LINDAS_HYDRO_PARAMS:
+        if d.get(key) is not None:
+            rows.append({"parameter": label, "wert": d[key], "einheit": unit})
+    danger = d.get("danger_level")
+
+    if response_format == ResponseFormat.JSON:
+        return json.dumps(
+            {
+                "source": "BAFU Hydrodaten via LINDAS (Open-Use / OGD-CH)",
+                "provenance": "live_api",
+                "station_id": d.get("station_id"),
+                "name": d.get("name"),
+                "gewaesser": d.get("water"),
+                "zeitstempel": d.get("time"),
+                "messwerte": rows,
+                "gefahrenstufe": danger,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    lines = [
+        f"## Hydrologische Daten: {d.get('name', '–')} (Station {d.get('station_id')})\n",
+        f"- **Gewässer:** {d.get('water') or '–'}",
+        f"- **Zeitstempel:** {d.get('time', '–')}",
+        "- **Quelle:** BAFU via LINDAS (SPARQL, Live-Werte)",
+        "",
+        "### Aktuelle Messwerte",
+        "| Parameter | Wert | Einheit |",
+        "|-----------|------|---------|",
+    ]
+    for r in rows:
+        lines.append(f"| {r['parameter']} | **{r['wert']}** | {r['einheit']} |")
+    if not rows:
+        lines.append("| – | keine Werte verfügbar | – |")
+    if danger:
+        lines.append("")
+        lines.append(f"**Gefahrenstufe:** {_format_flood_level(int(float(danger)))}")
+
+    lines += [
+        "",
+        f"**Detailansicht:** https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{d.get('station_id')}",
+        "",
+        "*Tipp: Für historische Daten → `env_hydro_history` aufrufen "
+        "(LINDAS liefert nur aktuelle Werte, keine Zeitreihe).*",
+    ]
+    return "\n".join(lines)
+
+
 def _assess_air_quality(pollutant: str, value: float) -> dict[str, Any]:
     """Bewertet einen Messwert gegen Schweizer LRV und WHO-Grenzwerte."""
     lrv_limit = SWISS_LRV_LIMITS.get(pollutant)
@@ -737,6 +801,53 @@ async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = N
     Returns:
         str: Stationsliste oder Fehlertext bei API-Problemen.
     """
+    # Primärpfad: LINDAS SPARQL — volle Stationsabdeckung (233) + zuverlässige
+    # Gewässernamen. LINDAS führt keinen Kanton-Code; bei gesetztem Kanton-Filter
+    # wird direkt der REST-Pfad (unten) genutzt, der den Kanton mitliefert.
+    if not params.canton:
+        try:
+            ls = await api.fetch_hydro_stations_lindas()
+            filtered = [
+                s
+                for s in ls
+                if not params.water_body or params.water_body.lower() in s["water"].lower()
+            ]
+            if params.response_format == ResponseFormat.JSON:
+                return _envelope_json(
+                    source="BAFU Hydrodaten via LINDAS",
+                    provenance="live_api",
+                    results=filtered[:100],
+                    match_type="none" if not filtered else "exact",
+                    note=(
+                        f"Keine Stationen für Gewässer='{params.water_body}'. "
+                        "Filter weglassen für die vollständige Liste."
+                        if not filtered
+                        else None
+                    ),
+                    query={"canton": params.canton, "water_body": params.water_body},
+                )
+            lines = [
+                f"## Hydrologische Messstationen ({len(filtered)} Resultate)\n",
+                f"*Filter: Gewässer={params.water_body or 'alle'} | Quelle: BAFU via LINDAS*\n",
+                "| Station-ID | Name | Gewässer |",
+                "|------------|------|---------|",
+            ]
+            for s in filtered[:50]:
+                lines.append(f"| {s['id']} | {s['name']} | {s['water'] or '–'} |")
+            if len(filtered) > 50:
+                lines.append(f"\n*…und {len(filtered) - 50} weitere Stationen.*")
+            if not filtered:
+                lines.append(
+                    "\n*Keine Treffer für diesen Filter (match_type: none). "
+                    "Filter weglassen für die vollständige Liste, oder `env_hydro_current` "
+                    "mit einer bekannten Station-ID (z.B. '2099' Limmat/Zürich) aufrufen.*"
+                )
+            lines.append("\n**Datenportal:** https://www.hydrodaten.admin.ch")
+            return "\n".join(lines)
+        except Exception as e:
+            # LINDAS nicht erreichbar → auf REST-Pfad zurückfallen.
+            await _handle_tool_error("env_hydro_stations", e, ctx, water_body=params.water_body)
+
     try:
         data = await api.fetch_hydro_stations()
     except Exception as e:
@@ -859,6 +970,15 @@ async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = Non
     Returns:
         str: Aktuelle Messwerte inkl. Zeitstempel, oder Fallback mit direktem Link.
     """
+    # Primärpfad: LINDAS SPARQL (typisierte Live-Werte: Abfluss/Pegel/Temperatur/
+    # Gefahrenstufe). Bei Ausfall oder unbekannter Station → REST-Fallback.
+    try:
+        lindas = await api.fetch_hydro_current_lindas(params.station_id)
+        if lindas.get("found"):
+            return _format_hydro_current_lindas(lindas, params.response_format)
+    except Exception as e:
+        await _handle_tool_error("env_hydro_current", e, ctx, station_id=params.station_id)
+
     try:
         data = await api.fetch_hydro_station_data(params.station_id)
     except Exception as e:
