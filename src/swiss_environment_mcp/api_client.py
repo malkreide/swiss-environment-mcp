@@ -59,6 +59,12 @@ RETRYABLE_STATUS: frozenset[int] = frozenset({429, 502, 503, 504})
 RETRY_MAX_ATTEMPTS = 3
 RETRY_BASE_DELAY = 0.5  # Sekunden; exp. Backoff 0.5s, 1.0s. Tests setzen 0.
 
+# --- SLF-Datenservice (WSL) — öffentliche No-Auth-APIs, CC BY 4.0 -------------
+# Schnee (Schneehöhe/Neuschnee) + Lawinenbulletin. Niederschlag bewusst NICHT
+# angebunden (Zuständigkeitsmatrix: Niederschlag = meteoswiss-mcp).
+SLF_MEASUREMENT_API = "https://measurement-api.slf.ch/public/api"
+SLF_BULLETIN_API = "https://aws.slf.ch/api/bulletin"
+
 TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 
 # Egress-Allow-List (Code-Layer, Audit SEC-021). Nur diese Hosts dürfen
@@ -72,6 +78,8 @@ ALLOWED_HOSTS: frozenset[str] = frozenset(
         "www.bafu.admin.ch",
         "map.bafu.admin.ch",
         "lindas.admin.ch",
+        "measurement-api.slf.ch",
+        "aws.slf.ch",
     }
 )
 
@@ -488,3 +496,64 @@ async def fetch_nabel_data(
     }
     response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
     return response.json()
+
+
+# --- SLF-Client (Schnee & Lawinen) --------------------------------------------
+
+
+async def _get_json_retry(url: str, params: dict[str, Any] | None = None) -> Any:
+    """GET-JSON mit Egress-Guard + Retry bei transienten Fehlern.
+
+    Gleiche Retry-Semantik wie `run_sparql` (RETRYABLE_STATUS, Timeout/Netzwerk,
+    exponentielles Backoff); deterministische 4xx werden sofort durchgereicht.
+    """
+    assert_host_allowed(url)
+    client = get_client()
+    last_exc: Exception | None = None
+    for attempt in range(RETRY_MAX_ATTEMPTS):
+        try:
+            response = await client.get(url, params=params)
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code not in RETRYABLE_STATUS:
+                raise
+            last_exc = e
+        except (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError) as e:
+            last_exc = e
+        if attempt < RETRY_MAX_ATTEMPTS - 1:
+            await asyncio.sleep(RETRY_BASE_DELAY * (2**attempt))
+    assert last_exc is not None  # pragma: no cover
+    raise last_exc
+
+
+async def fetch_slf_snow_stations() -> list[dict[str, Any]]:
+    """Ruft die automatischen IMIS-Messstationen des SLF ab (Metadaten).
+
+    Felder je Station: code, label, lon, lat, elevation (m), country_code,
+    canton_code, type (z.B. SNOW_FLAT, WIND).
+    """
+    data = await _get_json_retry(f"{SLF_MEASUREMENT_API}/imis/stations")
+    return data if isinstance(data, list) else []
+
+
+async def fetch_slf_daily_snow() -> list[dict[str, Any]]:
+    """Ruft die Tages-Schneewerte aller IMIS-Stationen ab.
+
+    Felder: station_code, measure_date (UTC), HS (Schneehöhe, cm),
+    HN_1D (Neuschnee 24 h, cm). Ein Call liefert alle Stationen (batch-fähig).
+    """
+    data = await _get_json_retry(f"{SLF_MEASUREMENT_API}/imis/daily-snow")
+    return data if isinstance(data, list) else []
+
+
+async def fetch_slf_avalanche_bulletin(language: str = "de") -> dict[str, Any]:
+    """Ruft das aktuelle Lawinenbulletin als CAAML-GeoJSON ab.
+
+    Liefert eine FeatureCollection (je Warnregion ein Feature). Ausserhalb der
+    Lawinensaison ist `features` leer — das ist kein Fehler, sondern der reguläre
+    Saisonzyklus (kein aktives Bulletin).
+    """
+    lang = language if language in {"de", "fr", "it", "en"} else "de"
+    data = await _get_json_retry(f"{SLF_BULLETIN_API}/caaml/{lang}/geojson")
+    return data if isinstance(data, dict) else {"type": "FeatureCollection", "features": []}

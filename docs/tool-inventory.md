@@ -48,12 +48,18 @@ gegen `meteoswiss-mcp` (Schnee-/Niederschlags-Überschneidung).
 
 ---
 
-## 2. Geplante Erweiterung (Phase-1-Probe abgeschlossen, Implementierung offen)
+> **Update Phase 3:** Cluster **Wasser** nutzt neu LINDAS-SPARQL als Primärpfad
+> (Inkrement 1, gemergt). Neu hinzugekommen ist der Cluster **Schnee/SLF** mit
+> `env_snow_stations`, `env_snow_current`, `env_avalanche_bulletin` (Inkrement 2)
+> — Stand jetzt **15 Tools**. Der SLF-IMIS-Niederschlagssensor wird bewusst nicht
+> als Tool angebunden (Abgrenzung meteoswiss).
+
+## 2. Geplante Erweiterung (Phase-1-Probe abgeschlossen)
 
 | Quelle | Cluster | Neue Hosts (künftig) | Probe-Doc |
 |---|---|---|---|
-| LINDAS-Hydro (SPARQL) | Wasser | `lindas.admin.ch` | `docs/probe-lindas-hydro.md` |
-| SLF-Datenservice | Naturgefahren / **Schnee** | `measurement-api.slf.ch`, `aws.slf.ch` | `docs/probe-slf.md` |
+| LINDAS-Hydro (SPARQL) ✅ umgesetzt | Wasser | `lindas.admin.ch` | `docs/probe-lindas-hydro.md` |
+| SLF-Datenservice ✅ umgesetzt | Schnee/SLF | `measurement-api.slf.ch`, `aws.slf.ch` | `docs/probe-slf.md` |
 | Jagdstatistik | (neu) Wildtiere | `www.jagdstatistik.ch` | `docs/probe-jagdstatistik.md` |
 
 ---

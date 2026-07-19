@@ -1,19 +1,22 @@
 """
 Swiss Environment MCP Server
 
-MCP-Server für Schweizer Umweltdaten des BAFU (Bundesamt für Umwelt).
-Bietet 12 Tools in 4 thematischen Clustern:
+MCP-Server für Schweizer Umweltdaten des BAFU (Bundesamt für Umwelt) und SLF.
+Bietet 15 Tools in 5 thematischen Clustern:
 
   Luft (3):        env_nabel_stations, env_nabel_current, env_air_limits_check
   Wasser (4):      env_hydro_stations, env_hydro_current, env_hydro_history, env_flood_warnings
   Naturgefahren (3): env_hazard_overview, env_hazard_regions, env_wildfire_danger
+  Schnee/SLF (3):  env_snow_stations, env_snow_current, env_avalanche_bulletin
   Umweltdaten (2): env_bafu_datasets, env_bafu_dataset_detail
 
 Datenquellen:
   - BAFU NABEL (Nationale Luftmessstation-Daten)
-  - hydrodaten.admin.ch (Hydrologische Messdaten, 10-Minuten-Intervall)
+  - LINDAS SPARQL (aktuelle Hydrologiedaten, lindas.admin.ch)
+  - hydrodaten.admin.ch (Hydrologische Messdaten, REST-Fallback)
   - naturgefahren.ch (Naturgefahren-Bulletin SLF/BAFU)
   - waldbrandgefahr.ch (Waldbrandgefahren-Index)
+  - SLF-Datenservice (Schnee/Lawinen: measurement-api.slf.ch, aws.slf.ch)
   - opendata.swiss CKAN (BAFU-Datenkatalog)
 
 Alle Daten: öffentlich, keine Authentifizierung erforderlich.
@@ -163,6 +166,25 @@ WILDFIRE_DANGER_LEVELS: dict[int, dict[str, str]] = {
     3: {"label": "Erheblich", "color": "orange"},
     4: {"label": "Gross", "color": "rot"},
     5: {"label": "Sehr gross", "color": "dunkelrot"},
+}
+
+# Lawinen-Gefahrenstufen (europäische EAWS-Skala 1–5)
+AVALANCHE_DANGER_LEVELS: dict[int, dict[str, str]] = {
+    1: {"label": "Gering", "color": "grün"},
+    2: {"label": "Mässig", "color": "gelb"},
+    3: {"label": "Erheblich", "color": "orange"},
+    4: {"label": "Gross", "color": "rot"},
+    5: {"label": "Sehr gross", "color": "schwarz/rot"},
+}
+
+# EAWS-Textwerte (CAAML `mainValue`) → numerische Stufe.
+_AVALANCHE_WORD_TO_LEVEL: dict[str, int] = {
+    "low": 1,
+    "moderate": 2,
+    "considerable": 3,
+    "high": 4,
+    "very_high": 5,
+    "very high": 5,
 }
 
 
@@ -410,6 +432,58 @@ class WildfireDangerInput(BaseModel):
         max_length=2,
         pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
         strict=True,
+    )
+
+
+class SnowStationsInput(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    canton: str = Field(
+        default="",
+        description="Kantonskürzel zum Filtern (z.B. 'GR', 'VS', 'BE') – leer = alle",
+        max_length=2,
+        pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
+        strict=True,
+    )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
+
+
+class SnowCurrentInput(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    canton: str = Field(
+        default="",
+        description="Kantonskürzel zum Filtern (z.B. 'GR', 'VS') – leer = ganze Schweiz",
+        max_length=2,
+        pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
+        strict=True,
+    )
+    station: str = Field(
+        default="",
+        description="IMIS-Stationscode zum Filtern (z.B. 'DAV2') – leer = alle",
+        max_length=10,
+        pattern=r"^[A-Za-z0-9]{0,10}$",  # Whitelist (SEC-018)
+        strict=True,
+    )
+    limit: int = Field(
+        default=20,
+        description="Maximale Anzahl Stationen in der Ausgabe (1–100)",
+        ge=1,
+        le=100,
+    )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
+
+
+class AvalancheBulletinInput(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    language: str = Field(
+        default="de",
+        description="Sprache: 'de', 'fr', 'it', 'en'",
+        max_length=2,
+        pattern=r"^[a-z]{2}$",  # Whitelist (SEC-018)
+    )
+    region: str = Field(
+        default="",
+        description="Regionsname/-code zum Filtern (Teilstring) – leer = alle Warnregionen",
+        max_length=60,
     )
 
 
@@ -1455,6 +1529,327 @@ async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None =
             "- https://www.waldbrandgefahr.ch/de/aktuelle-lage\n"
             "- https://www.naturgefahren.ch\n"
         )
+
+
+# --- TOOLS: SCHNEE & LAWINEN / SLF --------------------------------------------
+
+_SLF_ATTRIBUTION = "SLF (WSL-Institut für Schnee- und Lawinenforschung) – CC BY 4.0"
+
+
+def _avalanche_level_from(value: Any) -> int | None:
+    """Normalisiert einen CAAML-Gefahrenwert (Zahl 1–5 oder EAWS-Textwert)."""
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        level = int(value)
+        return level if 1 <= level <= 5 else None
+    text = str(value).strip().lower()
+    if text.isdigit():
+        level = int(text)
+        return level if 1 <= level <= 5 else None
+    return _AVALANCHE_WORD_TO_LEVEL.get(text)
+
+
+def _extract_avalanche_danger(props: dict[str, Any]) -> int | None:
+    """Best-effort-Extraktion der Gefahrenstufe aus einem CAAML-Feature.
+
+    CAAML/EAWS-Schemata variieren; defensiv mehrere Formen prüfen statt anzunehmen.
+    """
+    ratings = props.get("dangerRatings") or props.get("danger_ratings")
+    if isinstance(ratings, list) and ratings and isinstance(ratings[0], dict):
+        r0 = ratings[0]
+        level = _avalanche_level_from(
+            r0.get("mainValue") or r0.get("main_value") or r0.get("value")
+        )
+        if level is not None:
+            return level
+    for key in ("maxDangerLevel", "dangerLevel", "danger_level", "maxdanger"):
+        level = _avalanche_level_from(props.get(key))
+        if level is not None:
+            return level
+    return None
+
+
+@mcp.tool(
+    name="env_snow_stations",
+    annotations={
+        "title": "SLF-Schneemessstationen (IMIS) auflisten",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": True,
+    },
+)
+@trace_tool
+async def env_snow_stations(params: SnowStationsInput, ctx: Context | None = None) -> str:
+    """
+    Listet die automatischen IMIS-Schneemessstationen des SLF auf.
+
+    Das SLF betreibt ein Netz automatischer Stationen (IMIS) in den Schweizer
+    Bergen, die u.a. Schneehöhe, Neuschnee, Wind und Temperaturen messen.
+
+    <use_case>Einstieg in die Schneedaten: Stationsübersicht (nach Kanton), um
+    danach mit `env_snow_current` Schneehöhe/Neuschnee abzurufen.</use_case>
+    <important_notes>Datenquelle SLF (CC BY 4.0). `type`=SNOW_FLAT sind
+    Flachfeld-Schneestationen. Kein Niederschlags-Tool (→ meteoswiss-mcp).</important_notes>
+
+    Args:
+        params (SnowStationsInput):
+            - canton: Kantonskürzel zum Filtern (z.B. 'GR')
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Stationsliste mit Code, Name, Kanton, Höhe und Typ.
+    """
+    try:
+        stations = await api.fetch_slf_snow_stations()
+    except Exception as e:
+        error_msg = await _handle_tool_error("env_snow_stations", e, ctx, canton=params.canton)
+        return (
+            f"⚠️ SLF-Stationsliste nicht abrufbar: {error_msg}\n\n"
+            "**Direktzugang:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/messwerte-und-messstationen/\n"
+        )
+
+    canton = params.canton.upper()
+    filtered = [
+        s for s in stations if not canton or str(s.get("canton_code", "")).upper() == canton
+    ]
+
+    if params.response_format == ResponseFormat.JSON:
+        return _envelope_json(
+            source=_SLF_ATTRIBUTION,
+            provenance="live_api",
+            results=filtered[:200],
+            match_type="none" if not filtered else "exact",
+            note=(f"Keine IMIS-Stationen im Kanton {canton}." if not filtered else None),
+            query={"canton": params.canton},
+        )
+
+    lines = [
+        f"## SLF-Schneemessstationen (IMIS) – {len(filtered)} Stationen\n",
+        f"*Filter: Kanton={params.canton or 'alle'} | Quelle: {_SLF_ATTRIBUTION}*\n",
+        "| Code | Name | Kanton | Höhe (m) | Typ |",
+        "|------|------|--------|----------|-----|",
+    ]
+    for s in sorted(filtered, key=lambda x: str(x.get("canton_code", "")))[:60]:
+        lines.append(
+            f"| {s.get('code', '–')} | {s.get('label', '–')} | {s.get('canton_code', '–')} "
+            f"| {int(s['elevation']) if s.get('elevation') is not None else '–'} "
+            f"| {s.get('type', '–')} |"
+        )
+    if len(filtered) > 60:
+        lines.append(f"\n*…und {len(filtered) - 60} weitere Stationen.*")
+    if not filtered:
+        lines.append(
+            f"\n*Keine Stationen im Kanton {canton} (match_type: none). "
+            "Filter weglassen für alle Stationen.*"
+        )
+    lines.append("\n*Tipp: Aktuelle Schneehöhe/Neuschnee → `env_snow_current` aufrufen.*")
+    return "\n".join(lines)
+
+
+@mcp.tool(
+    name="env_snow_current",
+    annotations={
+        "title": "Aktuelle Schneehöhe & Neuschnee (SLF)",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": True,
+    },
+)
+@trace_tool
+async def env_snow_current(params: SnowCurrentInput, ctx: Context | None = None) -> str:
+    """
+    Ruft aktuelle Schneehöhe (HS) und Neuschnee 24 h (HN_1D) der SLF-IMIS-
+    Stationen ab.
+
+    Werte in cm, modelliert aus dem SLF-Schneedeckenmodell. Ausserhalb der
+    Schneesaison sind die Werte 0 (schneefrei) – das ist kein Fehler.
+
+    <use_case>Aktuelle Schneelage nach Kanton oder Station, z.B. für
+    Tourenplanung oder Schulausflüge.</use_case>
+    <important_notes>HS/HN_1D in cm. Kein Niederschlag (→ meteoswiss-mcp).
+    Datenquelle SLF (CC BY 4.0).</important_notes>
+
+    Args:
+        params (SnowCurrentInput):
+            - canton: Kantonskürzel zum Filtern
+            - station: IMIS-Stationscode zum Filtern
+            - limit: max. Anzahl Stationen
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Schneehöhe und Neuschnee je Station, nach Schneehöhe absteigend.
+    """
+    try:
+        snow = await api.fetch_slf_daily_snow()
+        stations = await api.fetch_slf_snow_stations()
+    except Exception as e:
+        error_msg = await _handle_tool_error("env_snow_current", e, ctx, canton=params.canton)
+        return (
+            f"⚠️ SLF-Schneedaten nicht abrufbar: {error_msg}\n\n"
+            "**Direktzugang:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/\n"
+        )
+
+    meta = {s.get("code"): s for s in stations}
+    canton = params.canton.upper()
+    station = params.station.upper()
+
+    rows: list[dict[str, Any]] = []
+    for rec in snow:
+        code = rec.get("station_code")
+        info = meta.get(code, {})
+        if station and str(code).upper() != station:
+            continue
+        if canton and str(info.get("canton_code", "")).upper() != canton:
+            continue
+        rows.append(
+            {
+                "code": code,
+                "name": info.get("label", ""),
+                "canton": info.get("canton_code", ""),
+                "hs_cm": rec.get("HS"),
+                "hn_1d_cm": rec.get("HN_1D"),
+                "date": rec.get("measure_date"),
+            }
+        )
+
+    rows.sort(key=lambda r: r["hs_cm"] if r["hs_cm"] is not None else -1, reverse=True)
+    shown = rows[: params.limit]
+
+    if params.response_format == ResponseFormat.JSON:
+        return _envelope_json(
+            source=_SLF_ATTRIBUTION,
+            provenance="live_api",
+            results=shown,
+            match_type="none" if not rows else "exact",
+            note=(
+                "Keine Stationen für diesen Filter."
+                if not rows
+                else (
+                    "Alle Werte 0 cm – aktuell schneefrei."
+                    if all((r["hs_cm"] or 0) == 0 for r in rows)
+                    else None
+                )
+            ),
+            query={"canton": params.canton, "station": params.station},
+        )
+
+    if not rows:
+        return (
+            f"## SLF-Schneedaten\n\n*Keine Stationen für Filter "
+            f"(Kanton={params.canton or '–'}, Station={params.station or '–'}) "
+            "(match_type: none). Filter weglassen oder Stationscode via "
+            "`env_snow_stations` prüfen.*"
+        )
+
+    max_hs = max((r["hs_cm"] or 0) for r in rows)
+    lines = [
+        f"## Aktuelle Schneelage (SLF/IMIS) – {len(rows)} Stationen\n",
+        f"*Filter: Kanton={params.canton or 'alle'}, Station={params.station or 'alle'} "
+        f"| Quelle: {_SLF_ATTRIBUTION}*\n",
+        "| Code | Name | Kanton | Schneehöhe HS (cm) | Neuschnee 24h (cm) |",
+        "|------|------|--------|--------------------|--------------------|",
+    ]
+    for r in shown:
+        lines.append(
+            f"| {r['code']} | {r['name'] or '–'} | {r['canton'] or '–'} "
+            f"| {r['hs_cm'] if r['hs_cm'] is not None else '–'} "
+            f"| {r['hn_1d_cm'] if r['hn_1d_cm'] is not None else '–'} |"
+        )
+    if len(rows) > params.limit:
+        lines.append(f"\n*…und {len(rows) - params.limit} weitere Stationen.*")
+    if max_hs == 0:
+        lines.append("\n*Alle gezeigten Stationen aktuell schneefrei (HS = 0 cm).*")
+    return "\n".join(lines)
+
+
+@mcp.tool(
+    name="env_avalanche_bulletin",
+    annotations={
+        "title": "Lawinenbulletin / Warnstufen (SLF)",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": True,
+    },
+)
+@trace_tool
+async def env_avalanche_bulletin(params: AvalancheBulletinInput, ctx: Context | None = None) -> str:
+    """
+    Ruft das aktuelle Lawinenbulletin des SLF ab (Warnstufen je Region).
+
+    Gefahrenstufen nach europäischer EAWS-Skala 1–5 (Gering bis Sehr gross).
+    Ausserhalb der Lawinensaison wird kein Bulletin publiziert – dann meldet das
+    Tool explizit «kein aktives Bulletin» (kein Fehler).
+
+    <use_case>Aktuelle Lawinengefahr je Warnregion für Tourenplanung oder
+    Sicherheitsbeurteilung.</use_case>
+    <important_notes>EAWS-Skala 1–5. Saisonal (Winter). Datenquelle SLF
+    (CC BY 4.0). Für Schneehöhen → `env_snow_current`.</important_notes>
+
+    Args:
+        params (AvalancheBulletinInput):
+            - language: 'de', 'fr', 'it', 'en'
+            - region: Regionsname/-code (Teilstring) zum Filtern
+
+    Returns:
+        str: Warnstufen je Region oder Hinweis, dass kein Bulletin aktiv ist.
+    """
+    try:
+        data = await api.fetch_slf_avalanche_bulletin(params.language)
+    except Exception as e:
+        error_msg = await _handle_tool_error(
+            "env_avalanche_bulletin", e, ctx, language=params.language
+        )
+        return (
+            f"⚠️ Lawinenbulletin nicht abrufbar: {error_msg}\n\n"
+            "**Direktzugang:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/\n"
+        )
+
+    features = data.get("features", []) if isinstance(data, dict) else []
+    if not features:
+        return (
+            "## 🏔️ Lawinenbulletin SLF\n\n"
+            "**Aktuell kein aktives Lawinenbulletin.** Ausserhalb der Lawinensaison "
+            "(i.d.R. ca. Mai–November) publiziert das SLF kein Bulletin.\n\n"
+            "**Aktuelle Lage:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/"
+        )
+
+    region_filter = params.region.lower()
+    entries: list[dict[str, Any]] = []
+    for feat in features:
+        props = feat.get("properties", {}) if isinstance(feat, dict) else {}
+        name = str(
+            props.get("region") or props.get("name") or props.get("label") or props.get("id") or "–"
+        )
+        if region_filter and region_filter not in name.lower():
+            continue
+        entries.append({"region": name, "level": _extract_avalanche_danger(props)})
+
+    lines = [
+        "## 🏔️ Lawinenbulletin SLF\n",
+        f"*Sprache: {params.language} | {len(entries)} Warnregionen "
+        f"| Quelle: {_SLF_ATTRIBUTION}*\n",
+        "**Gefahrenstufen (EAWS):** 1=Gering | 2=Mässig | 3=Erheblich | 4=Gross | 5=Sehr gross\n",
+        "| Warnregion | Gefahrenstufe |",
+        "|------------|---------------|",
+    ]
+    for e in entries[:60]:
+        lvl = e["level"]
+        if lvl is not None:
+            info = AVALANCHE_DANGER_LEVELS.get(lvl, {"label": "–", "color": "–"})
+            lines.append(f"| {e['region']} | Stufe {lvl} ({info['label']}, {info['color']}) |")
+        else:
+            lines.append(f"| {e['region']} | – (keine Angabe im Feature) |")
+    if not entries:
+        lines.append(f"| – | keine Region enthält '{params.region}' |")
+
+    lines.append(
+        "\n**Vollständiges Bulletin:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/"
+    )
+    return "\n".join(lines)
 
 
 # --- TOOLS: UMWELTDATEN / BAFU-DATENKATALOG -----------------------------------
