@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from swiss_environment_mcp import api_client as api  # noqa: E402
 from swiss_environment_mcp.server import (  # noqa: E402
     AirLimitsCheckInput,
+    AvalancheBulletinInput,
     BafuDatasetsInput,
     FloodWarningsInput,
     HydroCurrentInput,
@@ -25,13 +26,18 @@ from swiss_environment_mcp.server import (  # noqa: E402
     NabelCurrentInput,
     NabelStationsInput,
     ResponseFormat,
+    SnowCurrentInput,
+    SnowStationsInput,
     env_air_limits_check,
+    env_avalanche_bulletin,
     env_bafu_datasets,
     env_flood_warnings,
     env_hydro_current,
     env_hydro_stations,
     env_nabel_current,
     env_nabel_stations,
+    env_snow_current,
+    env_snow_stations,
     health,
 )
 
@@ -358,7 +364,7 @@ async def test_all_tools_have_use_case_tag():
     from swiss_environment_mcp.server import mcp
 
     tools = await mcp.list_tools()
-    assert len(tools) == 12
+    assert len(tools) == 15
     missing = [t.name for t in tools if "<use_case>" not in (t.description or "")]
     assert not missing, f"Tools ohne <use_case>-Tag: {missing}"
 
@@ -556,3 +562,134 @@ async def test_run_sparql_400_no_retry(monkeypatch):
 def test_lindas_host_is_allowed():
     """LINDAS-Endpoint steht auf der Egress-Allow-List (Phase 3)."""
     api.assert_host_allowed(api.LINDAS_ENDPOINT)
+
+
+# --- SLF Schnee & Lawinen (Phase 3, Inkrement 2) ------------------------------
+
+_SLF_STATIONS_URL = "https://measurement-api.slf.ch/public/api/imis/stations"
+_SLF_SNOW_URL = "https://measurement-api.slf.ch/public/api/imis/daily-snow"
+_SLF_BULLETIN_URL = "https://aws.slf.ch/api/bulletin/caaml/de/geojson"
+
+_SLF_STATIONS = [
+    {
+        "code": "DAV2",
+        "label": "Bärentälli",
+        "canton_code": "GR",
+        "elevation": 2558.0,
+        "type": "SNOW_FLAT",
+    },
+    {
+        "code": "TUM2",
+        "label": "Val Miez",
+        "canton_code": "GR",
+        "elevation": 2191.0,
+        "type": "SNOW_FLAT",
+    },
+    {
+        "code": "ANV2",
+        "label": "Anzonico",
+        "canton_code": "TI",
+        "elevation": 2000.0,
+        "type": "SNOW_FLAT",
+    },
+]
+
+
+@respx.mock
+async def test_snow_stations_canton_filter():
+    respx.get(_SLF_STATIONS_URL).mock(return_value=httpx.Response(200, json=_SLF_STATIONS))
+    out = await env_snow_stations(SnowStationsInput(canton="GR"))
+    assert "DAV2" in out and "TUM2" in out
+    assert "ANV2" not in out  # TI herausgefiltert
+    assert "CC BY 4.0" in out
+
+
+@respx.mock
+async def test_snow_current_join_and_sort():
+    respx.get(_SLF_STATIONS_URL).mock(return_value=httpx.Response(200, json=_SLF_STATIONS))
+    respx.get(_SLF_SNOW_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=[
+                {
+                    "station_code": "DAV2",
+                    "measure_date": "2026-02-01T00:00:00",
+                    "HS": 120.0,
+                    "HN_1D": 15.0,
+                },
+                {
+                    "station_code": "TUM2",
+                    "measure_date": "2026-02-01T00:00:00",
+                    "HS": 80.0,
+                    "HN_1D": 5.0,
+                },
+                {
+                    "station_code": "ANV2",
+                    "measure_date": "2026-02-01T00:00:00",
+                    "HS": 200.0,
+                    "HN_1D": 0.0,
+                },
+            ],
+        )
+    )
+    out = await env_snow_current(SnowCurrentInput(canton="GR"))
+    assert "120.0" in out and "80.0" in out
+    assert "ANV2" not in out  # TI herausgefiltert
+    # DAV2 (HS 120) muss vor TUM2 (HS 80) stehen (Sortierung absteigend)
+    assert out.index("DAV2") < out.index("TUM2")
+
+
+@respx.mock
+async def test_snow_current_retry_then_success(monkeypatch):
+    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    respx.get(_SLF_SNOW_URL).mock(
+        side_effect=[
+            httpx.Response(503),
+            httpx.Response(
+                200,
+                json=[{"station_code": "DAV2", "measure_date": "d", "HS": 50.0, "HN_1D": 2.0}],
+            ),
+        ]
+    )
+    respx.get(_SLF_STATIONS_URL).mock(return_value=httpx.Response(200, json=_SLF_STATIONS))
+    out = await env_snow_current(SnowCurrentInput(station="DAV2"))
+    assert "50.0" in out
+
+
+@respx.mock
+async def test_avalanche_bulletin_offseason_empty():
+    respx.get(_SLF_BULLETIN_URL).mock(
+        return_value=httpx.Response(200, json={"type": "FeatureCollection", "features": []})
+    )
+    out = await env_avalanche_bulletin(AvalancheBulletinInput(language="de"))
+    assert "kein aktives Lawinenbulletin" in out.lower() or "kein aktives" in out
+
+
+@respx.mock
+async def test_avalanche_bulletin_winter_danger():
+    """CAAML-Feature mit EAWS-Textwert 'considerable' → Stufe 3 (Erheblich)."""
+    respx.get(_SLF_BULLETIN_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "region": "Davos",
+                            "dangerRatings": [{"mainValue": "considerable"}],
+                        },
+                    }
+                ],
+            },
+        )
+    )
+    out = await env_avalanche_bulletin(AvalancheBulletinInput(language="de"))
+    assert "Davos" in out
+    assert "Stufe 3" in out and "Erheblich" in out
+
+
+def test_slf_hosts_allowed():
+    api.assert_host_allowed(_SLF_STATIONS_URL)
+    api.assert_host_allowed(_SLF_BULLETIN_URL)

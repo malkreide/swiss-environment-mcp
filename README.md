@@ -37,6 +37,7 @@ The server covers four thematic clusters: air quality (NABEL), hydrology, natura
 - 🚨 **Flood warnings** – active alerts filtered by danger level and canton
 - 🏔️ **Natural hazard bulletin** – SLF/BAFU bulletin in DE/FR/IT/EN, region-specific warnings
 - 🔥 **Wildfire danger** – canton- and region-level fire danger index
+- ❄️ **Snow & avalanches (SLF)** – snow depth, new snow per IMIS station; avalanche danger levels (EAWS)
 - 📦 **BAFU open data catalogue** – search and retrieve environmental datasets via CKAN
 - 🔑 **No authentication required** – all data sources are publicly accessible
 - ☁️ **Dual transport** – stdio for Claude Desktop, Streamable HTTP/SSE for cloud deployment
@@ -161,6 +162,14 @@ docker run -p 8000:8000 swiss-environment-mcp
 | `env_hazard_regions` | Region-specific warnings (floods, avalanches, rockfall) | naturgefahren.ch |
 | `env_wildfire_danger` | Wildfire danger index by canton and region | waldbrandgefahr.ch |
 
+### ❄️ Snow & Avalanches / SLF (3 tools)
+
+| Tool | Description | Data Source |
+|---|---|---|
+| `env_snow_stations` | List automatic SLF/IMIS snow measurement stations (by canton) | measurement-api.slf.ch |
+| `env_snow_current` | Current snow depth (HS) and 24 h new snow (HN_1D) per station, in cm | measurement-api.slf.ch |
+| `env_avalanche_bulletin` | Avalanche danger levels (EAWS 1–5) per warning region, seasonal | aws.slf.ch |
+
 ### 📊 Environmental Data Catalogue (2 tools)
 
 | Tool | Description | Data Source |
@@ -215,13 +224,15 @@ docker run -p 8000:8000 swiss-environment-mcp
 
 | Source | Data | Licence |
 |---|---|---|
-| [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Water levels, flow rates, temperatures (10-min intervals) | BAFU OGD |
+| [lindas.admin.ch](https://lindas.admin.ch) | Current hydrology (level, discharge, water temperature) via SPARQL | BAFU Open-Use / OGD |
+| [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Water levels, flow rates, temperatures (REST fallback) | BAFU OGD |
 | [naturgefahren.ch](https://naturgefahren.ch) | Natural hazard bulletin (SLF/BAFU) | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
+| [SLF data service](https://www.slf.ch/en/services-and-products/slf-data-service/) | Snow depth, new snow (IMIS); avalanche bulletin | SLF (WSL) CC BY 4.0 |
 | [opendata.swiss](https://opendata.swiss/en/organization/bafu) | BAFU data catalogue (CKAN API) | OGD |
 
 All data: publicly accessible, no authentication required.  
-**Attribution required:** BAFU must be cited as the source when using their data.
+**Attribution required:** BAFU / SLF (WSL) must be cited as the source when using their data.
 
 ---
 
@@ -296,9 +307,9 @@ ground and avalanche danger.
 
 | Data | swiss-environment-mcp (BAFU / SLF) | meteoswiss-mcp (MeteoSwiss) |
 |---|---|---|
-| Snow depth on the ground (`HS`) | ✅ SLF IMIS / study-plot ¹ | ❌ |
-| Fresh snow 24 h (`HN_1D`) | ✅ SLF ¹ | ❌ |
-| Avalanche danger level | ✅ SLF avalanche bulletin ¹ | ❌ |
+| Snow depth on the ground (`HS`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
+| Fresh snow 24 h (`HN_1D`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
+| Avalanche danger level | ✅ `env_avalanche_bulletin` (SLF, EAWS 1–5) | ❌ |
 | Snowfall as a current weather condition | ❌ | ✅ `meteo_current` / `meteo_forecast` (weather code) |
 | Precipitation amount (mm): measurement network, forecast, climate normals | ❌ | ✅ `meteo_current` / `meteo_forecast` / `meteo_climate_normals` |
 | Precipitation at SLF IMIS mountain stations | ✅ only as snow-cover context, **no standalone precipitation tool** | (MeteoSwiss network) |
@@ -308,12 +319,9 @@ ground and avalanche danger.
 **Rule:** snow **on the ground** and **avalanche** danger belong to
 `swiss-environment-mcp` (SLF); **atmospheric precipitation** (rain/snowfall as mm)
 plus weather, forecast, warnings and climate normals belong to `meteoswiss-mcp`.
-The SLF IMIS precipitation sensor is used only as context for the snowpack and is
-never exposed as a precipitation tool, so it does not duplicate MeteoSwiss.
-
-¹ SLF/snow tools are in preparation (Phase-1 live-probe completed 2026-07-19, see
-[`docs/probe-slf.md`](docs/probe-slf.md) and [`docs/tool-inventory.md`](docs/tool-inventory.md));
-the demarcation is fixed now so the two servers do not collide once implemented.
+The SLF IMIS precipitation endpoint (`RR_10MIN_SUM`) is deliberately **not** wired
+up as a tool, so it does not duplicate MeteoSwiss. The snow/avalanche tools are
+live (see [`docs/probe-slf.md`](docs/probe-slf.md)).
 
 ---
 

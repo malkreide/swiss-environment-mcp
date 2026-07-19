@@ -174,6 +174,28 @@ async def test_hydro_current_lindas() -> None:
     check("LINDAS: >200 Stationen", len(stations) > 200)
 
 
+async def test_slf_snow() -> None:
+    print("\n[Schnee] SLF IMIS — Stationen + Tages-Schneewerte")
+
+    if SKIP_LIVE:
+        print("  ⏭️  Live-Test übersprungen")
+        return
+
+    from swiss_environment_mcp import api_client as api
+
+    stations = await api.fetch_slf_snow_stations()
+    check("SLF: >50 IMIS-Stationen", len(stations) > 50)
+    check("SLF: Station hat canton_code", any(s.get("canton_code") for s in stations))
+
+    snow = await api.fetch_slf_daily_snow()
+    check("SLF: Tages-Schneewerte vorhanden", len(snow) > 0)
+    check("SLF: HS-Feld vorhanden", "HS" in (snow[0] if snow else {}))
+
+    # Bulletin: ausserhalb der Saison leere FeatureCollection (kein Fehler)
+    bulletin = await api.fetch_slf_avalanche_bulletin("de")
+    check("SLF: Bulletin ist FeatureCollection", bulletin.get("type") == "FeatureCollection")
+
+
 async def test_hydro_history() -> None:
     print("\n[Wasser] Historische Daten")
 
@@ -294,6 +316,7 @@ async def main() -> None:
     await test_hydro_current()
     await test_hydro_history()
     await test_hydro_current_lindas()
+    await test_slf_snow()
     await test_flood_warnings()
     await test_hazard_overview()
     await test_hazard_regions()

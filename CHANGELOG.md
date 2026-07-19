@@ -6,6 +6,17 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 ## [Unreleased]
 
 ### Neu / Added
+- **SLF-Schnee- & Lawinen-Tools** (Phase 3, Inkrement 2), Cluster «Schnee/SLF»:
+  - `env_snow_stations` — automatische IMIS-Schneemessstationen (Filter Kanton).
+  - `env_snow_current` — aktuelle Schneehöhe (HS) & Neuschnee 24 h (HN_1D) in cm,
+    je Station, mit Kanton-/Stations-Filter.
+  - `env_avalanche_bulletin` — Lawinenwarnstufen (EAWS 1–5) je Warnregion aus dem
+    CAAML-GeoJSON; ausserhalb der Saison sprechender «kein aktives Bulletin»-Pfad.
+  - Datenquelle SLF-Datenservice (`measurement-api.slf.ch`, `aws.slf.ch`),
+    **CC BY 4.0**, no-auth. Hosts in der Egress-Allow-List. Retry via
+    `_get_json_retry`. Tool-Anzahl 12 → 15, `tool-snapshot.json` aktualisiert.
+  - **Abgrenzung meteoswiss:** der SLF-IMIS-Niederschlagssensor (`RR_10MIN_SUM`)
+    wird bewusst **nicht** als Tool angebunden (Zuständigkeitsmatrix).
 - **LINDAS-SPARQL-Anbindung für Hydrodaten** (Phase 3). `env_hydro_current` und
   `env_hydro_stations` fragen primär den BAFU-LINDAS-Endpoint
   (`lindas.admin.ch/query`, Graph `foen/hydro`, `cube.link`-Data-Cube) ab und

@@ -37,6 +37,7 @@ Der Server deckt vier thematische Cluster ab: Luftqualität (NABEL), Hydrologie,
 - 🚨 **Hochwasserwarnungen** – aktive Warnungen nach Gefahrenstufe und Kanton
 - 🏔️ **Naturgefahren-Bulletin** – SLF/BAFU-Bulletin auf DE/FR/IT/EN, regionsspezifische Warnungen
 - 🔥 **Waldbrandgefahr** – Kantons- und Regionalindex für Waldbrandgefahr
+- ❄️ **Schnee & Lawinen (SLF)** – Schneehöhe, Neuschnee je IMIS-Station; Lawinenwarnstufen (EAWS)
 - 📦 **BAFU-Open-Data-Katalog** – Umweltdatensätze suchen und abrufen via CKAN
 - 🔑 **Keine Authentifizierung erforderlich** – alle Datenquellen sind öffentlich zugänglich
 - ☁️ **Dual Transport** – stdio für Claude Desktop, Streamable HTTP/SSE für Cloud-Deployment
@@ -161,6 +162,14 @@ docker run -p 8000:8000 swiss-environment-mcp
 | `env_hazard_regions` | Regionsspezifische Warnungen (Hochwasser, Lawinen, Steinschlag) | naturgefahren.ch |
 | `env_wildfire_danger` | Waldbrandgefahren-Index nach Kantonen und Regionen | waldbrandgefahr.ch |
 
+### ❄️ Schnee & Lawinen / SLF (3 Tools)
+
+| Tool | Beschreibung | Datenquelle |
+|---|---|---|
+| `env_snow_stations` | Automatische SLF/IMIS-Schneemessstationen auflisten (nach Kanton) | measurement-api.slf.ch |
+| `env_snow_current` | Aktuelle Schneehöhe (HS) und Neuschnee 24 h (HN_1D) je Station, in cm | measurement-api.slf.ch |
+| `env_avalanche_bulletin` | Lawinenwarnstufen (EAWS 1–5) je Warnregion, saisonal | aws.slf.ch |
+
 ### 📊 Umweltdatenkatalog (2 Tools)
 
 | Tool | Beschreibung | Datenquelle |
@@ -215,13 +224,15 @@ docker run -p 8000:8000 swiss-environment-mcp
 
 | Quelle | Daten | Lizenz |
 |---|---|---|
-| [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Pegel, Abfluss, Temperaturen (10-Min-Intervall) | BAFU OGD |
+| [lindas.admin.ch](https://lindas.admin.ch) | Aktuelle Hydrologie (Pegel, Abfluss, Wassertemperatur) via SPARQL | BAFU Open-Use / OGD |
+| [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Pegel, Abfluss, Temperaturen (REST-Fallback) | BAFU OGD |
 | [naturgefahren.ch](https://naturgefahren.ch) | Naturgefahren-Bulletin (SLF/BAFU) | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Waldbrandgefahren-Index | BAFU |
+| [SLF-Datenservice](https://www.slf.ch/de/services-und-produkte/slf-datenservice/) | Schneehöhe, Neuschnee (IMIS); Lawinenbulletin | SLF (WSL) CC BY 4.0 |
 | [opendata.swiss](https://opendata.swiss/de/organization/bafu) | BAFU-Datenkatalog (CKAN-API) | OGD |
 
 Alle Daten: öffentlich zugänglich, keine Authentifizierung erforderlich.  
-**Quellenangabe erforderlich:** Bei Verwendung der BAFU-Daten muss das BAFU als Quelle angegeben werden.
+**Quellenangabe erforderlich:** Bei Verwendung der Daten müssen BAFU bzw. SLF (WSL) als Quelle angegeben werden.
 
 ---
 
@@ -298,9 +309,9 @@ verantwortet Schnee am Boden und Lawinengefahr.
 
 | Grösse | swiss-environment-mcp (BAFU / SLF) | meteoswiss-mcp (MeteoSchweiz) |
 |---|---|---|
-| Schneehöhe am Boden (`HS`) | ✅ SLF IMIS / Beobachtungsfeld ¹ | ❌ |
-| Neuschnee 24 h (`HN_1D`) | ✅ SLF ¹ | ❌ |
-| Lawinenwarnstufe | ✅ SLF-Lawinenbulletin ¹ | ❌ |
+| Schneehöhe am Boden (`HS`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
+| Neuschnee 24 h (`HN_1D`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
+| Lawinenwarnstufe | ✅ `env_avalanche_bulletin` (SLF, EAWS 1–5) | ❌ |
 | Schneefall als aktuelle Wetterlage | ❌ | ✅ `meteo_current` / `meteo_forecast` (Wettercode) |
 | Niederschlagsmenge (mm): Messnetz, Prognose, Klimanormwerte | ❌ | ✅ `meteo_current` / `meteo_forecast` / `meteo_climate_normals` |
 | Niederschlag an SLF-IMIS-Bergstationen | ✅ nur als Schneedecken-Kontext, **kein eigenes Niederschlags-Tool** | (MeteoSchweiz-Messnetz) |
@@ -310,14 +321,9 @@ verantwortet Schnee am Boden und Lawinengefahr.
 **Regel:** Schnee **am Boden** und **Lawinengefahr** gehören zu
 `swiss-environment-mcp` (SLF); **atmosphärischer Niederschlag** (Regen/Schneefall
 als mm) sowie Wetter, Prognose, Warnungen und Klimanormwerte gehören zu
-`meteoswiss-mcp`. Der IMIS-Niederschlagssensor des SLF dient nur als Kontext zur
-Schneedecke und wird nie als Niederschlags-Tool exponiert — damit keine
-Duplikation mit MeteoSchweiz.
-
-¹ SLF-/Schnee-Tools sind in Vorbereitung (Phase-1-Live-Probe abgeschlossen am
-2026-07-19, siehe [`docs/probe-slf.md`](docs/probe-slf.md) und
-[`docs/tool-inventory.md`](docs/tool-inventory.md)); die Abgrenzung wird bereits
-jetzt fixiert, damit die beiden Server bei der Umsetzung nicht kollidieren.
+`meteoswiss-mcp`. Der IMIS-Niederschlagssensor des SLF (`RR_10MIN_SUM`) wird
+bewusst **nicht** als Tool angebunden — damit keine Duplikation mit MeteoSchweiz.
+Die Schnee-/Lawinen-Tools sind live (siehe [`docs/probe-slf.md`](docs/probe-slf.md)).
 
 ---
 
