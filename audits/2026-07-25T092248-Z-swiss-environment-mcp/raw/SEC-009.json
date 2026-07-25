@@ -1,0 +1,17 @@
+{
+  "status": "partial",
+  "category": "SEC",
+  "severity": "critical",
+  "evidence": [
+    "docs/security.md (Abschnitt 'Session-Modell (SEC-009)') — dokumentierter Entscheid: kein Auth-Modell, FastMCP verwaltet die Mcp-Session-Id; keine benutzerbezogenen Sessions, keine sensiblen Daten an Sessions gebunden; verbindliche Vorgaben (crypto IDs, sub-Binding, TTL, Logout-Invalidierung) für künftige OAuth-Einführung festgehalten",
+    "src/swiss_environment_mcp/server.py:2634-2650 — build_cors_app expose_headers/allow_headers für Mcp-Session-Id, allow_credentials=False; Session-Handling vollständig an den MCP-SDK-Transport delegiert, kein eigener (potenziell schwacher) Session-Code im Repo",
+    "pyproject.toml — mcp[cli]>=1.28.1,<2 gepinnt; die SDK-Session-ID-Generierung (uuid4) ist kryptografisch zufällig und wird nicht durch eigenen Code ersetzt",
+    "docs/security.md (Datenklassifikation) — ausschliesslich Public Open Data, alle Tools read-only, keine Personendaten: Session-Hijacking hätte keinen Zugriff auf fremde Daten oder Schreib-Operationen zur Folge"
+  ],
+  "gaps": [
+    "Kein User-Binding (user_id:session_id) — mangels Auth-Modell nicht umsetzbar; die Kriterien 'Binding an validierten sub-Claim' und 'HTTP 401/403 bei Mismatch' sind unerfüllt (dokumentiert als bewusster Verzicht)",
+    "Keine explizite Session-TTL und keine serverseitige Logout-Invalidierung konfiguriert",
+    "Kryptografische Qualität der SDK-Session-IDs im Audit-Environment nicht direkt verifizierbar (mcp-Paket nicht installiert); Beleg stützt sich auf Delegation an das gepinnte SDK"
+  ],
+  "evaluator_notes": "Für einen auth-losen Public-Data-Server ist das Session-Risiko dokumentiert und materiell gering (nichts zu kapern: read-only, keine User-Daten). Die harten Pass-Kriterien (Binding, TTL, Invalidierung) sind aber nicht erfüllt — daher partial mit dokumentierter Risiko-Akzeptanz."
+}

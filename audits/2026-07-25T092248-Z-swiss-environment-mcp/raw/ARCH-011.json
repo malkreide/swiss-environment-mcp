@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "medium",
+  "evidence": [
+    "Repo-Root — alle Pflicht-Files vorhanden: README.md, README.de.md, CHANGELOG.md, LICENSE, pyproject.toml (plus CONTRIBUTING.md/.de.md, SECURITY.md/.de.md)",
+    "pyproject.toml:[tool.hatch.build.targets.wheel] packages=['src/swiss_environment_mcp'] — korrektes src-Layout mit hatchling; Verzeichnisse src/, tests/, docs/, .github/workflows/ vorhanden",
+    ".github/workflows/ — ci.yml (Tests+Lint), publish.yml (PyPI Trusted Publisher, id-token: write), security.yml, live-tests.yml — mehr als das geforderte Minimum",
+    "README.md vs. README.de.md — Top-Level-Sektionen decken sich 1:1 (Overview/Übersicht … License/Lizenz, per Section-Diff geprüft)",
+    "README.md:288-293 — Abweichung vom tools/-Split explizit begründet ('Single-module layout (rationale, audit ARCH-011)': dünne uniforme Wrapper, bewusste dokumentierte Abweichung)"
+  ],
+  "gaps": [
+    "server.py ist auf 2681 Zeilen gewachsen (18 Tools); die dokumentierte Single-Module-Begründung nennt noch '12 tools' — die Rationale wurde beim Wachstum auf 18 Tools nicht neu bewertet",
+    "Stale Zählangaben in README-Projektstruktur/Architekturbox ('12 Tools · 3 Resources') gegenüber tatsächlich 18 Tools"
+  ],
+  "evaluator_notes": "Struktur entspricht dem Portfolio-Standard vollständig (src-Layout, Tests, 4 Workflows, bilinguale Doku, begründete Abweichung beim tools/-Split). Die veralteten '12 Tools'-Referenzen sind ein Doku-Drift, kein Strukturmangel."
+}

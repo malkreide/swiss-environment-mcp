@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "medium",
+  "evidence": [
+    "pyproject.toml — Build-Backend hatchling ohne cmdclass/Custom-Hooks; einziger Entry-Point [project.scripts] swiss-environment-mcp = 'swiss_environment_mcp.server:main'; kein package.json/pre-/postinstall im Repo",
+    "README.md:100-110 und 435-443 — voller, ungekürzter Installations-Befehl (uvx swiss-environment-mcp) in claude_desktop_config.json transparent gezeigt, ohne versteckte Setup-Steps",
+    ".github/workflows/publish.yml:7-9,35-50 — PyPI-Publish via pypa/gh-action-pypi-publish mit OIDC (permissions: id-token: write, environment pypi) = Trusted Publisher mit Sigstore-Signatur; zusätzlich MCP-Registry-Publish via GitHub-OIDC",
+    "scripts/ enthält nur tool_snapshot.py (im Repo lesbar, CI-Werkzeug, kein Install-Hook); kein dynamisches Code-Loading beim Install"
+  ],
+  "gaps": [
+    "CONTRIBUTING.md dokumentiert Dev-Setup/Tests, aber keinen expliziten Abschnitt zum Build-/Release-Prozess für unabhängige Verifikation (der Build ist nur über publish.yml nachvollziehbar)"
+  ],
+  "evaluator_notes": "Installation ist vollständig transparent (Standard-Wheel via hatchling, uvx-Befehl im README, keine Install-Hooks), Publishing läuft über PyPI-OIDC-Trusted-Publisher. Einzige Lücke ist die fehlende Build-Prozess-Doku in CONTRIBUTING.md."
+}

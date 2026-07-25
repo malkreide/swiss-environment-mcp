@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "critical",
+  "evidence": [
+    "src/ + scripts/ — Pattern-Scan (api_key/password/secret/token = '…', Connection-Strings, AKIA…) ohne Treffer; Server benötigt per Design keine Secrets (server.py:25 'Alle Daten: öffentlich, keine Authentifizierung erforderlich')",
+    ".gitignore:4-6 — '.env', '.env.*', '!.env.example' korrekt ausgeschlossen",
+    ".env.example:1-21 — existiert, enthält ausschliesslich Nicht-Secret-Konfiguration (Transport/Host/Port/CORS) mit explizitem Hinweis 'benötigt KEINE Secrets / API-Keys'",
+    ".github/workflows/security.yml:13-33 — gitleaks-Scan (History + Working Tree, --redact) auf jedem Push/PR; .gitleaks.toml im Repo-Root",
+    "pyproject.toml — pydantic-settings als Dependency; Settings-Klasse (server.py:49) als Lade-Pfad für alle Env-Konfiguration"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Keine hardcodierten Secrets; der Server ist auth-frei (nur öffentliche Gov-APIs). .env-Hygiene, .env.example und CI-Secret-Scanning (gitleaks inkl. History) sind vorhanden. SecretStr-Kriterium ist gegenstandslos, da keine Secrets existieren."
+}

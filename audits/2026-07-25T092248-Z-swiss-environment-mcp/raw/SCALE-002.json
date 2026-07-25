@@ -1,0 +1,17 @@
+{
+  "status": "fail",
+  "category": "SCALE",
+  "severity": "high",
+  "evidence": [
+    "grep -rE 'redis|session_manager|SessionStore|stick|affinity|DurableObject' src/ *.yaml *.yml Dockerfile Procfile docs/ → keine Implementierung eines Sticky-Session- oder Shared-State-Musters (nur textuelle Erwähnung in docs/scaling.md)",
+    "docs/scaling.md:5-16 — dokumentierter Ist-Zustand: Single-Instance (Render Web Service), keine serverseitig persistierten Sessions, kein verteiltes Session-Management",
+    "docs/scaling.md:19-37 — Scale-out-Anforderungen (Sticky Sessions bzw. Redis-Shared-State, Session-TTL, Failover-Regel) sind als verbindliche Vorgabe beschrieben, aber nicht implementiert",
+    "render.yaml:5 — plan: starter, keine Replica-/Scaling-Konfiguration; keine Session-TTL an irgendeiner Stelle gesetzt"
+  ],
+  "gaps": [
+    "Keines der beiden geforderten Muster (Sticky Sessions am Edge-LB / Shared-State-Session-Manager) ist implementiert.",
+    "Keine explizite Session-Lifetime (TTL) definiert — FastMCP-Session-State lebt im Prozess-Memory.",
+    "Kein Failover-Test vorhanden oder dokumentiert."
+  ],
+  "evaluator_notes": "Alle drei Pass-Kriterien unerfüllt, daher fail trotz sauberer Risikodokumentation: docs/scaling.md begründet den Verzicht mit der Single-Instance-Topologie (Affinität trivial erfüllt) und benennt die verbindlichen Muster für den Scale-out. Das Finding wird akut, sobald mehr als eine Replica läuft."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "medium",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:2589-2623 — zwei Primitive genutzt: 18 Tools + 3 Resources (env://grenzwerte/luft, env://nabel/stationen, env://hochwasser/gefahrenstufen)",
+    "src/swiss_environment_mcp/server.py:2589,2601,2616 — konsistentes URI-Schema 'env://<thema>/<objekt>'; Inhalte sind statische Referenzdaten (Grenzwerte, Stationslisten, Gefahrenstufen) = korrekte Resource-Kandidaten",
+    "docs/tool-inventory.md:44-48 + README.md:224 ('12 Tools · 3 Resources'-Box) — Resources sind dokumentiert und inventarisiert",
+    "src/swiss_environment_mcp/server.py:107-192 — die statischen Lookup-Daten, die Resources speisen, sind von Live-Tools getrennt; read-only Live-Abfragen bleiben bewusst Tools (nicht deterministisch/cachebar)"
+  ],
+  "gaps": [
+    "Keine Prompts (drittes Primitiv) — bei wiederkehrenden Lagebild-Workflows (z.B. 'Hochwasser-Lagecheck Kanton X') wären kuratierte Prompt-Templates ein sinnvoller Ausbau",
+    "Die 3 neuen statischen Lookups (JAGD_SPECIES/JAGD_CANTONS, Badestellen-Codes) sind nicht als Resources exponiert, obwohl env_hunting_species faktisch ein statisches Nachschlagewerk ist (Resource-Kandidat)"
+  ],
+  "evaluator_notes": "Mindestens zwei der drei Primitive sind mit konsistentem URI-Schema in Gebrauch und dokumentiert — Kernkriterium erfüllt. Prompts fehlen (zulässig), und der neue Jagd-Lookup wäre ein natürlicher Resource-Kandidat."
+}

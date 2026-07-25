@@ -1,0 +1,16 @@
+{
+  "status": "partial",
+  "category": "ARCH",
+  "severity": "medium",
+  "evidence": [
+    "pyproject.toml:21-24 — SDK-Major-Pin 'mcp[cli]>=1.28.1,<2' mit explizitem ARCH-012-Kommentar ('legt die ausgehandelte MCP-Protokoll-Version fest'); aber KEIN explizites protocolVersion-Pinning im Server-Code (grep protocolVersion/protocol_version in src/ = 0 Treffer)",
+    "CHANGELOG.md — vorhanden, Keep-a-Changelog-Format mit datierten Releases ([0.3.0] – 2026-07-25, Sektionen Neu/Architektur/Refactor/Behoben); CHANGELOG.md:167 dokumentiert den SDK-Pin",
+    "README.md:295-304 — Sektion 'MCP Protocol Version & Maintenance' mit Update-Policy (Dependabot monatlich, semver-Bump bei Tool-/Verhaltensänderung, Tool-Snapshot-Gate SEC-022)",
+    ".github/dependabot.yml — monatliche Update-PRs für pip UND github-actions aktiv"
+  ],
+  "gaps": [
+    "protocolVersion ist im Server-Code nicht explizit gepinnt — FastMCP wird ohne Versions-Pin instanziiert (server.py:310-322); der SDK-Major-Pin ist nur ein indirekter Proxy, ein Minor-Update des SDK kann die ausgehandelte Spec-Version still ändern",
+    "CHANGELOG-Einträge nennen keine expliziten Spec-Version-Bumps (nur SDK-Pin-Erwähnung) — Audit-Trail-Lücke bei künftigen Protokollwechseln"
+  ],
+  "evaluator_notes": "CHANGELOG-Disziplin, README-Policy-Sektion und Dependabot sind vorbildlich; das Kernkriterium — explizites protocolVersion-Pinning im Code statt SDK-Default — ist jedoch nicht erfüllt. 4 von 6 Kriterien erfüllt → partial."
+}

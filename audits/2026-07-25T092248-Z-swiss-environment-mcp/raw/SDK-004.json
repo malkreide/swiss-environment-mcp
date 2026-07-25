@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "category": "SDK",
+  "severity": "high",
+  "evidence": [
+    "CORS-Middleware um die Streamable-HTTP-App mit expose_headers=['Mcp-Session-Id'] und Mcp-Session-Id in allow_headers (src/swiss_environment_mcp/server.py:2629-2653)",
+    "Origins nicht hardcoded: konfigurierbar via MCP_CORS_ALLOW_ORIGINS (Settings, server.py:61-66); Wildcard-Default löst explizite Produktions-Warnung aus (server.py:2640-2644); allow_credentials=False, damit '*' CORS-spec-konform bleibt (server.py:2651-2652)",
+    "Runtime-verifiziert per Test: test_cors_exposes_and_allows_session_id_header prüft, dass die Response access-control-expose-headers mit Mcp-Session-Id trägt (tests/test_unit.py:430-442)"
+  ],
+  "gaps": [
+    "Default MCP_CORS_ALLOW_ORIGINS='*' im Dev-Modus — für Produktion nur als dokumentierte Pflicht (Kommentar + Log-Warnung), nicht technisch erzwungen"
+  ],
+  "evaluator_notes": "Das kritische expose_headers/allow_headers-Paar für Mcp-Session-Id ist gesetzt und getestet; da der Server ohne Auth/Credentials läuft, ist die Wildcard-Default-Kombination mit allow_credentials=False zulässig und wird beim Start gewarnt."
+}

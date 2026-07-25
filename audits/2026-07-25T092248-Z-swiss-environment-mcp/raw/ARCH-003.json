@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "medium",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:343-359 — MatchType-Literal ('exact'/'fuzzy'/'none') + ResponseEnvelope mit match_type- und note-Feld für alle Such-/Listen-Tools",
+    "src/swiss_environment_mcp/server.py:1565-1571,1592-1604 — NEU env_bathing_water: Teilstring-Suche (fuzzy), bei Nicht-Treffer actionable Hinweis ('ohne location listet alle Badestellen'), bei Mehrfach-Treffern match_type 'fuzzy' + 'Weitere Treffer'-Alternativen",
+    "src/swiss_environment_mcp/server.py:1166-1172, 2444-2453, 2079-2085 — leere Resultate liefern konkrete Handlungsvorschläge statt blanker Listen (Filter weglassen, bekannte Station-ID '2099', breitere Suchbegriffe)",
+    "src/swiss_environment_mcp/server.py:1418-1423, 2151-2158 — Zustände ohne Daten werden als explizite Nicht-Fehler geframed ('Keine aktiven Hochwasserwarnungen' = Entwarnung; 'kein aktives Bulletin' = Saisonzyklus)",
+    "tests/test_unit.py:341,377 + tests/test_lindas.py:279 — Unit-Tests decken match_type 'none' + actionable Note ab (inkl. neuem Bathing-Water-Pfad)"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Das Not-Found-Anti-Pattern ist systematisch adressiert (match_type + note + Alternativvorschläge), auch im neuen LINDAS-/Bathing-Water-Code. Sensible Daten existieren nicht (nur öffentliche Aggregatdaten), die Sensitive-Ausnahme ist daher nicht anwendbar."
+}

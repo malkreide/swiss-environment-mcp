@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "CH",
+  "severity": "medium",
+  "evidence": [
+    "README dokumentiert alle Datenquellen mit Lizenzen in einer Tabelle, inkl. der neuen Quellen: LINDAS/Badegewässer ('Open-Use / OGD, declared per graph/dataset — each response carries a licence field', README.md:249), SLF CC BY 4.0 (README.md:253), Jagdstatistik mit ehrlicher 'keine explizite Lizenz'-Recherche und Attributionspflicht (README.md:326)",
+    "Jede env_bathing_water-Antwort trägt ein Lizenzfeld: get_cube_license wird pro Aufruf ermittelt und in source-Feld bzw. Markdown-Fusszeile eingebettet (src/swiss_environment_mcp/server.py:1517, 1543, 1562, 1596, 1624)",
+    "Keine stillschweigende Re-Lizenzierung: LICENSE_UNDECLARED-Text warnt explizit, wenn am Cube keine Lizenz deklariert ist, statt 'Open-Use' anzunehmen (src/swiss_environment_mcp/lindas/cube.py:54-63, get_cube_license cube.py:382-403)",
+    "Konsistente Attribution über den ResponseEnvelope (source-Pflichtfeld + provenance) in allen Such-/Listen-Tools (server.py:346-359) und in den JSON-Ausgaben, z.B. 'BAFU Hydrodaten via LINDAS (Open-Use / OGD-CH)' (server.py:721)"
+  ],
+  "gaps": [
+    "Formelle Lizenzbestätigung des BAFU für die Jagdstatistik steht noch aus (im README transparent als offen markiert)"
+  ],
+  "evaluator_notes": "Das neue Badegewässer-Tool erfüllt die OGD-CH-Attribution vorbildlich: Lizenz wird live am Cube/Graph ermittelt, ehrlich als 'nicht deklariert' ausgewiesen und in jeder Antwort mitgeliefert; README-Lizenztabelle ist auf dem Stand der 0.3.0-Quellen."
+}

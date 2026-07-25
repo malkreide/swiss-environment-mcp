@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:49-69 — Konfiguration via pydantic_settings.BaseSettings (mcp_transport/mcp_host/port/mcp_cors_allow_origins), keine globalen Hardcodes",
+    "src/swiss_environment_mcp/server.py:2656-2677 — main() wählt Transport per Env-Var: stdio (Default), sse, streamable-http — gleiche FastMCP-Instanz und Tool-Registry für alle Transports",
+    "src/swiss_environment_mcp/server.py:296-322 — gemeinsamer Lifespan (api.startup/shutdown, geteilter httpx.AsyncClient) für alle Transports",
+    "src/swiss_environment_mcp/server.py:819-… — alle Tool-Handler nehmen ausschliesslich (params, ctx: Context); kein request./stdin/stdout-Zugriff in Handlern (grep); starlette.Request nur im Nicht-Tool-Health-Endpoint src/swiss_environment_mcp/server.py:328-331",
+    "src/swiss_environment_mcp/api_client.py:96-…, src/swiss_environment_mcp/lindas/client.py:19-21,96-114 — NEUER Code hält IoC ein: HTTP-Client und Egress-Guard werden injiziert (SelectRunner-Callback), lindas/-Module sind transportfrei"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Transport-agnostische Architektur sauber umgesetzt; das neue lindas/-Modul verstärkt das Pattern sogar (Client/Egress als injizierte Callbacks, keine Server-Imports). Keine Regression im neuen Code."
+}

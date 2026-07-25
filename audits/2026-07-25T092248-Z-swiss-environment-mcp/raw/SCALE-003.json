@@ -1,0 +1,17 @@
+{
+  "status": "fail",
+  "category": "SCALE",
+  "severity": "high",
+  "evidence": [
+    "find/grep im Repo: keine haproxy.cfg, keine nginx.conf, keine ingress*.yaml, kein k8s/- oder helm/-Verzeichnis — kein Edge-LB liest den Mcp-Session-Id-Header",
+    "src/swiss_environment_mcp/server.py:2649-2650 — CORS-Middleware erlaubt/exponiert den Mcp-Session-Id-Header (allow_headers/expose_headers); das ist nur die Client-seitige Voraussetzung, kein Routing",
+    "docs/scaling.md:26-29 — Header-basiertes Stick-Table-Routing (Kapazität ≥100k, TTL ~24h) ist als Scale-out-Vorgabe dokumentiert, nicht konfiguriert",
+    "render.yaml:1-17 — Render-managed LB ohne konfigurierbare Header-Affinität; kein Affinitäts- oder Failover-Test vorhanden"
+  ],
+  "gaps": [
+    "Kein Edge-LB mit Mcp-Session-Id-basiertem Routing (HAProxy stick-table / NGINX hash / Ingress-Annotation) konfiguriert.",
+    "Keine Stick-Table-Kapazität und kein TTL definiert.",
+    "Failover-Verhalten nicht getestet."
+  ],
+  "evaluator_notes": "Wie SCALE-002: In der aktuellen Single-Instance-Topologie existiert kein Edge-LB, den man konfigurieren könnte — alle vier Pass-Kriterien sind formal unerfüllt (fail). Der Server selbst ist mit der Mcp-Session-Id-Header-Exposition (CORS) LB-ready; die Routing-Konfiguration ist in docs/scaling.md als Pflicht beim ersten Scale-out festgehalten."
+}
