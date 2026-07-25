@@ -5,6 +5,41 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.3.0] – 2026-07-25
+
+### Neu
+- **`env_bathing_water` (18. Tool, Cluster Wasser):** Badegewässerqualität
+  (E.coli/Enterokokken) aus dem LINDAS-Data-Cube `foen/ubd01041prod` — der
+  einzige Hydro-Cube mit echter Mehrjahres-Zeitreihe (Saisondaten seit 2020).
+  Standorte werden zu Labels aufgelöst (nie rohe Code-URIs), die Kantonsnummer
+  aus der `containedInPlace`-URI wird als Join-Key mitgeliefert, jede Antwort
+  trägt ein Lizenzfeld (ehrlicher Hinweis, wenn am Cube keine Lizenz deklariert
+  ist — «im offenen Triplestore» ist nicht «frei verwendbar»).
+
+### Architektur
+- **Extraktionsfähiges `lindas/`-Modul (Drei-Schichten-Trennung):**
+  `lindas/client.py` kennt nur SPARQL+HTTP (GET/POST je Query-Länge,
+  45-s-Client-Timeout vor dem 60–90-s-Server-Abbruch, HTTP 400 als
+  `QueryError` mit der MALFORMED-Meldung, Retry 2 s/4 s/8 s);
+  `lindas/cube.py` kennt das cube.link-Vokabular (observationSet-Zwischenschritt,
+  Versions-Deduplizierung über `schema:expires`, Code→Label-Auflösung,
+  `pick_lang`, Lizenz-Suche auf Cube- und Graph-Ebene). Die Tools kennen nur
+  `cube.py`. Das Modul wird nach `lindas-mcp` gehoben, sobald ein zweiter
+  Server LINDAS nutzt.
+- Der bestehende Hydro-LINDAS-Pfad (`run_sparql` und Fetcher) läuft neu über
+  `lindas/client.py` (flache Result-Dicts statt roher Bindings).
+
+### Known findings (aus der Live-Probe, docs/probe-lindas-hydro.md N1–N7)
+- Direktzugriff `?cube cube:observation` liefert **0 Zeilen** ohne Fehler —
+  der observationSet-Zwischenschritt ist zwingend.
+- Abgelöste Cube-Versionen tragen `schema:expires`; das URI-Suffix kommt mal
+  mit, mal ohne Trailing-Slash (`ubd0104/4/` vs. `ubd01041prod/13`).
+- Lizenz liegt am Datensatz im Named Graph, nicht am Cube.
+
+> **Breaking (nur interne API):** `api_client.run_sparql` liefert neu flache
+> Dicts (Variable → Wert) statt roher SPARQL-Bindings; `api_client._binding_val`
+> entfällt. Tool-Antworten sind nicht betroffen.
+
 ### Refactor
 - **`sparql_client.py` als Portfolio-Baustein vereinheitlicht (Vendoring):** die
   Datei ist jetzt **byte-identisch** zur Kopie in `fedlex-mcp` (dortiger

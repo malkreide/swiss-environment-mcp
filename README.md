@@ -146,7 +146,7 @@ docker run -p 8000:8000 swiss-environment-mcp
 | `env_nabel_current` | Current air quality data for a station (NO₂, O₃, PM10, PM2.5, SO₂, CO) | NABEL / BAFU |
 | `env_air_limits_check` | Compare a measurement against Swiss LRV limits and WHO 2021 guidelines | Built-in |
 
-### 💧 Hydrology (4 tools)
+### 💧 Hydrology (5 tools)
 
 | Tool | Description | Data Source |
 |---|---|---|
@@ -154,6 +154,7 @@ docker run -p 8000:8000 swiss-environment-mcp
 | `env_hydro_current` | Current water level, flow rate and temperature at a station | **LINDAS SPARQL** → hydrodaten.admin.ch (fallback) |
 | `env_hydro_history` | Historical hourly values (up to 30 days) with download links ⚠️ | hydrodaten.admin.ch |
 | `env_flood_warnings` | Active flood warnings filtered by danger level and canton | hydrodaten.admin.ch |
+| `env_bathing_water` | Bathing water quality (E.coli, enterococci) per bathing site — multi-year time series | **LINDAS SPARQL** (data cube `ubd0104`) |
 
 ### 🏔️ Natural Hazards (3 tools)
 
@@ -192,6 +193,7 @@ docker run -p 8000:8000 swiss-environment-mcp
 | *"Air quality at Zürich-Kaserne right now?"* | `env_nabel_current` |
 | *"Does 45 µg/m³ NO₂ exceed the Swiss limit?"* | `env_air_limits_check` |
 | *"Current water level of the Limmat in Zurich?"* | `env_hydro_current` |
+| *"Is the water quality at Strandbad Küsnacht safe for swimming?"* | `env_bathing_water` |
 | *"Active flood warnings in Switzerland?"* | `env_flood_warnings` |
 | *"Natural hazard bulletin for Graubünden?"* | `env_hazard_overview` |
 | *"Wildfire danger in Canton Valais?"* | `env_wildfire_danger` |
@@ -228,11 +230,23 @@ docker run -p 8000:8000 swiss-environment-mcp
                         └───────────────────────────┘
 ```
 
+### Architecture note — extractable `lindas/` module
+
+All LINDAS SPARQL access goes through the deliberately **extractable**
+`src/swiss_environment_mcp/lindas/` module, built as three strict layers:
+`client.py` knows only SPARQL and HTTP (GET/POST, 45 s client-side timeout,
+`QueryError` carrying the server's MALFORMED message, 2 s/4 s/8 s retry);
+`cube.py` knows the cube.link vocabulary (mandatory `observationSet`
+two-phase access, version deduplication via `schema:expires`, code→label
+resolution, licence lookup); the tools only ever call `cube.py`. The module
+will be lifted into a shared `lindas-mcp` as soon as a second server uses
+LINDAS (candidate: `wsl-envidat-mcp`).
+
 ### Data Sources
 
 | Source | Data | Licence |
 |---|---|---|
-| [lindas.admin.ch](https://lindas.admin.ch) | Current hydrology (level, discharge, water temperature) via SPARQL | BAFU Open-Use / OGD |
+| [lindas.admin.ch](https://lindas.admin.ch) | Current hydrology (level, discharge, water temperature) and bathing water quality via SPARQL | BAFU Open-Use / OGD (declared per graph/dataset — each response carries a licence field) |
 | [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Water levels, flow rates, temperatures (REST fallback) | BAFU OGD |
 | [naturgefahren.ch](https://naturgefahren.ch) | Natural hazard bulletin (SLF/BAFU) | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
@@ -304,20 +318,28 @@ Scaling/session strategy: [`docs/scaling.md`](docs/scaling.md).
 - **Hydrology via LINDAS**: `env_hydro_current`, `env_hydro_stations` and `env_flood_warnings` query the BAFU LINDAS SPARQL endpoint (typed live values: level, discharge, water temperature, danger level). LINDAS holds **current values only** (one observation per station) — it is **not** a historical time series. See [`docs/probe-lindas-hydro.md`](docs/probe-lindas-hydro.md).
 - **Historical hydrology / `env_hydro_history` (BUG-01 resolved)**: the old `hydrodaten.admin.ch/lhg/az/*` REST endpoints (hourly CSV, `warnings.json`, station JSON) are **decommissioned (404)**. `env_flood_warnings` now uses LINDAS `dangerLevel` instead. Real historical time series (daily / long-term means — e.g. *summer 2024 vs. long-term average*) are **not freely available via API**; they must be ordered from the **BAFU Hydrological Enquiry Service** (abfragezentrale@bafu.admin.ch). `env_hydro_history` returns the latest LINDAS value plus this access path.
 - **Flood warnings**: `env_flood_warnings` reads LINDAS `dangerLevel`; a canton filter is not available there (LINDAS carries no canton code), so it is reported but not applied.
+- **Bathing water quality (`env_bathing_water`)**: reads the LINDAS data cube `foen/ubd01041prod` — the only hydro cube with a real multi-year time series (seasonal samples since 2020). Data is refreshed **annually after the bathing season** (no real-time monitoring), and the survey covers only the officially reported bathing sites (many popular lidos are not part of it). The licence is declared at graph/dataset level, not on the cube; every response therefore carries an explicit licence field — with an honest «not declared» note where none exists. See [`docs/probe-lindas-hydro.md`](docs/probe-lindas-hydro.md) (addendum N1–N7).
+- **No groundwater data in LINDAS**: verified 2026-07-24 via multilingual cube search — LINDAS contains **no groundwater cube** (NAQUA groundwater levels are not available via SPARQL).
 - **NABEL**: Near-real-time data only; no historical time series via this server.
 - **Natural hazards**: Bulletin availability depends on SLF/BAFU publication schedule.
 - **Wildfire danger**: Regional granularity varies by season and data availability.
 - **Hunting statistics (`env_hunting_stats`)**: The `jagdstatistik.ch` backend is **undocumented** (a content-negotiated web-app endpoint). A schema-guard degrades gracefully if the structure changes. Species/canton/datatype lookups are embedded (harvested 2026-07-19); figures are fetched live for 2015–2024. **Licence (researched 2026-07-19):** the data is owned by **BAFU** (compiled from cantonal offices; site tech by Wildtier Schweiz) and is **not** published as a licensed dataset on opendata.swiss; **no explicit licence is stated on the source**. Responses therefore require source attribution to BAFU; formal licence confirmation from BAFU is still pending. See [`docs/probe-jagdstatistik.md`](docs/probe-jagdstatistik.md).
 
-### Responsibility matrix — snow & precipitation (delineation vs. `meteoswiss-mcp`)
+### Responsibility matrix — water, snow & precipitation (delineation vs. `meteoswiss-mcp`)
 
-To avoid duplicating **snow and precipitation** data across the portfolio,
+To avoid duplicating **water, snow and precipitation** data across the portfolio,
 responsibilities are split as follows. `meteoswiss-mcp` owns atmospheric
-precipitation and weather; `swiss-environment-mcp` (SLF domain) owns snow on the
-ground and avalanche danger.
+precipitation and weather; `swiss-environment-mcp` owns surface waters
+(BAFU domain: discharge, water level, water temperature, bathing quality),
+snow on the ground and avalanche danger. Checked against the actual LINDAS
+cube dimensions (2026-07-24): there is **no overlap in measured quantities**.
 
 | Data | swiss-environment-mcp (BAFU / SLF) | meteoswiss-mcp (MeteoSwiss) |
 |---|---|---|
+| Discharge (m³/s) | ✅ `env_hydro_current` (LINDAS `hydro/river`) | ❌ |
+| Water level (m a.s.l.) | ✅ `env_hydro_current` (LINDAS `hydro/river` + `lake`) | ❌ |
+| Water temperature (°C) | ✅ `env_hydro_current` | ❌ (measures air temperature) |
+| Bathing water quality (E.coli etc.) | ✅ `env_bathing_water` (LINDAS `ubd0104`) | ❌ |
 | Snow depth on the ground (`HS`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
 | Fresh snow 24 h (`HN_1D`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
 | Avalanche danger level | ✅ `env_avalanche_bulletin` (SLF, EAWS 1–5) | ❌ |
@@ -327,12 +349,15 @@ ground and avalanche danger.
 | Weather warnings (storm, thunderstorm, heat) | ❌ | ✅ `meteo_warnings` |
 | Natural-hazard warnings (flood, avalanche, wildfire) | ✅ `env_flood_warnings`, `env_hazard_*`, `env_wildfire_danger` | ❌ |
 
-**Rule:** snow **on the ground** and **avalanche** danger belong to
-`swiss-environment-mcp` (SLF); **atmospheric precipitation** (rain/snowfall as mm)
-plus weather, forecast, warnings and climate normals belong to `meteoswiss-mcp`.
-The SLF IMIS precipitation endpoint (`RR_10MIN_SUM`) is deliberately **not** wired
-up as a tool, so it does not duplicate MeteoSwiss. The snow/avalanche tools are
-live (see [`docs/probe-slf.md`](docs/probe-slf.md)).
+**Rule:** everything **in and on water bodies** (discharge, level, water
+temperature, bathing quality), snow **on the ground** and **avalanche** danger
+belong to `swiss-environment-mcp` (BAFU/SLF); **atmospheric precipitation**
+(rain/snowfall as mm) plus weather, forecast, warnings and climate normals belong
+to `meteoswiss-mcp`. The SLF IMIS precipitation endpoint (`RR_10MIN_SUM`) is
+deliberately **not** wired up as a tool, so it does not duplicate MeteoSwiss. The
+snow/avalanche tools are live (see [`docs/probe-slf.md`](docs/probe-slf.md)).
+*TODO (out of scope here): mirror this matrix in the `meteoswiss-mcp` README —
+that repository is not part of this change.*
 
 ---
 
