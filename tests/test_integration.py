@@ -174,6 +174,31 @@ async def test_hydro_current_lindas() -> None:
     check("LINDAS: >200 Stationen", len(stations) > 200)
 
 
+async def test_bathing_water_lindas() -> None:
+    print("\n[Wasser] LINDAS Cube — Badegewässerqualität (Zwei-Phasen-Zugriff)")
+
+    if SKIP_LIVE:
+        print("  ⏭️  Live-Test übersprungen")
+        return
+
+    from swiss_environment_mcp import api_client as api
+    from swiss_environment_mcp.lindas import cube as lcube
+    from swiss_environment_mcp.server import BathingWaterInput, env_bathing_water
+
+    # Fundstück 6 live: Struktur & Observations nur via observationSet-Pfad.
+    cubes = await lcube.find_cubes(api.run_sparql, "badegewässer")
+    check("Cube-Suche: Badegewässer-Cube gefunden", len(cubes) >= 1)
+    if cubes:
+        structure = await lcube.get_cube_structure(api.run_sparql, cubes[0]["cube"])
+        dims = {d["dimension"].rsplit("/", 1)[-1] for d in structure}
+        check("Struktur: location-Dimension vorhanden", "location" in dims)
+
+    result = await env_bathing_water(BathingWaterInput(location="Clendy"))
+    check("Tool: Kein Python-Traceback", "Traceback" not in result)
+    check("Tool: Label statt Code-URI", "ld.admin.ch/dimension" not in result)
+    check("Tool: Lizenzfeld vorhanden", "Lizenz" in result or "Open-Use" in result)
+
+
 async def test_slf_snow() -> None:
     print("\n[Schnee] SLF IMIS — Stationen + Tages-Schneewerte")
 
@@ -331,6 +356,7 @@ async def main() -> None:
     await test_hydro_current()
     await test_hydro_history()
     await test_hydro_current_lindas()
+    await test_bathing_water_lindas()
     await test_slf_snow()
     await test_hunting_stats()
     await test_flood_warnings()

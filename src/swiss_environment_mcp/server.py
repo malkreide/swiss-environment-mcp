@@ -2,10 +2,11 @@
 Swiss Environment MCP Server
 
 MCP-Server für Schweizer Umweltdaten des BAFU (Bundesamt für Umwelt) und SLF.
-Bietet 17 Tools in 6 thematischen Clustern:
+Bietet 18 Tools in 6 thematischen Clustern:
 
   Luft (3):        env_nabel_stations, env_nabel_current, env_air_limits_check
-  Wasser (4):      env_hydro_stations, env_hydro_current, env_hydro_history, env_flood_warnings
+  Wasser (5):      env_hydro_stations, env_hydro_current, env_hydro_history,
+                   env_flood_warnings, env_bathing_water
   Naturgefahren (3): env_hazard_overview, env_hazard_regions, env_wildfire_danger
   Schnee/SLF (3):  env_snow_stations, env_snow_current, env_avalanche_bulletin
   Jagd (2):        env_hunting_species, env_hunting_stats
@@ -38,6 +39,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from . import api_client as api
+from .lindas import cube as lindas_cube
 from .logging_setup import configure_logging, get_logger
 from .tracing import configure_tracing, trace_tool
 
@@ -493,6 +495,29 @@ class FloodWarningsInput(BaseModel):
         max_length=2,
         pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
         strict=True,
+    )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
+
+
+class BathingWaterInput(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    location: str = Field(
+        default="",
+        description="Badestellen-Name zum Suchen (Teilstring, z.B. 'Mythenquai', 'Clendy') – leer = Übersicht",
+        max_length=60,
+    )
+    canton: str = Field(
+        default="",
+        description="Kantonskürzel zum Filtern (z.B. 'ZH', 'VD') – leer = alle",
+        max_length=2,
+        pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
+        strict=True,
+    )
+    limit: int = Field(
+        default=12,
+        description="Maximale Anzahl Messwerte bzw. Badestellen (1–50)",
+        ge=1,
+        le=50,
     )
     response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
 
@@ -1413,6 +1438,201 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
         "**Quelle:** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
     ]
     return "\n".join(lines)
+
+
+# --- Badegewässerqualität (LINDAS-Cube ubd01041prod, Nachtrag N1/N6) ----------
+
+# Basis-URI der aktuellen Cube-Serie; die konkrete Version (z.B. .../13) wird
+# zur Laufzeit über die Versions-Deduplizierung der Cube-Schicht ermittelt.
+_BATHING_CUBE_BASE = "https://environment.ld.admin.ch/foen/ubd01041prod"
+_BATHING_DIM = f"{_BATHING_CUBE_BASE}/"
+_BATHING_DIM_LOCATION = f"{_BATHING_DIM}location"
+_BATHING_DIM_DATE = f"{_BATHING_DIM}dateofprobing"
+
+# BFS-Kantonsnummer → Kürzel (Badestellen tragen `containedInPlace` als
+# ld.admin.ch/canton/NN — die Nummer ist der Join-Key, N4).
+CANTON_NUMBER_TO_ABBR: dict[int, str] = {
+    1: "ZH", 2: "BE", 3: "LU", 4: "UR", 5: "SZ", 6: "OW", 7: "NW", 8: "GL",
+    9: "ZG", 10: "FR", 11: "SO", 12: "BS", 13: "BL", 14: "SH", 15: "AR",
+    16: "AI", 17: "SG", 18: "GR", 19: "AG", 20: "TG", 21: "TI", 22: "VD",
+    23: "VS", 24: "NE", 25: "GE", 26: "JU",
+}  # fmt: skip
+
+
+async def _bathing_cube_uri() -> str | None:
+    """Ermittelt die aktuelle Version des Badegewässer-Cubes (Versions-Dedup)."""
+    cubes = await lindas_cube.find_cubes(api.run_sparql, "badegewässer")
+    for c in cubes:
+        if lindas_cube.base_cube_uri(c.get("cube", "")) == _BATHING_CUBE_BASE:
+            return c["cube"]
+    return cubes[0]["cube"] if cubes else None
+
+
+@mcp.tool(
+    name="env_bathing_water",
+    annotations={
+        "title": "Badegewässerqualität (E.coli/Enterokokken)",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": True,
+    },
+)
+@trace_tool
+async def env_bathing_water(params: BathingWaterInput, ctx: Context | None = None) -> str:
+    """
+    Ruft die Badegewässerqualität der BAFU-Erhebung ab (LINDAS-Data-Cube).
+
+    Die Erhebung misst die hygienische Qualität von Badestellen an Schweizer
+    Seen und Flüssen über E.coli- und Enterokokken-Konzentrationen. Im
+    Gegensatz zu Pegel/Abfluss ist dies eine echte Mehrjahres-Zeitreihe
+    (Saisondaten seit 2020, jährliche Nachführung).
+
+    <use_case>Wasserqualität einer Badestelle prüfen («Kann man bei X baden?»)
+    oder Badestellen eines Kantons auflisten.</use_case>
+    <important_notes>Ohne `location` wird eine Badestellen-Übersicht geliefert;
+    mit `location` die letzten Probenwerte dieser Stelle. Daten werden jährlich
+    nach der Badesaison nachgeführt (kein Echtzeit-Monitoring).</important_notes>
+
+    Args:
+        params (BathingWaterInput):
+            - location: Badestellen-Name (Teilstring), leer = Übersicht
+            - canton: Kantonskürzel zum Filtern
+            - limit: max. Anzahl Messwerte bzw. Badestellen
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Probenwerte mit aufgelösten Standort-Labels, Kantonsnummer
+             (Join-Key) und Lizenzfeld — nie rohe Code-URIs.
+    """
+    canton = params.canton.upper()
+    try:
+        cube_uri = await _bathing_cube_uri()
+        if cube_uri is None:
+            return (
+                "⚠️ Badegewässer-Cube in LINDAS nicht gefunden (Datenbestand "
+                "möglicherweise im Umbau). Direktzugang: https://www.bafu.admin.ch "
+                "→ Thema Wasser → Badegewässerqualität."
+            )
+        license_info = await lindas_cube.get_cube_license(api.run_sparql, cube_uri)
+
+        sites = await lindas_cube.find_dimension_values(
+            api.run_sparql,
+            cube_uri,
+            _BATHING_DIM_LOCATION,
+            name_contains=params.location,
+            limit=200,
+        )
+        if canton:
+            wanted = {n for n, a in CANTON_NUMBER_TO_ABBR.items() if a == canton}
+            sites = [s for s in sites if s.get("canton_number") in wanted]
+
+        # Ohne Location-Filter: Übersicht der Badestellen (keine Messwerte).
+        if not params.location:
+            rows = [
+                {
+                    "badestelle": s.get("name", "–"),
+                    "code": s.get("identifier", ""),
+                    "kanton": CANTON_NUMBER_TO_ABBR.get(s.get("canton_number", 0), "–"),
+                    "kanton_nummer": s.get("canton_number"),
+                }
+                for s in sites[: params.limit]
+            ]
+            if params.response_format == ResponseFormat.JSON:
+                return _envelope_json(
+                    source=f"BAFU Badegewässerqualität via LINDAS — {license_info}",
+                    provenance="live_api",
+                    results=rows,
+                    match_type="none" if not rows else "exact",
+                    note=f"{len(sites)} Badestellen insgesamt; `location` setzen für Messwerte.",
+                    query={"canton": canton},
+                )
+            lines = [
+                f"## Badestellen der BAFU-Erhebung ({len(sites)} Treffer)\n",
+                f"*Filter: Kanton={canton or 'alle'} | Quelle: BAFU via LINDAS*\n",
+                "| Badestelle | Code | Kanton |",
+                "|------------|------|--------|",
+            ]
+            for r in rows:
+                lines.append(f"| {r['badestelle']} | {r['code'] or '–'} | {r['kanton']} |")
+            if len(sites) > params.limit:
+                lines.append(f"\n*…und {len(sites) - params.limit} weitere Badestellen.*")
+            if not rows:
+                lines.append("\n*Keine Badestellen für diesen Filter (match_type: none).*")
+            lines.append(f"\n*Messwerte einer Stelle: `location` setzen. {license_info}*")
+            return "\n".join(lines)
+
+        if not sites:
+            return (
+                f"Keine Badestelle für '{params.location}'"
+                + (f" im Kanton {canton}" if canton else "")
+                + " gefunden (match_type: none). Tipp: `env_bathing_water` ohne "
+                "`location` listet alle Badestellen der Erhebung."
+            )
+
+        # Mit Location: letzte Probenwerte der besten Treffer-Badestelle.
+        site = sites[0]
+        observations = await lindas_cube.get_observations(
+            api.run_sparql,
+            cube_uri,
+            filters={_BATHING_DIM_LOCATION: site["value"]},
+            order_desc_by=_BATHING_DIM_DATE,
+            limit=params.limit,
+        )
+        site_canton = CANTON_NUMBER_TO_ABBR.get(site.get("canton_number", 0), "–")
+        results = [
+            {
+                "datum": o.get("dateofprobing", "–"),
+                "parameter": o.get("parametertype", "–"),
+                "konzentration": o.get("value", "–"),
+                "einheit": "KBE/100 ml",
+            }
+            for o in observations
+        ]
+        alternates = [s.get("name", "") for s in sites[1:4]]
+
+        if params.response_format == ResponseFormat.JSON:
+            return _envelope_json(
+                source=f"BAFU Badegewässerqualität via LINDAS — {license_info}",
+                provenance="live_api",
+                results=results,
+                match_type="fuzzy" if len(sites) > 1 else "exact",
+                note=(
+                    f"Badestelle: {site.get('name')} (Code {site.get('identifier', '–')}, "
+                    f"Kanton {site_canton}, Kantonsnummer {site.get('canton_number', '–')})."
+                    + (f" Weitere Treffer: {', '.join(alternates)}." if alternates else "")
+                ),
+                query={"location": params.location, "canton": canton},
+            )
+
+        lines = [
+            f"## Badegewässerqualität: {site.get('name', '–')} "
+            f"(Code {site.get('identifier', '–')}, Kanton {site_canton})\n",
+            "*Quelle: BAFU via LINDAS | Parameter: E.coli & Enterokokken (KBE/100 ml)*\n",
+            "| Datum | Parameter | Konzentration |",
+            "|-------|-----------|---------------|",
+        ]
+        for r in results:
+            lines.append(f"| {r['datum']} | {r['parameter']} | **{r['konzentration']}** |")
+        if not results:
+            lines.append("| – | keine Probenwerte verfügbar | – |")
+        if alternates:
+            lines.append(f"\n*Weitere Treffer für '{params.location}': {', '.join(alternates)}*")
+        lines += [
+            "",
+            "*Daten werden jährlich nach der Badesaison nachgeführt (kein Echtzeit-Monitoring).*",
+            f"*{license_info}*",
+        ]
+        return "\n".join(lines)
+    except Exception as e:
+        error_msg = await _handle_tool_error(
+            "env_bathing_water", e, ctx, location=params.location, canton=canton
+        )
+        return (
+            f"⚠️ Badegewässerdaten nicht abrufbar: {error_msg}\n\n"
+            "**Direktzugang:** https://www.bafu.admin.ch (Thema Wasser → "
+            "Badegewässerqualität) bzw. https://opendata.swiss/de/organization/bafu"
+        )
 
 
 # --- TOOLS: NATURGEFAHREN -----------------------------------------------------

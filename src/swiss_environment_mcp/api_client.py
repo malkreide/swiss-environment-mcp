@@ -27,6 +27,7 @@ from urllib.parse import unquote, urlparse
 import httpx
 
 from . import sparql_client
+from .lindas import client as lindas_client
 
 # --- Basis-URLs ---------------------------------------------------------------
 
@@ -46,19 +47,23 @@ BAFU_GIS = "https://map.bafu.admin.ch"
 
 # --- LINDAS (Linked Data Service des Bundes) — SPARQL -------------------------
 # Aktuelle hydrologische Messwerte des BAFU als RDF-Data-Cube (cube.link).
-# Client-Aufbau bewusst wiederverwendet vom bestehenden fedlex-mcp
-# (run_lindas/_execute_sparql), statt neu gebaut: GET mit
-# format=application/sparql-results+json, Retry nur bei transienten Fehlern.
-LINDAS_ENDPOINT = "https://lindas.admin.ch/query"
+# Transport seit Phase 2 der Hydro-Erweiterung über das extraktionsfähige
+# Modul `lindas/` (client.py: GET/POST, 45-s-Client-Timeout, QueryError für
+# HTTP 400 MALFORMED, Retry 2 s/4 s/8 s nur bei transienten Fehlern).
+LINDAS_ENDPOINT = lindas_client.LINDAS_ENDPOINT
 LINDAS_HYDRO_GRAPH = "https://lindas.admin.ch/foen/hydro"
 _HYDRO_STATION_CLASS = "http://example.com/HydroMeasuringStation"
 _HYDRO_DIM = "https://environment.ld.admin.ch/foen/hydro/dimension/"
 
-# Retry-Parameter für den geteilten SPARQL-/JSON-Client (siehe sparql_client).
+# Retry-Parameter für den geteilten JSON-Client (siehe sparql_client).
 # 4xx (ausser 429) sind deterministisch → sofort durchreichen. Diese Werte werden
 # bei jedem Aufruf an sparql_client übergeben (Tests monkeypatchen RETRY_BASE_DELAY).
 RETRY_MAX_ATTEMPTS = sparql_client.DEFAULT_MAX_ATTEMPTS
 RETRY_BASE_DELAY = sparql_client.DEFAULT_BASE_DELAY  # Sekunden. Tests setzen 0.
+
+# LINDAS-Retry (Portfolio-Standard 2 s/4 s/8 s; Tests setzen die Delay auf 0).
+LINDAS_RETRY_MAX_ATTEMPTS = lindas_client.DEFAULT_MAX_ATTEMPTS
+LINDAS_RETRY_BASE_DELAY = lindas_client.DEFAULT_BASE_DELAY
 
 # --- SLF-Datenservice (WSL) — öffentliche No-Auth-APIs, CC BY 4.0 -------------
 # Schnee (Schneehöhe/Neuschnee) + Lawinenbulletin. Niederschlag bewusst NICHT
@@ -222,6 +227,13 @@ def handle_http_error(e: Exception) -> str:
     """Einheitliche Fehlerformatierung für alle Tools."""
     if isinstance(e, SecurityError):
         return f"Fehler: Anfrage durch Sicherheitsrichtlinie blockiert ({e})."
+    if isinstance(e, lindas_client.QueryError):
+        # Die MALFORMED-Meldung benennt die fehlerhafte Query-Stelle — sie wird
+        # bewusst durchgereicht statt maskiert (Auftrag Phase 2; kein Leak von
+        # Server-Interna, die Meldung stammt vom öffentlichen SPARQL-Endpoint).
+        return f"Fehler: LINDAS hat die Abfrage abgelehnt (HTTP {e.status_code}): {e}"
+    if isinstance(e, lindas_client.QueryTimeoutError):
+        return f"Fehler: {e}"
     if isinstance(e, httpx.HTTPStatusError):
         code = e.response.status_code
         if code == 404:
@@ -240,26 +252,28 @@ def handle_http_error(e: Exception) -> str:
     return "Fehler: Unerwarteter interner Fehler. Bitte erneut versuchen."
 
 
-# --- LINDAS SPARQL-Client (wiederverwendet aus fedlex-mcp-Pattern) ------------
+# --- LINDAS SPARQL-Client (Transport: lindas/client.py) -----------------------
 
 
 # SPARQL-Helfer aus dem wiederverwendbaren Modul re-exportiert (Rückwärtskompat.).
 sparql_escape = sparql_client.sparql_escape
-_binding_val = sparql_client.binding_val
 
 
-async def run_sparql(query: str) -> list[dict[str, Any]]:
-    """Führt eine SPARQL-Abfrage gegen den LINDAS-Endpoint aus (Bindings).
+async def run_sparql(query: str) -> list[dict[str, str]]:
+    """Führt eine SPARQL-Abfrage gegen den LINDAS-Endpoint aus (flache Dicts).
 
-    Dünne Bindung an den geteilten `sparql_client` (Egress-Guard, Retry,
-    Backoff). `RETRY_BASE_DELAY` wird zur Laufzeit gelesen (Tests monkeypatchen).
+    Dünne Bindung an `lindas.client.select` (Egress-Guard, GET/POST, 45-s-
+    Timeout, QueryError bei 400, Retry 2 s/4 s/8 s). Erfüllt die
+    `lindas.cube.SelectRunner`-Signatur und wird von den Tools als Runner an
+    die Cube-Schicht übergeben. `LINDAS_RETRY_BASE_DELAY` wird zur Laufzeit
+    gelesen (Tests monkeypatchen auf 0).
     """
-    return await sparql_client.get_bindings(
+    return await lindas_client.select(
         get_client(),
-        LINDAS_ENDPOINT,
         query,
-        base_delay=RETRY_BASE_DELAY,
-        max_attempts=RETRY_MAX_ATTEMPTS,
+        endpoint=LINDAS_ENDPOINT,
+        base_delay=LINDAS_RETRY_BASE_DELAY,
+        max_attempts=LINDAS_RETRY_MAX_ATTEMPTS,
         egress_check=assert_host_allowed,
     )
 
@@ -284,14 +298,14 @@ WHERE {{
   }}
 }}
 """
-    bindings = await run_sparql(query)
+    rows = await run_sparql(query)
     stations: list[dict[str, Any]] = []
-    for b in bindings:
+    for r in rows:
         stations.append(
             {
-                "id": _binding_val(b, "id"),
-                "name": _binding_val(b, "name"),
-                "water": unquote(_binding_val(b, "water")),
+                "id": r.get("id", ""),
+                "name": r.get("name", ""),
+                "water": unquote(r.get("water", "")),
             }
         )
     return stations
@@ -325,18 +339,18 @@ WHERE {{
   FILTER(isNumeric(?danger) && ?danger >= {int(min_level)})
 }}
 """
-    bindings = await run_sparql(query)
+    rows = await run_sparql(query)
     warnings: list[dict[str, Any]] = []
-    for b in bindings:
+    for r in rows:
         warnings.append(
             {
-                "id": _binding_val(b, "id"),
-                "name": _binding_val(b, "name"),
-                "water": unquote(_binding_val(b, "water")),
-                "danger_level": int(float(_binding_val(b, "danger", "0"))),
-                "level": _binding_val(b, "level") or None,
-                "discharge": _binding_val(b, "discharge") or None,
-                "time": _binding_val(b, "time"),
+                "id": r.get("id", ""),
+                "name": r.get("name", ""),
+                "water": unquote(r.get("water", "")),
+                "danger_level": int(float(r.get("danger") or "0")),
+                "level": r.get("level") or None,
+                "discharge": r.get("discharge") or None,
+                "time": r.get("time", ""),
             }
         )
     warnings.sort(key=lambda w: w["danger_level"], reverse=True)
@@ -375,22 +389,22 @@ WHERE {{
 }}
 LIMIT 1
 """
-    bindings = await run_sparql(query)
-    if not bindings:
+    rows = await run_sparql(query)
+    if not rows:
         return {"found": False, "station_id": station_id}
-    b = bindings[0]
-    danger_raw = _binding_val(b, "danger")
+    r = rows[0]
+    danger_raw = r.get("danger", "")
     # dangerLevel ist entweder eine Zahl 1–5 oder cube.link/Undefined.
     danger = danger_raw if danger_raw and "Undefined" not in danger_raw else None
     return {
         "found": True,
         "station_id": station_id,
-        "name": _binding_val(b, "name"),
-        "water": unquote(_binding_val(b, "water")),
-        "time": _binding_val(b, "time"),
-        "level": _binding_val(b, "level") or None,
-        "discharge": _binding_val(b, "discharge") or None,
-        "temperature": _binding_val(b, "temp") or None,
+        "name": r.get("name", ""),
+        "water": unquote(r.get("water", "")),
+        "time": r.get("time", ""),
+        "level": r.get("level") or None,
+        "discharge": r.get("discharge") or None,
+        "temperature": r.get("temp") or None,
         "danger_level": danger,
     }
 

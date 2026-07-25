@@ -1,10 +1,11 @@
 {
-  "tool_count": 17,
+  "tool_count": 18,
   "tool_names": [
     "env_air_limits_check",
     "env_avalanche_bulletin",
     "env_bafu_dataset_detail",
     "env_bafu_datasets",
+    "env_bathing_water",
     "env_flood_warnings",
     "env_hazard_overview",
     "env_hazard_regions",
@@ -19,5 +20,5 @@
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "fc672e7bde07d17960ecfbb3f27459b148aec910ee987cbe28ca6f621f4a9b4b"
+  "sha256": "3dd4498f540bd1d08c9aaf908f1fb9bd14f6c8cccf6eb917417b688abb52e106"
 }

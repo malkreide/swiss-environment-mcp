@@ -51,9 +51,15 @@ gegen `meteoswiss-mcp` (Schnee-/Niederschlags-Überschneidung).
 > **Update Phase 3:** Cluster **Wasser** nutzt neu LINDAS-SPARQL als Primärpfad
 > (Inkrement 1). Neu: Cluster **Schnee/SLF** (`env_snow_stations`,
 > `env_snow_current`, `env_avalanche_bulletin`, Inkrement 2) und Cluster **Jagd**
-> (`env_hunting_species`, `env_hunting_stats`, Inkrement 3) — Stand jetzt
-> **17 Tools in 6 Clustern**. Der SLF-IMIS-Niederschlagssensor wird bewusst nicht
-> als Tool angebunden (Abgrenzung meteoswiss).
+> (`env_hunting_species`, `env_hunting_stats`, Inkrement 3). Der
+> SLF-IMIS-Niederschlagssensor wird bewusst nicht als Tool angebunden
+> (Abgrenzung meteoswiss).
+>
+> **Update Hydro-Erweiterung Phase 2 (2026-07-25):** Neu `env_bathing_water`
+> (Badegewässerqualität aus dem LINDAS-Cube `ubd01041prod`, Cluster Wasser) —
+> Stand jetzt **18 Tools in 6 Clustern** (Budget 18 ausgeschöpft). Der gesamte
+> LINDAS-Zugriff läuft über das extraktionsfähige Modul `lindas/`
+> (`client.py` + `cube.py`, siehe Architektur-Notiz in beiden READMEs).
 
 ## 2. Geplante Erweiterung (Phase-1-Probe abgeschlossen)
 

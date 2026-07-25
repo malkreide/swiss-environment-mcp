@@ -391,7 +391,7 @@ async def test_all_tools_have_use_case_tag():
     from swiss_environment_mcp.server import mcp
 
     tools = await mcp.list_tools()
-    assert len(tools) == 17
+    assert len(tools) == 18
     missing = [t.name for t in tools if "<use_case>" not in (t.description or "")]
     assert not missing, f"Tools ohne <use_case>-Tag: {missing}"
 
@@ -516,7 +516,7 @@ async def test_hydro_current_lindas_json_provenance():
 @respx.mock
 async def test_hydro_current_lindas_retry_then_success(monkeypatch):
     """Transienter 503 wird retried; zweiter Versuch erfolgreich (Resilienz)."""
-    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
     route = respx.get(_LINDAS_URL).mock(
         side_effect=[
             httpx.Response(503),
@@ -543,7 +543,7 @@ async def test_hydro_current_lindas_retry_then_success(monkeypatch):
 @respx.mock
 async def test_hydro_current_lindas_timeout_falls_back_to_rest(monkeypatch):
     """LINDAS-Totalausfall → sauberer Fallback auf den REST-Pfad."""
-    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
     respx.get(_LINDAS_URL).mock(side_effect=httpx.ConnectError("boom"))
     respx.get("https://www.hydrodaten.admin.ch/lhg/az/json/2099.json").mock(
         return_value=httpx.Response(
@@ -578,10 +578,12 @@ async def test_hydro_stations_lindas_water_body_filter():
 
 @respx.mock
 async def test_run_sparql_400_no_retry(monkeypatch):
-    """Deterministischer 400 (fehlerhafte Query) wird NICHT retried."""
-    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    """Deterministischer 400 → QueryError MIT MALFORMED-Meldung, ohne Retry."""
+    from swiss_environment_mcp.lindas import client as lindas_client
+
+    monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
     route = respx.get(_LINDAS_URL).mock(return_value=httpx.Response(400, text="MALFORMED"))
-    with pytest.raises(httpx.HTTPStatusError):
+    with pytest.raises(lindas_client.QueryError, match="MALFORMED"):
         await api.run_sparql("SELECT ?x WHERE { ?x")
     assert route.call_count == 1  # kein Retry bei 4xx
 
