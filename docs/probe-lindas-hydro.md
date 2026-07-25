@@ -173,3 +173,154 @@ WHERE {
 }
 ```
 → liefert 2099 «Zürich Unterhard» (Abfluss) und 2243 «Baden, Limmatpromenade».
+
+---
+
+# Nachtrag 2026-07-24 — Cube-Ebene, observationSet, Versionierung, Lizenz
+
+**Anlass:** Erweiterungsauftrag «BAFU-Hydrodaten via LINDAS» mit sechs generischen
+LINDAS-Fundstücken (Cube-Verankerung, Codes statt Labels, BFS-Nummern in URIs,
+Fünfsprachigkeit, Cube-Versionierung, observationSet-Zwischenschritt). Dieser
+Nachtrag prüft die Fundstücke gegen die konkreten Hydro-Cubes und schliesst die
+noch offenen Phase-1-Fragen (Cube-Suche inkl. Grundwasser, Struktur via
+`observationConstraint`, Phase-2-Zugriff, Zuständigkeitsmatrix). Alle Queries
+am 2026-07-24 live verifiziert, Antwortzeiten durchgehend < 2 s.
+
+## N1. Hydro-Cube-Inventar (verankerte Suche)
+
+Verankerte Cube-Suche (`?cube a cube:Cube`) über `schema:name` in allen Sprachen
+nach *abfluss / wasser / pegel / hydro / grundwasser / souterrain / groundwater /
+nappe / gewässer / fluss*:
+
+| Cube | Inhalt | Versionierung | Status |
+|---|---|---|---|
+| `.../foen/hydro/river` | Aktuelle Messwerte Flüsse (199 Obs.) | **unversioniert** | ⚠️ `CreativeWorkStatus/Draft` |
+| `.../foen/hydro/lake` | Aktuelle Messwerte Seen | **unversioniert** | ⚠️ `CreativeWorkStatus/Draft` |
+| `.../foen/ubd01041prod/1…13` | **Badegewässerqualität** (E.coli, Enterokokken) | 13 Versionen | `Published` |
+| `.../foen/ubd0104/1…6` | Badegewässerqualität (Vorgänger-Serie) | 6 Versionen | `Published` |
+
+**Negativ-Befund Grundwasser:** Es existiert **kein Grundwasser-Cube** in LINDAS
+(mehrsprachig geprüft). Grundwasserstände sind nur ausserhalb LINDAS verfügbar
+(BAFU-Grundwasserbeobachtung NAQUA, kein SPARQL). → Known Limitation.
+
+**Nicht-Cube-Vokabular:** Wie in Abschnitt 2 dokumentiert, hängen die
+Stationsdaten an einer eigenen Klasse `HydroMeasuringStation` (233 Instanzen)
+*neben* den Cubes — Fundstück «Hydro-Daten evtl. nicht als Cube» trifft für die
+Stammdaten zu, für die Messwerte nicht.
+
+## N2. Struktur via `observationConstraint` (Phase-1-Zugriff)
+
+Beide Muster-Cubes liefern die Struktur sauber über
+`cube:observationConstraint / sh:property`:
+
+**`foen/hydro/river`:** Key = `station`, `measurementTime`; Measures =
+`discharge` (m³/s), `waterLevel` (m ü. M.), `waterTemperature` (°C),
+`dangerLevel` (1–5). Deckt sich mit Abschnitt 2.
+
+**`foen/ubd01041prod/13`:** Key = `dateofprobing`, `parametertype`
+(`E.coli`|`Enterokokken`, als String — kein Code), `location` (**URI-Code**,
+s. N4); Measure = `value` (Konzentration); dazu `lowerlod`/`upperlod`
+(Bestimmungsgrenzen, weder Key noch Measure).
+
+## N3. observationSet-Zwischenschritt (Fundstück 6) — **bestätigt**
+
+Am River-Cube live gemessen:
+
+| Zugriffspfad | Zeilen |
+|---|---|
+| `?cube cube:observation ?obs` (direkt) | **0** |
+| `?cube cube:observationSet ?set . ?set cube:observation ?obs` | **199** |
+
+Der Direktzugriff liefert NULL Zeilen ohne Fehlermeldung — der
+`observationSet`-Zwischenschritt ist zwingend. (Die Queries in Abschnitt 6
+umgehen das Problem, weil sie über die Dimensions-Property `hd:station` statt
+über den Cube einsteigen — beide Pfade sind gültig, der Cube-Direktpfad nicht.)
+
+## N4. Codes → Labels (Fundstück 2) — für Badegewässer bestätigt
+
+`foen/hydro`-Observations tragen direkt Literalwerte (kein Code-Problem).
+`ubd01041prod` dagegen liefert die Ortsdimension als **Code-URI**:
+
+```
+location = https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22088
+```
+
+Auflösung über ein zweites Pattern (`?loc schema:name ?label`):
+`CH22088` → **«Clendy»**, mit `schema:containedInPlace` →
+`https://ld.admin.ch/canton/22` (**Kantonsnummer im URI-Klartext** — Join-Key,
+analog Fundstück 3 zu Gemeinde-BFS-Nummern) sowie WGS84-Koordinaten.
+Code→Label-Auflösung ist damit für jeden künftigen Cube-generischen Zugriff
+Pflicht; für die beiden `foen/hydro`-Cubes genügt der Stations-Join.
+
+## N5. Versionierung (Fundstück 5) — Dedup-Regel
+
+`ubd01041prod` zeigt das Muster: Jede Version trägt `schema:version` (1…13);
+**abgelöste Versionen erhalten `schema:expires`**, die aktuelle nicht.
+Dedup-Regel für search/get: `FILTER NOT EXISTS { ?cube schema:expires ?x }`
+(robuster als MAX über das URI-Suffix, das mal mit, mal ohne Trailing-Slash
+vorkommt: `ubd0104/4/` vs. `ubd01041prod/13`).
+Die beiden `foen/hydro`-Cubes sind unversioniert (Live-Snapshots) — dort
+entfällt die Deduplizierung, dafür ist ihr `Draft`-Status zu dokumentieren.
+
+## N6. Aktualität & Zeitreihen-Fähigkeit
+
+| Cube | Observations | Zeitraum | Charakter |
+|---|---|---|---|
+| `foen/hydro/river` | 1 je Station | nur letzter Messwert | **Live-Ticker** |
+| `ubd01041prod/13` | **12 167** | 2020 → 2025-09-23 | **echte Zeitreihe** |
+
+Der kritische Fund aus Abschnitt 3 bleibt bestehen: Für Pegel/Abfluss gibt es
+in LINDAS keine Historie. Die Badegewässerqualität ist dagegen als
+Mehrjahres-Zeitreihe abfragbar (Saison-Daten, jährliche Nachführung —
+`dcterms:modified` 2026-05, letzte Probe 2025-09). Die Anchor-Frage
+(«aktueller Abfluss vs. langjähriges Mittel») bleibt via LINDAS **nur zur
+Hälfte** beantwortbar — ehrlich reduziert auf: aktueller Abfluss (LINDAS) +
+Verweis auf BAFU-Tagesmittel-CSV für das langjährige Mittel.
+
+## N7. Lizenz — liegt am Graph bzw. Datensatz, nicht am Cube
+
+- `foen/hydro`: `dcterms:license` + `dcterms:rights` =
+  `https://ld.admin.ch/vocabulary/TermsOfUse/Open-Use` — aber am **Named Graph**
+  `<https://lindas.admin.ch/foen/hydro>`, nicht an den Cube-URIs.
+- `ubd01041prod/13`: **keine** Lizenz-Triple am Cube; Herkunft nur über
+  `dcterms:creator/publisher` (BAFU) und `schema:workExample` → opendata.swiss.
+
+Konsequenz für die Implementation: Lizenzfeld je Antwort aus dem Graph bzw.
+Datensatz-Deskriptor ziehen; wo keines deklariert ist, explizit
+`«Lizenz: nicht am Cube deklariert — Herkunft BAFU, via opendata.swiss prüfen»`
+ausgeben statt stillschweigend «Open-Use» anzunehmen.
+
+## N8. Zuständigkeitsmatrix BAFU (LINDAS) vs. MeteoSchweiz
+
+Konkret gegen die Cube-Dimensionen geprüft — **keine Messgrössen-Überschneidung**:
+
+| Messgrösse | BAFU via LINDAS (`swiss-environment-mcp`) | MeteoSchweiz (`meteoswiss-mcp`) |
+|---|---|---|
+| Abfluss (m³/s) | ✅ `hydro/river` | ❌ |
+| Wasserstand / Pegel (m ü. M.) | ✅ `hydro/river` + `lake` | ❌ |
+| Wassertemperatur (°C) | ✅ `hydro/river` | ❌ (misst Lufttemperatur) |
+| Hochwasser-Gefahrenstufe | ✅ `dangerLevel` | ❌ (Wetterwarnungen: Sturm/Gewitter/Hitze) |
+| Badegewässerqualität (E.coli u. a.) | ✅ `ubd0104` | ❌ |
+| Niederschlag (mm) | ❌ (in keinem Hydro-Cube enthalten) | ✅ |
+| Schneefall / Lufttemperatur | ❌ | ✅ |
+
+Die Matrix bestätigt die bereits in `docs/tool-inventory.md` (Abschnitt 3)
+dokumentierte Aufteilung; die einzige Duplikationsgefahr (Niederschlag) betrifft
+SLF-IMIS, nicht LINDAS.
+
+## N9. Konsequenz für Phase 2 (Stand der Implementation)
+
+Die LINDAS-Anbindung der beiden `foen/hydro`-Cubes ist seit PR #24–#28
+**bereits produktiv** (`env_hydro_stations/current/history`,
+`env_flood_warnings` LINDAS-first; gemeinsamer `sparql_client.py`, vendored
+byte-identisch mit `fedlex-mcp`). Offen wäre gemäss Erweiterungsauftrag:
+
+1. Restrukturierung in ein extraktionsfähiges `lindas/`-Modul
+   (`client.py` = HTTP/SPARQL, `cube.py` = cube.link-Guardrails mit
+   Zwei-Phasen-Zugriff, Versions-Dedup, Code→Label) — ein **Refactoring**
+   des bestehenden Pfads, kein Neubau.
+2. Neue Tools nur dort, wo sie nicht mit den bestehenden `env_hydro_*`-Tools
+   kollidieren (Tool-Budget 18, aktuell 17): einziger echter Neuzugang wäre
+   Badegewässerqualität (`ubd0104`) — der einzige Hydro-Cube mit Zeitreihe.
+
+Entscheid dazu beim «go» für Phase 2.
