@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "OBS",
+  "severity": "critical",
+  "evidence": [
+    "grep -rn 'print(' src/ --include='*.py' → 0 Treffer (keine print-Statements im gesamten src/, inkl. neuem lindas/-Pfad)",
+    "src/swiss_environment_mcp/logging_setup.py:35 — structlog.WriteLoggerFactory(file=sys.stderr) mit explizitem OBS-004-Kommentar ('stderr — niemals stdout')",
+    "src/swiss_environment_mcp/server.py:72 — configure_logging() transport-unabhängig beim Import; identische Logging-Konfiguration für stdio, sse und streamable-http (kein transport-abhängiger Switch in main(), server.py:2656-2677)",
+    "Runtime-Test (Audit-Lauf, stdio): initialize-Request via stdin → stdout enthält ausschliesslich valide JSON-RPC-Zeilen (programmatischer Parse-Check: 'stdout pure JSON: True'), keine Junk-Lines"
+  ],
+  "gaps": [
+    "Kein CI-Guard gegen künftige print()-Regressionen (ruff-Select E,F,I,N,W ohne T20-Regel in pyproject.toml:60) — Empfehlung, kein Pass-Kriterium."
+  ],
+  "evaluator_notes": "Alle Kriterien erfüllt: keine prints, structlog explizit auf sys.stderr, gleiche Konfiguration über alle Transports, und der Inspector-äquivalente Runtime-Test bestätigt einen unkorrumpierten stdout-Protokollstrom im stdio-Modus."
+}

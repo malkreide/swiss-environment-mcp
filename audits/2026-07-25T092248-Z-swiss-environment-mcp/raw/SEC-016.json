@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "critical",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:59 — Settings.mcp_host Default '127.0.0.1'; Docstring Zeile 52-53 dokumentiert den SEC-016-Entscheid explizit; kein '0.0.0.0' als Code-Default (repo-weiter grep: 0.0.0.0 nur in Dockerfile/compose/render.yaml/.env.example-Kommentar)",
+    "src/swiss_environment_mcp/server.py:2661-2676 — Host/Port ausschliesslich aus Env-Settings (MCP_HOST/PORT); Default-Transport stdio öffnet gar keinen Port",
+    "Dockerfile:28-31 — ENV MCP_HOST=0.0.0.0 NUR im Container, mit Kommentar 'der Code-Default bleibt 127.0.0.1 (Audit SEC-016)'; render.yaml setzt MCP_HOST=0.0.0.0 ebenfalls explizit mit Begründung",
+    ".env.example:11-13 und SECURITY.md:26 — Differenzierung lokal (127.0.0.1) vs. Container/Cloud (0.0.0.0) dokumentiert ('Network transports default to 127.0.0.1 (SEC-016)')"
+  ],
+  "gaps": [
+    "docker-compose.yml mappt 'ports: 8000:8000' ohne Bind-Adresse — auf einem Dev-Host wird der Container-Port damit auf allen Host-Interfaces exponiert (empfohlen: '127.0.0.1:8000:8000')",
+    "Optionales Kriterium nicht umgesetzt: keine Laufzeit-Warnung beim Start mit 0.0.0.0 ausserhalb eines Container-Kontexts"
+  ],
+  "evaluator_notes": "Alle Pflicht-Kriterien erfüllt: 127.0.0.1 als Code-Default, 0.0.0.0 nur explizit in Container-Artefakten, Differenzierung dokumentiert. Nachschärfen sollte man das Port-Mapping im docker-compose-Beispiel."
+}
