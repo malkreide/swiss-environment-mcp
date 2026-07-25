@@ -1,0 +1,672 @@
+{
+ "audit_meta": {
+  "server_name": "swiss-environment-mcp",
+  "run_id": "2026-07-25T145413-Z-swiss-environment-mcp",
+  "skill_version": "1.0.0",
+  "catalog_hash": "091f446b27965044ce658a1d5f4b2cabe2b0ab5661dcc1a53b6be8f1f2e093c0",
+  "policy": "fail-or-partial",
+  "note": "Bestaetigender Re-Audit nach Remediation aller 17 Findings (main @ 2b64258, PRs #36/#37/#38 gemergt). Gleicher Katalog-Hash + gleiches Profil wie Vorlauf 2026-07-25T092248-Z (44 anwendbare Checks). Vergleich: Vorlauf 27 pass/15 partial/2 fail. Die 2 fails (SEC-014/015) sind zu accepted-risk-partial verbessert; 11 der 12 open-Findings zu pass geflippt; SCALE-004 bleibt partial (otel-Extra laesst das <200MB-Ideal nicht zu, aber Image-Size-Gate ergaenzt). Die verbleibenden partials sind saemtlich dokumentierte Risiko-Akzeptanzen bzw. ein begruendeter Trade-off — keine fails."
+ },
+ "results": {
+  "ARCH-001": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:850-2550 (18 Tools, alle name=\"env_*\" snake_case, keine Spaces/Punkte/Klammern)",
+    "src/swiss_environment_mcp/server.py:849-879 (env_nabel_stations: Beschreibung mit Use-Case und Kontext)",
+    "README.md:141 (stabiler env_-Namespace-Prefix dokumentiert)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Einheitliche snake_case-Convention mit env_-Prefix über alle 18 Tools; Beschreibungen liefern Use-Case und Kontext (nicht nur Funktion). Unverändert pass."
+  },
+  "ARCH-002": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:868-870 (<use_case>/<important_notes>-Tags in env_nabel_stations)",
+    "src/swiss_environment_mcp/server.py grep <use_case> = 18/18 Tools",
+    "src/swiss_environment_mcp/server.py:1070-1073 (env_hydro_stations: use_case + important_notes mit Fallback-Caveat)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Alle 18 Tools tragen <use_case>-Tags (18/18 = 100%, > 80%-Schwelle), mehrere zusätzlich <important_notes>. Beschreibungen deutlich > 100 Zeichen Median. Unverändert pass."
+  },
+  "ARCH-003": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:384-400 (MatchType Literal exact/fuzzy/none + ResponseEnvelope mit match_type/note)",
+    "src/swiss_environment_mcp/server.py:1119-1124,1207-1213 (leeres Filterresultat → match_type none + actionable Hinweis)",
+    "src/swiss_environment_mcp/server.py:1100-1107 (JSON-Envelope mit note bei leerem Resultat)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Such-/Listen-Tools liefern match_type-Feld und bei none einen actionable Hinweis (Filter weglassen / bekannte Station-ID). Keine sensiblen Personendaten im Server. Unverändert pass."
+  },
+  "ARCH-004": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:51-71 (Settings via pydantic BaseSettings, transport-agnostisch, Env-Vars)",
+    "src/swiss_environment_mcp/server.py:331-363 (gemeinsame lifespan für alle Transports; FastMCP-Instanz)",
+    "src/swiss_environment_mcp/server.py:2708-2725 (stdio + streamable-http/sse per ENV wählbar)",
+    "src/swiss_environment_mcp/server.py (grep: kein request.headers/request.client in env_-Tool-Handlern; Tools nutzen ctx: Context)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Tool-Handler sind transport-agnostisch (ctx-basiert, kein direkter Request-Zugriff); Konfiguration über Pydantic-Settings; Dual-Transport (stdio/streamable-http) mit gemeinsamem Lifespan. Unverändert pass."
+  },
+  "ARCH-005": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "critical",
+   "evidence": [
+    ".gitignore:4-6 (.env, .env.*, !.env.example)",
+    ".env.example vorhanden (Platzhalter, keine echten Secrets)",
+    ".github/workflows/security.yml:12-33 (gitleaks Secret-Scan auf Push/PR, History + Working Tree)",
+    "src/swiss_environment_mcp/server.py:51-71 (Konfiguration via pydantic-settings; keine hardcoded Keys)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Server nutzt ausschliesslich öffentliche, auth-freie BAFU-APIs — keine Secrets im Code. .gitignore/.env.example korrekt, gitleaks-CI aktiv. Unverändert pass."
+  },
+  "ARCH-006": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "high",
+   "evidence": [
+    "README.md:147-158 (\"Tool budget (18 tools, 6 clusters)\" — Begründung: use-case-getrieben, kein CRUD/Endpoint-Mapping, verworfene Konsolidierung der *_stations/*_current-Paare)",
+    "README.de.md:147 (\"Tool-Budget (18 Tools, 6 Cluster)\" — parallele deutsche Begründung)",
+    "src/swiss_environment_mcp/server.py:1-14 (18 Tools in 6 thematischen Clustern, je distinkte User-Frage)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Zuvor partial (Tool-Budget-Begründung fehlte im README). Remediation Batch 4: beide READMEs (Zeile 147ff) begründen jetzt explizit, warum 18 Tools über 6 Domänen die ≤12-Faustregel überschreiten und welche Konsolidierung bewusst verworfen wurde. Pass-Kriterium \"dokumentierte Begründung im README\" nun erfüllt."
+  },
+  "ARCH-007": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:1560-1569 (env_bathing_water: Lizenz- + Standort-Query via asyncio.gather parallel)",
+    "src/swiss_environment_mcp/server.py:2072-2075 (env_snow_current: SLF Tageswerte + Stations-Metadaten via asyncio.gather parallel)",
+    "src/swiss_environment_mcp/server.py:2637-2664 (Tools liefern gedanklich abgeschlossene Resultate; interne Aggregation gekapselt)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Zuvor partial (keine asyncio.gather-Parallelisierung). Remediation Batch 4: env_bathing_water (1560) und env_snow_current (2072) parallelisieren nun unabhängige interne Calls via asyncio.gather statt sequenziell. Pass-Kriterium für interne Aggregation/Parallelisierung erfüllt."
+  },
+  "ARCH-008": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:2637 (@mcp.resource env://grenzwerte/luft)",
+    "src/swiss_environment_mcp/server.py:2649 (@mcp.resource env://nabel/stationen)",
+    "src/swiss_environment_mcp/server.py:2664 (@mcp.resource env://hochwasser/gefahrenstufen)",
+    "README.md:286 (Projektstruktur nennt Tools + 3 Resources)"
+   ],
+   "gaps": [
+    "README.md:286 / :243 nennen \"12 Tools\" statt tatsächlicher 18 — Zahl-Ungenauigkeit, betrifft aber nicht die Primitiv-Nutzung"
+   ],
+   "evaluator_notes": "Server nutzt zwei der drei Primitive: Tools + 3 Resources mit konsistentem env://-URI-Schema. Pass-Kriterium (mindestens zwei Primitive) erfüllt. Unverändert pass."
+  },
+  "ARCH-009": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py (grep readOnlyHint = 18/18 Tools mit expliziten annotations)",
+    "src/swiss_environment_mcp/server.py:851-857 (env_nabel_stations: readOnlyHint True, destructiveHint False, idempotentHint True, openWorldHint True)",
+    "README.md:226 (\"Read-only (readOnlyHint: true) — the server cannot modify or delete any data\")"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Alle 18 Tools tragen explizite Annotations; readOnlyHint durchgängig True und konsistent mit dem read-only-Verhalten (keine schreibenden Tools). Annotations-Policy im README dokumentiert. Unverändert pass."
+  },
+  "ARCH-011": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "Top-Level: README.md, README.de.md, CHANGELOG.md, LICENSE, pyproject.toml alle vorhanden",
+    "pyproject.toml:53 (src-Layout: packages = [\"src/swiss_environment_mcp\"])",
+    ".github/workflows/ (ci.yml + publish.yml vorhanden)",
+    "README.md:306-309 & README.de.md:306-309 (dokumentierte, begründete Abweichung: alle Tools bewusst in server.py statt tools/-Paket)"
+   ],
+   "gaps": [
+    "README.md:286/243 Projektstruktur nennt \"12 tools\" statt 18 (Zahl veraltet)",
+    "server.py ist ~2730 Zeilen (monolithisch), Abweichung vom tools/-Split-Standard — jedoch im README explizit begründet"
+   ],
+   "evaluator_notes": "Alle Pflicht-Files/-Verzeichnisse, src-Layout und README.de-Sektionsparität vorhanden. Die >5-Tools-in-einer-Datei-Abweichung ist per Pass-Kriterium \"Abweichungen im README begründet\" (Zeile 306-309) abgedeckt. Kleinere Zahl-Ungenauigkeit (12 vs 18) als gap notiert. Pass."
+  },
+  "ARCH-012": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:315-343 (_mcp_protocol_version() + server_start-Log mit mcp_protocol_version in der lifespan)",
+    "README.md:313-322 (Sektion \"MCP Protocol Version & Maintenance\": SDK-Version als kanonischer Pin, Update-Policy, monatliche Dependabot-PRs)",
+    ".github/dependabot.yml (pip + github-actions, monatlich)",
+    "CHANGELOG.md (Keep-a-Changelog-Format; Unreleased-Eintrag dokumentiert ARCH-012 Protokollversion-Logging)"
+   ],
+   "gaps": [
+    "protocolVersion wird über die SDK-Konstante LATEST_PROTOCOL_VERSION geloggt statt als hartcodierter Literal gepinnt — bewusste, dokumentierte Design-Entscheidung (SDK-Version = Pin, via Dependabot getrackt)"
+   ],
+   "evaluator_notes": "Zuvor partial (protocolVersion nicht geloggt/gepinnt). Remediation Batch 4: lifespan loggt nun beim server_start die vom SDK unterstützte mcp_protocol_version; README-Sektion, Update-Policy, CHANGELOG und Dependabot vorhanden. Pinning erfolgt über SDK-Versions-Pin + Startup-Logging statt Literal — dokumentiert und audit-trail-sichtbar; Pass-Intention (kein stiller Bruch, Nachvollziehbarkeit) erfüllt."
+  },
+  "CH-004": {
+   "status": "pass",
+   "category": "CH",
+   "severity": "medium",
+   "evidence": [
+    "Source-Feld in Tool-Returns: src/swiss_environment_mcp/server.py — _envelope_json(source=...) mit voller Attribution (z.B. :892 'BAFU – Nationales Beobachtungsnetz...NABEL', :762 'BAFU Hydrodaten via LINDAS (Open-Use / OGD-CH)'); 34 source/provenance/CC-BY-Vorkommen in server.py. Markdown-Ausgaben fuehren 'Quelle: BAFU' mit.",
+    "README.md:263-276 Data-Sources-Tabelle mit Provider + Lizenz je Quelle (lindas.admin.ch, hydrodaten.admin.ch, SLF CC BY 4.0, jagdstatistik.ch, opendata.swiss); README.md:231,416-420 Lizenz-/ToS-Sektion; 'Attribution required: BAFU / SLF (WSL)'.",
+    "README.de.md analog; CONTRIBUTING.md:156-167 / CONTRIBUTING.de.md Data-Sources-&-Attribution-Tabelle.",
+    "Jagdstatistik-Lizenz transparent recherchiert und markiert (README.md:344, docs/probe-jagdstatistik.md): BAFU-Eigentum, keine explizite Lizenz publiziert, Quellenangabe erforderlich."
+   ],
+   "gaps": [
+    "jagdstatistik.ch hat keine explizit publizierte Lizenz — im README ehrlich als 'no explicit licence, attribution required' dokumentiert (kein Compliance-Verstoss, sondern korrekte Offenlegung)."
+   ],
+   "evaluator_notes": "OGD-CH-Compliance erfuellt: source-Feld mit Attribution in Tool-Returns, README dokumentiert alle Quellen mit Lizenzen (CC BY 4.0 / OGD / Open-Use), keine Re-Lizenzierung, Provenance je Response. Pass."
+  },
+  "OBS-001": {
+   "status": "pass",
+   "category": "OBS",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:107-121 — _terminal_failure(message) -> ToolError: terminale Ausfuehrungsfehler werden via 'raise' als ToolError signalisiert. Per SDK-Kontrakt (lowlevel _make_error_result) setzt FastMCP daraufhin isError=true im CallToolResult (statt Fehlertext als erfolgreiches Resultat). Docstring grenzt bewusst ab: NICHT fuer Graceful-Degradation / leere-aber-gueltige Resultate.",
+    "src/swiss_environment_mcp/server.py:1270, 1436, 1673, 1749, 1829, 1908, 1993, 2079, 2195, 2363, 2542, 2628 — 'raise _terminal_failure(...)' konsistent an den Upstream-Fehlerpfaden der Tools; die maskierte, user-freundliche Meldung + Recovery-Hinweise bleiben im Fehler-Content.",
+    "src/swiss_environment_mcp/server.py:82-105 — _handle_tool_error: liefert maskierte Meldung (api.handle_http_error), loggt echte Details strukturiert nach stderr, meldet zusaetzlich via ctx.warning. Graceful-Degradation-Pfade (z.B. Beispiel-Stationslisten) geben weiterhin regulaere Resultate zurueck (kein isError).",
+    "tests/test_unit.py:295-330 (test_execution_error_path_logs_and_reports) — Execution-Error-Pfad: pytest.raises(ToolError) bei Upstream-500; Assertion: 'fehlgeschlagen' in Msg, 'Traceback'/'500 Internal' NICHT enthalten; ctx.warning gesetzt; tool_error + tool_failed geloggt. Weitere ToolError-Tests: test_unit.py:673/703/732, test_lindas.py:300-306.",
+    "tests/test_unit.py:~331 (test_protocol_error_invalid_args) — Protocol-Error-Pfad: ungueltige Tool-Argumente -> pydantic ValidationError (vom Framework als JSON-RPC-Error formatiert), abgedeckt.",
+    "Testlauf (venv): 79 passed, 1 skipped — inkl. der oben zitierten Execution- und Protocol-Error-Tests."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Frueherer partial-Grund ('isError-Flag nicht gesetzt') ist behoben: terminale Fehler werfen jetzt ToolError, wodurch FastMCP isError=true setzt (SDK-Kontrakt als gegeben angenommen). Execution- vs. Protocol-Error-Trennung sauber: Ausfuehrungsfehler -> ToolError/isError mit maskierter Recovery-Meldung; Protocol-Fehler (falsche Args) -> ValidationError -> JSON-RPC-Error. Beide Pfade durch dokumentierte, gruene Tests abgedeckt. Alle Pass-Kriterien erfuellt."
+  },
+  "OBS-002": {
+   "status": "pass",
+   "category": "OBS",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/api_client.py:250-252 (handle_http_error Catch-all) — generische Meldung 'Unerwarteter interner Fehler. Bitte erneut versuchen.' ohne Exception-Typ/-Text; Kommentar referenziert OBS-002. Funktionales Aequivalent zu mask_error_details=True (das offizielle mcp-SDK-FastMCP kennt diesen Parameter nicht).",
+    "src/swiss_environment_mcp/server.py:82-105 — _handle_tool_error: maskierte Meldung ans LLM; echte Details (error_type, detail, Query-Parameter) ausschliesslich ins strukturierte stderr-Log (logger.warning 'tool_error'). ToolError (server.py:107-121) traegt nur die maskierte Meldung.",
+    "grep 'traceback|format_exc|sys.exc_info' src/ -> nur logging_setup.py:43 (format_exc_info-Prozessor fuers Server-Log); keine Traceback-Ausgabe in Tool-Returns/Tool-Errors.",
+    "src/swiss_environment_mcp/api_client.py:229-234 — LINDAS-QueryError-MALFORMED-Meldung wird bewusst/begruendet durchgereicht (Kommentar: stammt vom oeffentlichen SPARQL-Endpoint, benennt fehlerhafte Query-Stelle, keine Server-Interna) — OBS-001-konformer Execution-Error.",
+    "tests/test_unit.py:295-330 (Leak-Assertion: 'Traceback'/'500 Internal' nicht im ToolError-Content) + tests/test_lindas.py:64-79 (QueryError/QueryTimeoutError-Meldungen).",
+    "Log-Schutz: Server hat keine Auth/Tokens (oeffentliche Datenquellen, docs/security.md); geloggte Felder sind Tool-Name, Fehlertyp und Query-Parameter oeffentlicher APIs — kein Klartext-Token, kein PII."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Unveraendert bestaetigt gegenueber Vorlauf-Pass. Maskierung ist zentralisiert (handle_http_error + _handle_tool_error + ToolError traegt nur die maskierte Meldung) und getestet; Originalfehler gehen nur ins strukturierte stderr-Log. Die unmaskierte LINDAS-MALFORMED-Meldung ist eine dokumentierte, begruendete Ausnahme (Server-Feedback des oeffentlichen Endpoints, keine eigenen Interna). Alle Pass-Kriterien erfuellt."
+  },
+  "OBS-003": {
+   "status": "pass",
+   "category": "OBS",
+   "severity": "medium",
+   "evidence": [
+    "pyproject.toml:28 — structlog>=24.1.0 in [project.dependencies] (strukturierter Logger als harte Dependency).",
+    "src/swiss_environment_mcp/logging_setup.py:37-49 — structlog.configure mit JSONRenderer, ISO-TimeStamper, add_log_level, merge_contextvars, format_exc_info; WriteLoggerFactory(file=sys.stderr). JSON-Output, maschinenlesbar.",
+    "src/swiss_environment_mcp/tracing.py:88-107 (trace_tool) — Correlation-ID: request_id = uuid4().hex[:12] wird via structlog.contextvars.bound_contextvars(request_id=..., tool=...) pro Tool-Call gebunden; alle Logs des Calls (auch die Warnung aus _handle_tool_error) korrelierbar. Invocation-Logging: tool_invoked (info), tool_succeeded (info, mit is_error), tool_failed (error, exc_info).",
+    "Severity-Stufen aktiv genutzt (>= 4): debug (api_client.py:232/284/544 upstream_request), info (tracing.py:96/105, server.py:339), warning (server.py:91/2689, ctx.warning), error (tracing.py:103 tool_failed). -> debug/info/warning/error alle vertreten.",
+    "src/swiss_environment_mcp/logging_setup.py:20-30 — LOG_LEVEL-Env (DEBUG/INFO/WARNING) schaltet die debug-Stufe (Upstream-Requests/Retry-Details) ohne Code-Aenderung ein.",
+    "src/swiss_environment_mcp/api_client.py:224 — Debug-Upstream-Logging (_logger.debug 'upstream_request'), Correlation-Kontext (request_id/tool) erscheint via contextvars automatisch mit.",
+    "grep 'print(' src/ -> 0 Treffer (keine print-Statements)."
+   ],
+   "gaps": [
+    "Kein CI-Guard gegen print()-Regressionen (ruff ohne T20-Regel) — Empfehlung, kein Pass-Kriterium.",
+    "notice/critical/alert/emergency-Stufen werden nicht genutzt (4 von 8 RFC-5424-Stufen aktiv) — das Kriterium verlangt mindestens 4 (debug/info/warning/error), erfuellt."
+   ],
+   "evaluator_notes": "Alle drei frueheren partial-Gruende sind behoben: (1) statt nur 1 jetzt >= 4 Severity-Stufen (debug/info/warning/error); (2) Invocation-Logging vorhanden (tool_invoked/succeeded/failed im trace_tool-Decorator); (3) Correlation-ID (request_id) pro Tool-Call via structlog-contextvars gebunden. structlog als Dependency, JSON-Output nach stderr, pro Tool-Call bound context (tool + request_id). Alle Pass-Kriterien erfuellt."
+  },
+  "OBS-004": {
+   "status": "pass",
+   "category": "OBS",
+   "severity": "critical",
+   "evidence": [
+    "grep -rn 'print(' src/ --include='*.py' -> 0 Treffer (keine print-Statements im gesamten src/, inkl. lindas/-Pfad).",
+    "src/swiss_environment_mcp/logging_setup.py:47 — structlog.WriteLoggerFactory(file=sys.stderr) mit explizitem OBS-004-Kommentar ('stderr — niemals stdout'). Modul-Docstring (:1-11) begruendet: stdout ist bei stdio fuer JSON-RPC reserviert.",
+    "src/swiss_environment_mcp/server.py:75 — configure_logging() transport-unabhaengig beim Import; main() (server.py:2707-2726) hat keinen transport-abhaengigen Logging-Switch -> identische stderr-Konfiguration fuer stdio, sse und streamable-http.",
+    "src/swiss_environment_mcp/tracing.py:26 — _obs_logger via get_logger(); alle Tool-Layer-Logs laufen ebenfalls ueber die stderr-gebundene structlog-Konfiguration.",
+    "Runtime (Vorlauf, stdio): initialize-Request via stdin -> stdout enthaelt ausschliesslich valide JSON-RPC-Zeilen (Parse-Check 'stdout pure JSON: True'); Logging-Konfiguration unveraendert (2b64258)."
+   ],
+   "gaps": [
+    "Kein CI-Guard gegen kuenftige print()-Regressionen (ruff-Select ohne T20-Regel) — Empfehlung, kein Pass-Kriterium."
+   ],
+   "evaluator_notes": "Unveraendert bestaetigt gegenueber Vorlauf-Pass. Keine prints, structlog explizit auf sys.stderr via WriteLoggerFactory, gleiche Konfiguration ueber alle Transports (kein transport-abhaengiger Switch). Bei stdio bleibt stdout ein unkorrumpierter Protokollstrom. Alle Pass-Kriterien erfuellt."
+  },
+  "OBS-006": {
+   "status": "pass",
+   "category": "OBS",
+   "severity": "medium",
+   "evidence": [
+    "Dockerfile:27 — RUN pip install --no-cache-dir \"$(ls /tmp/*.whl)[otel]\": das otel-Extra ist jetzt IM Runtime-Image installiert (behebt den frueheren partial-Grund 'otel-Extra fehlt im Docker-Image'). Kommentar :23-25: Tracing bleibt opt-in (No-op ohne OTEL_EXPORTER_OTLP_ENDPOINT).",
+    "pyproject.toml:39-42 — [project.optional-dependencies] otel = opentelemetry-sdk, opentelemetry-exporter-otlp-proto-http, opentelemetry-instrumentation-httpx.",
+    "src/swiss_environment_mcp/tracing.py:30-64 (configure_tracing) — TracerProvider mit Resource(service.name, deployment.environment) + BatchSpanProcessor(OTLPSpanExporter) + HTTPXClientInstrumentor().instrument() (Auto-Instrumentation fuer ausgehende httpx-Calls -> Backend-Child-Spans). No-op ohne OTLP-Endpoint / ohne otel-Extra.",
+    "src/swiss_environment_mcp/tracing.py:69-79 (_run_traced) — pro Tool-Call Span 'mcp.tool.<name>' mit Attributen mcp.tool.name und mcp.tool.result.is_error.",
+    "src/swiss_environment_mcp/tracing.py:1-18 (Docstring) + Code — KEINE sensitiven Daten in Span-Attributen: nur Tool-Name + is_error-Bool; keine Argumente/Inhalte/Tokens.",
+    "render.yaml:25-28 — OTEL_SERVICE_NAME=swiss-environment-mcp (Service-Name gesetzt), OTEL_EXPORTER_OTLP_ENDPOINT via sync:false (Endpoint operator-konfigurierbar); docker-compose.yml:15-17 dokumentiert OTEL_SERVICE_NAME/OTEL_EXPORTER_OTLP_ENDPOINT.",
+    "src/swiss_environment_mcp/server.py:79 — configure_tracing() beim Server-Start (No-op bis Endpoint gesetzt)."
+   ],
+   "gaps": [
+    "Span-Attribut mcp.user.id ist nicht gesetzt — strukturell N/A: der Server hat keine Authentifizierung / keine user_claims (ausschliesslich oeffentliche Daten, kein User-Identity-Kontext). Kein PII/Token-Leak-Risiko, da keine User-Identitaet existiert.",
+    "Tracing ist opt-in: aktiv erst bei gesetztem OTEL_EXPORTER_OTLP_ENDPOINT (in Cloud-Manifesten als sync:false hinterlegt) — das otel-Extra ist jetzt im Image gebacken, also ohne Rebuild aktivierbar."
+   ],
+   "evaluator_notes": "Frueherer partial-Grund ('otel-Extra fehlt im Docker-Image') ist behoben (Dockerfile:27). SDK installiert (via Extra im Image) und konditional initialisiert; TracerProvider + OTLP-http-Exporter; httpx-Auto-Instrumentation aktiv; Span pro Tool-Call mit mcp.tool.name + mcp.tool.result.is_error; keine sensitiven Attribute; OTLP-Endpoint env-konfigurierbar; Service-Name + deployment.environment gesetzt. Einziges nicht gesetztes Attribut (mcp.user.id) ist mangels Auth/User-Identity in diesem Public-Data-Server ein legitimes N/A, kein Implementierungs-Gap. Pass."
+  },
+  "OPS-001": {
+   "status": "pass",
+   "category": "OPS",
+   "severity": "high",
+   "evidence": [
+    "tests/test_unit.py:659-731 (gemockte respx-Unit-Tests test_hazard_overview_*, test_hazard_regions_*, test_wildfire_danger_* — je Happy + Error)",
+    "tests/test_unit.py (64 Test-Funktionen, respx-gemockt; pyproject.toml:65-66 registriert live-Marker)",
+    "tests/test_integration.py:23,224,238 (pytestmark live; test_snow_stations_tool, test_avalanche_bulletin_tool; 18 Live-Tests)",
+    "tests/test_20_scenarios.py::test_all_scenarios (collect-only: 1 test collected — nicht mehr 0)",
+    ".github/workflows/ci.yml:45 (pytest -m \"not live\") + .github/workflows/live-tests.yml:7-25 (nightly cron 04:00 + workflow_dispatch, pytest -m live)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Zuvor partial (3 Hazard-Tools ohne Mock-Tests, test_20_scenarios 0 collected). Remediation Batch 2: Hazard/Regions/Wildfire nun gemockt (test_unit.py:659-731), Live-Tests test_snow_stations_tool/test_avalanche_bulletin_tool ergänzt, test_20_scenarios sammelt jetzt test_all_scenarios (1 collected). respx-Mocking, Marker registriert, CI schliesst live aus, separater Nightly-Workflow. Pass."
+  },
+  "OPS-002": {
+   "status": "pass",
+   "category": "OPS",
+   "severity": "medium",
+   "evidence": [
+    "README.md:28 (Anchor demo query, konkret natürlich-sprachlich) + README.md:22-430 (alle Pflicht-Sektionen: Installation, Configuration, Available Tools, Safety & Limits, Architecture, Known Limitations, Security, License)",
+    "README.md:239-241 (ASCII-Architekturdiagramm mit Box-Drawing-Zeichen)",
+    "README.md:334-... (Known Limitations mit > 3 expliziten Limits) + CHANGELOG.md (Keep-a-Changelog)",
+    "CONTRIBUTING.md + CONTRIBUTING.de.md (bilingual); README.de.md mit paralleler Sektionsstruktur"
+   ],
+   "gaps": [
+    "README.md:243/286 nennen \"12 Tools\" statt 18 (Zahl veraltet in Architektur/Projektstruktur)"
+   ],
+   "evaluator_notes": "Alle 8 Pflicht-Sektionen vorhanden, Anchor-Demo-Query konkret, ASCII-Diagramm und Limits-Sektion explizit, CHANGELOG im Keep-a-Changelog-Format, CONTRIBUTING bilingual, README.de.md sektionsparallel. Unverändert pass; kleinere Tool-Zahl-Ungenauigkeit als gap notiert."
+  },
+  "OPS-003": {
+   "status": "pass",
+   "category": "OPS",
+   "severity": "high",
+   "evidence": [
+    "README.md:324-331 (Lifecycle Phase explizit deklariert: \"Phase 1 (read-only)\" — alle Tools read-only, no auth, no side effects)",
+    "docs/roadmap.md:5-34 (Phasen 1/2/3 mit Übergangs-Voraussetzungen Phase 1→2 und 2→3)",
+    "src/swiss_environment_mcp/server.py (grep readOnlyHint True 18/18, keine destructiveHint True → Phase-1-Tool-Kategorisierung konsistent)"
+   ],
+   "gaps": [
+    "docs/roadmap.md:7 nennt \"12 Tools\" statt 18 (Zahl veraltet, betrifft nicht die Phasen-Deklaration)"
+   ],
+   "evaluator_notes": "Phase 1 explizit im README deklariert, Roadmap-File mit phasenspezifischen Tasks und Übergangs-Gates vorhanden, Tool-Annotations (ausschliesslich read-only, keine destruktiven) entsprechen der Phase. Unverändert pass."
+  },
+  "SCALE-001": {
+   "status": "pass",
+   "category": "SCALE",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:61 — Settings.mcp_transport: str = \"stdio\": ENV-basierte Transport-Selektion via pydantic-settings (MCP_TRANSPORT), stdio-Default (SEC-016-konform, mcp_host-Default 127.0.0.1).",
+    "src/swiss_environment_mcp/server.py:2707-2726 — main() schaltet transportabhängig: streamable-http -> uvicorn.run(build_cors_app()), sse -> mcp.run('sse'), sonst stdio. Host/Port aus settings.",
+    "render.yaml:14 (MCP_TRANSPORT=streamable-http), :15-19 (MCP_HOST=0.0.0.0, PORT=8000); Dockerfile:31 (ENV MCP_TRANSPORT=streamable-http, MCP_HOST=0.0.0.0, PORT=8000) — Cloud-Manifeste setzen den HTTP-Transport explizit.",
+    "grep -riE 'websocket' src/ -> 0 Treffer: keine veraltete WebSocket-Implementierung.",
+    "Runtime (Vorlauf 2026-07-25T092248): Server mit MCP_TRANSPORT=streamable-http -> POST /mcp initialize -> HTTP 200 mit Capabilities; /health -> HTTP 200. Artefakt unverändert (2b64258)."
+   ],
+   "gaps": [
+    "Der Live-Cloud-Endpoint (Render-URL) wurde nicht direkt kontaktiert; der initialize-Nachweis erfolgte gegen das identische lokale Artefakt mit Cloud-Transport-Konfiguration (unveraendert seit Vorlauf)."
+   ],
+   "evaluator_notes": "Alle vier Pass-Kriterien erfuellt: ENV-basierte Transport-Selektion (stdio + streamable-http/sse), Cloud-Deployment nutzt streamable-http, kein WebSocket-Code, initialize antwortet HTTP 200. Unveraendert bestaetigt gegenueber Vorlauf-Pass."
+  },
+  "SCALE-002": {
+   "status": "partial",
+   "category": "SCALE",
+   "severity": "high",
+   "evidence": [
+    "docs/scaling.md:5-17 — 'Aktueller Stand: Single-Instance': explizite Architektur-Entscheidung. Server laeuft als einzelne Instanz (Render Web Service / einzelner Container); alle Requests einer Mcp-Session-Id landen zwangslaeufig auf derselben Instanz -> kein verteiltes Session-Management noetig.",
+    "docs/scaling.md:5-17 — State-Eigenschaften dokumentiert: keine serverseitig persistierten Sessions, jeder Tool-Call abgeschlossen/idempotent gegenueber oeffentlichen Daten, ein geteilter httpx.AsyncClient pro Prozess (Lifespan).",
+    "docs/scaling.md:19-37 — Re-Evaluations-Trigger: Sobald horizontal skaliert wird, ist genau EINES der zwei Muster verbindlich: (1) Sticky Sessions am Edge-LB (SCALE-003) oder (2) Shared-State-Session-Manager (Redis / Durable Objects). Session-TTL in beiden Faellen explizit zu setzen; Failover ohne Shared State darf nicht stumm umgeleitet werden.",
+    "Code-Review: kein redis/memcached/SessionStore/session_manager in src/ (grep negativ) — konsistent mit Single-Instance-Topologie (kein Shared State implementiert)."
+   ],
+   "gaps": [
+    "Keines der beiden Pass-Muster (Sticky Sessions ODER Shared-State-Session-Manager) ist implementiert — nach den strengen Pass-Kriterien nicht erfuellt.",
+    "Kein Failover-Test (Modus 3), da in Single-Instance-Topologie kein Failover-Pfad existiert."
+   ],
+   "evaluator_notes": "Adjudiziert als dokumentierte Single-Instance-Risiko-Akzeptanz (accepted-risk). Die Pass-Kriterien des Checks setzen ein horizontal skaliertes Deployment voraus (applies_when transport==HTTP/SSE, multi-instance); die tatsaechliche Topologie ist bewusst single-instance, wodurch der Session-Stickiness-Bedarf strukturell entfaellt. docs/scaling.md haelt sowohl die aktuelle Entscheidung als auch die verbindlichen Muster + Re-Eval-Trigger fuer Scale-out fest. Ehrliche Einordnung nach Pass-Kriterien: partial (kein Sticky-LB/Shared-State implementiert), Risiko dokumentiert und begruendet."
+  },
+  "SCALE-003": {
+   "status": "partial",
+   "category": "SCALE",
+   "severity": "high",
+   "evidence": [
+    "docs/scaling.md:19-37 — Scale-out-Abschnitt beschreibt den konkreten Edge-LB-Routing-Layer: HAProxy/Nginx/K8s-Ingress routet anhand des Mcp-Session-Id-Headers konsistent auf dasselbe Backend; HAProxy-Stick-Table auf den Header, TTL korreliert mit Session-TTL (z.B. 24h), Kapazitaet >= 100k Sessions.",
+    "docs/scaling.md:5-17 — Begruendung, warum aktuell kein Edge-LB-Routing noetig ist: Single-Instance-Topologie, alle Requests einer Mcp-Session-Id landen zwangslaeufig auf derselben Instanz.",
+    "docs/scaling.md:33-37 — Failover-Regel dokumentiert: bei Backend-Ausfall darf eine Session ohne Shared State nicht stumm auf ein neues Backend umgeleitet werden (entweder Shared State oder sauberer Session-Neuaufbau).",
+    "find . -name 'haproxy.cfg' -o -name 'nginx.conf' -o -name 'ingress*.yaml' -> keine Edge-LB-Konfiguration im Repo (konsistent mit Single-Instance)."
+   ],
+   "gaps": [
+    "Kein Edge-LB liest den Mcp-Session-Id-Header (keine HAProxy-Stick-Table / NGINX-Hash / K8s-Ingress-Affinity implementiert) — strenge Pass-Kriterien nicht erfuellt.",
+    "Kein Affinitaets-/Failover-Runtime-Test (Modus 2), da kein Edge-LB im Single-Instance-Setup vorhanden."
+   ],
+   "evaluator_notes": "Adjudiziert als dokumentierte Single-Instance-Risiko-Akzeptanz (accepted-risk). SCALE-003 ergaenzt SCALE-002 um den konkreten Routing-Layer und greift erst bei multi-instance-Deployment. Die verbindliche Edge-LB-Konfiguration (HAProxy Stick-Table auf Mcp-Session-Id, TTL >= 24h, Kapazitaet >= 100k) ist als Scale-out-Trigger in docs/scaling.md hinterlegt, aber im aktuellen Single-Instance-Betrieb nicht aktiv. Ehrliche Einordnung nach Pass-Kriterien: partial."
+  },
+  "SCALE-004": {
+   "status": "partial",
+   "category": "SCALE",
+   "severity": "medium",
+   "evidence": [
+    "Dockerfile:2 (FROM python:3.12-slim AS builder) + :15 (FROM python:3.12-slim AS runtime) — 2 FROM-Statements, benannte Stages (multi-stage), slim-Base. Build-Stage baut ein Wheel, Runtime-Stage installiert nur das Wheel (+[otel]).",
+    "Dockerfile:33-37 — non-root: groupadd/useradd 'app' (uid/gid 10001), USER app gesetzt (SEC-007).",
+    "Dockerfile:40-42 — HEALTHCHECK-Direktive vorhanden (python urllib gegen http://127.0.0.1:8000/health, interval 30s).",
+    ".github/workflows/image-size.yml — NEUER Regressions-Gate (SCALE-004): docker build + Groessenpruefung via 'docker image inspect --format {{.Size}}'; path-gefiltert auf [Dockerfile, pyproject.toml, src/**]; fail bei > CEILING.",
+    ".github/workflows/image-size.yml — CEILING=350 (MB). Der Workflow-Kommentar raeumt explizit ein, dass das <=200-MB-Ideal durch den python-slim-Unterbau + das otel-Extra (OBS-006) knapp ueberschritten wird; das Ceiling faengt echte Regressionen (Fat-Dependencies), ohne bei jedem Build zu scheitern.",
+    "Groessen-Schaetzung (Docker-Daemon in der Audit-Umgebung nicht verfuegbar, kein Live-Build): venv-site-packages der Runtime-Deps ohne otel bereits 95 MB; python:3.12-slim-Base ~130 MB unkomprimiert; + otel-Extra -> geschaetzt ~250-290 MB. Konsistent mit dem 350-MB-Ceiling und dem Repo-eigenen Eingestaendnis."
+   ],
+   "gaps": [
+    "Pass-Kriterium 'Final-Image-Groesse < 200 MB (Python)' ist NICHT erfuellt: das Image liegt (per Repo-eigenem Ceiling 350 MB und Schaetzung ~250-290 MB) oberhalb von 200 MB. Der OBS-006-otel-Extra treibt die Groesse ueber die 200-MB-Marke (dokumentierter Trade-off).",
+    "Live-Docker-Build zur exakten Groessenmessung in der Audit-Umgebung nicht moeglich (kein Docker-Daemon)."
+   ],
+   "evaluator_notes": "5 von 6 Pass-Kriterien erfuellt: multi-stage, benannte Stages, slim-Base, USER non-root, HEALTHCHECK. Der frueher offene Punkt 'nicht verifizierbar / kein Gate' ist behoben — image-size.yml stellt jetzt eine reproduzierbare, path-gefilterte Groessenpruefung mit Regressions-Ceiling bereit. Streng bewertet bleibt jedoch das harte Kriterium '< 200 MB' unerfuellt (Ceiling bei 350 MB, Repo raeumt die Ueberschreitung selbst ein). Die Ueberschreitung ist ein begruendeter Trade-off gegen die OBS-006-Anforderung (otel-Extra im Image). Daher partial statt pass."
+  },
+  "SCALE-006": {
+   "status": "pass",
+   "category": "SCALE",
+   "severity": "medium",
+   "evidence": [
+    "docker-compose.yml:19-27 — explizite Limits im Render-/Deploy-Beispiel: mem_limit 256m, mem_reservation 128m (requests < limits -> Burst-Headroom), cpus 0.5, ulimits.nofile soft 4096/hard 8192 (FD-Limit >= 4096), restart: unless-stopped.",
+    "render.yaml:9 — plan: starter; Kommentar :6-9 dokumentiert die plan-gebundenen Limits 512 MB RAM / 0.5 vCPU (Render deckelt hart auf Plan-Ebene) und Auto-Restart bei OOM (managed). Damit ist der Render-Deployment-Pfad (frueherer Gap) jetzt abgedeckt.",
+    "docs/scaling.md:39-59 — Resource-Limits-Sektion mit Limits-Tabelle je Deployment-Pfad (Docker-Compose / Render / Kubernetes) inkl. Memory/CPU + Restart-bei-OOM-Spalte.",
+    "docs/scaling.md:53-59 — reproduzierbares OOM-Verfahren dokumentiert: 'docker run --memory=64m ...' erzwingt OOM-Kill; restart-policy startet den Container neu; /health danach wieder gruen. Architektur-Begruendung: single-instance, kein unbeschraenkt wachsender State -> OOM-Kill = sauberer Neustart ohne Datenverlust."
+   ],
+   "gaps": [
+    "OOM-Verhalten ist als reproduzierbares Verfahren dokumentiert (Modus 2), aber im Audit nicht als Live-Test ausgefuehrt/evidenziert (kein Docker-Daemon verfuegbar); restart-policy ist jedoch aktiv konfiguriert.",
+    "Render-Limits sind plan-erzwungen/dokumentiert (kein numerisches Feld im Manifest, da Render Limits auf Plan-Ebene deckelt) — check-konform, da der Check fuer Railway/Render Doku als Nachweis akzeptiert."
+   ],
+   "evaluator_notes": "Beide frueheren partial-Gruende sind behoben: (1) Limits nicht nur im Beispiel-Compose, sondern jetzt auch im Render-Pfad (plan starter, dokumentiert) und in docs/scaling.md je Deployment-Pfad; (2) OOM-Verhalten ist ueber ein reproduzierbares Verfahren + aktive restart-policy adressiert. Alle config_check-Kriterien (Modus 1) erfuellt: Memory-Limit explizit, CPU-Limit gesetzt, requests < limits, FD-Limit >= 4096, restart-policy aktiv. Der Check akzeptiert fuer managed Plattformen (Railway/Render) Dokumentation als Nachweis. Pass; residualer Punkt ist der nicht live-ausgefuehrte OOM-Test (dokumentiert-reproduzierbar)."
+  },
+  "SDK-001": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:331-348 — @asynccontextmanager lifespan(server), ruft api.startup() vor yield und api.shutdown() im finally.",
+    "src/swiss_environment_mcp/server.py:351-363 — FastMCP('swiss_environment_mcp', lifespan=lifespan, ...).",
+    "src/swiss_environment_mcp/api_client.py:192-226 — einzelner geteilter httpx.AsyncClient (_client global, lazy via get_client()), startup() initialisiert, shutdown() schliesst via aclose().",
+    "Kein httpx.AsyncClient() pro Tool-Call — alle Fetcher nutzen get_client()."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Lifespan-Pattern korrekt: Ressource (HTTP-Client mit DNS-Pinning-Transport) einmalig erzeugt, Cleanup im finally. Single-Server-Setup, daher kein AsyncExitStack noetig."
+  },
+  "SDK-002": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "medium",
+   "evidence": [
+    "pydantic 2.13.4 (>=2.0.0 in pyproject.toml) — Pydantic v2.",
+    "src/swiss_environment_mcp/server.py:387-422 — ResponseEnvelope(BaseModel) mit source, provenance, count, match_type (Literal exact/fuzzy/none), results, note, query; _envelope_json() als konsistenter Serializer fuer Such-/Listen-Tools im JSON-Modus.",
+    "Alle Tools haben explizite Return-Annotation (-> str); 17/18 via grep 'async def env_.*-> str', das 18. ebenfalls -> str (Mehrzeilen-Signatur).",
+    "MatchType Literal statt str (server.py:384); Field(default_factory=list) fuer results (server.py:398) — kein Mutable-Default-Bug."
+   ],
+   "gaps": [
+    "Tools geben str (Markdown-Default) bzw. JSON-String zurueck statt direkt das ResponseEnvelope-BaseModel — bewusste Design-Entscheidung (Markdown als menschenlesbares Default). FastMCP exponiert daher kein strukturiertes Output-Schema, aber der Envelope ist konsistent und typgeprueft. Kein Fail-Kriterium."
+   ],
+   "evaluator_notes": "Pydantic v2, konsistenter Provenance-Envelope mit source/provenance/count/match_type, Literal-Types, Field-Defaults. Return-Annotationen vorhanden. Pass."
+  },
+  "SDK-003": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py — alle Tools deklarieren ctx: Context | None = None (19 Vorkommen), FastMCP injiziert den Context.",
+    "src/swiss_environment_mcp/server.py:81-103 _handle_tool_error() nutzt await ctx.warning(...) fuer nicht-terminale Fehler und loggt strukturiert nach stderr (nicht print()).",
+    "Fehlerpfade in Tools rufen _handle_tool_error(..., ctx, ...) (z.B. server.py:963,1129,1134,1260,1265) statt Fehler stumm zu schlucken.",
+    "Logging via structlog get_logger nach stderr (OBS-003/004), nicht stdout — kein stdio-Protocol-Crash-Risiko."
+   ],
+   "gaps": [
+    "report_progress wird nicht genutzt — die Tools sind einzelne, schnelle HTTP-Calls (<2s), keine langlaufenden Schleifen/gather ueber grosse Listen. Progress daher nicht erforderlich."
+   ],
+   "evaluator_notes": "Context-Injection vorhanden und sinnvoll genutzt (ctx.warning fuer Fehler, kein print). Keine langlaufenden Tools, daher kein Progress-Bedarf. Pass."
+  },
+  "SDK-004": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:2677-2701 build_cors_app() — CORSMiddleware um mcp.streamable_http_app(): expose_headers=['Mcp-Session-Id'] (kritisch), allow_headers=['*','Mcp-Session-Id'], allow_methods GET/POST/DELETE/OPTIONS.",
+    "allow_origins aus Settings (MCP_CORS_ALLOW_ORIGINS, server.py:63-68); bei '*' wird eine Warnung 'cors_wildcard_origin' geloggt (server.py:2688-2692) — Produktions-Hinweis auf explizite Origins.",
+    "allow_credentials=False (zulaessig mit Wildcard; kein Auth/Credentials im Server) — kein CORS-Spec-Verstoss.",
+    "build_cors_app() ist in main() bei transport=='streamable-http' via uvicorn.run() verdrahtet (server.py:2708-2721)."
+   ],
+   "gaps": [
+    "Default MCP_CORS_ALLOW_ORIGINS='*' fuer Dev; Produktion muss explizite Liste setzen (per Warnung + Doku adressiert, kein Hardcode)."
+   ],
+   "evaluator_notes": "HTTP/SSE-Transport: CORS korrekt konfiguriert, Mcp-Session-Id sowohl expose_headers als auch allow_headers, Origins env-konfigurierbar mit Wildcard-Warnung, credentials=False. Alle Pass-Kriterien erfuellt."
+  },
+  "SEC-004": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "HTTPS-Enforcement: assert_host_allowed() wirft SecurityError bei scheme!='https' (src/swiss_environment_mcp/api_client.py:161-163), vor jedem Request aufgerufen (api_client.py:231, plus egress_check-Callback der SPARQL-/JSON-Clients api_client.py:291,552).",
+    "IP-Blocklisting nach Resolution: _resolve_and_check() loest den Host via socket.getaddrinfo einmalig auf und prueft jede IP mit _is_blocked_ip (is_private/is_loopback/is_link_local/is_reserved/is_multicast/is_unspecified) -> SecurityError (api_client.py:117-146). 169.254.169.254 faellt unter is_link_local, wird also blockiert.",
+    "IPv6-Loopback (::1 -> is_loopback) und IPv6-Link-local (fe80::/10 -> is_link_local) sind durch dieselben ipaddress-Flags abgedeckt.",
+    "DNS-Pinning: _PinnedTransport verbindet gegen die aufgeloeste IP (copy_with(host=ip)), SNI/Cert gegen Original-Host via sni_hostname-Extension (api_client.py:169-187) -> genau eine Resolution, kein TOCTOU.",
+    "Default-Deny Egress-Allow-List: ALLOWED_HOSTS frozenset (10 fixe Gov-Hosts), Host nicht in Liste -> SecurityError (api_client.py:90-103,164-166).",
+    "follow_redirects=False im geteilten Client (api_client.py:204) verhindert Redirect auf interne Ziele.",
+    "Tests gruen: test_egress_blocks_unknown_host, test_egress_blocks_non_https, test_dns_pin_blocks_internal_ip, test_client_uses_pinned_transport (tests/test_unit.py:175-220) — 9 passed in Re-Run."
+   ],
+   "gaps": [
+    "Kein Egress-Proxy (Smokescreen) als Defense-in-Depth im Deployment; NetworkPolicy nur als Beispielartefakt (deploy/network-policy.example.yaml), auf Render/Docker-Compose nicht wirksam. Fuer Public-Open-Data/No-Auth-Profil akzeptabel — Code-Layer ist die massgebliche Kontrolle.",
+    "_resolve_and_check ist best-effort: bei socket.gaierror (offline) wird nicht gepinnt/geblockt und httpx loest erneut auf — reiner Offline-Fehlerpfad, kein Rebinding-Vektor, da ohne Aufloesung ohnehin kein Connect zustande kommt."
+   ],
+   "evaluator_notes": "applies_when erfuellt (tools_make_external_requests==true). Alle harten Pass-Kriterien (HTTPS-Zwang, IP-Blocklist nach Resolution, single-resolution Pinning, 169.254.169.254 explizit via link_local, IPv6-Loopback/Link-local) im Code nachgewiesen mit Datei:Zeile und durch Tests belegt. Unveraendert pass gegenueber Run 2026-07-25T092248-Z."
+  },
+  "SEC-005": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Remediation bestaetigt: assert_host_allowed() loest NICHT mehr auf — nur Schema-Check + Allow-List (src/swiss_environment_mcp/api_client.py:149-166), mit explizitem Kommentar dass die IP-/SSRF-Pruefung bewusst einmalig im _PinnedTransport erfolgt (api_client.py:154-159).",
+    "Genau EINE DNS-Resolution pro Request: _PinnedTransport.handle_async_request ruft _resolve_and_check einmal und pinnt die IP (api_client.py:178-187).",
+    "Original-Hostname erhalten fuer TLS: request.extensions['sni_hostname']=host gesetzt; nur das Connect-Ziel wird auf die gepinnte IP umgeschrieben (copy_with(host=ip)); Host-Header (beim Request-Bau gesetzt) bleibt der Original-Hostname (api_client.py:183-186). Cert-Verification laeuft damit gegen den Hostnamen, verify NICHT deaktiviert.",
+    "Neuer Test test_assert_host_allowed_does_not_resolve verifiziert calls==0 getaddrinfo im Egress-Guard (tests/test_unit.py:223-233).",
+    "Neuer Test test_pinned_transport_resolves_once verifiziert exakt eine Resolution (calls==1) UND dass das Connect-Ziel die gepinnte IP ist (captured host=='185.27.134.1') (tests/test_unit.py:236-259).",
+    "Re-Run gruen: 9 passed (dns/pinned/assert_host/egress/transport/resolve)."
+   ],
+   "gaps": [
+    "Kein Live-Rebinding-Integrationstest mit echtem DNS-Mock-Server (bekannte Grenze des Katalogs, per Mock-Pattern abgedeckt)."
+   ],
+   "evaluator_notes": "Behebt den vorigen partial-Status (doppelte DNS-Resolution, kein 1-Call-Test) vollstaendig. Beide Pass-Kriterien fuer evidence_required=2 (einmalige Resolution + Pinning; Host/SNI erhalten + Test 1 DNS-Call) sind nun erfuellt und getestet. Statuswechsel partial -> pass."
+  },
+  "SEC-006": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Default-Transport ist stdio: Settings.mcp_transport default 'stdio' (src/swiss_environment_mcp/server.py:60); main() faellt im else-Zweig auf mcp.run(transport='stdio') zurueck (server.py: main, else-Branch).",
+    "SSE/streamable-http nur via expliziter MCP_TRANSPORT-Env-Var aktivierbar (server.py main(): if transport=='streamable-http' / elif 'sse').",
+    "README dokumentiert lokalen stdio-Use-Case primaer: Installation via uvx + claude_desktop_config mcpServers (README.md:55-115), Hinweis 'stdio for the developer laptop' (README.md:135).",
+    "README dokumentiert Cloud-Use-Case separat (README.md:118-135 'Cloud Deployment (SSE for browser access)').",
+    "Default-Start (ohne Env-Var) oeffnet keinen TCP-Port (stdio-Pfad)."
+   ],
+   "gaps": [
+    "Unbekanntes MCP_TRANSPORT wird nicht mit ValueError abgewiesen, sondern faellt still auf stdio zurueck (else-Branch) — sicher (kein Port), aber weniger explizit als das Katalog-Pass-Pattern."
+   ],
+   "evaluator_notes": "applies_when erfuellt (deployment.includes local-stdio). Alle Pass-Kriterien erfuellt. Unveraendert pass."
+  },
+  "SEC-007": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Dockerfile setzt non-root User mit UID>=10000: groupadd/useradd uid 10001, USER app (Dockerfile Runtime-Stage).",
+    "Multi-Stage-Build (builder -> runtime) auf python:3.12-slim, keine Build-Toolchain im Runtime-Image (Dockerfile).",
+    "HEALTHCHECK gegen /health-Endpoint definiert (Dockerfile).",
+    "Keine Filesystem-Tools exponiert (server.py: alle 18 Tools sind HTTP-read-only) -> keine Pfad-Allow-List/Volume-Mounts noetig (Modus 3 N/A).",
+    "docker-compose.yml setzt harte Resource-Limits (mem_limit 256m, cpus 0.5, ulimits nofile) — SCALE-006-Haertung."
+   ],
+   "gaps": [
+    "Kein Kubernetes-Deployment-Manifest im Repo (nur deploy/network-policy.example.yaml) -> readOnlyRootFilesystem, capabilities.drop:[ALL], seccompProfile RuntimeDefault, runAsNonRoot sind nicht als K8s-SecurityContext gesetzt. Diese Kriterien sind im Katalog 'Bei Kubernetes' konditioniert; Deploy-Ziele sind Render/Docker/Railway, nicht K8s.",
+    "docker-compose.yml setzt kein read_only:true / cap_drop:[ALL] als Container-Haertung (Defense-in-Depth-Luecke, nicht kritisch fuer Public-Open-Data-Profil)."
+   ],
+   "evaluator_notes": "applies_when erfuellt (deployment includes local-stdio/Render). Kern-Haertung (Dockerfile non-root UID 10001, Multi-Stage, slim) vorhanden; K8s-spezifische Haerteanforderungen sind mangels K8s-Target N/A. Unveraendert pass; empfohlene Ergaenzung: cap_drop/read_only in compose."
+  },
+  "SEC-008": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "medium",
+   "evidence": [
+    "Keine pre/postinstall-Hooks: Build-Backend hatchling, nur regulaere [project.scripts]-Entry-Points, kein cmdclass, kein setup.py (pyproject.toml:1-2,49).",
+    "README zeigt vollen, ungekuerzten Installationsbefehl transparent: 'uvx swiss-environment-mcp' und mcpServers-Config mit command 'uvx' (README.md:66-115,451-459) — kein Hide-behind-one-liner.",
+    "Keine Setup-Scripts mit dynamischem Code-Loading im Repo.",
+    "PyPI OIDC Trusted Publisher aktiv: .github/workflows/publish.yml mit permissions id-token:write, environment pypi, pypa/gh-action-pypi-publish@release/v1 (Sigstore-Attestation automatisch, kein API-Token).",
+    "Zusaetzlich MCP-Registry-Publishing via github-oidc (publish.yml publish-mcp-Job).",
+    "CONTRIBUTING.md vorhanden (erklaert Build-Prozess)."
+   ],
+   "gaps": [
+    "README enthaelt keinen expliziten Sigstore-Verifikationsbefehl fuer Endnutzer (optionaler Katalog-Zusatz, nicht Pass-kritisch)."
+   ],
+   "evaluator_notes": "applies_when erfuellt (deployment includes local-stdio). Alle harten Kriterien erfuellt (keine Hooks, transparenter Befehl, Trusted-Publisher/Sigstore). npm-Provenance N/A (Python). Unveraendert pass."
+  },
+  "SEC-009": {
+   "status": "partial",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "Kein Auth-Modell im Code (profile.yaml auth_model: none); kein anwendungsseitiges User-zu-Session-Binding, weil keine User-Identitaet existiert.",
+    "docs/security.md §'Session-Modell (SEC-009)' (Zeilen 52-60) dokumentiert die bewusste Entscheidung: FastMCP verwaltet die Mcp-Session-Id selbst, keine benutzerbezogenen Sessions/sensitiven Daten an Sessions gebunden.",
+    "Verbindliche Re-Evaluations-Trigger dokumentiert: bei kuenftiger OAuth/OIDC-Einfuehrung sind kryptografisch zufaellige Session-IDs, Bindung an validierten sub-Claim, explizite TTL und serverseitige Logout-Invalidierung vorgeschrieben (docs/security.md:58-60).",
+    "Kompensierend: read-only, ausschliesslich Public Open Data — geleakte Session-ID hat keinen exfiltrierbaren Wert (docs/security.md §Datenklassifikation)."
+   ],
+   "gaps": [
+    "Harte Pass-Kriterien technisch unerfuellt: kein kryptografisches user_id:session_id-Binding, kein 401/403 bei Session-Mismatch, kein anwendungsseitiges TTL/Logout-Invalidation — mangels Auth nicht implementierbar.",
+    "Session-ID-Generierung liegt im FastMCP-SDK (uuid4, crypto-sicher), aber ohne User-Binding und ohne Test-Nachweis im Repo."
+   ],
+   "evaluator_notes": "applies_when erfuellt (transport != stdio-only, dual). Die harte Anforderung (Bindung an validierte User-Identitaet) bleibt technisch unerfuellt, weil kein Auth-/User-Konzept existiert; das zugrundeliegende Threat (Hijacking eines authentifizierten Opfer-Kontexts) hat mangels Auth und mangels privater Daten keine schaedliche Auspraegung. Dokumentierte, begruendete Risiko-Akzeptanz mit verbindlichen Re-Eval-Triggern. Ehrlich: partial (accepted-risk), unveraendert gegenueber Run 2026-07-25T092248-Z — die Remediation hat die Doku formalisiert, aber keine technische Kontrolle ergaenzt (weil bei no-auth nicht anwendbar)."
+  },
+  "SEC-013": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Server benoetigt keinerlei Secrets/API-Keys (Public Open Data, No-Auth) — dokumentiert in docs/security.md §'Secret-Management (SEC-013)' (Zeilen 37-49).",
+    "Datenklasse Public Open Data -> Reifegrad-Stufe 1 (bzw. Stufe 0: keine Geheimnisse) laut Katalog akzeptabel und hier bewusst dokumentiert.",
+    "Container-Image enthaelt keine Secrets: nur nicht-geheime Env-Vars MCP_TRANSPORT/MCP_HOST/PORT (Dockerfile ENV; render.yaml; docker-compose.yml). Kein grep-Treffer auf KEY/SECRET/TOKEN mit Wert.",
+    "Keine Hardcoded Secrets im Code, CI-Scan via gitleaks (.gitleaks.toml, ARCH-005) — dokumentiert docs/security.md:42.",
+    "Konfiguration ausschliesslich ueber .env.example (nicht-geheime Vars).",
+    "Migrationspfad dokumentiert: bei kuenftigem authentifiziertem Upstream -> Stufe 3 Secret-Manager (EU/CH), SecretStr (docs/security.md:47-49)."
+   ],
+   "gaps": [
+    "Keine — Region/Rotation/Audit-Kriterien sind N/A, da keine Secrets vorhanden."
+   ],
+   "evaluator_notes": "applies_when 'always' erfuellt. Fuer Public-Open-Data-Profil ist Stufe 1 dokumentiert-akzeptabel; alle uebrigen Kriterien N/A mangels Secrets. Unveraendert pass."
+  },
+  "SEC-014": {
+   "status": "partial",
+   "category": "SEC",
+   "severity": "medium",
+   "evidence": [
+    "docs/security.md §'Tool-Allow-Listing / Gateway (SEC-014)' (Zeilen 62-74) formalisiert die Risiko-Akzeptanz: kein Auth-Modell, nur read-only Public-Data-Tools, tools/list fuer alle Clients identisch -> kein rollen-/teambasiertes Allow-Listing implementiert.",
+    "Verbindliche Re-Evaluations-Trigger dokumentiert: Sobald (a) Auth-Modell, (b) write-faehige Tools oder (c) Enterprise-/Multi-Tenant-Kontext -> vorgelagertes MCP-Gateway mit Tool-Allow-List pro Rolle + 403-Auditierung zwingend (docs/security.md:70-74).",
+    "Profilkontext stuetzt niedriges Risiko: enterprise_context=false, stadt_zuerich_context=false, write_capable=false, single-server, keine Fremd-Tools (profile.yaml).",
+    "Kompensierend fuer Server-Integritaet: Tool-Definition-Snapshot tool-snapshot.json (SEC-022 CI-Gate), Namespace-Praefix env_ (README.md)."
+   ],
+   "gaps": [
+    "Harte Pass-Kriterien technisch unerfuellt: keine explizite default-deny Tool-Allow-List, kein Server-Side Group/Role-Check (mangels Auth/Gruppen nicht moeglich), keine team-/rollenspezifische tools/list-Filterung, keine Auditierung abgelehnter Tool-Calls.",
+    "Kein vorgelagertes MCP-Gateway vorhanden."
+   ],
+   "evaluator_notes": "applies_when nur via is_cloud_deployed==true erfuellt (enterprise/stadt_zuerich=false). Die Substanz des Checks (Lateral Movement zwischen Teams/Servern, rollenbasierter Zugriff) hat fuer einen single-server, no-auth, read-only Public-Data-Server praktisch keine Angriffsflaeche. Die harte technische Kontrolle (Allow-List/Gateway) bleibt jedoch unimplementiert. Ehrlich bewertet: Statuswechsel FAIL -> partial (accepted-risk) — begruendete, dokumentierte Risiko-Akzeptanz mit verbindlichen Re-Eval-Triggern + kompensierendem Snapshot-Gate rechtfertigt partial fuer dieses Profil, aber kein voller pass, da die Anforderung technisch offen bleibt."
+  },
+  "SEC-015": {
+   "status": "partial",
+   "category": "SEC",
+   "severity": "medium",
+   "evidence": [
+    "docs/security.md §'Tool-Poisoning-Detection (SEC-015)' (Zeilen 76-95) formalisiert die Risiko-Akzeptanz: Server laeuft ohne vorgelagertes Gateway und aggregiert KEINE fremden Tool-Definitionen (einzige Tool-Quelle ist der Server selbst) -> Pre-Flight-Detection nicht implementiert.",
+    "Alle vier Katalog-Muster­klassen sind dokumentiert (eingebettete System-Prompts, Override-/Jailbreak-Phrasen, unsichtbare Steuerzeichen/Zero-Width/Bidi, Homoglyphen) als das, was ein Gateway-Deployment ergaenzen muesste (docs/security.md:85-91).",
+    "Kompensierende Kontrolle gegen Rug-Pull der eigenen Tool-Defs: Tool-Definition-Snapshot tool-snapshot.json (SEC-022, CI-Gate) — docs/security.md:81-83.",
+    "Verbindlicher Re-Evaluations-Trigger: Sobald der Server hinter ein Gateway gestellt wird oder Tools Dritter mountet -> vier Muster als default-deny-Filter + SIEM-Alerting + Tests (docs/security.md:93-95).",
+    "Der Check selbst stuft das Risiko bei ausschliesslich eigenen Servern als niedrig ein (SEC-015.md Description)."
+   ],
+   "gaps": [
+    "Harte Pass-Kriterien technisch unerfuellt: kein Pre-Flight-Detection-Layer, keine Pattern-Klassen als Code, kein default-deny-Filter fuer High-Risk-Tools, kein SIEM-Alerting, keine Detection-Tests."
+   ],
+   "evaluator_notes": "applies_when nur via is_cloud_deployed==true erfuellt (enterprise/stadt_zuerich=false). Das Threat (poisoned Fremd-Tool-Definitionen) existiert fuer diesen single-server ohne Tool-Aggregation nicht; der Snapshot-Gate deckt den einzigen realen Vektor (Rug-Pull eigener Defs) ab. Ehrlich bewertet: Statuswechsel FAIL -> partial (accepted-risk) — dokumentierte, begruendete Risiko-Akzeptanz + vier benannte Muster + kompensierende Kontrolle + Re-Eval-Trigger rechtfertigen partial fuer dieses Profil; kein voller pass, da die technische Detection-Anforderung offen bleibt."
+  },
+  "SEC-016": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "Kein 0.0.0.0-Default im Code: Settings.mcp_host default '127.0.0.1' (src/swiss_environment_mcp/server.py:61), Kommentar verweist explizit auf SEC-016 (server.py:54-56).",
+    "Host via Env-Var konfigurierbar, Default 127.0.0.1; main() setzt mcp.settings.host=settings.mcp_host (server.py main()).",
+    "MCP_HOST=0.0.0.0 nur explizit im Container gesetzt: Dockerfile ENV MCP_HOST=0.0.0.0 (mit Kommentar 'NUR im Container'), render.yaml envVars, Procfile — Code-Default bleibt 127.0.0.1.",
+    "README erklaert Differenzierung lokal (stdio/127.0.0.1) vs. Cloud (SSE): README.md:118-135 'stdio for the developer laptop, SSE for the browser'.",
+    "grep nach 0.0.0.0 im src/ liefert keinen Treffer als Code-Default (nur in Dockerfile/render.yaml/Procfile/docker-compose als Deployment-ENV)."
+   ],
+   "gaps": [
+    "docker-compose.yml bindet 'ports: - \"8000:8000\"' ohne Bind-Adresse (alle Host-Interfaces) — Katalog-Common-Failure; unkritisch, da als Server-/Container-Deployment-Beispiel gedacht, waere aber auf einem Dev-Laptop ein NeighborJack-Vektor. Empfehlung: '127.0.0.1:8000:8000' bzw. Hinweis.",
+    "Keine optionale Runtime-Warnung bei 0.0.0.0-Binding ausserhalb Container (Katalog-Kriterium ist 'Optional')."
+   ],
+   "evaluator_notes": "applies_when erfuellt (transport != stdio-only). Die kritische Kontrolle (Code-Default 127.0.0.1, 0.0.0.0 nur explizit im Container) ist erfuellt und im Kommentar/README verankert. Unveraendert pass; kleinere Compose-Bind-Haertung empfohlen."
+  },
+  "SEC-018": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:425-726 — jedes der 18 Tools hat ein dediziertes Pydantic-v2-Eingabemodell mit ConfigDict(extra='forbid'), str_strip_whitespace und teils validate_assignment.",
+    "src/swiss_environment_mcp/server.py:440,497,510,537,554,599,629,647,668,674,681,724 — Whitelist-Patterns (pattern=r'^[A-Za-z]{...}$', nur Ziffern, Slug-Zeichen) plus strict=True an den ID-/Code-Feldern (SEC-018-Kommentare inline).",
+    "src/swiss_environment_mcp/server.py:456-461,517-522,557-562,632-637,703-713 — Range-Constraints (ge/le) auf allen numerischen Feldern (value, days, limit, rows, offset, min_level).",
+    "pydantic 2.13.4 im venv; pyproject.toml: pydantic>=2.0.0."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Strikte Input-Validation an allen Tool-Boundaries: extra='forbid' (Reject unbekannter Felder), Whitelist-Regex statt Blacklist, Längen- und Range-Grenzen, field_validator-Normalisierung (upper/lower). Defense-in-Depth vollständig erfüllt."
+  },
+  "SEC-019": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "docs/security.md:17-35 — explizite Lethal-Trifecta-Bewertungstabelle: private Daten=Nein (nur oeffentliche BAFU-Daten), untrusted content=Teilweise (kein Exfiltrationswert), ausgehender Kanal=Eingeschraenkt (nur fixe Gov-Hosts, read-only). Ergebnis: max. eine Faehigkeit in schaedlicher Auspraegung.",
+    "docs/security.md:10 — alle Tools read-only (readOnlyHint:true), keine Schreib-/Send-Faehigkeit.",
+    "src/swiss_environment_mcp/api_client.py:90-103,204 — ALLOWED_HOSTS frozenset + follow_redirects=False; keine Empfaenger-/Webhook-Ziele aus User-Input.",
+    "SECURITY.md / README.md / README.de.md enthalten ebenfalls Trifecta-Referenzen; Roadmap nennt Eskalationstrigger (Write/Send)."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Trifecta-Score strukturell < 2. Kein exfiltrierbarer Kanal, kein Write. Bewertung dokumentiert inkl. verbindlichem Re-Evaluations-Trigger bei kuenftigen Write-/Send-Tools. Kein ADR noetig, da nur eine Faehigkeit."
+  },
+  "SEC-020": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "grep -rnE 'os\\.system|shell=True|eval(|exec(|os\\.popen|subprocess' src/ => KEINE Treffer (nur Bytecode-Cache-Matches auf Substrings, kein Quellcode).",
+    "Keine Subprocess-/Shell-Ausfuehrung im Server — reiner HTTP-Client (httpx) gegen fixe Gov-APIs.",
+    "src/swiss_environment_mcp/api_client.py:272,381 — SPARQL-Werte via sparql_escape() maskiert; min_level via int() gecastet (api_client.py:353) statt String-Interpolation ungeprüfter Werte.",
+    "Keine Filesystem-/Pfad-Operationen aus User-Input (keine os.path-Konkatenation mit Tool-Args)."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Kein RCE-Vektor: keine Shell-Interpretation, kein eval/exec, keine externen Binaries. SPARQL-Injection durch sparql_escape + numerische Casts adressiert. Library-First-Architektur."
+  },
+  "SEC-021": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Code-Layer: src/swiss_environment_mcp/api_client.py:90-103 ALLOWED_HOSTS als frozenset (nicht config-mutierbar); :149-166 assert_host_allowed() erzwingt HTTPS + Host-Whitelist; :231,291,552 vor JEDEM ausgehenden Request (GET/SPARQL/Retry) aufgerufen.",
+    "Network-Layer (NEU, behebt vorigen partial): deploy/network-policy.example.yaml — Variante A vanilla NetworkPolicy (DNS + TCP/443), Variante B CiliumNetworkPolicy toFQDNs mit exakt den 10 ALLOWED_HOSTS (www.hydrodaten.admin.ch, opendata.swiss, www.naturgefahren.ch, www.waldbrandgefahr.ch, www.bafu.admin.ch, map.bafu.admin.ch, lindas.admin.ch, measurement-api.slf.ch, aws.slf.ch, www.jagdstatistik.ch) + DNS-Egress zu kube-dns.",
+    "Verglichen: FQDN-Liste im Manifest == ALLOWED_HOSTS (10/10 identisch).",
+    "Update-Verfahren (NEU): docs/security.md:112-122 verbindliches 4-Schritte-Verfahren; CONTRIBUTING.md:141-146 und CONTRIBUTING.de.md (Sicherheitsrelevante Aenderungen) — PR-Begruendung, network-policy im selben PR nachziehen, CHANGELOG unter Security, Second-Person-Review (kein Self-Merge).",
+    "DNS-Resolution-Path im Network-Layer explizit erlaubt (beide Varianten)."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Voriger partial (nur Prosa, kein Artefakt, kein Verfahren) ist behoben: deploybares K8s/Cilium-Artefakt vorhanden, FQDN-Liste synchron mit Code-Layer, verbindliches Allow-List-Update-Verfahren in security.md + beiden CONTRIBUTING-Dateien. Alle 6 Pass-Kriterien erfuellt. Render/Docker-Einschraenkung (kein hostbasierter Egress) transparent dokumentiert."
+  },
+  "SEC-022": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Namespace-Praefix: alle 18 Tools tragen konsistent das env_-Praefix (tool-snapshot.json tool_names; server.py @mcp.tool(name='env_...')). Kollisionssicher bei Multi-Server-Mount.",
+    "Hash-Pinning: tool-snapshot.json (18 Tools, sha256 3dd4498f...) + scripts/tool_snapshot.py check als CI-Gate; check laeuft gruen (tool-snapshot OK).",
+    "Re-Approval-Konvention (NEU, behebt vorigen partial): CONTRIBUTING.md:148-154 und CONTRIBUTING.de.md — bei Tool-Definition-Aenderung Snapshot regenerieren (python scripts/tool_snapshot.py), CHANGELOG-Eintrag; bei breaking Change expliziter Client-Re-Approval-Hinweis (Snapshot-Hash wechselt, Downstreams muessen neu zustimmen).",
+    "Praefix-Namespace-Entscheidung dokumentiert (NEU): README.md:139-145 'Available Tools' und README.de.md:139-145 'Verfuegbare Tools' — env_ als bewusste, stabile Namespace-Wahl gegen Shadowing."
+   ],
+   "gaps": [],
+   "evaluator_notes": "Voriger partial (keine Re-Approval-Konvention, Praefix nicht dokumentiert) ist behoben: Client-Re-Approval-Hinweis + Snapshot-Regenerierung in beiden CONTRIBUTING-Dateien, env_-Namespace in beiden READMEs begruendet. Hash-Snapshot + CI-Gate deckt Rug-Pull-Detection ab."
+  }
+ }
+}

@@ -1,0 +1,134 @@
+{
+  "audit_meta": {
+    "server_name": "swiss-environment-mcp",
+    "run_id": "2026-07-25T145413-Z-swiss-environment-mcp",
+    "skill_version": "1.0.0",
+    "catalog_hash": "091f446b27965044ce658a1d5f4b2cabe2b0ab5661dcc1a53b6be8f1f2e093c0",
+    "policy": "fail-or-partial",
+    "note": "Bestaetigender Re-Audit nach Remediation aller 17 Findings (main @ 2b64258, PRs #36/#37/#38 gemergt). Gleicher Katalog-Hash + gleiches Profil wie Vorlauf 2026-07-25T092248-Z (44 anwendbare Checks). Vergleich: Vorlauf 27 pass/15 partial/2 fail. Die 2 fails (SEC-014/015) sind zu accepted-risk-partial verbessert; 11 der 12 open-Findings zu pass geflippt; SCALE-004 bleibt partial (otel-Extra laesst das <200MB-Ideal nicht zu, aber Image-Size-Gate ergaenzt). Die verbleibenden partials sind saemtlich dokumentierte Risiko-Akzeptanzen bzw. ein begruendeter Trade-off — keine fails."
+  },
+  "totals": {
+    "checks_evaluated": 44,
+    "applicable": 44,
+    "by_status": {
+      "pass": 38,
+      "fail": 0,
+      "partial": 6,
+      "todo": 0,
+      "n/a": 0
+    },
+    "by_severity_among_findings": {
+      "critical": 1,
+      "high": 2,
+      "medium": 3,
+      "low": 0
+    },
+    "by_category": {
+      "ARCH": {
+        "pass": 11,
+        "fail": 0,
+        "partial": 0,
+        "todo": 0,
+        "n/a": 0
+      },
+      "CH": {
+        "pass": 1,
+        "fail": 0,
+        "partial": 0,
+        "todo": 0,
+        "n/a": 0
+      },
+      "OBS": {
+        "pass": 5,
+        "fail": 0,
+        "partial": 0,
+        "todo": 0,
+        "n/a": 0
+      },
+      "OPS": {
+        "pass": 3,
+        "fail": 0,
+        "partial": 0,
+        "todo": 0,
+        "n/a": 0
+      },
+      "SCALE": {
+        "pass": 2,
+        "fail": 0,
+        "partial": 3,
+        "todo": 0,
+        "n/a": 0
+      },
+      "SDK": {
+        "pass": 4,
+        "fail": 0,
+        "partial": 0,
+        "todo": 0,
+        "n/a": 0
+      },
+      "SEC": {
+        "pass": 12,
+        "fail": 0,
+        "partial": 3,
+        "todo": 0,
+        "n/a": 0
+      }
+    }
+  },
+  "findings": {
+    "policy": "fail-or-partial",
+    "policy_statuses": [
+      "fail",
+      "partial"
+    ],
+    "expected_count": 6,
+    "expected_ids": [
+      "SCALE-002",
+      "SCALE-003",
+      "SCALE-004",
+      "SEC-009",
+      "SEC-014",
+      "SEC-015"
+    ],
+    "details": [
+      {
+        "check_id": "SCALE-002",
+        "category": "SCALE",
+        "severity": "high",
+        "status": "partial"
+      },
+      {
+        "check_id": "SCALE-003",
+        "category": "SCALE",
+        "severity": "high",
+        "status": "partial"
+      },
+      {
+        "check_id": "SCALE-004",
+        "category": "SCALE",
+        "severity": "medium",
+        "status": "partial"
+      },
+      {
+        "check_id": "SEC-009",
+        "category": "SEC",
+        "severity": "critical",
+        "status": "partial"
+      },
+      {
+        "check_id": "SEC-014",
+        "category": "SEC",
+        "severity": "medium",
+        "status": "partial"
+      },
+      {
+        "check_id": "SEC-015",
+        "category": "SEC",
+        "severity": "medium",
+        "status": "partial"
+      }
+    ]
+  },
+  "production_ready": true,
+  "blocking_findings": []
+}

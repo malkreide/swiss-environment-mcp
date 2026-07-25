@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "OBS",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:107-121 — _terminal_failure(message) -> ToolError: terminale Ausfuehrungsfehler werden via 'raise' als ToolError signalisiert. Per SDK-Kontrakt (lowlevel _make_error_result) setzt FastMCP daraufhin isError=true im CallToolResult (statt Fehlertext als erfolgreiches Resultat). Docstring grenzt bewusst ab: NICHT fuer Graceful-Degradation / leere-aber-gueltige Resultate.",
+    "src/swiss_environment_mcp/server.py:1270, 1436, 1673, 1749, 1829, 1908, 1993, 2079, 2195, 2363, 2542, 2628 — 'raise _terminal_failure(...)' konsistent an den Upstream-Fehlerpfaden der Tools; die maskierte, user-freundliche Meldung + Recovery-Hinweise bleiben im Fehler-Content.",
+    "src/swiss_environment_mcp/server.py:82-105 — _handle_tool_error: liefert maskierte Meldung (api.handle_http_error), loggt echte Details strukturiert nach stderr, meldet zusaetzlich via ctx.warning. Graceful-Degradation-Pfade (z.B. Beispiel-Stationslisten) geben weiterhin regulaere Resultate zurueck (kein isError).",
+    "tests/test_unit.py:295-330 (test_execution_error_path_logs_and_reports) — Execution-Error-Pfad: pytest.raises(ToolError) bei Upstream-500; Assertion: 'fehlgeschlagen' in Msg, 'Traceback'/'500 Internal' NICHT enthalten; ctx.warning gesetzt; tool_error + tool_failed geloggt. Weitere ToolError-Tests: test_unit.py:673/703/732, test_lindas.py:300-306.",
+    "tests/test_unit.py:~331 (test_protocol_error_invalid_args) — Protocol-Error-Pfad: ungueltige Tool-Argumente -> pydantic ValidationError (vom Framework als JSON-RPC-Error formatiert), abgedeckt.",
+    "Testlauf (venv): 79 passed, 1 skipped — inkl. der oben zitierten Execution- und Protocol-Error-Tests."
+  ],
+  "gaps": [],
+  "evaluator_notes": "Frueherer partial-Grund ('isError-Flag nicht gesetzt') ist behoben: terminale Fehler werfen jetzt ToolError, wodurch FastMCP isError=true setzt (SDK-Kontrakt als gegeben angenommen). Execution- vs. Protocol-Error-Trennung sauber: Ausfuehrungsfehler -> ToolError/isError mit maskierter Recovery-Meldung; Protocol-Fehler (falsche Args) -> ValidationError -> JSON-RPC-Error. Beide Pfade durch dokumentierte, gruene Tests abgedeckt. Alle Pass-Kriterien erfuellt."
+}

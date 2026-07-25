@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "OBS",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/api_client.py:250-252 (handle_http_error Catch-all) — generische Meldung 'Unerwarteter interner Fehler. Bitte erneut versuchen.' ohne Exception-Typ/-Text; Kommentar referenziert OBS-002. Funktionales Aequivalent zu mask_error_details=True (das offizielle mcp-SDK-FastMCP kennt diesen Parameter nicht).",
+    "src/swiss_environment_mcp/server.py:82-105 — _handle_tool_error: maskierte Meldung ans LLM; echte Details (error_type, detail, Query-Parameter) ausschliesslich ins strukturierte stderr-Log (logger.warning 'tool_error'). ToolError (server.py:107-121) traegt nur die maskierte Meldung.",
+    "grep 'traceback|format_exc|sys.exc_info' src/ -> nur logging_setup.py:43 (format_exc_info-Prozessor fuers Server-Log); keine Traceback-Ausgabe in Tool-Returns/Tool-Errors.",
+    "src/swiss_environment_mcp/api_client.py:229-234 — LINDAS-QueryError-MALFORMED-Meldung wird bewusst/begruendet durchgereicht (Kommentar: stammt vom oeffentlichen SPARQL-Endpoint, benennt fehlerhafte Query-Stelle, keine Server-Interna) — OBS-001-konformer Execution-Error.",
+    "tests/test_unit.py:295-330 (Leak-Assertion: 'Traceback'/'500 Internal' nicht im ToolError-Content) + tests/test_lindas.py:64-79 (QueryError/QueryTimeoutError-Meldungen).",
+    "Log-Schutz: Server hat keine Auth/Tokens (oeffentliche Datenquellen, docs/security.md); geloggte Felder sind Tool-Name, Fehlertyp und Query-Parameter oeffentlicher APIs — kein Klartext-Token, kein PII."
+  ],
+  "gaps": [],
+  "evaluator_notes": "Unveraendert bestaetigt gegenueber Vorlauf-Pass. Maskierung ist zentralisiert (handle_http_error + _handle_tool_error + ToolError traegt nur die maskierte Meldung) und getestet; Originalfehler gehen nur ins strukturierte stderr-Log. Die unmaskierte LINDAS-MALFORMED-Meldung ist eine dokumentierte, begruendete Ausnahme (Server-Feedback des oeffentlichen Endpoints, keine eigenen Interna). Alle Pass-Kriterien erfuellt."
+}

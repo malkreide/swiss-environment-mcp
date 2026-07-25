@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "SCALE",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:61 — Settings.mcp_transport: str = \"stdio\": ENV-basierte Transport-Selektion via pydantic-settings (MCP_TRANSPORT), stdio-Default (SEC-016-konform, mcp_host-Default 127.0.0.1).",
+    "src/swiss_environment_mcp/server.py:2707-2726 — main() schaltet transportabhängig: streamable-http -> uvicorn.run(build_cors_app()), sse -> mcp.run('sse'), sonst stdio. Host/Port aus settings.",
+    "render.yaml:14 (MCP_TRANSPORT=streamable-http), :15-19 (MCP_HOST=0.0.0.0, PORT=8000); Dockerfile:31 (ENV MCP_TRANSPORT=streamable-http, MCP_HOST=0.0.0.0, PORT=8000) — Cloud-Manifeste setzen den HTTP-Transport explizit.",
+    "grep -riE 'websocket' src/ -> 0 Treffer: keine veraltete WebSocket-Implementierung.",
+    "Runtime (Vorlauf 2026-07-25T092248): Server mit MCP_TRANSPORT=streamable-http -> POST /mcp initialize -> HTTP 200 mit Capabilities; /health -> HTTP 200. Artefakt unverändert (2b64258)."
+  ],
+  "gaps": [
+    "Der Live-Cloud-Endpoint (Render-URL) wurde nicht direkt kontaktiert; der initialize-Nachweis erfolgte gegen das identische lokale Artefakt mit Cloud-Transport-Konfiguration (unveraendert seit Vorlauf)."
+  ],
+  "evaluator_notes": "Alle vier Pass-Kriterien erfuellt: ENV-basierte Transport-Selektion (stdio + streamable-http/sse), Cloud-Deployment nutzt streamable-http, kein WebSocket-Code, initialize antwortet HTTP 200. Unveraendert bestaetigt gegenueber Vorlauf-Pass."
+}

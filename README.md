@@ -240,7 +240,7 @@ resources instead of tools.
 │   Claude / AI   │────▶│   Swiss Environment MCP   │────▶│  BAFU / Swiss Agencies   │
 │   (MCP Host)    │◀────│   (MCP Server)            │◀────│                          │
 └─────────────────┘     │                           │     │  hydrodaten.admin.ch     │
-                        │  12 Tools · 3 Resources   │     │  naturgefahren.ch        │
+                        │  18 Tools · 3 Resources   │     │  naturgefahren.ch        │
                         │  Stdio | SSE              │     │  waldbrandgefahr.ch      │
                         │                           │     │  opendata.swiss (CKAN)   │
                         │  api_client.py            │     └──────────────────────────┘
@@ -283,7 +283,7 @@ All data: publicly accessible, no authentication required.
 swiss-environment-mcp/
 ├── src/swiss_environment_mcp/
 │   ├── __init__.py          # Package
-│   ├── server.py            # FastMCP server: 12 tools, 3 resources
+│   ├── server.py            # FastMCP server: 18 tools, 3 resources
 │   ├── api_client.py        # HTTP client + egress allow-list (SSRF guard)
 │   └── logging_setup.py     # structlog -> stderr
 ├── tests/
@@ -302,7 +302,7 @@ swiss-environment-mcp/
 └── pyproject.toml           # Build configuration (hatchling)
 ```
 
-> **Single-module layout (rationale, audit ARCH-011):** the 12 tools live in one
+> **Single-module layout (rationale, audit ARCH-011):** the 18 tools live in one
 > `server.py` rather than a `tools/` package. They are thin, uniform wrappers over
 > `api_client.py` sharing the same input/response patterns, so a single
 > well-sectioned module stays more navigable than 4 near-identical files. This is a

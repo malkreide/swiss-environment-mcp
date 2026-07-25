@@ -4,7 +4,7 @@ Adressiert Finding OPS-003 (Phasenarchitektur: Read-only First).
 
 ## Aktuelle Phase: **Phase 1 — Read-only Wrapper**
 
-Der Server befindet sich in **Phase 1**. Alle 12 Tools sind read-only
+Der Server befindet sich in **Phase 1**. Alle 18 Tools sind read-only
 (`readOnlyHint: true`), es gibt keine schreibenden oder destruktiven Operationen
 und keine Authentifizierung. Datenquellen sind ausschliesslich öffentliche
 BAFU/SLF/opendata.swiss-Endpunkte.

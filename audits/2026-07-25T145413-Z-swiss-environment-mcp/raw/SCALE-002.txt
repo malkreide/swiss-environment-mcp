@@ -1,0 +1,16 @@
+{
+  "status": "partial",
+  "category": "SCALE",
+  "severity": "high",
+  "evidence": [
+    "docs/scaling.md:5-17 — 'Aktueller Stand: Single-Instance': explizite Architektur-Entscheidung. Server laeuft als einzelne Instanz (Render Web Service / einzelner Container); alle Requests einer Mcp-Session-Id landen zwangslaeufig auf derselben Instanz -> kein verteiltes Session-Management noetig.",
+    "docs/scaling.md:5-17 — State-Eigenschaften dokumentiert: keine serverseitig persistierten Sessions, jeder Tool-Call abgeschlossen/idempotent gegenueber oeffentlichen Daten, ein geteilter httpx.AsyncClient pro Prozess (Lifespan).",
+    "docs/scaling.md:19-37 — Re-Evaluations-Trigger: Sobald horizontal skaliert wird, ist genau EINES der zwei Muster verbindlich: (1) Sticky Sessions am Edge-LB (SCALE-003) oder (2) Shared-State-Session-Manager (Redis / Durable Objects). Session-TTL in beiden Faellen explizit zu setzen; Failover ohne Shared State darf nicht stumm umgeleitet werden.",
+    "Code-Review: kein redis/memcached/SessionStore/session_manager in src/ (grep negativ) — konsistent mit Single-Instance-Topologie (kein Shared State implementiert)."
+  ],
+  "gaps": [
+    "Keines der beiden Pass-Muster (Sticky Sessions ODER Shared-State-Session-Manager) ist implementiert — nach den strengen Pass-Kriterien nicht erfuellt.",
+    "Kein Failover-Test (Modus 3), da in Single-Instance-Topologie kein Failover-Pfad existiert."
+  ],
+  "evaluator_notes": "Adjudiziert als dokumentierte Single-Instance-Risiko-Akzeptanz (accepted-risk). Die Pass-Kriterien des Checks setzen ein horizontal skaliertes Deployment voraus (applies_when transport==HTTP/SSE, multi-instance); die tatsaechliche Topologie ist bewusst single-instance, wodurch der Session-Stickiness-Bedarf strukturell entfaellt. docs/scaling.md haelt sowohl die aktuelle Entscheidung als auch die verbindlichen Muster + Re-Eval-Trigger fuer Scale-out fest. Ehrliche Einordnung nach Pass-Kriterien: partial (kein Sticky-LB/Shared-State implementiert), Risiko dokumentiert und begruendet."
+}

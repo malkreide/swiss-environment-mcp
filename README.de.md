@@ -240,7 +240,7 @@ Listen-Tools stattdessen zu MCP-Resources migriert werden sollten.
 │   Claude / KI   │────▶│   Swiss Environment MCP   │────▶│  BAFU / Bundesbehörden   │
 │   (MCP Host)    │◀────│   (MCP Server)            │◀────│                          │
 └─────────────────┘     │                           │     │  hydrodaten.admin.ch     │
-                        │  12 Tools · 3 Resources   │     │  naturgefahren.ch        │
+                        │  18 Tools · 3 Resources   │     │  naturgefahren.ch        │
                         │  Stdio | SSE              │     │  waldbrandgefahr.ch      │
                         │                           │     │  opendata.swiss (CKAN)   │
                         │  api_client.py            │     └──────────────────────────┘
@@ -283,7 +283,7 @@ Alle Daten: öffentlich zugänglich, keine Authentifizierung erforderlich.
 swiss-environment-mcp/
 ├── src/swiss_environment_mcp/
 │   ├── __init__.py          # Paket
-│   ├── server.py            # FastMCP-Server: 12 Tools, 3 Resources
+│   ├── server.py            # FastMCP-Server: 18 Tools, 3 Resources
 │   ├── api_client.py        # HTTP-Client + Egress-Allow-List (SSRF-Schutz)
 │   └── logging_setup.py     # structlog -> stderr
 ├── tests/
@@ -302,7 +302,7 @@ swiss-environment-mcp/
 └── pyproject.toml           # Build-Konfiguration (hatchling)
 ```
 
-> **Single-Modul-Layout (Begründung, Audit ARCH-011):** Die 12 Tools liegen in
+> **Single-Modul-Layout (Begründung, Audit ARCH-011):** Die 18 Tools liegen in
 > einer `server.py` statt in einem `tools/`-Paket. Sie sind schlanke, uniforme
 > Wrapper über `api_client.py` mit gleichem Input-/Response-Muster — ein gut
 > gegliedertes Einzelmodul bleibt navigierbarer als 4 fast identische Dateien.

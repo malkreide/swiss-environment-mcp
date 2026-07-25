@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "category": "OBS",
+  "severity": "medium",
+  "evidence": [
+    "Dockerfile:27 — RUN pip install --no-cache-dir \"$(ls /tmp/*.whl)[otel]\": das otel-Extra ist jetzt IM Runtime-Image installiert (behebt den frueheren partial-Grund 'otel-Extra fehlt im Docker-Image'). Kommentar :23-25: Tracing bleibt opt-in (No-op ohne OTEL_EXPORTER_OTLP_ENDPOINT).",
+    "pyproject.toml:39-42 — [project.optional-dependencies] otel = opentelemetry-sdk, opentelemetry-exporter-otlp-proto-http, opentelemetry-instrumentation-httpx.",
+    "src/swiss_environment_mcp/tracing.py:30-64 (configure_tracing) — TracerProvider mit Resource(service.name, deployment.environment) + BatchSpanProcessor(OTLPSpanExporter) + HTTPXClientInstrumentor().instrument() (Auto-Instrumentation fuer ausgehende httpx-Calls -> Backend-Child-Spans). No-op ohne OTLP-Endpoint / ohne otel-Extra.",
+    "src/swiss_environment_mcp/tracing.py:69-79 (_run_traced) — pro Tool-Call Span 'mcp.tool.<name>' mit Attributen mcp.tool.name und mcp.tool.result.is_error.",
+    "src/swiss_environment_mcp/tracing.py:1-18 (Docstring) + Code — KEINE sensitiven Daten in Span-Attributen: nur Tool-Name + is_error-Bool; keine Argumente/Inhalte/Tokens.",
+    "render.yaml:25-28 — OTEL_SERVICE_NAME=swiss-environment-mcp (Service-Name gesetzt), OTEL_EXPORTER_OTLP_ENDPOINT via sync:false (Endpoint operator-konfigurierbar); docker-compose.yml:15-17 dokumentiert OTEL_SERVICE_NAME/OTEL_EXPORTER_OTLP_ENDPOINT.",
+    "src/swiss_environment_mcp/server.py:79 — configure_tracing() beim Server-Start (No-op bis Endpoint gesetzt)."
+  ],
+  "gaps": [
+    "Span-Attribut mcp.user.id ist nicht gesetzt — strukturell N/A: der Server hat keine Authentifizierung / keine user_claims (ausschliesslich oeffentliche Daten, kein User-Identity-Kontext). Kein PII/Token-Leak-Risiko, da keine User-Identitaet existiert.",
+    "Tracing ist opt-in: aktiv erst bei gesetztem OTEL_EXPORTER_OTLP_ENDPOINT (in Cloud-Manifesten als sync:false hinterlegt) — das otel-Extra ist jetzt im Image gebacken, also ohne Rebuild aktivierbar."
+  ],
+  "evaluator_notes": "Frueherer partial-Grund ('otel-Extra fehlt im Docker-Image') ist behoben (Dockerfile:27). SDK installiert (via Extra im Image) und konditional initialisiert; TracerProvider + OTLP-http-Exporter; httpx-Auto-Instrumentation aktiv; Span pro Tool-Call mit mcp.tool.name + mcp.tool.result.is_error; keine sensitiven Attribute; OTLP-Endpoint env-konfigurierbar; Service-Name + deployment.environment gesetzt. Einziges nicht gesetztes Attribut (mcp.user.id) ist mangels Auth/User-Identity in diesem Public-Data-Server ein legitimes N/A, kein Implementierungs-Gap. Pass."
+}

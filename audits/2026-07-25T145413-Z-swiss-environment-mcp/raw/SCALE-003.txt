@@ -1,0 +1,16 @@
+{
+  "status": "partial",
+  "category": "SCALE",
+  "severity": "high",
+  "evidence": [
+    "docs/scaling.md:19-37 — Scale-out-Abschnitt beschreibt den konkreten Edge-LB-Routing-Layer: HAProxy/Nginx/K8s-Ingress routet anhand des Mcp-Session-Id-Headers konsistent auf dasselbe Backend; HAProxy-Stick-Table auf den Header, TTL korreliert mit Session-TTL (z.B. 24h), Kapazitaet >= 100k Sessions.",
+    "docs/scaling.md:5-17 — Begruendung, warum aktuell kein Edge-LB-Routing noetig ist: Single-Instance-Topologie, alle Requests einer Mcp-Session-Id landen zwangslaeufig auf derselben Instanz.",
+    "docs/scaling.md:33-37 — Failover-Regel dokumentiert: bei Backend-Ausfall darf eine Session ohne Shared State nicht stumm auf ein neues Backend umgeleitet werden (entweder Shared State oder sauberer Session-Neuaufbau).",
+    "find . -name 'haproxy.cfg' -o -name 'nginx.conf' -o -name 'ingress*.yaml' -> keine Edge-LB-Konfiguration im Repo (konsistent mit Single-Instance)."
+  ],
+  "gaps": [
+    "Kein Edge-LB liest den Mcp-Session-Id-Header (keine HAProxy-Stick-Table / NGINX-Hash / K8s-Ingress-Affinity implementiert) — strenge Pass-Kriterien nicht erfuellt.",
+    "Kein Affinitaets-/Failover-Runtime-Test (Modus 2), da kein Edge-LB im Single-Instance-Setup vorhanden."
+  ],
+  "evaluator_notes": "Adjudiziert als dokumentierte Single-Instance-Risiko-Akzeptanz (accepted-risk). SCALE-003 ergaenzt SCALE-002 um den konkreten Routing-Layer und greift erst bei multi-instance-Deployment. Die verbindliche Edge-LB-Konfiguration (HAProxy Stick-Table auf Mcp-Session-Id, TTL >= 24h, Kapazitaet >= 100k) ist als Scale-out-Trigger in docs/scaling.md hinterlegt, aber im aktuellen Single-Instance-Betrieb nicht aktiv. Ehrliche Einordnung nach Pass-Kriterien: partial."
+}
