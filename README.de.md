@@ -144,6 +144,18 @@ Einbinden mehrerer MCP-Server nicht kollidieren. Tool-Definitionen (Name,
 Beschreibung, Input-Schema) sind über `tool-snapshot.json` gepinnt; Änderungen
 erfordern einen CHANGELOG-Eintrag (siehe CONTRIBUTING).
 
+**Tool-Budget (18 Tools, 6 Cluster).** Jedes Tool entspricht einer eigenen
+Nutzerfrage, nicht einem REST-Endpoint — kein CRUD-/Endpoint-Mapping, und die
+Anchor-Queries sind je in einem Call beantwortbar. Die Anzahl liegt über der
+Faustregel ≤12, weil der Server bewusst sechs Umweltdomänen abdeckt (Luft,
+Wasser, Naturgefahren, Schnee, Jagd, Katalog), die je ein Listen-/Detail-Paar
+oder eine domänenspezifische Aktion brauchen. Weitere Zusammenlegung wurde
+geprüft und verworfen: Die `*_stations`/`*_current`-Paare (NABEL, Hydro, Schnee)
+bedienen echte unterschiedliche Absichten (Finden vs. Auslesen einer bekannten
+Station); ein Zusammenlegen würde die Parameter eines einzelnen Tools
+überladen. Eine siebte Domäne würde eine Prüfung auslösen, ob einzelne
+Listen-Tools stattdessen zu MCP-Resources migriert werden sollten.
+
 ### 🌬️ Luftqualität / NABEL (3 Tools)
 
 | Tool | Beschreibung | Datenquelle |

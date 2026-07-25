@@ -5,6 +5,20 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Audit-Remediation (Re-Audit 2026-07-25) — Batch 4: Architektur-Politur
+
+- **ARCH-007 — Parallelisierung unabhängiger interner Calls:**
+  `env_bathing_water` holt Lizenz- und Standort-Query, `env_snow_current` die
+  beiden SLF-Endpoints (Tageswerte + Stationen) neu via `asyncio.gather` statt
+  sequenziell.
+- **ARCH-012 — Protokollversion im Startup-Log:** die Lifespan loggt beim Start
+  `server_start` mit `transport` und der vom SDK unterstützten
+  `mcp_protocol_version` — ein SDK-Bump, der die Spec-Version verschiebt, wird
+  damit im Audit-Trail sichtbar.
+- **ARCH-006 — Tool-Budget-Begründung im README:** beide READMEs erklären, warum
+  18 Tools über 6 Domänen (statt ≤12) use-case-getrieben sind und welche
+  Konsolidierung (Stations-/Current-Paare) bewusst verworfen wurde.
+
 ### Audit-Remediation (Re-Audit 2026-07-25) — Batch 3: Security-Härtung
 
 - **SEC-005 — eine DNS-Resolution pro Request:** `assert_host_allowed()` prüft

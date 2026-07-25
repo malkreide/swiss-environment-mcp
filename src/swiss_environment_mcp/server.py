@@ -26,6 +26,7 @@ Alle Daten: öffentlich, keine Authentifizierung erforderlich.
 Lizenz der Quelldaten: BAFU-Nutzungsbedingungen / Open Government Data (OGD)
 """
 
+import asyncio
 import json
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -311,13 +312,35 @@ def _resolve_species(value: str) -> str | None:
 # --- Server-Initialisierung ---------------------------------------------------
 
 
+def _mcp_protocol_version() -> str:
+    """Vom SDK unterstützte MCP-Protokollversion (Audit ARCH-012).
+
+    Best-effort: Über die tatsächlich pro Session ausgehandelte Version hinaus
+    verankert dies den Spec-Stand des gepinnten SDK im Server-Log — ein
+    Minor-SDK-Update, das die Protokollversion verschiebt, wird so im Log
+    (und damit im Audit-Trail) sichtbar.
+    """
+    try:
+        from mcp.types import LATEST_PROTOCOL_VERSION
+
+        return str(LATEST_PROTOCOL_VERSION)
+    except Exception:  # pragma: no cover - SDK-Layout-Änderung
+        return "unknown"
+
+
 @asynccontextmanager
 async def lifespan(_server: FastMCP) -> AsyncIterator[None]:
     """Gemeinsames Lifecycle-Management für alle Transports (Audit SDK-001).
 
     Erzeugt den geteilten HTTP-Client beim Start und schliesst ihn beim
-    Shutdown — statt pro Tool-Call einen neuen Client zu öffnen.
+    Shutdown — statt pro Tool-Call einen neuen Client zu öffnen. Loggt beim
+    Start die unterstützte MCP-Protokollversion (Audit ARCH-012).
     """
+    logger.info(
+        "server_start",
+        transport=settings.mcp_transport,
+        mcp_protocol_version=_mcp_protocol_version(),
+    )
     await api.startup()
     try:
         yield
@@ -1532,14 +1555,17 @@ async def env_bathing_water(params: BathingWaterInput, ctx: Context | None = Non
                 "möglicherweise im Umbau). Direktzugang: https://www.bafu.admin.ch "
                 "→ Thema Wasser → Badegewässerqualität."
             )
-        license_info = await lindas_cube.get_cube_license(api.run_sparql, cube_uri)
-
-        sites = await lindas_cube.find_dimension_values(
-            api.run_sparql,
-            cube_uri,
-            _BATHING_DIM_LOCATION,
-            name_contains=params.location,
-            limit=200,
+        # Lizenz- und Standort-Query hängen beide nur am cube_uri und sind
+        # voneinander unabhängig → parallel ausführen (Audit ARCH-007).
+        license_info, sites = await asyncio.gather(
+            lindas_cube.get_cube_license(api.run_sparql, cube_uri),
+            lindas_cube.find_dimension_values(
+                api.run_sparql,
+                cube_uri,
+                _BATHING_DIM_LOCATION,
+                name_contains=params.location,
+                limit=200,
+            ),
         )
         if canton:
             wanted = {n for n, a in CANTON_NUMBER_TO_ABBR.items() if a == canton}
@@ -2041,8 +2067,12 @@ async def env_snow_current(params: SnowCurrentInput, ctx: Context | None = None)
         str: Schneehöhe und Neuschnee je Station, nach Schneehöhe absteigend.
     """
     try:
-        snow = await api.fetch_slf_daily_snow()
-        stations = await api.fetch_slf_snow_stations()
+        # Tages-Schneewerte und Stations-Metadaten sind zwei unabhängige
+        # SLF-Endpoints → parallel abrufen (Audit ARCH-007).
+        snow, stations = await asyncio.gather(
+            api.fetch_slf_daily_snow(),
+            api.fetch_slf_snow_stations(),
+        )
     except Exception as e:
         error_msg = await _handle_tool_error("env_snow_current", e, ctx, canton=params.canton)
         raise _terminal_failure(
