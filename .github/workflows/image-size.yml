@@ -1,0 +1,37 @@
+# Image-Size-Gate (Audit SCALE-004). Baut das Runtime-Image und prüft die Grösse
+# gegen eine Regressions-Obergrenze. Läuft nur, wenn Image-relevante Dateien
+# geändert werden — hält die Haupt-CI schnell.
+name: Image Size
+
+on:
+  push:
+    branches: [main]
+    paths: [Dockerfile, pyproject.toml, "src/**"]
+  pull_request:
+    branches: [main]
+    paths: [Dockerfile, pyproject.toml, "src/**"]
+
+jobs:
+  image-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Image bauen
+        run: docker build -t swiss-environment-mcp:ci .
+
+      - name: Grösse prüfen (Regressions-Ceiling)
+        run: |
+          # Grösse des Runtime-Images in MB (komprimiert-unabhängig, wie docker inspect meldet).
+          BYTES=$(docker image inspect swiss-environment-mcp:ci --format '{{.Size}}')
+          MB=$(( BYTES / 1024 / 1024 ))
+          echo "Runtime-Image: ${MB} MB"
+          # Ceiling als Regressions-Guard. Das ≤200-MB-Ideal (Audit SCALE-004) wird
+          # durch den python-slim-Unterbau + das otel-Extra (OBS-006) knapp
+          # überschritten; das Ceiling fängt echte Regressionen (versehentliche
+          # Fat-Dependencies), ohne bei jedem Build zu scheitern.
+          CEILING=350
+          if [ "$MB" -gt "$CEILING" ]; then
+            echo "::error::Image ${MB} MB überschreitet das Ceiling ${CEILING} MB (SCALE-004)."
+            exit 1
+          fi
