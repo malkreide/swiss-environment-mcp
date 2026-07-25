@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "category": "SDK",
+  "severity": "high",
+  "evidence": [
+    "Lifespan mit @asynccontextmanager, an den FastMCP-Konstruktor übergeben, Cleanup im finally (src/swiss_environment_mcp/server.py:296-307, 310-322)",
+    "Geteilter httpx.AsyncClient mit startup()/shutdown()-Lifecycle statt pro Tool-Call: einzige AsyncClient-Instanziierung im Repo in _new_client (src/swiss_environment_mcp/api_client.py:180-214, Instanziierung nur api_client.py:185)",
+    "Auch der neue lindas/-Pfad nutzt den Lifespan-Client: run_sparql übergibt get_client() an lindas.client.select, das den injizierten Client verwendet statt einen eigenen zu öffnen (api_client.py:271-278, lindas/client.py:96-136)"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Single-Server-Setup, daher kein AsyncExitStack nötig. Die neue lindas/-Schicht ist bewusst transportfrei gebaut (Client wird injiziert) und erzeugt keine per-Call-Clients — das Pass-Kriterium gilt auch für den neuen Code."
+}

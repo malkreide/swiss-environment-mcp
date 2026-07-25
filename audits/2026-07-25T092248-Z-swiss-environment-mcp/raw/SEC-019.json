@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "critical",
+  "evidence": [
+    "Dokumentierte Trifecta-Bewertung mit Tabelle und Ergebnis 'maximal eine Fähigkeit' (docs/security.md:17-35)",
+    "Server ist vollständig read-only: alle 18 Tools tragen readOnlyHint=true/destructiveHint=false (z.B. src/swiss_environment_mcp/server.py:808-816, 1471-1479); keine send_mail/smtplib/webhook/POST-an-Fremdziele-Funktionen im Code (einziger POST ist die SPARQL-Query an lindas.admin.ch, lindas/client.py:128-136, Egress-geprüft)",
+    "Kein exfiltrierbarer Kanal: ausgehende Requests nur an frozenset-Allow-List von 10 Gov-/SLF-Hosts (src/swiss_environment_mcp/api_client.py:84-97), follow_redirects=False (api_client.py:192), keine Empfänger-Ziele aus User-Input",
+    "Eskalations-Trigger dokumentiert: Neubewertung bei künftigen Write-/Send-Tools (docs/security.md:33-35, docs/roadmap.md:30)"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Nur öffentliche BAFU/SLF-Daten, keine privaten Daten, kein Write/Send — Trifecta-Score bleibt auch mit den neuen LINDAS-/SLF-/Jagd-Tools bei maximal 1 von 3. Die neuen Hosts sind in derselben Allow-List erfasst."
+}
