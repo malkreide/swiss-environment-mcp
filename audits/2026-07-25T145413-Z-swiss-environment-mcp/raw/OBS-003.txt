@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "category": "OBS",
+  "severity": "medium",
+  "evidence": [
+    "pyproject.toml:28 — structlog>=24.1.0 in [project.dependencies] (strukturierter Logger als harte Dependency).",
+    "src/swiss_environment_mcp/logging_setup.py:37-49 — structlog.configure mit JSONRenderer, ISO-TimeStamper, add_log_level, merge_contextvars, format_exc_info; WriteLoggerFactory(file=sys.stderr). JSON-Output, maschinenlesbar.",
+    "src/swiss_environment_mcp/tracing.py:88-107 (trace_tool) — Correlation-ID: request_id = uuid4().hex[:12] wird via structlog.contextvars.bound_contextvars(request_id=..., tool=...) pro Tool-Call gebunden; alle Logs des Calls (auch die Warnung aus _handle_tool_error) korrelierbar. Invocation-Logging: tool_invoked (info), tool_succeeded (info, mit is_error), tool_failed (error, exc_info).",
+    "Severity-Stufen aktiv genutzt (>= 4): debug (api_client.py:232/284/544 upstream_request), info (tracing.py:96/105, server.py:339), warning (server.py:91/2689, ctx.warning), error (tracing.py:103 tool_failed). -> debug/info/warning/error alle vertreten.",
+    "src/swiss_environment_mcp/logging_setup.py:20-30 — LOG_LEVEL-Env (DEBUG/INFO/WARNING) schaltet die debug-Stufe (Upstream-Requests/Retry-Details) ohne Code-Aenderung ein.",
+    "src/swiss_environment_mcp/api_client.py:224 — Debug-Upstream-Logging (_logger.debug 'upstream_request'), Correlation-Kontext (request_id/tool) erscheint via contextvars automatisch mit.",
+    "grep 'print(' src/ -> 0 Treffer (keine print-Statements)."
+  ],
+  "gaps": [
+    "Kein CI-Guard gegen print()-Regressionen (ruff ohne T20-Regel) — Empfehlung, kein Pass-Kriterium.",
+    "notice/critical/alert/emergency-Stufen werden nicht genutzt (4 von 8 RFC-5424-Stufen aktiv) — das Kriterium verlangt mindestens 4 (debug/info/warning/error), erfuellt."
+  ],
+  "evaluator_notes": "Alle drei frueheren partial-Gruende sind behoben: (1) statt nur 1 jetzt >= 4 Severity-Stufen (debug/info/warning/error); (2) Invocation-Logging vorhanden (tool_invoked/succeeded/failed im trace_tool-Decorator); (3) Correlation-ID (request_id) pro Tool-Call via structlog-contextvars gebunden. structlog als Dependency, JSON-Output nach stderr, pro Tool-Call bound context (tool + request_id). Alle Pass-Kriterien erfuellt."
+}

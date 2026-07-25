@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "OBS",
+  "severity": "critical",
+  "evidence": [
+    "grep -rn 'print(' src/ --include='*.py' -> 0 Treffer (keine print-Statements im gesamten src/, inkl. lindas/-Pfad).",
+    "src/swiss_environment_mcp/logging_setup.py:47 — structlog.WriteLoggerFactory(file=sys.stderr) mit explizitem OBS-004-Kommentar ('stderr — niemals stdout'). Modul-Docstring (:1-11) begruendet: stdout ist bei stdio fuer JSON-RPC reserviert.",
+    "src/swiss_environment_mcp/server.py:75 — configure_logging() transport-unabhaengig beim Import; main() (server.py:2707-2726) hat keinen transport-abhaengigen Logging-Switch -> identische stderr-Konfiguration fuer stdio, sse und streamable-http.",
+    "src/swiss_environment_mcp/tracing.py:26 — _obs_logger via get_logger(); alle Tool-Layer-Logs laufen ebenfalls ueber die stderr-gebundene structlog-Konfiguration.",
+    "Runtime (Vorlauf, stdio): initialize-Request via stdin -> stdout enthaelt ausschliesslich valide JSON-RPC-Zeilen (Parse-Check 'stdout pure JSON: True'); Logging-Konfiguration unveraendert (2b64258)."
+  ],
+  "gaps": [
+    "Kein CI-Guard gegen kuenftige print()-Regressionen (ruff-Select ohne T20-Regel) — Empfehlung, kein Pass-Kriterium."
+  ],
+  "evaluator_notes": "Unveraendert bestaetigt gegenueber Vorlauf-Pass. Keine prints, structlog explizit auf sys.stderr via WriteLoggerFactory, gleiche Konfiguration ueber alle Transports (kein transport-abhaengiger Switch). Bei stdio bleibt stdout ein unkorrumpierter Protokollstrom. Alle Pass-Kriterien erfuellt."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "SCALE",
+  "severity": "medium",
+  "evidence": [
+    "docker-compose.yml:19-27 — explizite Limits im Render-/Deploy-Beispiel: mem_limit 256m, mem_reservation 128m (requests < limits -> Burst-Headroom), cpus 0.5, ulimits.nofile soft 4096/hard 8192 (FD-Limit >= 4096), restart: unless-stopped.",
+    "render.yaml:9 — plan: starter; Kommentar :6-9 dokumentiert die plan-gebundenen Limits 512 MB RAM / 0.5 vCPU (Render deckelt hart auf Plan-Ebene) und Auto-Restart bei OOM (managed). Damit ist der Render-Deployment-Pfad (frueherer Gap) jetzt abgedeckt.",
+    "docs/scaling.md:39-59 — Resource-Limits-Sektion mit Limits-Tabelle je Deployment-Pfad (Docker-Compose / Render / Kubernetes) inkl. Memory/CPU + Restart-bei-OOM-Spalte.",
+    "docs/scaling.md:53-59 — reproduzierbares OOM-Verfahren dokumentiert: 'docker run --memory=64m ...' erzwingt OOM-Kill; restart-policy startet den Container neu; /health danach wieder gruen. Architektur-Begruendung: single-instance, kein unbeschraenkt wachsender State -> OOM-Kill = sauberer Neustart ohne Datenverlust."
+  ],
+  "gaps": [
+    "OOM-Verhalten ist als reproduzierbares Verfahren dokumentiert (Modus 2), aber im Audit nicht als Live-Test ausgefuehrt/evidenziert (kein Docker-Daemon verfuegbar); restart-policy ist jedoch aktiv konfiguriert.",
+    "Render-Limits sind plan-erzwungen/dokumentiert (kein numerisches Feld im Manifest, da Render Limits auf Plan-Ebene deckelt) — check-konform, da der Check fuer Railway/Render Doku als Nachweis akzeptiert."
+  ],
+  "evaluator_notes": "Beide frueheren partial-Gruende sind behoben: (1) Limits nicht nur im Beispiel-Compose, sondern jetzt auch im Render-Pfad (plan starter, dokumentiert) und in docs/scaling.md je Deployment-Pfad; (2) OOM-Verhalten ist ueber ein reproduzierbares Verfahren + aktive restart-policy adressiert. Alle config_check-Kriterien (Modus 1) erfuellt: Memory-Limit explizit, CPU-Limit gesetzt, requests < limits, FD-Limit >= 4096, restart-policy aktiv. Der Check akzeptiert fuer managed Plattformen (Railway/Render) Dokumentation als Nachweis. Pass; residualer Punkt ist der nicht live-ausgefuehrte OOM-Test (dokumentiert-reproduzierbar)."
+}
