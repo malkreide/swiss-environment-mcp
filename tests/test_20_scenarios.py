@@ -1,8 +1,12 @@
 """
 20 Diverse Test-Szenarien fuer swiss-environment-mcp.
 
+Diese Szenarien treffen echte BAFU-Live-APIs und sind daher als `live` markiert
+(via `pytest -m "not live"` aus der CI ausgeschlossen). Sie werden sowohl von
+pytest (`test_all_scenarios`) als auch als Standalone-Skript (`__main__`) ausgefuehrt.
+
 Deckt ab:
-  - Alle 12 Tools
+  - Repraesentative Tools aus allen Clustern
   - Verschiedene Parameterkonstellationen
   - Edge Cases (ungueltige Eingaben, Grenzwerte, leere Filter)
   - Cross-Tool-Logik (Stationen finden -> Daten abrufen)
@@ -56,6 +60,11 @@ from swiss_environment_mcp.server import (
     env_nabel_stations,
     env_wildfire_danger,
 )
+
+import pytest  # noqa: E402
+
+# Szenarien treffen echte Live-APIs → als live markiert (CI: pytest -m "not live").
+pytestmark = pytest.mark.live
 
 _pass = 0
 _fail = 0
@@ -445,30 +454,49 @@ async def scenario_20():
           "Ressourcen" in result or "ressource" in result.lower() or "opendata" in result)
     check(S, "NABEL-Datensatz: Download-URL(s)", "http" in result)
 
-    # Ungueltige ID
-    result_bad = await env_bafu_dataset_detail(
-        BafuDatasetDetailInput(dataset_id="non-existent-dataset-xyz-12345")
-    )
-    check(S, "Ungueltige ID: Fehlermeldung",
-          "Fehler" in result_bad or "nicht gefunden" in result_bad or "env_bafu_datasets" in result_bad,
-          f"Inhalt: {result_bad[:200]}")
+    # Ungueltige ID → seit OBS-001 ein terminaler ToolError (isError:true),
+    # dessen Content weiterhin den Bezug zu env_bafu_datasets enthaelt.
+    from mcp.server.fastmcp.exceptions import ToolError
+
+    try:
+        await env_bafu_dataset_detail(
+            BafuDatasetDetailInput(dataset_id="non-existent-dataset-xyz-12345")
+        )
+        check(S, "Ungueltige ID: ToolError erwartet", False, "kein Fehler geworfen")
+    except ToolError as exc:
+        msg = str(exc)
+        check(S, "Ungueltige ID: Fehlermeldung",
+              "nicht gefunden" in msg or "env_bafu_datasets" in msg,
+              f"Inhalt: {msg[:200]}")
 
 
 # =============================================================================
 # MAIN
 # =============================================================================
 
+_SCENARIOS = [
+    scenario_01, scenario_02, scenario_03, scenario_04, scenario_05,
+    scenario_06, scenario_07, scenario_08, scenario_09, scenario_10,
+    scenario_11, scenario_12, scenario_13, scenario_14, scenario_15,
+    scenario_16, scenario_17, scenario_18, scenario_19, scenario_20,
+]
+
+
+async def test_all_scenarios():
+    """pytest-Einstieg (live): führt alle 20 Szenarien aus, erwartet 0 Fehl-Checks."""
+    global _pass, _fail, _errors
+    _pass, _fail, _errors = 0, 0, []
+    for i, scenario_fn in enumerate(_SCENARIOS, 1):
+        await scenario_fn()
+    assert _fail == 0, f"{_fail} Szenario-Check(s) fehlgeschlagen: {_errors}"
+
+
 async def main():
     print("=" * 60)
     print("  swiss-environment-mcp -- 20 Testszenarien")
     print("=" * 60)
 
-    scenarios = [
-        scenario_01, scenario_02, scenario_03, scenario_04, scenario_05,
-        scenario_06, scenario_07, scenario_08, scenario_09, scenario_10,
-        scenario_11, scenario_12, scenario_13, scenario_14, scenario_15,
-        scenario_16, scenario_17, scenario_18, scenario_19, scenario_20,
-    ]
+    scenarios = _SCENARIOS
 
     for i, scenario_fn in enumerate(scenarios, 1):
         try:

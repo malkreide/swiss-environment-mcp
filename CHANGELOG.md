@@ -5,6 +5,19 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Audit-Remediation (Re-Audit 2026-07-25) — Batch 2: Test-Coverage (OPS-001)
+
+- **Gemockte Unit-Tests für die drei bisher ungetesteten Tools** (Happy Path +
+  Fehlerpfad → `ToolError`): `env_hazard_overview`, `env_hazard_regions`,
+  `env_wildfire_danger`. Damit hat jedes datenliefernde Tool CI-abgedeckte
+  Erfolgs- und Fehlerpfade (6 neue Tests, Suite 71 → 77).
+- **Eigenständige Live-Tests** für `env_snow_stations` und
+  `env_avalanche_bulletin` (bisher nur indirekt über `test_slf_snow`).
+- **`tests/test_20_scenarios.py`** ist nicht mehr ein pytest-unsichtbares
+  Skript: neu als `live`-markierter `test_all_scenarios` sammelbar (aus der
+  CI via `-m "not live"` ausgeschlossen), Docstring auf 18 Tools korrigiert,
+  die Fehler-ID-Erwartung an die neue `isError`-Semantik (OBS-001) angepasst.
+
 ### Audit-Remediation (Re-Audit 2026-07-25) — Batch 1: Observability
 
 - **OBS-006 — Tracing im Deployment aktivierbar:** Das Docker-Image installiert

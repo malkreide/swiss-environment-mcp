@@ -21,6 +21,8 @@ from swiss_environment_mcp.server import (  # noqa: E402
     AvalancheBulletinInput,
     BafuDatasetsInput,
     FloodWarningsInput,
+    HazardOverviewInput,
+    HazardRegionsInput,
     HuntingSpeciesInput,
     HuntingStatsInput,
     HydroCurrentInput,
@@ -30,10 +32,13 @@ from swiss_environment_mcp.server import (  # noqa: E402
     ResponseFormat,
     SnowCurrentInput,
     SnowStationsInput,
+    WildfireDangerInput,
     env_air_limits_check,
     env_avalanche_bulletin,
     env_bafu_datasets,
     env_flood_warnings,
+    env_hazard_overview,
+    env_hazard_regions,
     env_hunting_species,
     env_hunting_stats,
     env_hydro_current,
@@ -42,6 +47,7 @@ from swiss_environment_mcp.server import (  # noqa: E402
     env_nabel_stations,
     env_snow_current,
     env_snow_stations,
+    env_wildfire_danger,
     health,
 )
 
@@ -601,6 +607,95 @@ async def test_run_sparql_400_no_retry(monkeypatch):
 def test_lindas_host_is_allowed():
     """LINDAS-Endpoint steht auf der Egress-Allow-List (Phase 3)."""
     api.assert_host_allowed(api.LINDAS_ENDPOINT)
+
+
+# --- Naturgefahren & Waldbrand (OPS-001: Fehlerpfade in CI abgedeckt) ---------
+
+_HAZARD_OVERVIEW_URL = "https://www.naturgefahren.ch/api/v1/warnings/overview/ch"
+_HAZARD_REGIONS_URL = "https://www.naturgefahren.ch/api/v1/warnings/regions"
+_WILDFIRE_URL = "https://www.waldbrandgefahr.ch/api/danger"
+
+
+@respx.mock
+async def test_hazard_overview_happy():
+    """env_hazard_overview parst die Gefahrenübersicht und listet die Warnungen."""
+    respx.get(_HAZARD_OVERVIEW_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json={"warnings": [{"type": "Lawinen", "danger_level": 3, "text": "Erheblich"}]},
+        )
+    )
+    out = await env_hazard_overview(HazardOverviewInput(language="de"))
+    assert "Lawinen" in out and "Gefahrenstufe 3" in out
+
+
+@respx.mock
+async def test_hazard_overview_error_raises_tool_error():
+    """Upstream-503 → terminaler Fehler als ToolError (isError:true, OBS-001)."""
+    from mcp.server.fastmcp.exceptions import ToolError
+
+    respx.get(_HAZARD_OVERVIEW_URL).mock(return_value=httpx.Response(503))
+    with pytest.raises(ToolError) as exc:
+        await env_hazard_overview(HazardOverviewInput(language="de"))
+    assert "Bulletin nicht abrufbar" in str(exc.value)
+
+
+@respx.mock
+async def test_hazard_regions_happy_filters_region():
+    """env_hazard_regions filtert auf die angefragte Region."""
+    respx.get(_HAZARD_REGIONS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "regions": [
+                    {"name": "Zürich", "warnings": [{"type": "hochwasser", "danger_level": 2}]},
+                    {"name": "Wallis", "warnings": [{"type": "lawinen", "danger_level": 4}]},
+                ]
+            },
+        )
+    )
+    out = await env_hazard_regions(HazardRegionsInput(region="Zürich"))
+    assert "Zürich" in out and "hochwasser" in out
+    assert "Wallis" not in out  # Regionsfilter greift
+
+
+@respx.mock
+async def test_hazard_regions_error_raises_tool_error():
+    from mcp.server.fastmcp.exceptions import ToolError
+
+    respx.get(_HAZARD_REGIONS_URL).mock(return_value=httpx.Response(500))
+    with pytest.raises(ToolError) as exc:
+        await env_hazard_regions(HazardRegionsInput(region="Zürich"))
+    assert "Regionaldaten nicht abrufbar" in str(exc.value)
+
+
+@respx.mock
+async def test_wildfire_danger_happy_filters_canton():
+    """env_wildfire_danger zeigt Stufe + Label und filtert auf den Kanton."""
+    respx.get(_WILDFIRE_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "regions": [
+                    {"name": "Unterwallis", "canton": "VS", "danger_level": 4},
+                    {"name": "Zürich", "canton": "ZH", "danger_level": 1},
+                ]
+            },
+        )
+    )
+    out = await env_wildfire_danger(WildfireDangerInput(language="de", canton="VS"))
+    assert "Unterwallis" in out and "Stufe 4" in out and "Gross" in out
+    assert "Zürich" not in out  # Kantonsfilter greift
+
+
+@respx.mock
+async def test_wildfire_danger_error_raises_tool_error():
+    from mcp.server.fastmcp.exceptions import ToolError
+
+    respx.get(_WILDFIRE_URL).mock(return_value=httpx.Response(503))
+    with pytest.raises(ToolError) as exc:
+        await env_wildfire_danger(WildfireDangerInput(language="de"))
+    assert "Waldbranddaten nicht abrufbar" in str(exc.value)
 
 
 # --- SLF Schnee & Lawinen (Phase 3, Inkrement 2) ------------------------------
