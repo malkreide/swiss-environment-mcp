@@ -221,6 +221,35 @@ async def test_slf_snow() -> None:
     check("SLF: Bulletin ist FeatureCollection", bulletin.get("type") == "FeatureCollection")
 
 
+async def test_snow_stations_tool() -> None:
+    print("\n[Schnee] env_snow_stations — Tool eigenständig (OPS-001)")
+
+    if SKIP_LIVE:
+        print("  ⏭️  Live-Test übersprungen")
+        return
+
+    from swiss_environment_mcp.server import SnowStationsInput, env_snow_stations
+
+    result = await env_snow_stations(SnowStationsInput(canton="GR"))
+    check("Snow-Stations: Kein Python-Traceback", "Traceback" not in result)
+    check("Snow-Stations: SLF/IMIS erwähnt", "IMIS" in result or "SLF" in result)
+
+
+async def test_avalanche_bulletin_tool() -> None:
+    print("\n[Schnee] env_avalanche_bulletin — Tool eigenständig (OPS-001)")
+
+    if SKIP_LIVE:
+        print("  ⏭️  Live-Test übersprungen")
+        return
+
+    from swiss_environment_mcp.server import AvalancheBulletinInput, env_avalanche_bulletin
+
+    # Ausserhalb der Saison ein reguläres „kein aktives Bulletin" — kein Fehler.
+    result = await env_avalanche_bulletin(AvalancheBulletinInput(language="de"))
+    check("Avalanche: Kein Python-Traceback", "Traceback" not in result)
+    check("Avalanche: Lawinen-Kontext", "Lawinen" in result or "Bulletin" in result)
+
+
 async def test_hunting_stats() -> None:
     print("\n[Jagd] Eidg. Jagdstatistik — Rothirsch Abschuss Graubünden")
 
@@ -358,6 +387,8 @@ async def main() -> None:
     await test_hydro_current_lindas()
     await test_bathing_water_lindas()
     await test_slf_snow()
+    await test_snow_stations_tool()
+    await test_avalanche_bulletin_tool()
     await test_hunting_stats()
     await test_flood_warnings()
     await test_hazard_overview()

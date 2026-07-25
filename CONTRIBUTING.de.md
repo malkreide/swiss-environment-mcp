@@ -133,6 +133,28 @@ PRs, die Breaking Changes an bestehenden Tool-Signaturen einführen, erfordern z
 
 ---
 
+## Sicherheitsrelevante Änderungen
+
+Zwei Arten von Änderungen betreffen das Sicherheitsprofil des Servers und folgen
+einem strengeren Verfahren (kein Self-Merge):
+
+**Egress-Allow-List erweitern (`ALLOWED_HOSTS`, SEC-021).** Ein neuer Host
+vergrössert die Angriffsfläche. Ein PR, der `ALLOWED_HOSTS` in
+`src/swiss_environment_mcp/api_client.py` ändert, muss: (1) den neuen Host
+begründen (Datenquelle, Endpoint, Lizenz); (2) die FQDN-Liste in
+`deploy/network-policy.example.yaml` im selben PR nachziehen; (3) einen
+CHANGELOG-Eintrag unter *Sicherheit* enthalten; (4) von einer zweiten Person
+reviewt werden.
+
+**Tool-Definitionen ändern (SEC-022).** Tool-Name, Beschreibung und
+Input-Schema sind über `tool-snapshot.json` gepinnt (CI-Gate). Bei einer
+Änderung den Snapshot neu erzeugen (`PYTHONPATH=src python
+scripts/tool_snapshot.py`) und einen CHANGELOG-Eintrag ergänzen. Ist die
+Änderung breaking für Clients, einen expliziten **Client-Re-Approval-Hinweis**
+in den CHANGELOG aufnehmen (der Snapshot-Hash wechselt; Downstreams, die
+Tool-Definitionen pinnen, müssen neu zustimmen). Das `env_`-Tool-Präfix ist eine
+bewusste, stabile Namespace-Wahl — siehe README.
+
 ## Datenquellen & Quellenangabe
 
 Dieser Server verwendet offene Daten von Schweizer Bundesbehörden:

@@ -133,6 +133,26 @@ PRs that introduce breaking changes to existing tool signatures require a discus
 
 ---
 
+## Security-relevant changes
+
+Two kinds of change touch the server's security profile and follow a stricter
+procedure (no self-merge):
+
+**Extending the egress allow-list (`ALLOWED_HOSTS`, SEC-021).** Adding a host
+widens the attack surface. A PR that touches `ALLOWED_HOSTS` in
+`src/swiss_environment_mcp/api_client.py` must: (1) justify the new host
+(data source, endpoint, licence); (2) update the FQDN list in
+`deploy/network-policy.example.yaml` in the same PR; (3) add a CHANGELOG entry
+under *Security*; (4) be reviewed by a second person.
+
+**Changing tool definitions (SEC-022).** Tool name, description or input schema
+are pinned via `tool-snapshot.json` (CI gate). When a tool definition changes,
+regenerate it (`PYTHONPATH=src python scripts/tool_snapshot.py`) and add a
+CHANGELOG entry. If the change is breaking for clients, add an explicit
+**client re-approval note** to the CHANGELOG (the snapshot hash changes, so
+downstreams that pin tool definitions must re-approve). The `env_` tool-name
+prefix is a deliberate, stable namespace choice — see the README.
+
 ## Data Sources & Attribution
 
 This server uses open data from Swiss federal authorities:

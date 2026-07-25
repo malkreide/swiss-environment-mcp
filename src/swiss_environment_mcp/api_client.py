@@ -147,9 +147,16 @@ def _resolve_and_check(host: str) -> str | None:
 
 
 def assert_host_allowed(url: str) -> None:
-    """Validiert eine Ziel-URL gegen Schema-, Allow-List- und IP-Regeln.
+    """Validiert eine Ziel-URL gegen Schema- und Allow-List-Regeln.
 
-    Wird vor *jedem* ausgehenden Request aufgerufen.
+    Wird vor *jedem* ausgehenden Request aufgerufen (auch als `egress_check`-
+    Callback der SPARQL-/JSON-Clients).
+
+    Die IP-/SSRF-Prüfung (DNS-Auflösung + Blocklist) erfolgt bewusst **nicht**
+    hier, sondern **einmalig** im `_PinnedTransport` unmittelbar vor dem Connect
+    (Audit SEC-005): So gibt es genau *eine* DNS-Resolution pro Request und kein
+    TOCTOU-Fenster zwischen Prüfung und Verbindungsaufbau. Früher löste diese
+    Funktion zusätzlich auf → zwei `getaddrinfo`-Calls pro Request.
     """
     parsed = urlparse(url)
     if parsed.scheme != "https":
@@ -157,7 +164,6 @@ def assert_host_allowed(url: str) -> None:
     host = parsed.hostname or ""
     if host not in ALLOWED_HOSTS:
         raise SecurityError(f"Host '{host}' ist nicht in der Egress-Allow-List")
-    _resolve_and_check(host)
 
 
 class _PinnedTransport(httpx.AsyncHTTPTransport):

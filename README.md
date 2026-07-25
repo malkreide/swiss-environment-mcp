@@ -138,6 +138,24 @@ docker run -p 8000:8000 swiss-environment-mcp
 
 ## Available Tools
 
+All tools share the stable `env_` name prefix — a deliberate namespace choice so
+that the server's tools are recognisable and unlikely to collide when several MCP
+servers are mounted together. Tool definitions (name, description, input schema)
+are pinned via `tool-snapshot.json`; changes require a CHANGELOG entry (see
+CONTRIBUTING).
+
+**Tool budget (18 tools, 6 clusters).** Every tool maps to a distinct user
+question, not to a REST endpoint — there is no CRUD/endpoint mirroring, and the
+anchor queries are each answerable in a single call. The count sits above the
+≤12 rule of thumb because the server deliberately spans six environmental
+domains (air, water, hazards, snow, hunting, catalogue), each needing a
+list/detail pair or a domain-specific action. Further consolidation was
+considered and rejected: the `*_stations`/`*_current` pairs (NABEL, hydro, snow)
+serve genuinely different intents (discovery vs. reading a known station) and
+collapsing them would overload a single tool's parameters. Adding a seventh
+domain would trigger a review of whether some listings should migrate to MCP
+resources instead of tools.
+
 ### 🌬️ Air Quality / NABEL (3 tools)
 
 | Tool | Description | Data Source |
