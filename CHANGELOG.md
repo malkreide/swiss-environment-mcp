@@ -5,6 +5,28 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.4.0] – 2026-07-25
+
+Erster getaggter Release seit v0.2.3 — bündelt die Hydro-Phase-2 (neues Tool
+`env_bathing_water`, extraktionsfähiges `lindas/`-Modul; zuvor unter `[0.3.0]`
+dokumentiert, aber nie getaggt) **und** die vollständige Audit-Remediation der
+17 Findings des Re-Audits 2026-07-25.
+
+**Auditbestätigt** (Re-Audit-Run `2026-07-25T145413-Z`, mcp-audit v1.0.0,
+catalog `091f446b`): 44 anwendbare Checks → **38 pass / 6 partial / 0 fail**,
+`production_ready: true`, keine blockierenden Fails. Die 6 verbleibenden partials
+sind dokumentierte Risiko-Akzeptanzen bzw. ein begründeter Trade-off
+(SEC-009/014/015, SCALE-002/003/004) mit Re-Evaluations-Triggern.
+
+> **⚠️ Breaking (OBS-001):** Terminale Ausführungsfehler werden neu als
+> `ToolError` geworfen → FastMCP setzt `isError:true`, statt den Fehlertext als
+> erfolgreiches Resultat zurückzugeben. Recovery-Hinweise bleiben im
+> Fehler-Content. Clients, die bisher Fehlertexte als normalen Output parsten,
+> müssen `isError` auswerten. Details im Batch-1-Eintrag unten.
+
+Die folgenden Batch-Einträge dokumentieren die Remediation im Detail; die
+Hydro-Phase-2-Änderungen stehen unverändert im `[0.3.0]`-Block darunter.
+
 ### Audit-Remediation (Re-Audit 2026-07-25) — Batch 5: Deployment/Scale + Risiko-Akzeptanz
 
 - **SCALE-004 — Image-Size-Gate:** neuer Workflow `.github/workflows/image-size.yml`
