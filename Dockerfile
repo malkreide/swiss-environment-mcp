@@ -20,8 +20,11 @@ WORKDIR /app
 RUN groupadd --system --gid 10001 app \
     && useradd --system --uid 10001 --gid app --no-create-home app
 
+# Inkl. otel-Extra, damit OpenTelemetry-Tracing im Deployment aktivierbar ist
+# (Audit OBS-006). Tracing bleibt dennoch opt-in: configure_tracing() ist ein
+# No-op, solange OTEL_EXPORTER_OTLP_ENDPOINT nicht gesetzt ist.
 COPY --from=builder /dist/*.whl /tmp/
-RUN pip install --no-cache-dir /tmp/*.whl && rm -rf /tmp/*.whl
+RUN pip install --no-cache-dir "$(ls /tmp/*.whl)[otel]" && rm -rf /tmp/*.whl
 
 # Cloud-Transport. MCP_HOST=0.0.0.0 NUR im Container (Audit SEC-016) —
 # der Code-Default bleibt 127.0.0.1.

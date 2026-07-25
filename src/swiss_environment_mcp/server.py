@@ -33,6 +33,7 @@ from enum import Enum
 from typing import Any, Literal
 
 from mcp.server.fastmcp import Context, FastMCP
+from mcp.server.fastmcp.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from starlette.requests import Request
@@ -99,6 +100,23 @@ async def _handle_tool_error(
         except Exception:  # ctx-Logging darf den Tool-Call nie zum Absturz bringen
             pass
     return msg
+
+
+def _terminal_failure(message: str) -> ToolError:
+    """Signalisiert einen terminalen Ausführungsfehler als MCP `isError:true` (OBS-001).
+
+    Wird via `raise` genutzt: FastMCP setzt daraufhin `isError=true` im
+    CallToolResult (statt einen Fehlertext als reguläres, erfolgreiches Resultat
+    zurückzugeben). Die enthaltenen Direktlinks/Recovery-Hinweise bleiben im
+    Fehler-Content erhalten — der Client bekommt weiterhin die Hilfestellung,
+    weiss aber jetzt maschinenlesbar, dass der Abruf fehlgeschlagen ist.
+
+    Nur für echte Ausführungsfehler (Upstream nicht erreichbar, Egress
+    blockiert) — NICHT für Graceful-Degradation-Pfade, die genuine
+    Ersatzdaten liefern (z.B. Beispiel-Stationslisten), oder für leere, aber
+    gültige Resultate (match_type "none", "keine aktive Warnung").
+    """
+    return ToolError(message)
 
 
 # --- Konstanten ---------------------------------------------------------------
@@ -1225,7 +1243,7 @@ async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = Non
             "env_hydro_current", e, ctx, station_id=params.station_id
         )
         portal_url = f"https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{params.station_id}"
-        return (
+        raise _terminal_failure(
             f"⚠️ Aktuelle Daten für Station {params.station_id} nicht abrufbar: {error_msg}\n\n"
             f"**Direktzugang:** {portal_url}\n"
             f"**Vollständiges Datenportal:** https://www.hydrodaten.admin.ch/de"
@@ -1394,7 +1412,7 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
         error_msg = await _handle_tool_error(
             "env_flood_warnings", e, ctx, min_level=params.min_level
         )
-        return (
+        raise _terminal_failure(
             f"⚠️ Warnungsdaten nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang zu aktuellen Warnungen:**\n"
             "- https://www.hydrodaten.admin.ch/de/hochwasserwarnungen\n"
@@ -1628,7 +1646,7 @@ async def env_bathing_water(params: BathingWaterInput, ctx: Context | None = Non
         error_msg = await _handle_tool_error(
             "env_bathing_water", e, ctx, location=params.location, canton=canton
         )
-        return (
+        raise _terminal_failure(
             f"⚠️ Badegewässerdaten nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:** https://www.bafu.admin.ch (Thema Wasser → "
             "Badegewässerqualität) bzw. https://opendata.swiss/de/organization/bafu"
@@ -1704,7 +1722,7 @@ async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None =
         error_msg = await _handle_tool_error(
             "env_hazard_overview", e, ctx, language=params.language
         )
-        return (
+        raise _terminal_failure(
             f"⚠️ Bulletin nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:**\n"
             "- https://www.naturgefahren.ch\n"
@@ -1781,7 +1799,7 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
 
     except Exception as e:
         error_msg = await _handle_tool_error("env_hazard_regions", e, ctx, region=params.region)
-        return (
+        raise _terminal_failure(
             f"⚠️ Regionaldaten nicht abrufbar: {error_msg}\n\n"
             "**Manuelle Abfrage:**\n"
             "- https://www.naturgefahren.ch\n"
@@ -1863,7 +1881,7 @@ async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None =
         error_msg = await _handle_tool_error(
             "env_wildfire_danger", e, ctx, language=params.language
         )
-        return (
+        raise _terminal_failure(
             f"⚠️ Waldbranddaten nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:**\n"
             "- https://www.waldbrandgefahr.ch/de/aktuelle-lage\n"
@@ -1945,7 +1963,7 @@ async def env_snow_stations(params: SnowStationsInput, ctx: Context | None = Non
         stations = await api.fetch_slf_snow_stations()
     except Exception as e:
         error_msg = await _handle_tool_error("env_snow_stations", e, ctx, canton=params.canton)
-        return (
+        raise _terminal_failure(
             f"⚠️ SLF-Stationsliste nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/messwerte-und-messstationen/\n"
         )
@@ -2027,7 +2045,7 @@ async def env_snow_current(params: SnowCurrentInput, ctx: Context | None = None)
         stations = await api.fetch_slf_snow_stations()
     except Exception as e:
         error_msg = await _handle_tool_error("env_snow_current", e, ctx, canton=params.canton)
-        return (
+        raise _terminal_failure(
             f"⚠️ SLF-Schneedaten nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/\n"
         )
@@ -2143,7 +2161,7 @@ async def env_avalanche_bulletin(params: AvalancheBulletinInput, ctx: Context | 
         error_msg = await _handle_tool_error(
             "env_avalanche_bulletin", e, ctx, language=params.language
         )
-        return (
+        raise _terminal_failure(
             f"⚠️ Lawinenbulletin nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/\n"
         )
@@ -2311,7 +2329,7 @@ async def env_hunting_stats(params: HuntingStatsInput, ctx: Context | None = Non
         error_msg = await _handle_tool_error(
             "env_hunting_stats", e, ctx, species=sp_code, canton=params.canton
         )
-        return (
+        raise _terminal_failure(
             f"⚠️ Jagdstatistik nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:** https://www.jagdstatistik.ch/de/home\n"
         )
@@ -2490,7 +2508,7 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
 
     except Exception as e:
         error_msg = await _handle_tool_error("env_bafu_datasets", e, ctx, query=params.query)
-        return (
+        raise _terminal_failure(
             f"⚠️ Datensatzsuche fehlgeschlagen: {error_msg}\n\n"
             "**Direktzugang zum BAFU-Datenkatalog:**\n"
             "- https://opendata.swiss/de/organization/bafu\n"
@@ -2576,7 +2594,7 @@ async def env_bafu_dataset_detail(
         error_msg = await _handle_tool_error(
             "env_bafu_dataset_detail", e, ctx, dataset_id=params.dataset_id
         )
-        return (
+        raise _terminal_failure(
             f"⚠️ Datensatz '{params.dataset_id}' nicht gefunden: {error_msg}\n\n"
             "**Tipp:** Nutze `env_bafu_datasets` um gültige Dataset-IDs zu finden.\n"
             "**BAFU-Datenkatalog:** https://opendata.swiss/de/organization/bafu"

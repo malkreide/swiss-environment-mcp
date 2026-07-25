@@ -9,6 +9,7 @@ JSON-Renderer + ISO-Timestamp + Log-Level → maschinenlesbar für SIEM/Log-Aggr
 """
 
 import logging
+import os
 import sys
 
 import structlog
@@ -16,11 +17,23 @@ import structlog
 _configured = False
 
 
-def configure_logging(level: int = logging.INFO) -> None:
+def _level_from_env(default: int = logging.INFO) -> int:
+    """Liest die Log-Stufe aus `LOG_LEVEL` (z.B. DEBUG/INFO/WARNING); Default INFO.
+
+    Ermöglicht es dem Betrieb, im Fehlerfall die debug-Stufe (Upstream-Requests,
+    Retry-Details) einzuschalten, ohne Code-Änderung (Audit OBS-003).
+    """
+    name = os.environ.get("LOG_LEVEL", "").strip().upper()
+    return logging.getLevelName(name) if name in logging._nameToLevel else default
+
+
+def configure_logging(level: int | None = None) -> None:
     """Konfiguriert structlog idempotent (mehrfacher Aufruf ist sicher)."""
     global _configured
     if _configured:
         return
+    if level is None:
+        level = _level_from_env()
     structlog.configure(
         processors=[
             structlog.contextvars.merge_contextvars,

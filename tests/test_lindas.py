@@ -296,10 +296,15 @@ async def test_bathing_water_unknown_location_actionable():
 
 
 @respx.mock
-async def test_bathing_water_upstream_down_graceful(monkeypatch):
-    """LINDAS down → Graceful Degradation mit Direktzugang statt Stacktrace."""
+async def test_bathing_water_upstream_down_raises_tool_error(monkeypatch):
+    """LINDAS down → terminaler Fehler als ToolError (isError:true, OBS-001),
+    Fehler-Content trägt weiterhin den Direktzugang statt eines Stacktrace."""
+    from mcp.server.fastmcp.exceptions import ToolError
+
     monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
     respx.get(_URL).mock(side_effect=httpx.ConnectError("boom"))
-    out = await env_bathing_water(BathingWaterInput(location="Clendy"))
-    assert "nicht abrufbar" in out
-    assert "Direktzugang" in out
+    with pytest.raises(ToolError) as exc:
+        await env_bathing_water(BathingWaterInput(location="Clendy"))
+    msg = str(exc.value)
+    assert "nicht abrufbar" in msg
+    assert "Direktzugang" in msg

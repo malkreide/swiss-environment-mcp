@@ -11,6 +11,10 @@ services:
       PORT: "8000"
       # In Produktion explizite Origins setzen (Audit SDK-004):
       # MCP_CORS_ALLOW_ORIGINS: https://app.example.ch
+      # OpenTelemetry-Tracing aktivieren (Audit OBS-006) — das Image enthält das
+      # otel-Extra bereits; Tracing startet, sobald der Endpoint gesetzt ist:
+      # OTEL_SERVICE_NAME: swiss-environment-mcp
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
     # Harte Resource-Limits gegen Resource-Exhaustion / Noisy-Neighbour (SCALE-006)
     mem_limit: 256m
     mem_reservation: 128m

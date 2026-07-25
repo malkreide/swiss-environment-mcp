@@ -5,6 +5,31 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Audit-Remediation (Re-Audit 2026-07-25) — Batch 1: Observability
+
+- **OBS-006 — Tracing im Deployment aktivierbar:** Das Docker-Image installiert
+  neu das `[otel]`-Extra (`Dockerfile`); `render.yaml` setzt `OTEL_SERVICE_NAME`
+  und exponiert `OTEL_EXPORTER_OTLP_ENDPOINT` (sync:false), `docker-compose.yml`
+  dokumentiert beide. Tracing bleibt opt-in (No-op ohne Endpoint), ist jetzt aber
+  ohne Rebuild einschaltbar.
+- **OBS-003 — Logging über den Fehlerpfad hinaus:** `trace_tool` bindet je
+  Tool-Call eine Correlation-ID (`request_id`) + `tool` in den Log-Kontext und
+  emittiert `tool_invoked`/`tool_succeeded` (info) bzw. `tool_failed` (error).
+  Ausgehende Upstream-Requests werden auf `debug` geloggt; `LOG_LEVEL` (Env)
+  schaltet die Stufe um. Damit sind vier Severity-Stufen aktiv genutzt.
+
+> **Breaking (OBS-001, JSON-/Protokoll-Konsument:innen):** Terminale
+> Ausführungsfehler (Upstream nicht erreichbar, Egress blockiert) werden neu als
+> `ToolError` geworfen — FastMCP setzt daraufhin `isError:true` im
+> CallToolResult, statt den Fehlertext als *erfolgreiches* Resultat
+> (`isError:false`) zurückzugeben. Die maskierte Meldung und die
+> Direktzugang-Hinweise bleiben im Fehler-Content erhalten; Clients, die bisher
+> den Fehlertext als normalen Output geparst haben, müssen neu `isError`
+> auswerten. Graceful-Degradation-Pfade mit echten Ersatzdaten (z.B.
+> Beispiel-Stationslisten in `env_hydro_stations`) und leere gültige Resultate
+> (`match_type: none`, „keine aktive Warnung") bleiben unveränderte
+> Erfolgs-Resultate.
+
 ## [0.3.0] – 2026-07-25
 
 ### Neu
