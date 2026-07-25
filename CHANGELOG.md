@@ -5,6 +5,26 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Audit-Remediation (Re-Audit 2026-07-25) — Batch 5: Deployment/Scale + Risiko-Akzeptanz
+
+- **SCALE-004 — Image-Size-Gate:** neuer Workflow `.github/workflows/image-size.yml`
+  baut das Runtime-Image und prüft die Grösse gegen ein Regressions-Ceiling
+  (350 MB; das ≤200-MB-Ideal wird durch python-slim + otel-Extra knapp
+  überschritten — das Gate fängt echte Regressionen). Läuft nur bei
+  Image-relevanten Änderungen.
+- **SCALE-006 — Resource-Limits im produktiven Pfad:** `render.yaml` dokumentiert
+  die Plan-`starter`-Deckel (512 MB / 0.5 vCPU, Auto-Restart bei OOM);
+  `docs/scaling.md` ergänzt eine Limits-Tabelle je Deployment-Pfad (Compose/
+  Render/K8s) und ein reproduzierbares OOM-/Restart-Verfahren.
+- **Risiko-Akzeptanz formalisiert (SEC-014, SEC-015, + Re-Evaluations-Trigger):**
+  `docs/security.md` trennt Tool-Allow-Listing (SEC-014) und
+  Tool-Poisoning-Detection (SEC-015), benennt die vier Detektions-Muster­klassen
+  des Katalogs und die verbindlichen Trigger, ab wann die Kontrollen
+  nachzurüsten sind (Auth-Einführung, write-Tools, Gateway-/Multi-Tenant-Betrieb).
+  SCALE-002/003 (Sticky-LB/Shared-State) und SEC-009 (Session-Binding) bleiben
+  dokumentierte Single-Instance-/No-Auth-Akzeptanzen in `docs/scaling.md` bzw.
+  `docs/security.md`.
+
 ### Audit-Remediation (Re-Audit 2026-07-25) — Batch 4: Architektur-Politur
 
 - **ARCH-007 — Parallelisierung unabhängiger interner Calls:**

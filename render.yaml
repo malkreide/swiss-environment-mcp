@@ -2,6 +2,10 @@ services:
   - type: web
     name: swiss-environment-mcp
     runtime: python
+    # Plan 'starter' deckelt die Resources hart auf 512 MB RAM / 0.5 vCPU
+    # (Audit SCALE-006). Render startet den Dienst bei OOM automatisch neu.
+    # Der Server ist single-instance und hält keinen wachsenden State — ein
+    # OOM-Kill ist damit ein sauberer Neustart. Details: docs/scaling.md.
     plan: starter
     # Inkl. otel-Extra, damit Tracing aktivierbar ist (Audit OBS-006).
     buildCommand: pip install -e ".[otel]"

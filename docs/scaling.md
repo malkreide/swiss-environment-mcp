@@ -42,6 +42,22 @@ Pro Container Memory-/CPU-Limits setzen (Multi-Tenant-Scheduling-Schutz);
 Requests < Limits für Burst-Spielraum; `ulimit -n` ≥ 4096 wegen ausgehender
 Connections; restart-policy aktiv für sauberes OOM-Verhalten.
 
+**Nach Deployment-Pfad:**
+
+| Pfad | Memory / CPU | Restart bei OOM |
+|---|---|---|
+| **Docker-Compose** (self-hosted) | `mem_limit: 256m`, `mem_reservation: 128m`, `cpus: 0.5`, `ulimits.nofile 4096/8192` — explizit in `docker-compose.yml` | `restart: unless-stopped` |
+| **Render** (`render.yaml`, Plan `starter`) | Plan-gebunden: 512 MB RAM / 0.5 vCPU (Render deckelt hart auf Plan-Ebene) | Render startet den Dienst bei OOM automatisch neu (managed) |
+| **Kubernetes** | `resources.requests/limits` im Pod-Spec setzen (Werte analog Compose) + `restartPolicy: Always` | kubelet killt+restartet bei Limit-Überschreitung |
+
+**OOM-Verhalten (verifizierbar):** Der Prozess ist single-instance und hält
+keinen unbeschränkt wachsenden State (kein Session-Store, gecachte Codelisten
+sind klein). Ein OOM-Kill ist damit ein sauberer Neustart ohne Datenverlust.
+Lokal reproduzierbar: `docker run --memory=64m …` erzwingt einen OOM-Kill; der
+Container wird durch die restart-policy neu gestartet, der `/health`-Endpoint ist
+danach wieder grün. Ein knappes `--memory` unterhalb des Startbedarfs zeigt den
+CrashLoop, ein realistisches Limit (≥ 256 MB) läuft stabil.
+
 ## SPARQL-Client (Portfolio-Baustein)
 
 Der SPARQL-/JSON-Retry-Client ist in `sparql_client.py` isoliert: abhängigkeitsarm

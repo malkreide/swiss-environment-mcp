@@ -59,17 +59,40 @@ Requests hinweg persistiert und keine sensiblen Daten an eine Session gebunden.
 kryptografisch zufällige Session-IDs, Bindung an den validierten `sub`-Claim,
 explizite TTL und serverseitige Invalidierung bei Logout.
 
-## Tool-Poisoning / Gateway (SEC-015)
+## Tool-Allow-Listing / Gateway (SEC-014)
 
-Der Server läuft als eigenständiger, read-only Public-Data-Server **ohne**
-vorgelagertes MCP-Gateway. Eine Pre-Flight-Tool-Poisoning-Detection ist daher
-nicht implementiert und für dieses Profil nicht erforderlich. Die Tool-Integrität
-wird stattdessen über den **Tool-Definition-Snapshot** (`tool-snapshot.json`,
-SEC-022, CI-Gate) gegen unbemerkte Änderungen («Rug Pull») abgesichert.
+Der Server hat **kein Auth-Modell** und exponiert ausschliesslich read-only
+Public-Data-Tools; `tools/list` ist für alle Clients identisch. Ein rollen-/
+teambasiertes Tool-Allow-Listing (default-deny) und die Auditierung
+abgelehnter Tool-Aufrufe sind daher **nicht** implementiert — für dieses Profil
+eine bewusste, dokumentierte Risiko-Akzeptanz.
 
-Sollte der Server in einem Enterprise-Kontext hinter ein Gateway gestellt
-werden, ist dort Tool-Allow-Listing (default-deny) und Prompt-Injection-Filtering
-zu ergänzen.
+**Re-Evaluations-Trigger (verbindlich):** Sobald (a) ein Auth-Modell eingeführt
+wird, (b) write-fähige Tools hinzukommen oder (c) der Server in einem
+Enterprise-/Multi-Tenant-Kontext betrieben wird, ist ein vorgelagertes
+MCP-Gateway mit Tool-Allow-List pro Rolle und 403-Auditierung zwingend
+nachzurüsten.
+
+## Tool-Poisoning-Detection (SEC-015)
+
+Der Server läuft eigenständig **ohne** vorgelagertes MCP-Gateway und aggregiert
+**keine fremden Tool-Definitionen** — die einzige Tool-Quelle ist dieser Server
+selbst. Eine Pre-Flight-Tool-Poisoning-Detection ist daher nicht implementiert.
+Die Integrität der eigenen Tool-Definitionen wird über den
+**Tool-Definition-Snapshot** (`tool-snapshot.json`, SEC-022, CI-Gate) gegen
+unbemerkte Änderungen («Rug Pull») abgesichert.
+
+**Was ein Gateway-Deployment ergänzen müsste** — die vier Detektions-Muster­klassen
+des Katalogs, sobald fremde Tool-Definitionen ins Spiel kommen:
+
+1. eingebettete System-Prompts / Instruktionen in Tool-Descriptions,
+2. Override-/Jailbreak-Phrasen («ignore previous instructions» u. ä.),
+3. unsichtbare Steuerzeichen (Zero-Width, Bidi-Overrides),
+4. Homoglyphen / Look-alike-Unicode in Namen und Beschreibungen.
+
+**Re-Evaluations-Trigger:** Sobald der Server hinter ein Gateway gestellt wird
+oder Tools Dritter mountet, sind diese vier Muster als default-deny-Filter mit
+SIEM-Alerting zu implementieren und gegen Standard-Angriffsmuster zu testen.
 
 ## Egress-Kontrolle (SEC-021)
 
