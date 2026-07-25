@@ -138,6 +138,12 @@ docker run -p 8000:8000 swiss-environment-mcp
 
 ## Available Tools
 
+All tools share the stable `env_` name prefix — a deliberate namespace choice so
+that the server's tools are recognisable and unlikely to collide when several MCP
+servers are mounted together. Tool definitions (name, description, input schema)
+are pinned via `tool-snapshot.json`; changes require a CHANGELOG entry (see
+CONTRIBUTING).
+
 ### 🌬️ Air Quality / NABEL (3 tools)
 
 | Tool | Description | Data Source |

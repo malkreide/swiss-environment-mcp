@@ -5,6 +5,24 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Audit-Remediation (Re-Audit 2026-07-25) — Batch 3: Security-Härtung
+
+- **SEC-005 — eine DNS-Resolution pro Request:** `assert_host_allowed()` prüft
+  nur noch Schema + Allow-List; die DNS-Auflösung samt IP-Blocklist erfolgt
+  **einmalig** im `_PinnedTransport` unmittelbar vor dem Connect (zuvor lösten
+  Guard *und* Transport je einmal auf → zwei `getaddrinfo`-Calls). Zwei neue
+  Tests verifizieren: der Guard löst gar nicht mehr auf, der Transport genau
+  einmal (Connect-Ziel = gepinnte IP).
+- **SEC-021 — deploybares Network-Layer-Egress-Artefakt:**
+  `deploy/network-policy.example.yaml` (vanilla `NetworkPolicy` + Cilium-FQDN-
+  Egress auf exakt die Allow-List-Hosts). `docs/security.md` und CONTRIBUTING
+  dokumentieren das verbindliche Verfahren für Allow-List-Erweiterungen
+  (PR-Begründung, Manifest-Sync, CHANGELOG-Pflicht, Zweit-Review).
+- **SEC-022 — Tool-Definitions-Governance dokumentiert:** CONTRIBUTING hält
+  Snapshot-Regenerierung + expliziten Client-Re-Approval-Hinweis bei
+  breaking Tool-Änderungen fest; das stabile `env_`-Präfix ist als bewusste
+  Namespace-Entscheidung in beiden READMEs erklärt.
+
 ### Audit-Remediation (Re-Audit 2026-07-25) — Batch 2: Test-Coverage (OPS-001)
 
 - **Gemockte Unit-Tests für die drei bisher ungetesteten Tools** (Happy Path +

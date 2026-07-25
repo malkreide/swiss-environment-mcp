@@ -73,9 +73,27 @@ zu ergänzen.
 
 ## Egress-Kontrolle (SEC-021)
 
-- **Code-Layer:** `ALLOWED_HOSTS` (frozenset) in `api_client.py`;
+- **Code-Layer (immer aktiv):** `ALLOWED_HOSTS` (frozenset) in `api_client.py`;
   `assert_host_allowed()` läuft vor jedem ausgehenden Request (HTTPS-Zwang,
-  Host-Whitelist, IP-Blocklist gegen private/loopback/link-local).
-- **Network-Layer (empfohlen für Cloud):** zusätzlich eine NetworkPolicy /
-  Security-Group, die ausgehenden Traffic auf die BAFU-/opendata.swiss-Hosts
-  beschränkt. DNS-Auflösung für diese Hosts muss erlaubt bleiben.
+  Host-Whitelist). Die DNS-Auflösung + IP-Blocklist (private/loopback/
+  link-local) erfolgt **einmalig** im `_PinnedTransport` unmittelbar vor dem
+  Connect (SEC-005: eine Resolution pro Request, kein TOCTOU-Fenster).
+- **Network-Layer (deploybar, Kubernetes):** `deploy/network-policy.example.yaml`
+  liefert ein konkretes Artefakt — eine vanilla `NetworkPolicy` (DNS + 443) und
+  eine Cilium-`CiliumNetworkPolicy` mit FQDN-Egress, die exakt die Allow-List-
+  Hosts freigibt. Es ist Defense-in-Depth zum Code-Layer und **muss mit
+  `ALLOWED_HOSTS` synchron** gehalten werden (Verfahren: CONTRIBUTING.md).
+- **Render/Docker-Compose:** bieten keine hostbasierte Egress-Beschränkung auf
+  App-Ebene; dort bleibt der Code-Layer die massgebliche Kontrolle.
+
+### Allow-List erweitern (verbindliches Verfahren)
+
+Eine Änderung an `ALLOWED_HOSTS` ist eine sicherheitsrelevante Erweiterung der
+Angriffsfläche und durchläuft daher:
+
+1. **PR mit expliziter Begründung**, welcher neue Host warum nötig ist
+   (Datenquelle, Endpoint, Lizenz).
+2. **`deploy/network-policy.example.yaml` im selben PR mitziehen** (FQDN-Liste).
+3. **CHANGELOG-Eintrag** unter Security (neuer Egress-Host = dokumentierte
+   Änderung des Sicherheitsprofils).
+4. Review durch eine zweite Person (kein Self-Merge von Egress-Änderungen).

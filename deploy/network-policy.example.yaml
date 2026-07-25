@@ -1,0 +1,74 @@
+# Deploybares Network-Layer-Egress-Artefakt (Audit SEC-021).
+#
+# Der Code-Layer (`ALLOWED_HOSTS` in api_client.py + DNS-Pinning im
+# _PinnedTransport) ist die primäre und immer aktive Egress-Kontrolle. Auf
+# Plattformen mit Netzwerk-Policies (Kubernetes) sollte zusätzlich eine
+# Network-Layer-Beschränkung deployt werden — Defense-in-Depth, damit ein
+# kompromittierter Prozess nicht an der App-Logik vorbei ausgehen kann.
+#
+# WICHTIG: Die exakte Host-Liste MUSS mit `ALLOWED_HOSTS` in
+# `src/swiss_environment_mcp/api_client.py` synchron gehalten werden. Das
+# Update-Verfahren ist in CONTRIBUTING.md dokumentiert.
+#
+# Hinweis Render/Docker-Compose: Diese Plattformen bieten keine
+# hostbasierte Egress-Beschränkung auf App-Ebene. Dort bleibt der Code-Layer
+# die massgebliche Kontrolle; dieses Manifest gilt für Kubernetes-Deployments.
+---
+# Variante A — vanilla NetworkPolicy: erlaubt DNS + ausgehendes HTTPS (443),
+# beschränkt aber NICHT auf einzelne Hostnamen (NetworkPolicy egress ist
+# CIDR-/Namespace-basiert, nicht DNS-hostbasiert). Bereits eine sinnvolle
+# Reduktion (nur 443 + DNS), reicht für hostgenaue Kontrolle aber nicht.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: swiss-environment-mcp-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: swiss-environment-mcp
+  policyTypes: [Egress]
+  egress:
+    - to:  # DNS-Auflösung muss erlaubt bleiben
+        - namespaceSelector: {}
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+    - ports:  # ausgehendes HTTPS
+        - { protocol: TCP, port: 443 }
+---
+# Variante B — Cilium FQDN-Egress: hostgenaue Beschränkung auf exakt die
+# Allow-List-Hosts (erfordert Cilium als CNI). Dies ist die Network-Layer-
+# Entsprechung zu ALLOWED_HOSTS.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: swiss-environment-mcp-fqdn-egress
+spec:
+  endpointSelector:
+    matchLabels:
+      app: swiss-environment-mcp
+  egress:
+    - toEndpoints:  # DNS zu kube-dns erlauben (für die FQDN-Auflösung nötig)
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - { port: "53", protocol: ANY }
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:  # MUSS mit ALLOWED_HOSTS synchron sein
+        - matchName: www.hydrodaten.admin.ch
+        - matchName: opendata.swiss
+        - matchName: www.naturgefahren.ch
+        - matchName: www.waldbrandgefahr.ch
+        - matchName: www.bafu.admin.ch
+        - matchName: map.bafu.admin.ch
+        - matchName: lindas.admin.ch
+        - matchName: measurement-api.slf.ch
+        - matchName: aws.slf.ch
+        - matchName: www.jagdstatistik.ch
+      toPorts:
+        - ports:
+            - { port: "443", protocol: TCP }

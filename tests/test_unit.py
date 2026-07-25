@@ -220,6 +220,45 @@ def test_client_uses_pinned_transport():
     assert isinstance(c._transport, api._PinnedTransport)
 
 
+def test_assert_host_allowed_does_not_resolve(monkeypatch):
+    """SEC-005: der Egress-Guard löst NICHT auf — die eine Resolution macht der Transport."""
+    calls = {"n": 0}
+
+    def counting(host, port, *a, **k):
+        calls["n"] += 1
+        return [(2, 1, 6, "", ("185.27.134.1", 443))]
+
+    monkeypatch.setattr(api.socket, "getaddrinfo", counting)
+    api.assert_host_allowed("https://opendata.swiss/api/3/action/package_search")
+    assert calls["n"] == 0  # Schema+Allow-List only, keine DNS-Auflösung mehr
+
+
+async def test_pinned_transport_resolves_once(monkeypatch):
+    """SEC-005: genau EINE DNS-Resolution pro Request, im gepinnten Transport."""
+    calls = {"n": 0}
+
+    def counting(host, port, *a, **k):
+        calls["n"] += 1
+        return [(2, 1, 6, "", ("185.27.134.1", 443))]
+
+    monkeypatch.setattr(api.socket, "getaddrinfo", counting)
+    monkeypatch.setattr(api, "dns_pin_enabled", True)
+
+    captured = {}
+
+    async def fake_super(self, request):
+        captured["host"] = request.url.host
+        return httpx.Response(200, request=request)
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request", fake_super)
+
+    transport = api._PinnedTransport()
+    resp = await transport.handle_async_request(httpx.Request("GET", "https://opendata.swiss/x"))
+    assert resp.status_code == 200
+    assert calls["n"] == 1  # exakt eine Resolution
+    assert captured["host"] == "185.27.134.1"  # Connect-Ziel = gepinnte IP
+
+
 # --- Health-Endpoint (SCALE-004 / SEC-016) ------------------------------------
 
 
