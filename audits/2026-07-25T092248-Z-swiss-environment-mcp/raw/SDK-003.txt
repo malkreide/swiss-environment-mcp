@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "category": "SDK",
+  "severity": "medium",
+  "evidence": [
+    "Alle 18 Tools deklarieren ctx: Context | None und werden per FastMCP-DI versorgt, auch das neue env_bathing_water (src/swiss_environment_mcp/server.py:819-2512, z.B. 1482)",
+    "Fehler werden nicht stumm geschluckt: zentrale _handle_tool_error meldet via ctx.warning an den Client und loggt strukturiert (server.py:79-101; genutzt z.B. in env_bathing_water server.py:1627-1630); Verhalten getestet (tests/test_unit.py:260-270)",
+    "Kein print()/stdout-Logging: structlog schreibt ausschliesslich nach stderr (src/swiss_environment_mcp/logging_setup.py:34-35), grep nach print( in src/ liefert 0 Treffer — stdio-Transport-sicher"
+  ],
+  "gaps": [
+    "ctx.report_progress wird nirgends genutzt; env_bathing_water kettet bis zu 4 sequentielle SPARQL-Queries und könnte bei langsamem LINDAS >2 s laufen, ohne Progress-Events"
+  ],
+  "evaluator_notes": "Context-Injection und Fehler-Reporting sind flächendeckend; die Tools sind kurze API-Calls, nur der neue Mehrfach-Query-Pfad des Badegewässer-Tools wäre ein Kandidat für Progress-Reports. Keine schreibenden Tools, daher kein ctx.elicit nötig."
+}

@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "medium",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py — 18× <use_case> und 18× <important_notes> (grep-Count) = 100% der 18 Tools, deutlich über der 80%-Schwelle; auch die neuen Tools (env_bathing_water src/swiss_environment_mcp/server.py:1491-1495, env_snow_current src/swiss_environment_mcp/server.py:2010-2013, env_hunting_stats src/swiss_environment_mcp/server.py:2277-2280)",
+    "src/swiss_environment_mcp/server.py:886-897, 1297-1301 — Important-Notes mit echten Caveats (env_nabel_current: 'keine Echtzeit-Rohwerte'; env_hydro_history: 'LINDAS liefert nur den aktuellen Wert (keine Zeitreihe)')",
+    "src/swiss_environment_mcp/server.py:1930-1934, 2126-2130 — explizite Differenzierung ähnlicher Tools ('Kein Niederschlags-Tool (→ meteoswiss-mcp)', 'Für Schneehöhen → env_snow_current')",
+    "tests/test_unit.py:390 — CI-Test test_all_tools_have_use_case_tag verhindert Regression; Median-Description-Länge weit über 100 Zeichen (mehrzeilige Docstrings mit Args/Returns)"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Alle 18 Tools tragen strukturierte <use_case>/<important_notes>-Tags, per CI-Test abgesichert. Der neue Code (env_bathing_water, SLF, Jagd) hält den Standard vollständig ein."
+}

@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "OPS",
+  "severity": "high",
+  "evidence": [
+    "README.md:306-314 — Sektion 'Lifecycle Phase': 'This server is in Phase 1 (read-only) — all tools read-only, no auth, no side effects' mit Verweis auf docs/roadmap.md und docs/security.md",
+    "docs/roadmap.md:1-42 — Phasenmodell (1 Read-only ✅ / 2 Write-Auth / 3 Multi-Agent) mit expliziten Übergangs-Voraussetzungen (Audit ohne critical/high, ISDS/DSG bei Personendaten, OAuth/OIDC, Trifecta-Neubewertung, Secret-Manager) und 'Phasenübergänge werden im CHANGELOG dokumentiert'",
+    "src/swiss_environment_mcp/server.py — Phase deckt sich mit den Annotations: 18/18 Tools readOnlyHint:True, 0× destructiveHint:True (grep), auch alle NEUEN Tools (env_bathing_water src/swiss_environment_mcp/server.py:1471-1479, SLF, Jagd) sind reine Read-Tools ohne Auth",
+    "src/swiss_environment_mcp/api_client.py:84-97 — Egress-Allow-List (frozenset, 10 Gov-Hosts) untermauert das Phase-1-Profil; die drei neuen Hosts (measurement-api.slf.ch, aws.slf.ch, www.jagdstatistik.ch) wurden kontrolliert ergänzt"
+  ],
+  "gaps": [
+    "docs/roadmap.md:7 nennt noch 'Alle 12 Tools' (tatsächlich 18) — die Phase-Deklaration wurde bei den Tool-Erweiterungen nicht nachgeführt (inhaltlich bleibt die Aussage korrekt: alle read-only)"
+  ],
+  "evaluator_notes": "Phase 1 ist deklariert, dokumentiert (Roadmap mit Übergangs-Gates) und deckt sich mit den tatsächlichen Tool-Annotations — auch für den gesamten neuen Code. Nur der Tool-Zähler in der Roadmap ist veraltet."
+}

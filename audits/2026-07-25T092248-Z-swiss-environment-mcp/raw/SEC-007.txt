@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "high",
+  "evidence": [
+    "Dockerfile:20-22 — Non-root-User mit UID/GID 10001 (groupadd --system --gid 10001 / useradd --uid 10001, --no-create-home)",
+    "Dockerfile:35 — 'USER app' vor dem CMD; Prozess läuft nicht als root",
+    "Dockerfile:1-12 — Multi-Stage-Build (builder baut Wheel, Runtime-Stage installiert nur das Wheel; kein Build-Toolchain im Runtime-Image)",
+    "Dockerfile:38-41 — HEALTHCHECK gegen /health; docker-compose.yml — mem_limit 256m, cpus 0.5, ulimits nofile (Ressourcen-Begrenzung); Docker-Default-seccomp-Profil bleibt aktiv (nirgends 'seccomp:unconfined'/privileged gesetzt)",
+    "Server exponiert keine Filesystem-Tools (alle 18 Tools read-only auf externe APIs) — Volume-Allow-List-Kriterium nicht anwendbar"
+  ],
+  "gaps": [
+    "docker-compose.yml setzt kein read_only: true, kein cap_drop: [ALL] und kein security_opt (no-new-privileges) — Container-Filesystem bleibt beschreibbar",
+    "Keine Kubernetes-Manifeste (runAsNonRoot/readOnlyRootFilesystem/capabilities-Kriterien entfallen); für Render existiert kein deklaratives Sandbox-Hardening"
+  ],
+  "evaluator_notes": "Kern-Kriterien erfüllt: Non-root UID 10001, Multi-Stage-Image, Default-seccomp, Ressourcen-Limits, keine File-Tools. Empfohlene Nachschärfung: read_only/cap_drop im docker-compose-Beispiel."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "OPS",
+  "severity": "medium",
+  "evidence": [
+    "README.md:28 — konkrete natürlich-sprachliche Anchor-Demo-Query ('What is the current air quality at the NABEL station Zürich-Kaserne – and does it comply with WHO 2021 guidelines?') + 3 weitere Quickstart-Fragen (README.md:87-91) + Query→Tool-Tabelle (README.md:191-203)",
+    "README.md:218-244 — ASCII-Architekturdiagramm (Box-Drawing, Host→Server→Quellen) inkl. neuer Architektur-Notiz zum extrahierbaren lindas/-Modul und Datenquellen-/Lizenz-Tabelle",
+    "README.md:316-… — 'Known Limitations' mit >3 expliziten Limits (LINDAS nur Aktualwerte, BUG-01/404-Endpoints, Kantonsfilter-Einschränkung, …); Safety&Limits-Tabelle README.md:204-216 (Access/Rate-Limits/Lizenz/ToS)",
+    "Alle 8 Pflicht-Sektionen vorhanden (Anchor:28, Installation:55, Tools:139, Configuration:95, Security:204+385, Architecture:218, Limits:316, License:398); README.de.md hält alle Top-Level-Sektionen synchron; CHANGELOG.md im Keep-a-Changelog-Format; CONTRIBUTING.md + CONTRIBUTING.de.md bilingual"
+  ],
+  "gaps": [
+    "Doku-Drift zum neuen Code: Architekturdiagramm und Projektstruktur nennen '12 Tools · 3 Resources' (tatsächlich 18 Tools) und das Diagramm zeigt die neuen Upstreams (lindas.admin.ch, measurement-api.slf.ch/aws.slf.ch, jagdstatistik.ch) nicht als Boxen — nur die Datenquellen-Tabelle ist aktuell",
+    "docs/roadmap.md:7 ebenfalls stale ('Alle 12 Tools')"
+  ],
+  "evaluator_notes": "Alle Pflicht-Sektionen inkl. Anchor-Query, ASCII-Diagramm und substanzieller Limits-Sektion sind in beiden Sprachen vorhanden — Kriterien erfüllt. Der Zähler-/Diagramm-Drift ('12 Tools' statt 18, fehlende neue Quellen-Boxen) sollte beim nächsten Release nachgezogen werden."
+}

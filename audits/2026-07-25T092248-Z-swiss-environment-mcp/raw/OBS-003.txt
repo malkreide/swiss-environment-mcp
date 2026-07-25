@@ -1,0 +1,18 @@
+{
+  "status": "partial",
+  "category": "OBS",
+  "severity": "medium",
+  "evidence": [
+    "pyproject.toml:28 — structlog>=24.1.0 in den Haupt-Dependencies",
+    "src/swiss_environment_mcp/logging_setup.py:24-37 — JSONRenderer + ISO-TimeStamper + add_log_level + merge_contextvars; WriteLoggerFactory(file=sys.stderr)",
+    "src/swiss_environment_mcp/server.py:72-73 — configure_logging() beim Modul-Import, Logger mit gebundenem Initial-Kontext (server=...)",
+    "src/swiss_environment_mcp/server.py:89-95 — Fehlerpfad loggt strukturiert mit gebundenen Feldern (event tool_error, tool, error_type, detail, tool-spezifische Parameter); verifiziert in tests/test_unit.py:260-270 via capture_logs",
+    "grep 'print(' src/ → 0 Treffer (keine print-Statements im Tool-Code)"
+  ],
+  "gaps": [
+    "Nur die Severity-Stufe 'warning' wird aktiv genutzt (server.py:89, server.py:2641) — gefordert sind mindestens 4 aktiv genutzte Stufen (debug/info/warning/error).",
+    "Kein Log-Event pro Tool-Call (kein tool_invoked/tool_succeeded); Logging existiert nur im Fehlerpfad.",
+    "Kein session_id/correlation_id im gebundenen Kontext — Multi-Step-Workflows sind nicht korrelierbar."
+  ],
+  "evaluator_notes": "Fundament stimmt (structlog, JSON, stderr, gebundene Felder, keine prints), aber die Nutzung ist auf den Fehlerpfad mit einer einzigen Severity-Stufe beschränkt. Erfolgs-/Invocation-Logging mit Correlation-ID und weiteren Stufen fehlt → partial."
+}

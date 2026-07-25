@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "SDK",
+  "severity": "medium",
+  "evidence": [
+    "Pydantic >= 2.0 als Dependency (pyproject.toml:26-27)",
+    "Typisierter ResponseEnvelope als BaseModel mit source/provenance/count/match_type(Literal)/results(Field default_factory)/note (src/swiss_environment_mcp/server.py:343-381)",
+    "Envelope konsistent in den Such-/Listen-Tools inkl. des neuen env_bathing_water (JSON-Modus via _envelope_json mit match_type exact/fuzzy/none, server.py:1541-1549, 1594-1606); Envelope-Struktur getestet (tests/test_unit.py:328-336)",
+    "Alle 18 Tools haben explizite Return-Annotationen (-> str, z.B. server.py:1482) und Literal-/Enum-Typen für enumerierbare Werte (MatchType server.py:343, ResponseFormat server.py:337-339)"
+  ],
+  "gaps": [
+    "Markdown-String bleibt Default-Rückgabeformat; die Tools annotieren -> str statt BaseModel direkt, FastMCP exponiert daher kein strukturiertes Output-Schema im tools/list-Manifest (bewusste UX-Entscheidung, JSON-Modus liefert den validierten Pydantic-Dump)"
+  ],
+  "evaluator_notes": "Der Envelope ist ein validiertes Pydantic-Modell und wurde für das neue LINDAS-Tool konsistent weitergeführt (inkl. Lizenz im source-Feld); der bekannte, bereits im letzten Audit akzeptierte Trade-off (str-Serialisierung statt Modell-Return) bleibt als Gap dokumentiert."
+}

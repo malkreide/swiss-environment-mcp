@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "medium",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:808-2510 — alle 18 Tools folgen einheitlich snake_case mit `env_`-Präfix (env_nabel_stations … env_bafu_dataset_detail); keine Spaces/Punkte/Klammern/Sonderzeichen (grep über alle @mcp.tool(name=…))",
+    "src/swiss_environment_mcp/server.py:1471-1495 — NEUES Tool env_bathing_water hält die Convention und liefert Use-Case-Kontext in der Description (<use_case>Wasserqualität einer Badestelle prüfen…</use_case>)",
+    "src/swiss_environment_mcp/server.py:819-838, 2002-2023 — Descriptions sind mehrsätzig mit Kontext (Datenquelle, Einheiten, Folge-Tool-Hinweise), kein Ein-Satz-Anti-Pattern",
+    "tests/test_unit.py:390 — test_all_tools_have_use_case_tag erzwingt Use-Case-Kontext in jeder Tool-Description via CI"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Einheitliche snake_case-Convention (env_-Präfix als Namespace) über alle 18 Tools inkl. der neuen SLF-/Jagd-/Bathing-Tools; Descriptions enthalten durchgängig Use-Case und Kontext. camelCase wäre bevorzugt, snake_case ist laut Check explizit akzeptabel."
+}

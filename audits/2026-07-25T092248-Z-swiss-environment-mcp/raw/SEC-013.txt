@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "high",
+  "evidence": [
+    "docs/security.md (Abschnitt 'Secret-Management (SEC-013)') — dokumentierter Entscheid: Server benötigt keine Secrets/API-Keys (Public Open Data), Stufe 1 bewusst gewählt; Eskalationspfad auf Stufe 3 (Secret-Manager EU/CH + SecretStr) für künftige authentifizierte Upstreams festgehalten",
+    "src/swiss_environment_mcp/ — kein Secret-Loading im Code: einzige Env-Reads sind OTEL_EXPORTER_OTLP_ENDPOINT/OTEL_SERVICE_NAME (tracing.py:30,44-45) und Transport-Settings (server.py:58-64); grep nach KEY/SECRET/TOKEN/PASSWORD in src/ ohne Treffer",
+    "Dockerfile:28-31 — ENV-Layer enthält nur MCP_TRANSPORT/MCP_HOST/PORT (nicht-geheime Werte); keine Secrets in Image-Layern",
+    ".env.example:4-6 — dokumentiert explizit 'benötigt KEINE Secrets / API-Keys' und listet nur Transport-Variablen",
+    ".github/workflows/security.yml — gitleaks-Scan (History + Working Tree, --redact) auf jedem Push/PR als CI-Gate"
+  ],
+  "gaps": [
+    "Rotation-/Secret-Manager-Kriterien sind mangels Secrets nicht anwendbar; bei künftigem authentifiziertem Upstream ist der dokumentierte Wechsel auf Stufe 3 zwingend umzusetzen"
+  ],
+  "evaluator_notes": "Der Server verarbeitet ausschliesslich Public Open Data und hält null Secrets — die für dieses Profil geforderte dokumentierte Stufe-1-Begründung liegt in docs/security.md vor, flankiert von gitleaks-CI und secret-freien Image-Layern."
+}

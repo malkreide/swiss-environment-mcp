@@ -1,0 +1,17 @@
+{
+  "status": "partial",
+  "category": "OPS",
+  "severity": "high",
+  "evidence": [
+    "tests/test_unit.py (56 Tests) + tests/test_lindas.py (16 Tests) — respx-gemockte Unit-Tests inkl. Happy-/Error-/Edge-Pfaden; der NEUE lindas-Code ist gut abgedeckt (client 400/Timeout/Retry/POST, cube-Dedup/Label-Resolution/Injection-Guard, Bathing-Water happy/not-found/degradation tests/test_lindas.py:51-305)",
+    "tests/test_integration.py:23 — 'pytestmark = pytest.mark.live': 16 Live-Tests decken fast alle Tools inkl. der neuen (test_bathing_water_lindas:177, test_slf_snow:202, test_hunting_stats:224)",
+    "pyproject.toml [tool.pytest.ini_options] — live-Marker registriert ('live: Test trifft echte BAFU-Live-APIs …'); respx als dev-Dependency",
+    ".github/workflows/ci.yml:44-48 — CI läuft 'pytest -m \"not live\"'; .github/workflows/live-tests.yml — separater nightly-Workflow (cron 0 4 * * *) + workflow_dispatch; Live-Tests brauchen keine Credentials (auth-freie Public-APIs, SEC-013 gegenstandslos)"
+  ],
+  "gaps": [
+    "Quantitatives Kriterium 'mind. 5 Unit-Tests pro Tool' verfehlt (72 gemockte Tests / 18 Tools ≈ 4): env_hazard_overview, env_hazard_regions und env_wildfire_danger haben KEINE gemockten Unit-Tests (nur Live-Tests) — Fehlerpfade dieser drei Tools sind in CI ungetestet",
+    "Kein Live-Test für env_avalanche_bulletin und env_snow_stations als eigenständige Tools (nur indirekt via test_slf_snow)",
+    "tests/test_20_scenarios.py ist ein Standalone-Skript ohne pytest-Testfunktionen (0 collected) und im Docstring veraltet ('Alle 12 Tools')"
+  ],
+  "evaluator_notes": "Die Test-Strategie (mocked/live-Trennung, Marker, CI-Exklusion, nightly Workflow) ist vollständig und der neue LINDAS-Code überdurchschnittlich getestet. Partial wegen der ungemockten Hazard-Tools und verfehlter Per-Tool-Quoten."
+}

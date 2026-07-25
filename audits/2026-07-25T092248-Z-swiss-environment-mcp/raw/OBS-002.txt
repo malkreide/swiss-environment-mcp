@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "OBS",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/api_client.py:250-252 — Catch-all-Pfad liefert generische Meldung ('Unerwarteter interner Fehler') ohne Exception-Typ/-Text; Kommentar referenziert OBS-002 explizit — funktionales Äquivalent zu mask_error_details=True (das offizielle mcp-SDK-FastMCP kennt diesen Parameter nicht)",
+    "src/swiss_environment_mcp/server.py:79-101 — _handle_tool_error: maskierte Meldung ans LLM, echte Details (error_type, detail) ausschliesslich ins strukturierte stderr-Server-Log (logger.warning 'tool_error')",
+    "grep 'traceback|format_exc|sys.exc_info' src/ → nur logging_setup.py:30 (format_exc_info-Prozessor fürs Server-Log); keine Traceback-Ausgabe in Tool-Returns",
+    "src/swiss_environment_mcp/api_client.py:230-234 — QueryError-MALFORMED-Meldung wird bewusst und begründet durchgereicht (Kommentar: Meldung stammt vom öffentlichen SPARQL-Endpoint, benennt die fehlerhafte Query-Stelle, keine Server-Interna) — entspricht dem im Check geforderten Muster 'Execution-Errors user-friendly, Server-Crashes generisch'",
+    "tests/test_unit.py:242-246 — Leak-Test: interne Exception-Details erscheinen nicht im LLM-Result; tests/test_lindas.py:64-75 deckt QueryError/QueryTimeoutError-Meldungen ab",
+    "Log-Schutz: Server hat keine Auth/Tokens (öffentliche Datenquellen, docs/security.md), geloggte Felder sind Tool-Name, Fehlertyp und Query-Parameter öffentlicher APIs — kein Klartext-Token, kein PII"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Maskierung ist zentralisiert und getestet; Originalfehler gehen nur ins strukturierte stderr-Log. Die unmaskierte LINDAS-MALFORMED-Meldung ist eine dokumentierte, OBS-001-konforme Ausnahme für deterministische Execution-Errors: sie enthält Server-Feedback des öffentlichen Endpoints zur Query, keine eigenen Interna — im Sinne von OBS-002 begründet."
+}

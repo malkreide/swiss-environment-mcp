@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "SCALE",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:58 — Settings.mcp_transport: str = \"stdio\" (ENV-basierte Transport-Selektion via pydantic-settings, MCP_TRANSPORT)",
+    "src/swiss_environment_mcp/server.py:2656-2677 — main() schaltet zwischen streamable-http (uvicorn + build_cors_app), sse und stdio; Host/Port aus settings.mcp_host/settings.port",
+    "render.yaml:9-16 — Deployment-Manifest setzt MCP_TRANSPORT=streamable-http, MCP_HOST=0.0.0.0, PORT=8000 explizit; Dockerfile:28-30 und Procfile:1 identisch",
+    "Runtime-Test (Audit-Lauf): Server mit MCP_TRANSPORT=streamable-http gestartet, POST /mcp initialize → HTTP 200 mit Capabilities-Response (serverInfo swiss_environment_mcp, protocolVersion 2025-03-26); /health → HTTP 200",
+    "Keine WebSocket-Implementierung: grep -riE 'websocket' src/ → 0 Treffer"
+  ],
+  "gaps": [
+    "Der Live-Cloud-Endpoint (Render-URL) wurde nicht direkt angefragt; der initialize-Nachweis erfolgte gegen das identische Artefakt lokal mit der Cloud-Transport-Konfiguration."
+  ],
+  "evaluator_notes": "Transport-Selektion folgt exakt dem Pass-Pattern: stdio-Default (SEC-016-konform mit 127.0.0.1-Host-Default), Cloud-Manifeste setzen streamable-http explizit, kein WebSocket-Code. Runtime-Verifikation des initialize-Handshakes über Streamable HTTP erfolgreich."
+}

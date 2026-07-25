@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "critical",
+  "evidence": [
+    "src/swiss_environment_mcp/api_client.py:149-150 — assert_host_allowed() erzwingt HTTPS (SecurityError bei anderem Schema) vor jedem Request",
+    "src/swiss_environment_mcp/api_client.py:84-97 — Egress-Allow-List ALLOWED_HOSTS als frozenset (10 fixe Gov-Hosts); Host-Check in Zeile 152-153; kein Tool nimmt URLs aus User-Input entgegen",
+    "src/swiss_environment_mcp/api_client.py:111-119 — _is_blocked_ip blockt private/loopback/link_local (inkl. 169.254.169.254)/reserved/multicast/unspecified; deckt via ipaddress auch IPv6 ::1 und fe80::/10 ab",
+    "src/swiss_environment_mcp/api_client.py:157-175 — _PinnedTransport: Resolution + Blocklist-Check + Connect auf geprüfte IP im selben Schritt (kein TOCTOU); Zeile 192 follow_redirects=False",
+    "src/swiss_environment_mcp/api_client.py:217-223 und 271-278 — jeder GET-Pfad (_get_json) ruft assert_host_allowed; LINDAS-Pfad run_sparql übergibt egress_check=assert_host_allowed an lindas.client.select",
+    "src/swiss_environment_mcp/lindas/client.py:113-114 — select() ruft den injizierten egress_check(endpoint) vor GET wie POST auf; genutzter HTTP-Client ist der geteilte Pinned-Client (api_client.py:183-193)",
+    "tests/test_unit.py:169-200 — Tests: unbekannter Host blockiert, Nicht-HTTPS blockiert, interne aufgelöste IP (169.254.169.254) blockiert"
+  ],
+  "gaps": [
+    "Kein Egress-Proxy (z.B. Smokescreen) im Production-Deployment (Render/Compose); Network-Layer-Filtering ist in docs/security.md nur als Empfehlung dokumentiert, nicht umgesetzt",
+    "assert_host_allowed löst zusätzlich zur Transport-Pinning-Resolution auf (redundanter zweiter DNS-Lookup; kein Sicherheitsrisiko, da die Connect-IP separat geprüft und gepinnt wird)"
+  ],
+  "evaluator_notes": "SSRF-Schutz mehrschichtig und auch im neuen LINDAS-Pfad lückenlos: Host-Allow-List (keine User-URLs), HTTPS-Zwang, IP-Blocklist nach Resolution, DNS-Pinning-Transport, keine Redirects. Einziger offener Punkt ist die Defense-in-Depth via Egress-Proxy/NetworkPolicy im Deployment."
+}

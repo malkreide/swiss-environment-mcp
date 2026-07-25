@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "high",
+  "evidence": [
+    "Alle 18 Tools nehmen Pydantic-Input-Modelle mit extra='forbid' entgegen (src/swiss_environment_mcp/server.py:384-686; z.B. NabelCurrentInput server.py:392-407, BathingWaterInput server.py:502-522)",
+    "Whitelist-Patterns + feld-level strict=True auf kritischen Feldern: station ^[A-Za-z]{2,10}$ (server.py:399-400), station_id ^[0-9]{2,10}$ (server.py:456-457), dataset_id Slug-Whitelist (server.py:683-684), canton ^[A-Za-z]{0,2}$ inkl. neuem BathingWaterInput (server.py:513-514), species/data_type (server.py:627,640)",
+    "Numerische Constraints ge/le überall: days 1-30 (server.py:479-480), min_level 1-5 (server.py:489-490), limit 1-50 im neuen BathingWaterInput (server.py:519-520), rows 1-50/offset ge=0 (server.py:665-671), value 0-100000 (server.py:418-419)",
+    "Edge-Case-Tests: ValidationError bei rows=999 (tests/test_unit.py:274-277), Injection 'station_id=2099; DROP TABLE' abgewiesen (tests/test_unit.py:283-289), Path-Traversal '../../etc/passwd' abgewiesen (tests/test_unit.py:292-298)",
+    "Downstream-Defense für Freitext-Felder des neuen LINDAS-Pfads: sparql_escape (src/swiss_environment_mcp/lindas/cube.py:65-73) und _safe_uri-Whitelist-Regex (cube.py:49,76-80) mit Injection-Test (tests/test_lindas.py:167-169)"
+  ],
+  "gaps": [
+    "strict=True nur feld-level auf kritischen Feldern, nicht global im model_config (Pydantic-Lax-Coercion auf übrigen Feldern möglich)",
+    "Freitext-Felder (location, water_body, region, query) haben max_length aber kein Whitelist-Pattern — kompensiert durch sparql_escape/URL-Parametrisierung"
+  ],
+  "evaluator_notes": "Der neue BathingWaterInput folgt der etablierten Konvention (extra='forbid', Kanton-Whitelist, limit 1-50); location ist pattern-frei, wird aber nur via sparql_escape in CONTAINS-Literale interpoliert. Alle Pflicht-Kriterien substanziell erfüllt, 5 Evidenzpunkte (>3)."
+}

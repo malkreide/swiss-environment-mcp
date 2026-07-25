@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "critical",
+  "evidence": [
+    "Keine verbotenen Patterns: grep über src/ und scripts/ nach os.system|shell=True|eval(|exec(|os.popen liefert 0 Treffer; das Projekt ruft überhaupt keine Subprocesses/externen Binaries auf (nur httpx-Library-Calls)",
+    "User-Input erreicht ausschliesslich parametrisierte HTTP-Calls (httpx params-Dict, z.B. src/swiss_environment_mcp/api_client.py:443-450, 588-589) bzw. escaped/validierte SPARQL-Interpolation: sparql_escape (lindas/cube.py:65-73), _safe_uri-Whitelist ^https?://[^\\s<>\"'{}|\\\\^`]+$ (lindas/cube.py:49,76-80), int()-Cast für limit (cube.py:187,258,352)",
+    "Timeouts gegen Resource-Exhaustion auf allen Aufrufpfaden: httpx.Timeout(15.0, connect=5.0) (api_client.py:80), LINDAS-Client-Timeout 45 s vor dem Server-Abbruch (lindas/client.py:38,116)",
+    "Injection-Tests: _safe_uri weist SPARQL-Struktur-Injection zurück (tests/test_lindas.py:167-169), sparql_escape-Verhalten getestet (tests/test_unit.py:822-824), Shell-artiger Input '2099; DROP TABLE' scheitert bereits an der Pydantic-Whitelist (tests/test_unit.py:283-289)"
+  ],
+  "gaps": [],
+  "evaluator_notes": "Library-First-Architektur ohne jegliche Shell-/Subprocess-Nutzung; der neue lindas/-Code interpoliert User-Input nur über sparql_escape bzw. die _SAFE_URI-Whitelist und castet numerische Limits hart auf int. Kein Command-Injection-Vektor gefunden."
+}

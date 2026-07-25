@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "category": "SEC",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py:58 — Settings.mcp_transport Default 'stdio'; HTTP nur via expliziter Env-Var MCP_TRANSPORT",
+    "src/swiss_environment_mcp/server.py:2661-2680 — main(): nur der streamable-http-Zweig startet uvicorn, der sse-Zweig mcp.run('sse'); Default-/Fallback-Zweig ist mcp.run(transport='stdio') — Default-Start öffnet keinen TCP-Port",
+    "README.md:96-115 — lokaler Use-Case primär dokumentiert (Claude Desktop, uvx, claude_desktop_config.json mit vollem Befehl)",
+    "README.md:117-135 — Cloud-Deployment separat dokumentiert ('stdio for the developer laptop, SSE for the browser'); .env.example:8-13 dokumentiert stdio-Default und 127.0.0.1-Binding"
+  ],
+  "gaps": [
+    "Unbekannte MCP_TRANSPORT-Werte fallen still auf stdio zurück statt mit ValueError zu scheitern (Pass-Pattern verlangt explizite Ablehnung; Fallback geht immerhin in die sichere Richtung)",
+    "Runtime-Test (ss/nmap gegen Default-Start) im Audit-Environment nicht ausführbar (mcp-Paket nicht installiert); Befund beruht auf Code-Review"
+  ],
+  "evaluator_notes": "Default-Transport ist stdio ohne Netzwerk-Binding, HTTP/SSE nur per expliziter Env-Var, lokale und Cloud-Nutzung sind sauber getrennt dokumentiert. Kleine Härtungslücke: fehlende Validierung unbekannter Transport-Werte."
+}

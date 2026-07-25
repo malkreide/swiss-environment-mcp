@@ -1,0 +1,16 @@
+{
+  "status": "partial",
+  "category": "ARCH",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py — 18 @mcp.tool-Registrierungen (grep-Count), in 6 thematischen Clustern (src/swiss_environment_mcp/server.py:5-13); liegt im Heuristik-Band 16-25 ('ernste Zweifel')",
+    "docs/tool-inventory.md:58-62 — Tool-Budget explizit bewirtschaftet ('Stand jetzt 18 Tools in 6 Clustern (Budget 18 ausgeschöpft)') inkl. Zuständigkeitsmatrix/Abgrenzung zu meteoswiss-mcp (bewusster Verzicht auf Niederschlags-Tool)",
+    "README.md:28 — Anchor-Demo-Query ('current air quality at NABEL station Zürich-Kaserne … WHO 2021') ist mit 1 Tool-Call (env_nabel_current) beantwortbar; Beispiel-Query-Tabelle README.md:191-203 mappt jede Frage auf genau 1 Tool",
+    "src/swiss_environment_mcp/server.py:1510-1626 — kein 1:1-API-Mapping: NEU env_bathing_water aggregiert intern 4 SPARQL-Schritte (Cube-Version-Discovery, Lizenz, Dimension-Werte, Observations) hinter einem Tool; env_hunting_stats kapselt das undokumentierte Highcharts-Backend inkl. Total-Berechnung"
+  ],
+  "gaps": [
+    "README enthält keine explizite Tool-Budget-Begründung, warum 18 Tools nötig sind bzw. keine weitere Aggregation möglich ist (Pass-Kriterium 'dokumentierte Begründung im README' — die Begründung liegt nur in docs/tool-inventory.md)",
+    "18 Tools überschreiten das Ideal (≤12) deutlich; Stations-/Current-Paare (nabel, hydro, snow) wären Kandidaten für Zusammenlegung oder Resources-Migration"
+  ],
+  "evaluator_notes": "Substanziell gut: Use-Case-getriebene Tools, kein CRUD-/Endpoint-Mapping, Anchor-Query mit 1 Call, Budget in docs/ bewirtschaftet. Formal fehlt die geforderte Begründung im README selbst und die Anzahl liegt im Zweifelsband — daher partial statt pass."
+}

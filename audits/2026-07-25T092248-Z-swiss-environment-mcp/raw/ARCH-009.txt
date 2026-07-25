@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "category": "ARCH",
+  "severity": "high",
+  "evidence": [
+    "src/swiss_environment_mcp/server.py — 18/18 Tools tragen explizite annotations mit allen vier Hints (grep readOnlyHint = 18); kein Tool verlässt sich auf Defaults",
+    "src/swiss_environment_mcp/server.py:1471-1479 — NEU env_bathing_water korrekt annotiert (readOnlyHint True, destructiveHint False, idempotentHint True, openWorldHint True); ebenso SLF-Tools (src/swiss_environment_mcp/server.py:1913-1921, 1991-1998, 2108-2116) und Jagd-Tools (src/swiss_environment_mcp/server.py:2200-2208, 2258-2265)",
+    "src/swiss_environment_mcp/server.py — Konsistenz: kein readOnlyHint:False und kein destructiveHint:True im ganzen Server (grep leer); passt zum tatsächlichen Verhalten (nur GET/SPARQL-SELECT, keine Schreiboperationen); differenzierte idempotentHint-Setzung (True bei statischen Lookups, False bei Live-Daten) und openWorldHint:False bei rein lokalen Tools (env_air_limits_check src/swiss_environment_mcp/server.py:965-972, env_hunting_species src/swiss_environment_mcp/server.py:2200-2207)",
+    "README.md:208 + docs/roadmap.md:7-13 — Annotations-Policy dokumentiert ('Read-only (readOnlyHint: true) — the server cannot modify or delete any data'; Phase-1-Kopplung an Annotations)"
+  ],
+  "gaps": [
+    "Keine tabellarische Per-Tool-Annotations-Übersicht in README/docs (nur die Blanket-Policy); bei den differenzierten idempotent/openWorld-Werten wäre eine Tabelle drift-sicherer"
+  ],
+  "evaluator_notes": "Vollständige, konsistente und differenzierte Annotations über alle 18 Tools inkl. sämtlicher neuer Tools; Policy im README dokumentiert. Nur die Per-Tool-Übersichtstabelle fehlt als Komfort/Drift-Schutz."
+}
