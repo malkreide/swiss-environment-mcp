@@ -28,6 +28,12 @@ import httpx
 
 from . import sparql_client
 from .lindas import client as lindas_client
+from .logging_setup import get_logger
+
+# Debug-Stufe: ausgehende Upstream-Requests (nur mit LOG_LEVEL=DEBUG sichtbar,
+# Audit OBS-003). Der Correlation-Kontext (request_id/tool) wird vom Tool-Layer
+# via structlog-contextvars gebunden und erscheint hier automatisch mit.
+_logger = get_logger(component="api_client")
 
 # --- Basis-URLs ---------------------------------------------------------------
 
@@ -217,6 +223,7 @@ async def shutdown() -> None:
 async def _get_json(url: str, params: dict[str, Any] | None = None) -> httpx.Response:
     """Gemeinsamer GET-Pfad: Egress-Guard + geteilter Client + raise_for_status."""
     assert_host_allowed(url)
+    _logger.debug("upstream_request", method="GET", url=url)
     client = get_client()
     response = await client.get(url, params=params)
     response.raise_for_status()
@@ -268,6 +275,7 @@ async def run_sparql(query: str) -> list[dict[str, str]]:
     die Cube-Schicht übergeben. `LINDAS_RETRY_BASE_DELAY` wird zur Laufzeit
     gelesen (Tests monkeypatchen auf 0).
     """
+    _logger.debug("upstream_request", method="SPARQL", url=LINDAS_ENDPOINT)
     return await lindas_client.select(
         get_client(),
         query,
@@ -527,6 +535,7 @@ async def _get_json_retry(
     headers: dict[str, str] | None = None,
 ) -> Any:
     """GET-JSON mit Egress-Guard + Retry (dünne Bindung an sparql_client)."""
+    _logger.debug("upstream_request", method="GET", url=url)
     return await sparql_client.get_json(
         get_client(),
         url,

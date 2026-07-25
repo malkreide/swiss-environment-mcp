@@ -3,7 +3,8 @@ services:
     name: swiss-environment-mcp
     runtime: python
     plan: starter
-    buildCommand: pip install -e .
+    # Inkl. otel-Extra, damit Tracing aktivierbar ist (Audit OBS-006).
+    buildCommand: pip install -e ".[otel]"
     startCommand: python -m swiss_environment_mcp.server
     envVars:
       - key: MCP_TRANSPORT
@@ -14,4 +15,11 @@ services:
         value: 0.0.0.0
       - key: PORT
         value: 8000
+      # OpenTelemetry-Tracing (Audit OBS-006). Der Dienstname ist gesetzt; der
+      # Export-Endpoint wird vom Betreiber im Render-Dashboard hinterlegt
+      # (sync:false). Solange er leer ist, bleibt Tracing ein No-op.
+      - key: OTEL_SERVICE_NAME
+        value: swiss-environment-mcp
+      - key: OTEL_EXPORTER_OTLP_ENDPOINT
+        sync: false
     healthCheckPath: /health

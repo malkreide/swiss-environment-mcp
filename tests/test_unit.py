@@ -248,7 +248,13 @@ def test_error_detail_is_masked():
 
 @respx.mock
 async def test_execution_error_path_logs_and_reports():
-    """Execution-Error-Pfad: maskiertes Result, ctx.warning, strukturiertes Log (OBS-001)."""
+    """Execution-Error-Pfad: isError via ToolError, ctx.warning, strukturiertes Log (OBS-001).
+
+    Seit v0.3.x wird ein terminaler Ausführungsfehler als `ToolError` geworfen —
+    FastMCP setzt daraufhin `isError:true`. Die maskierte Meldung + der
+    Direktzugang-Hinweis stehen im Fehler-Content; keine Internals leaken.
+    """
+    from mcp.server.fastmcp.exceptions import ToolError
     from structlog.testing import capture_logs
 
     from swiss_environment_mcp.server import env_bafu_datasets
@@ -258,16 +264,20 @@ async def test_execution_error_path_logs_and_reports():
     )
     ctx = _FakeContext()
     with capture_logs() as logs:
-        out = await env_bafu_datasets(BafuDatasetsInput(query="x"), ctx=ctx)
-    # User-Result enthält keine Internals, aber den Fallback-Hinweis
-    assert "fehlgeschlagen" in out
-    assert "Traceback" not in out and "500 Internal" not in out
+        with pytest.raises(ToolError) as exc:
+            await env_bafu_datasets(BafuDatasetsInput(query="x"), ctx=ctx)
+    # Fehler-Content trägt den Fallback-Hinweis, aber keine Internals
+    msg = str(exc.value)
+    assert "fehlgeschlagen" in msg
+    assert "Traceback" not in msg and "500 Internal" not in msg
     # Fehler wurde über den Context gemeldet ...
     assert ctx.warnings and "env_bafu_datasets" in ctx.warnings[0]
-    # ... und strukturiert geloggt (Event tool_error mit tool-Feld)
+    # ... strukturiert geloggt (tool_error mit tool-Feld) ...
     assert any(
         e.get("event") == "tool_error" and e.get("tool") == "env_bafu_datasets" for e in logs
     )
+    # ... und der Tool-Layer hat tool_failed (error-Stufe) emittiert (OBS-003).
+    assert any(e.get("event") == "tool_failed" for e in logs)
 
 
 async def test_protocol_error_invalid_args():
