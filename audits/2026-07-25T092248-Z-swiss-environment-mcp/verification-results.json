@@ -1,0 +1,702 @@
+{
+ "audit_meta": {
+  "server_name": "swiss-environment-mcp",
+  "run_id": "2026-07-25T092248-Z-swiss-environment-mcp",
+  "skill_version": "1.0.0",
+  "catalog_hash": "091f446b27965044ce658a1d5f4b2cabe2b0ab5661dcc1a53b6be8f1f2e093c0",
+  "policy": "fail-or-partial",
+  "note": "Re-Audit nach Hydro-Phase-2/3 (main @ v0.3.0, 18 Tools, lindas/-Modul). Batch-Ausfuehrung durch 4 Task-Agents mit strikter Kriterien-Lesart; Abweichungen zum Juni-Audit (44/44 pass) sind ueberwiegend Bewertungs-Differenzen (dokumentierte Risiko-Akzeptanzen streng als fail/partial gewertet), keine Code-Regressionen. SCALE-002/003 adjudiziert, siehe evaluator_notes."
+ },
+ "results": {
+  "ARCH-001": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:808-2510 — alle 18 Tools folgen einheitlich snake_case mit `env_`-Präfix (env_nabel_stations … env_bafu_dataset_detail); keine Spaces/Punkte/Klammern/Sonderzeichen (grep über alle @mcp.tool(name=…))",
+    "src/swiss_environment_mcp/server.py:1471-1495 — NEUES Tool env_bathing_water hält die Convention und liefert Use-Case-Kontext in der Description (<use_case>Wasserqualität einer Badestelle prüfen…</use_case>)",
+    "src/swiss_environment_mcp/server.py:819-838, 2002-2023 — Descriptions sind mehrsätzig mit Kontext (Datenquelle, Einheiten, Folge-Tool-Hinweise), kein Ein-Satz-Anti-Pattern",
+    "tests/test_unit.py:390 — test_all_tools_have_use_case_tag erzwingt Use-Case-Kontext in jeder Tool-Description via CI"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Einheitliche snake_case-Convention (env_-Präfix als Namespace) über alle 18 Tools inkl. der neuen SLF-/Jagd-/Bathing-Tools; Descriptions enthalten durchgängig Use-Case und Kontext. camelCase wäre bevorzugt, snake_case ist laut Check explizit akzeptabel."
+  },
+  "ARCH-002": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py — 18× <use_case> und 18× <important_notes> (grep-Count) = 100% der 18 Tools, deutlich über der 80%-Schwelle; auch die neuen Tools (env_bathing_water src/swiss_environment_mcp/server.py:1491-1495, env_snow_current src/swiss_environment_mcp/server.py:2010-2013, env_hunting_stats src/swiss_environment_mcp/server.py:2277-2280)",
+    "src/swiss_environment_mcp/server.py:886-897, 1297-1301 — Important-Notes mit echten Caveats (env_nabel_current: 'keine Echtzeit-Rohwerte'; env_hydro_history: 'LINDAS liefert nur den aktuellen Wert (keine Zeitreihe)')",
+    "src/swiss_environment_mcp/server.py:1930-1934, 2126-2130 — explizite Differenzierung ähnlicher Tools ('Kein Niederschlags-Tool (→ meteoswiss-mcp)', 'Für Schneehöhen → env_snow_current')",
+    "tests/test_unit.py:390 — CI-Test test_all_tools_have_use_case_tag verhindert Regression; Median-Description-Länge weit über 100 Zeichen (mehrzeilige Docstrings mit Args/Returns)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Alle 18 Tools tragen strukturierte <use_case>/<important_notes>-Tags, per CI-Test abgesichert. Der neue Code (env_bathing_water, SLF, Jagd) hält den Standard vollständig ein."
+  },
+  "ARCH-003": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:343-359 — MatchType-Literal ('exact'/'fuzzy'/'none') + ResponseEnvelope mit match_type- und note-Feld für alle Such-/Listen-Tools",
+    "src/swiss_environment_mcp/server.py:1565-1571,1592-1604 — NEU env_bathing_water: Teilstring-Suche (fuzzy), bei Nicht-Treffer actionable Hinweis ('ohne location listet alle Badestellen'), bei Mehrfach-Treffern match_type 'fuzzy' + 'Weitere Treffer'-Alternativen",
+    "src/swiss_environment_mcp/server.py:1166-1172, 2444-2453, 2079-2085 — leere Resultate liefern konkrete Handlungsvorschläge statt blanker Listen (Filter weglassen, bekannte Station-ID '2099', breitere Suchbegriffe)",
+    "src/swiss_environment_mcp/server.py:1418-1423, 2151-2158 — Zustände ohne Daten werden als explizite Nicht-Fehler geframed ('Keine aktiven Hochwasserwarnungen' = Entwarnung; 'kein aktives Bulletin' = Saisonzyklus)",
+    "tests/test_unit.py:341,377 + tests/test_lindas.py:279 — Unit-Tests decken match_type 'none' + actionable Note ab (inkl. neuem Bathing-Water-Pfad)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Das Not-Found-Anti-Pattern ist systematisch adressiert (match_type + note + Alternativvorschläge), auch im neuen LINDAS-/Bathing-Water-Code. Sensible Daten existieren nicht (nur öffentliche Aggregatdaten), die Sensitive-Ausnahme ist daher nicht anwendbar."
+  },
+  "ARCH-004": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:49-69 — Konfiguration via pydantic_settings.BaseSettings (mcp_transport/mcp_host/port/mcp_cors_allow_origins), keine globalen Hardcodes",
+    "src/swiss_environment_mcp/server.py:2656-2677 — main() wählt Transport per Env-Var: stdio (Default), sse, streamable-http — gleiche FastMCP-Instanz und Tool-Registry für alle Transports",
+    "src/swiss_environment_mcp/server.py:296-322 — gemeinsamer Lifespan (api.startup/shutdown, geteilter httpx.AsyncClient) für alle Transports",
+    "src/swiss_environment_mcp/server.py:819-… — alle Tool-Handler nehmen ausschliesslich (params, ctx: Context); kein request./stdin/stdout-Zugriff in Handlern (grep); starlette.Request nur im Nicht-Tool-Health-Endpoint src/swiss_environment_mcp/server.py:328-331",
+    "src/swiss_environment_mcp/api_client.py:96-…, src/swiss_environment_mcp/lindas/client.py:19-21,96-114 — NEUER Code hält IoC ein: HTTP-Client und Egress-Guard werden injiziert (SelectRunner-Callback), lindas/-Module sind transportfrei"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Transport-agnostische Architektur sauber umgesetzt; das neue lindas/-Modul verstärkt das Pattern sogar (Client/Egress als injizierte Callbacks, keine Server-Imports). Keine Regression im neuen Code."
+  },
+  "ARCH-005": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "critical",
+   "evidence": [
+    "src/ + scripts/ — Pattern-Scan (api_key/password/secret/token = '…', Connection-Strings, AKIA…) ohne Treffer; Server benötigt per Design keine Secrets (server.py:25 'Alle Daten: öffentlich, keine Authentifizierung erforderlich')",
+    ".gitignore:4-6 — '.env', '.env.*', '!.env.example' korrekt ausgeschlossen",
+    ".env.example:1-21 — existiert, enthält ausschliesslich Nicht-Secret-Konfiguration (Transport/Host/Port/CORS) mit explizitem Hinweis 'benötigt KEINE Secrets / API-Keys'",
+    ".github/workflows/security.yml:13-33 — gitleaks-Scan (History + Working Tree, --redact) auf jedem Push/PR; .gitleaks.toml im Repo-Root",
+    "pyproject.toml — pydantic-settings als Dependency; Settings-Klasse (server.py:49) als Lade-Pfad für alle Env-Konfiguration"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Keine hardcodierten Secrets; der Server ist auth-frei (nur öffentliche Gov-APIs). .env-Hygiene, .env.example und CI-Secret-Scanning (gitleaks inkl. History) sind vorhanden. SecretStr-Kriterium ist gegenstandslos, da keine Secrets existieren."
+  },
+  "ARCH-006": {
+   "status": "partial",
+   "category": "ARCH",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py — 18 @mcp.tool-Registrierungen (grep-Count), in 6 thematischen Clustern (src/swiss_environment_mcp/server.py:5-13); liegt im Heuristik-Band 16-25 ('ernste Zweifel')",
+    "docs/tool-inventory.md:58-62 — Tool-Budget explizit bewirtschaftet ('Stand jetzt 18 Tools in 6 Clustern (Budget 18 ausgeschöpft)') inkl. Zuständigkeitsmatrix/Abgrenzung zu meteoswiss-mcp (bewusster Verzicht auf Niederschlags-Tool)",
+    "README.md:28 — Anchor-Demo-Query ('current air quality at NABEL station Zürich-Kaserne … WHO 2021') ist mit 1 Tool-Call (env_nabel_current) beantwortbar; Beispiel-Query-Tabelle README.md:191-203 mappt jede Frage auf genau 1 Tool",
+    "src/swiss_environment_mcp/server.py:1510-1626 — kein 1:1-API-Mapping: NEU env_bathing_water aggregiert intern 4 SPARQL-Schritte (Cube-Version-Discovery, Lizenz, Dimension-Werte, Observations) hinter einem Tool; env_hunting_stats kapselt das undokumentierte Highcharts-Backend inkl. Total-Berechnung"
+   ],
+   "gaps": [
+    "README enthält keine explizite Tool-Budget-Begründung, warum 18 Tools nötig sind bzw. keine weitere Aggregation möglich ist (Pass-Kriterium 'dokumentierte Begründung im README' — die Begründung liegt nur in docs/tool-inventory.md)",
+    "18 Tools überschreiten das Ideal (≤12) deutlich; Stations-/Current-Paare (nabel, hydro, snow) wären Kandidaten für Zusammenlegung oder Resources-Migration"
+   ],
+   "evaluator_notes": "Substanziell gut: Use-Case-getriebene Tools, kein CRUD-/Endpoint-Mapping, Anchor-Query mit 1 Call, Budget in docs/ bewirtschaftet. Formal fehlt die geforderte Begründung im README selbst und die Anzahl liegt im Zweifelsband — daher partial statt pass."
+  },
+  "ARCH-007": {
+   "status": "partial",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:1510-1626 — env_bathing_water ist aus LLM-Sicht atomar: ein Call liefert Standort-Labels (nie rohe Code-URIs), Kantons-Join-Key, Probenwerte und Lizenzfeld; die 4-stufige SPARQL-Orchestrierung ist vollständig verkapselt (lindas/cube.py:316-376 löst Codes intern zu Labels auf)",
+    "src/swiss_environment_mcp/server.py:2025-2058 — env_snow_current joint intern zwei SLF-API-Antworten (daily-snow + Stations-Metadaten) zu einem abgeschlossenen Resultat inkl. Sortierung",
+    "src/swiss_environment_mcp/server.py:2327-2364 — env_hunting_stats liefert Jahres-Totale + Klassen direkt (kein Folge-Call nötig); Anchor-Demo-Query mit 1 Tool-Call beantwortbar",
+    "src/swiss_environment_mcp/ — grep 'asyncio.gather' = 0 Treffer: unabhängige Sub-Calls laufen sequentiell (src/swiss_environment_mcp/server.py:2026-2027 snow+stations; src/swiss_environment_mcp/server.py:1517-1525 Lizenz+Sites nach Cube-Discovery)"
+   ],
+   "gaps": [
+    "Keine Parallelisierung interner Aggregationen: env_snow_current (2 unabhängige SLF-Calls) und env_bathing_water (Lizenz- und Site-Query beide nur vom cube_uri abhängig) könnten asyncio.gather nutzen — Pass-Kriterium 'wo Aggregation Sinn ergibt: gather' nicht erfüllt",
+    "Aggregierter Charakter wird in den Descriptions nur teilweise explizit gemacht (z.B. env_snow_current erwähnt den internen 2-Quellen-Join nicht)"
+   ],
+   "evaluator_notes": "Qualitativ sind die Tools atomar und gedanklich abgeschlossen — gerade der neue LINDAS-Code kapselt vorbildlich. Es fehlt aber durchgängig die Parallelisierung unabhängiger interner Calls (nirgends asyncio.gather), daher partial."
+  },
+  "ARCH-008": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:2589-2623 — zwei Primitive genutzt: 18 Tools + 3 Resources (env://grenzwerte/luft, env://nabel/stationen, env://hochwasser/gefahrenstufen)",
+    "src/swiss_environment_mcp/server.py:2589,2601,2616 — konsistentes URI-Schema 'env://<thema>/<objekt>'; Inhalte sind statische Referenzdaten (Grenzwerte, Stationslisten, Gefahrenstufen) = korrekte Resource-Kandidaten",
+    "docs/tool-inventory.md:44-48 + README.md:224 ('12 Tools · 3 Resources'-Box) — Resources sind dokumentiert und inventarisiert",
+    "src/swiss_environment_mcp/server.py:107-192 — die statischen Lookup-Daten, die Resources speisen, sind von Live-Tools getrennt; read-only Live-Abfragen bleiben bewusst Tools (nicht deterministisch/cachebar)"
+   ],
+   "gaps": [
+    "Keine Prompts (drittes Primitiv) — bei wiederkehrenden Lagebild-Workflows (z.B. 'Hochwasser-Lagecheck Kanton X') wären kuratierte Prompt-Templates ein sinnvoller Ausbau",
+    "Die 3 neuen statischen Lookups (JAGD_SPECIES/JAGD_CANTONS, Badestellen-Codes) sind nicht als Resources exponiert, obwohl env_hunting_species faktisch ein statisches Nachschlagewerk ist (Resource-Kandidat)"
+   ],
+   "evaluator_notes": "Mindestens zwei der drei Primitive sind mit konsistentem URI-Schema in Gebrauch und dokumentiert — Kernkriterium erfüllt. Prompts fehlen (zulässig), und der neue Jagd-Lookup wäre ein natürlicher Resource-Kandidat."
+  },
+  "ARCH-009": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py — 18/18 Tools tragen explizite annotations mit allen vier Hints (grep readOnlyHint = 18); kein Tool verlässt sich auf Defaults",
+    "src/swiss_environment_mcp/server.py:1471-1479 — NEU env_bathing_water korrekt annotiert (readOnlyHint True, destructiveHint False, idempotentHint True, openWorldHint True); ebenso SLF-Tools (src/swiss_environment_mcp/server.py:1913-1921, 1991-1998, 2108-2116) und Jagd-Tools (src/swiss_environment_mcp/server.py:2200-2208, 2258-2265)",
+    "src/swiss_environment_mcp/server.py — Konsistenz: kein readOnlyHint:False und kein destructiveHint:True im ganzen Server (grep leer); passt zum tatsächlichen Verhalten (nur GET/SPARQL-SELECT, keine Schreiboperationen); differenzierte idempotentHint-Setzung (True bei statischen Lookups, False bei Live-Daten) und openWorldHint:False bei rein lokalen Tools (env_air_limits_check src/swiss_environment_mcp/server.py:965-972, env_hunting_species src/swiss_environment_mcp/server.py:2200-2207)",
+    "README.md:208 + docs/roadmap.md:7-13 — Annotations-Policy dokumentiert ('Read-only (readOnlyHint: true) — the server cannot modify or delete any data'; Phase-1-Kopplung an Annotations)"
+   ],
+   "gaps": [
+    "Keine tabellarische Per-Tool-Annotations-Übersicht in README/docs (nur die Blanket-Policy); bei den differenzierten idempotent/openWorld-Werten wäre eine Tabelle drift-sicherer"
+   ],
+   "evaluator_notes": "Vollständige, konsistente und differenzierte Annotations über alle 18 Tools inkl. sämtlicher neuer Tools; Policy im README dokumentiert. Nur die Per-Tool-Übersichtstabelle fehlt als Komfort/Drift-Schutz."
+  },
+  "ARCH-011": {
+   "status": "pass",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "Repo-Root — alle Pflicht-Files vorhanden: README.md, README.de.md, CHANGELOG.md, LICENSE, pyproject.toml (plus CONTRIBUTING.md/.de.md, SECURITY.md/.de.md)",
+    "pyproject.toml:[tool.hatch.build.targets.wheel] packages=['src/swiss_environment_mcp'] — korrektes src-Layout mit hatchling; Verzeichnisse src/, tests/, docs/, .github/workflows/ vorhanden",
+    ".github/workflows/ — ci.yml (Tests+Lint), publish.yml (PyPI Trusted Publisher, id-token: write), security.yml, live-tests.yml — mehr als das geforderte Minimum",
+    "README.md vs. README.de.md — Top-Level-Sektionen decken sich 1:1 (Overview/Übersicht … License/Lizenz, per Section-Diff geprüft)",
+    "README.md:288-293 — Abweichung vom tools/-Split explizit begründet ('Single-module layout (rationale, audit ARCH-011)': dünne uniforme Wrapper, bewusste dokumentierte Abweichung)"
+   ],
+   "gaps": [
+    "server.py ist auf 2681 Zeilen gewachsen (18 Tools); die dokumentierte Single-Module-Begründung nennt noch '12 tools' — die Rationale wurde beim Wachstum auf 18 Tools nicht neu bewertet",
+    "Stale Zählangaben in README-Projektstruktur/Architekturbox ('12 Tools · 3 Resources') gegenüber tatsächlich 18 Tools"
+   ],
+   "evaluator_notes": "Struktur entspricht dem Portfolio-Standard vollständig (src-Layout, Tests, 4 Workflows, bilinguale Doku, begründete Abweichung beim tools/-Split). Die veralteten '12 Tools'-Referenzen sind ein Doku-Drift, kein Strukturmangel."
+  },
+  "ARCH-012": {
+   "status": "partial",
+   "category": "ARCH",
+   "severity": "medium",
+   "evidence": [
+    "pyproject.toml:21-24 — SDK-Major-Pin 'mcp[cli]>=1.28.1,<2' mit explizitem ARCH-012-Kommentar ('legt die ausgehandelte MCP-Protokoll-Version fest'); aber KEIN explizites protocolVersion-Pinning im Server-Code (grep protocolVersion/protocol_version in src/ = 0 Treffer)",
+    "CHANGELOG.md — vorhanden, Keep-a-Changelog-Format mit datierten Releases ([0.3.0] – 2026-07-25, Sektionen Neu/Architektur/Refactor/Behoben); CHANGELOG.md:167 dokumentiert den SDK-Pin",
+    "README.md:295-304 — Sektion 'MCP Protocol Version & Maintenance' mit Update-Policy (Dependabot monatlich, semver-Bump bei Tool-/Verhaltensänderung, Tool-Snapshot-Gate SEC-022)",
+    ".github/dependabot.yml — monatliche Update-PRs für pip UND github-actions aktiv"
+   ],
+   "gaps": [
+    "protocolVersion ist im Server-Code nicht explizit gepinnt — FastMCP wird ohne Versions-Pin instanziiert (server.py:310-322); der SDK-Major-Pin ist nur ein indirekter Proxy, ein Minor-Update des SDK kann die ausgehandelte Spec-Version still ändern",
+    "CHANGELOG-Einträge nennen keine expliziten Spec-Version-Bumps (nur SDK-Pin-Erwähnung) — Audit-Trail-Lücke bei künftigen Protokollwechseln"
+   ],
+   "evaluator_notes": "CHANGELOG-Disziplin, README-Policy-Sektion und Dependabot sind vorbildlich; das Kernkriterium — explizites protocolVersion-Pinning im Code statt SDK-Default — ist jedoch nicht erfüllt. 4 von 6 Kriterien erfüllt → partial."
+  },
+  "CH-004": {
+   "status": "pass",
+   "category": "CH",
+   "severity": "medium",
+   "evidence": [
+    "README dokumentiert alle Datenquellen mit Lizenzen in einer Tabelle, inkl. der neuen Quellen: LINDAS/Badegewässer ('Open-Use / OGD, declared per graph/dataset — each response carries a licence field', README.md:249), SLF CC BY 4.0 (README.md:253), Jagdstatistik mit ehrlicher 'keine explizite Lizenz'-Recherche und Attributionspflicht (README.md:326)",
+    "Jede env_bathing_water-Antwort trägt ein Lizenzfeld: get_cube_license wird pro Aufruf ermittelt und in source-Feld bzw. Markdown-Fusszeile eingebettet (src/swiss_environment_mcp/server.py:1517, 1543, 1562, 1596, 1624)",
+    "Keine stillschweigende Re-Lizenzierung: LICENSE_UNDECLARED-Text warnt explizit, wenn am Cube keine Lizenz deklariert ist, statt 'Open-Use' anzunehmen (src/swiss_environment_mcp/lindas/cube.py:54-63, get_cube_license cube.py:382-403)",
+    "Konsistente Attribution über den ResponseEnvelope (source-Pflichtfeld + provenance) in allen Such-/Listen-Tools (server.py:346-359) und in den JSON-Ausgaben, z.B. 'BAFU Hydrodaten via LINDAS (Open-Use / OGD-CH)' (server.py:721)"
+   ],
+   "gaps": [
+    "Formelle Lizenzbestätigung des BAFU für die Jagdstatistik steht noch aus (im README transparent als offen markiert)"
+   ],
+   "evaluator_notes": "Das neue Badegewässer-Tool erfüllt die OGD-CH-Attribution vorbildlich: Lizenz wird live am Cube/Graph ermittelt, ehrlich als 'nicht deklariert' ausgewiesen und in jeder Antwort mitgeliefert; README-Lizenztabelle ist auf dem Stand der 0.3.0-Quellen."
+  },
+  "OBS-001": {
+   "status": "partial",
+   "category": "OBS",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:79-101 — zentrale _handle_tool_error: alle 18 Tools fangen Anwendungsfehler (try/except, z.B. server.py:1627-1635 in env_bathing_water) und geben eine LLM-lesbare Meldung als reguläres Tool-Result zurück — nie als JSON-RPC-Error",
+    "src/swiss_environment_mcp/api_client.py:226-252 — handle_http_error differenziert 404/429/503/Timeout/ConnectError/SecurityError/QueryError/QueryTimeoutError mit handlungsleitenden Meldungen (Recovery-Hinweise fürs LLM)",
+    "tests/test_unit.py:250-270 — Execution-Error-Pfad getestet (HTTP 500 → maskiertes Result, ctx.warning, strukturiertes tool_error-Log)",
+    "tests/test_unit.py:273-278 (plus 284-299) — Protocol-Error-Pfad getestet: ungültige Argumente → pydantic ValidationError",
+    "Runtime-Test (Audit-Lauf): tools/call mit nicht existentem Tool → Tool-Result mit isError:true ('Unknown tool: nonexistent_tool'), Session bleibt intakt"
+   ],
+   "gaps": [
+    "Anwendungsfehler werden als regulärer String (Präfix 'Fehler:'/'⚠️') mit isError:false zurückgegeben statt mit gesetztem isError:true-Flag; die Fehlersignalisierung ist rein textuell (vgl. Heuristik _looks_like_error in src/swiss_environment_mcp/tracing.py:55-56).",
+    "Keine standardisierten JSON-RPC-Fehlercode-Konstanten (-32601/-32602/-326xx) im eigenen Code; Protocol-Level-Errors sind vollständig ans MCP-SDK delegiert."
+   ],
+   "evaluator_notes": "Die Kern-Trennung ist erreicht: Execution-Errors landen nie als JSON-RPC-Error, sondern in-band mit Recovery-Hinweisen, und beide Fehlerpfade sind getestet. Weil das isError-Flag bei Anwendungsfehlern nicht gesetzt wird und standardisierte Protocol-Fehlercodes nur implizit über das SDK kommen, bleibt es bei partial."
+  },
+  "OBS-002": {
+   "status": "pass",
+   "category": "OBS",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/api_client.py:250-252 — Catch-all-Pfad liefert generische Meldung ('Unerwarteter interner Fehler') ohne Exception-Typ/-Text; Kommentar referenziert OBS-002 explizit — funktionales Äquivalent zu mask_error_details=True (das offizielle mcp-SDK-FastMCP kennt diesen Parameter nicht)",
+    "src/swiss_environment_mcp/server.py:79-101 — _handle_tool_error: maskierte Meldung ans LLM, echte Details (error_type, detail) ausschliesslich ins strukturierte stderr-Server-Log (logger.warning 'tool_error')",
+    "grep 'traceback|format_exc|sys.exc_info' src/ → nur logging_setup.py:30 (format_exc_info-Prozessor fürs Server-Log); keine Traceback-Ausgabe in Tool-Returns",
+    "src/swiss_environment_mcp/api_client.py:230-234 — QueryError-MALFORMED-Meldung wird bewusst und begründet durchgereicht (Kommentar: Meldung stammt vom öffentlichen SPARQL-Endpoint, benennt die fehlerhafte Query-Stelle, keine Server-Interna) — entspricht dem im Check geforderten Muster 'Execution-Errors user-friendly, Server-Crashes generisch'",
+    "tests/test_unit.py:242-246 — Leak-Test: interne Exception-Details erscheinen nicht im LLM-Result; tests/test_lindas.py:64-75 deckt QueryError/QueryTimeoutError-Meldungen ab",
+    "Log-Schutz: Server hat keine Auth/Tokens (öffentliche Datenquellen, docs/security.md), geloggte Felder sind Tool-Name, Fehlertyp und Query-Parameter öffentlicher APIs — kein Klartext-Token, kein PII"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Maskierung ist zentralisiert und getestet; Originalfehler gehen nur ins strukturierte stderr-Log. Die unmaskierte LINDAS-MALFORMED-Meldung ist eine dokumentierte, OBS-001-konforme Ausnahme für deterministische Execution-Errors: sie enthält Server-Feedback des öffentlichen Endpoints zur Query, keine eigenen Interna — im Sinne von OBS-002 begründet."
+  },
+  "OBS-003": {
+   "status": "partial",
+   "category": "OBS",
+   "severity": "medium",
+   "evidence": [
+    "pyproject.toml:28 — structlog>=24.1.0 in den Haupt-Dependencies",
+    "src/swiss_environment_mcp/logging_setup.py:24-37 — JSONRenderer + ISO-TimeStamper + add_log_level + merge_contextvars; WriteLoggerFactory(file=sys.stderr)",
+    "src/swiss_environment_mcp/server.py:72-73 — configure_logging() beim Modul-Import, Logger mit gebundenem Initial-Kontext (server=...)",
+    "src/swiss_environment_mcp/server.py:89-95 — Fehlerpfad loggt strukturiert mit gebundenen Feldern (event tool_error, tool, error_type, detail, tool-spezifische Parameter); verifiziert in tests/test_unit.py:260-270 via capture_logs",
+    "grep 'print(' src/ → 0 Treffer (keine print-Statements im Tool-Code)"
+   ],
+   "gaps": [
+    "Nur die Severity-Stufe 'warning' wird aktiv genutzt (server.py:89, server.py:2641) — gefordert sind mindestens 4 aktiv genutzte Stufen (debug/info/warning/error).",
+    "Kein Log-Event pro Tool-Call (kein tool_invoked/tool_succeeded); Logging existiert nur im Fehlerpfad.",
+    "Kein session_id/correlation_id im gebundenen Kontext — Multi-Step-Workflows sind nicht korrelierbar."
+   ],
+   "evaluator_notes": "Fundament stimmt (structlog, JSON, stderr, gebundene Felder, keine prints), aber die Nutzung ist auf den Fehlerpfad mit einer einzigen Severity-Stufe beschränkt. Erfolgs-/Invocation-Logging mit Correlation-ID und weiteren Stufen fehlt → partial."
+  },
+  "OBS-004": {
+   "status": "pass",
+   "category": "OBS",
+   "severity": "critical",
+   "evidence": [
+    "grep -rn 'print(' src/ --include='*.py' → 0 Treffer (keine print-Statements im gesamten src/, inkl. neuem lindas/-Pfad)",
+    "src/swiss_environment_mcp/logging_setup.py:35 — structlog.WriteLoggerFactory(file=sys.stderr) mit explizitem OBS-004-Kommentar ('stderr — niemals stdout')",
+    "src/swiss_environment_mcp/server.py:72 — configure_logging() transport-unabhängig beim Import; identische Logging-Konfiguration für stdio, sse und streamable-http (kein transport-abhängiger Switch in main(), server.py:2656-2677)",
+    "Runtime-Test (Audit-Lauf, stdio): initialize-Request via stdin → stdout enthält ausschliesslich valide JSON-RPC-Zeilen (programmatischer Parse-Check: 'stdout pure JSON: True'), keine Junk-Lines"
+   ],
+   "gaps": [
+    "Kein CI-Guard gegen künftige print()-Regressionen (ruff-Select E,F,I,N,W ohne T20-Regel in pyproject.toml:60) — Empfehlung, kein Pass-Kriterium."
+   ],
+   "evaluator_notes": "Alle Kriterien erfüllt: keine prints, structlog explizit auf sys.stderr, gleiche Konfiguration über alle Transports, und der Inspector-äquivalente Runtime-Test bestätigt einen unkorrumpierten stdout-Protokollstrom im stdio-Modus."
+  },
+  "OBS-006": {
+   "status": "partial",
+   "category": "OBS",
+   "severity": "medium",
+   "evidence": [
+    "src/swiss_environment_mcp/tracing.py:24-52 — configure_tracing: TracerProvider mit Resource (service.name via OTEL_SERVICE_NAME, deployment.environment via OTEL_ENVIRONMENT), BatchSpanProcessor + OTLP-HTTP-Exporter, Aktivierung nur bei gesetztem OTEL_EXPORTER_OTLP_ENDPOINT (Env-konfigurierbar, nichts hardcoded)",
+    "src/swiss_environment_mcp/tracing.py:51 — HTTPXClientInstrumentor().instrument(): Backend-API-Calls (httpx) werden automatisch zu Child-Spans",
+    "src/swiss_environment_mcp/tracing.py:59-78 — trace_tool-Decorator: Span 'mcp.tool.<name>' mit Attributen mcp.tool.name und mcp.tool.result.is_error; keine Args/Inhalte/Tokens in Span-Attributen (Docstring tracing.py:9-12, grep set_attribute → nur name/is_error)",
+    "src/swiss_environment_mcp/server.py — @trace_tool auf allen 18 Tools (grep-Count 18/18, inkl. neuem env_bathing_water server.py:1481), aktiviert via configure_tracing() in server.py:76",
+    "pyproject.toml:39-43 — otel-Extra (opentelemetry-sdk, otlp-proto-http-Exporter, instrumentation-httpx) als optionale Dependency"
+   ],
+   "gaps": [
+    "OTel-SDK ist nicht installiert im ausgelieferten Artefakt: Dockerfile:24 installiert das Wheel ohne [otel]-Extra — im Container bleibt configure_tracing selbst mit gesetztem OTLP-Endpoint ein stiller No-op (ImportError-Pfad tracing.py:39-40).",
+    "Kein OTEL_EXPORTER_OTLP_ENDPOINT/OTEL_SERVICE_NAME in den Deployment-Manifesten (render.yaml, docker-compose.yml, Dockerfile) — Tracing ist im Cloud-Deployment faktisch inaktiv.",
+    "Span-Attribut mcp.user.id fehlt (mangels Auth existiert keine User-Identity — nachvollziehbar, aber Kriterium formal unerfüllt)."
+   ],
+   "evaluator_notes": "Die Tracing-Implementierung selbst ist vollständig und sauber (Decorator auf allen 18 Tools, Auto-Instrumentation, PII-freie Spans, Env-basierte Konfiguration), aber sie ist im tatsächlichen Deployment nicht aktivierbar: das Docker-Image enthält das otel-Extra nicht und kein Manifest setzt den OTLP-Endpoint. Code-ready, deployment-inaktiv → partial."
+  },
+  "OPS-001": {
+   "status": "partial",
+   "category": "OPS",
+   "severity": "high",
+   "evidence": [
+    "tests/test_unit.py (56 Tests) + tests/test_lindas.py (16 Tests) — respx-gemockte Unit-Tests inkl. Happy-/Error-/Edge-Pfaden; der NEUE lindas-Code ist gut abgedeckt (client 400/Timeout/Retry/POST, cube-Dedup/Label-Resolution/Injection-Guard, Bathing-Water happy/not-found/degradation tests/test_lindas.py:51-305)",
+    "tests/test_integration.py:23 — 'pytestmark = pytest.mark.live': 16 Live-Tests decken fast alle Tools inkl. der neuen (test_bathing_water_lindas:177, test_slf_snow:202, test_hunting_stats:224)",
+    "pyproject.toml [tool.pytest.ini_options] — live-Marker registriert ('live: Test trifft echte BAFU-Live-APIs …'); respx als dev-Dependency",
+    ".github/workflows/ci.yml:44-48 — CI läuft 'pytest -m \"not live\"'; .github/workflows/live-tests.yml — separater nightly-Workflow (cron 0 4 * * *) + workflow_dispatch; Live-Tests brauchen keine Credentials (auth-freie Public-APIs, SEC-013 gegenstandslos)"
+   ],
+   "gaps": [
+    "Quantitatives Kriterium 'mind. 5 Unit-Tests pro Tool' verfehlt (72 gemockte Tests / 18 Tools ≈ 4): env_hazard_overview, env_hazard_regions und env_wildfire_danger haben KEINE gemockten Unit-Tests (nur Live-Tests) — Fehlerpfade dieser drei Tools sind in CI ungetestet",
+    "Kein Live-Test für env_avalanche_bulletin und env_snow_stations als eigenständige Tools (nur indirekt via test_slf_snow)",
+    "tests/test_20_scenarios.py ist ein Standalone-Skript ohne pytest-Testfunktionen (0 collected) und im Docstring veraltet ('Alle 12 Tools')"
+   ],
+   "evaluator_notes": "Die Test-Strategie (mocked/live-Trennung, Marker, CI-Exklusion, nightly Workflow) ist vollständig und der neue LINDAS-Code überdurchschnittlich getestet. Partial wegen der ungemockten Hazard-Tools und verfehlter Per-Tool-Quoten."
+  },
+  "OPS-002": {
+   "status": "pass",
+   "category": "OPS",
+   "severity": "medium",
+   "evidence": [
+    "README.md:28 — konkrete natürlich-sprachliche Anchor-Demo-Query ('What is the current air quality at the NABEL station Zürich-Kaserne – and does it comply with WHO 2021 guidelines?') + 3 weitere Quickstart-Fragen (README.md:87-91) + Query→Tool-Tabelle (README.md:191-203)",
+    "README.md:218-244 — ASCII-Architekturdiagramm (Box-Drawing, Host→Server→Quellen) inkl. neuer Architektur-Notiz zum extrahierbaren lindas/-Modul und Datenquellen-/Lizenz-Tabelle",
+    "README.md:316-… — 'Known Limitations' mit >3 expliziten Limits (LINDAS nur Aktualwerte, BUG-01/404-Endpoints, Kantonsfilter-Einschränkung, …); Safety&Limits-Tabelle README.md:204-216 (Access/Rate-Limits/Lizenz/ToS)",
+    "Alle 8 Pflicht-Sektionen vorhanden (Anchor:28, Installation:55, Tools:139, Configuration:95, Security:204+385, Architecture:218, Limits:316, License:398); README.de.md hält alle Top-Level-Sektionen synchron; CHANGELOG.md im Keep-a-Changelog-Format; CONTRIBUTING.md + CONTRIBUTING.de.md bilingual"
+   ],
+   "gaps": [
+    "Doku-Drift zum neuen Code: Architekturdiagramm und Projektstruktur nennen '12 Tools · 3 Resources' (tatsächlich 18 Tools) und das Diagramm zeigt die neuen Upstreams (lindas.admin.ch, measurement-api.slf.ch/aws.slf.ch, jagdstatistik.ch) nicht als Boxen — nur die Datenquellen-Tabelle ist aktuell",
+    "docs/roadmap.md:7 ebenfalls stale ('Alle 12 Tools')"
+   ],
+   "evaluator_notes": "Alle Pflicht-Sektionen inkl. Anchor-Query, ASCII-Diagramm und substanzieller Limits-Sektion sind in beiden Sprachen vorhanden — Kriterien erfüllt. Der Zähler-/Diagramm-Drift ('12 Tools' statt 18, fehlende neue Quellen-Boxen) sollte beim nächsten Release nachgezogen werden."
+  },
+  "OPS-003": {
+   "status": "pass",
+   "category": "OPS",
+   "severity": "high",
+   "evidence": [
+    "README.md:306-314 — Sektion 'Lifecycle Phase': 'This server is in Phase 1 (read-only) — all tools read-only, no auth, no side effects' mit Verweis auf docs/roadmap.md und docs/security.md",
+    "docs/roadmap.md:1-42 — Phasenmodell (1 Read-only ✅ / 2 Write-Auth / 3 Multi-Agent) mit expliziten Übergangs-Voraussetzungen (Audit ohne critical/high, ISDS/DSG bei Personendaten, OAuth/OIDC, Trifecta-Neubewertung, Secret-Manager) und 'Phasenübergänge werden im CHANGELOG dokumentiert'",
+    "src/swiss_environment_mcp/server.py — Phase deckt sich mit den Annotations: 18/18 Tools readOnlyHint:True, 0× destructiveHint:True (grep), auch alle NEUEN Tools (env_bathing_water src/swiss_environment_mcp/server.py:1471-1479, SLF, Jagd) sind reine Read-Tools ohne Auth",
+    "src/swiss_environment_mcp/api_client.py:84-97 — Egress-Allow-List (frozenset, 10 Gov-Hosts) untermauert das Phase-1-Profil; die drei neuen Hosts (measurement-api.slf.ch, aws.slf.ch, www.jagdstatistik.ch) wurden kontrolliert ergänzt"
+   ],
+   "gaps": [
+    "docs/roadmap.md:7 nennt noch 'Alle 12 Tools' (tatsächlich 18) — die Phase-Deklaration wurde bei den Tool-Erweiterungen nicht nachgeführt (inhaltlich bleibt die Aussage korrekt: alle read-only)"
+   ],
+   "evaluator_notes": "Phase 1 ist deklariert, dokumentiert (Roadmap mit Übergangs-Gates) und deckt sich mit den tatsächlichen Tool-Annotations — auch für den gesamten neuen Code. Nur der Tool-Zähler in der Roadmap ist veraltet."
+  },
+  "SCALE-001": {
+   "status": "pass",
+   "category": "SCALE",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:58 — Settings.mcp_transport: str = \"stdio\" (ENV-basierte Transport-Selektion via pydantic-settings, MCP_TRANSPORT)",
+    "src/swiss_environment_mcp/server.py:2656-2677 — main() schaltet zwischen streamable-http (uvicorn + build_cors_app), sse und stdio; Host/Port aus settings.mcp_host/settings.port",
+    "render.yaml:9-16 — Deployment-Manifest setzt MCP_TRANSPORT=streamable-http, MCP_HOST=0.0.0.0, PORT=8000 explizit; Dockerfile:28-30 und Procfile:1 identisch",
+    "Runtime-Test (Audit-Lauf): Server mit MCP_TRANSPORT=streamable-http gestartet, POST /mcp initialize → HTTP 200 mit Capabilities-Response (serverInfo swiss_environment_mcp, protocolVersion 2025-03-26); /health → HTTP 200",
+    "Keine WebSocket-Implementierung: grep -riE 'websocket' src/ → 0 Treffer"
+   ],
+   "gaps": [
+    "Der Live-Cloud-Endpoint (Render-URL) wurde nicht direkt angefragt; der initialize-Nachweis erfolgte gegen das identische Artefakt lokal mit der Cloud-Transport-Konfiguration."
+   ],
+   "evaluator_notes": "Transport-Selektion folgt exakt dem Pass-Pattern: stdio-Default (SEC-016-konform mit 127.0.0.1-Host-Default), Cloud-Manifeste setzen streamable-http explizit, kein WebSocket-Code. Runtime-Verifikation des initialize-Handshakes über Streamable HTTP erfolgreich."
+  },
+  "SCALE-002": {
+   "status": "partial",
+   "category": "SCALE",
+   "severity": "high",
+   "evidence": [
+    "grep -rE 'redis|session_manager|SessionStore|stick|affinity|DurableObject' src/ *.yaml *.yml Dockerfile Procfile docs/ → keine Implementierung eines Sticky-Session- oder Shared-State-Musters (nur textuelle Erwähnung in docs/scaling.md)",
+    "docs/scaling.md:5-16 — dokumentierter Ist-Zustand: Single-Instance (Render Web Service), keine serverseitig persistierten Sessions, kein verteiltes Session-Management",
+    "docs/scaling.md:19-37 — Scale-out-Anforderungen (Sticky Sessions bzw. Redis-Shared-State, Session-TTL, Failover-Regel) sind als verbindliche Vorgabe beschrieben, aber nicht implementiert",
+    "render.yaml:5 — plan: starter, keine Replica-/Scaling-Konfiguration; keine Session-TTL an irgendeiner Stelle gesetzt"
+   ],
+   "gaps": [
+    "Keines der beiden geforderten Muster (Sticky Sessions am Edge-LB / Shared-State-Session-Manager) ist implementiert.",
+    "Keine explizite Session-Lifetime (TTL) definiert — FastMCP-Session-State lebt im Prozess-Memory.",
+    "Kein Failover-Test vorhanden oder dokumentiert."
+   ],
+   "evaluator_notes": "Alle drei Pass-Kriterien unerfüllt, daher fail trotz sauberer Risikodokumentation: docs/scaling.md begründet den Verzicht mit der Single-Instance-Topologie (Affinität trivial erfüllt) und benennt die verbindlichen Muster für den Scale-out. Das Finding wird akut, sobald mehr als eine Replica läuft. [Lead-Auditor-Adjudikation 2026-07-25: fail->partial. Vorbedingung des Checks (horizontal skaliertes Deployment) ist nicht gegeben — render.yaml deployt eine Single-Instance, Affinitaet trivial erfuellt; docs/scaling.md dokumentiert die verbindlichen Muster fuer den Scale-out. Konsistent mit Juni-Audit bei identischem Katalog-Hash. Nicht pass, weil TTL/Failover ungetestet bleiben; wird zum harten fail, sobald >1 Replica deployt wird.]"
+  },
+  "SCALE-003": {
+   "status": "partial",
+   "category": "SCALE",
+   "severity": "high",
+   "evidence": [
+    "find/grep im Repo: keine haproxy.cfg, keine nginx.conf, keine ingress*.yaml, kein k8s/- oder helm/-Verzeichnis — kein Edge-LB liest den Mcp-Session-Id-Header",
+    "src/swiss_environment_mcp/server.py:2649-2650 — CORS-Middleware erlaubt/exponiert den Mcp-Session-Id-Header (allow_headers/expose_headers); das ist nur die Client-seitige Voraussetzung, kein Routing",
+    "docs/scaling.md:26-29 — Header-basiertes Stick-Table-Routing (Kapazität ≥100k, TTL ~24h) ist als Scale-out-Vorgabe dokumentiert, nicht konfiguriert",
+    "render.yaml:1-17 — Render-managed LB ohne konfigurierbare Header-Affinität; kein Affinitäts- oder Failover-Test vorhanden"
+   ],
+   "gaps": [
+    "Kein Edge-LB mit Mcp-Session-Id-basiertem Routing (HAProxy stick-table / NGINX hash / Ingress-Annotation) konfiguriert.",
+    "Keine Stick-Table-Kapazität und kein TTL definiert.",
+    "Failover-Verhalten nicht getestet."
+   ],
+   "evaluator_notes": "Wie SCALE-002: In der aktuellen Single-Instance-Topologie existiert kein Edge-LB, den man konfigurieren könnte — alle vier Pass-Kriterien sind formal unerfüllt (fail). Der Server selbst ist mit der Mcp-Session-Id-Header-Exposition (CORS) LB-ready; die Routing-Konfiguration ist in docs/scaling.md als Pflicht beim ersten Scale-out festgehalten. [Lead-Auditor-Adjudikation 2026-07-25: fail->partial. Vorbedingung des Checks (horizontal skaliertes Deployment) ist nicht gegeben — render.yaml deployt eine Single-Instance, Affinitaet trivial erfuellt; docs/scaling.md dokumentiert die verbindlichen Muster fuer den Scale-out. Konsistent mit Juni-Audit bei identischem Katalog-Hash. Nicht pass, weil TTL/Failover ungetestet bleiben; wird zum harten fail, sobald >1 Replica deployt wird.]"
+  },
+  "SCALE-004": {
+   "status": "partial",
+   "category": "SCALE",
+   "severity": "medium",
+   "evidence": [
+    "Dockerfile:2 und Dockerfile:15 — zwei FROM-Statements mit benannten Stages (AS builder / AS runtime); Build-Stage baut Wheel, Runtime-Stage installiert nur das Wheel (Dockerfile:23-24)",
+    "Dockerfile:2,15 — beide Stages auf python:3.12-slim (Slim-Base)",
+    "Dockerfile:20-21,34 — dedizierter Non-Root-User (uid/gid 10001, --no-create-home), USER app vor CMD",
+    "Dockerfile:37-38 — HEALTHCHECK-Direktive (30s-Intervall) gegen /health; Endpoint existiert in src/swiss_environment_mcp/server.py:328-331 und liefert im Runtime-Test HTTP 200",
+    "Grössen-Schätzung (Audit-Lauf, kein Docker-Daemon verfügbar): site-packages der installierten Dependencies = 92 MB + python:3.12-slim-Base ≈ 125 MB → ~210-220 MB unkomprimiert"
+   ],
+   "gaps": [
+    "Final-Image-Grösse < 200 MB nicht verifizierbar (kein Docker-Daemon im Audit-Container); die Schätzung liegt mit ~210-220 MB unkomprimiert leicht über der Schwelle."
+   ],
+   "evaluator_notes": "Struktur ist vorbildlich: Multi-Stage mit benannten Stages, Slim-Base, Non-Root-User mit hoher UID, Healthcheck gegen den echten /health-Endpoint. Einzig das Grössen-Kriterium (<200 MB) konnte nicht bestätigt werden und ist gemäss Dependency-Footprint-Messung grenzwertig — daher partial statt pass."
+  },
+  "SCALE-006": {
+   "status": "partial",
+   "category": "SCALE",
+   "severity": "medium",
+   "evidence": [
+    "docker-compose.yml:15-17 — mem_limit: 256m, mem_reservation: 128m, cpus: 0.5 (Reservation < Limit → Burst-Headroom vorhanden)",
+    "docker-compose.yml:19-22 — ulimits nofile soft 4096 / hard 8192 (FD-Limit ≥ 4096 für viele ausgehende Connections)",
+    "docker-compose.yml:23-29 — restart: unless-stopped plus Healthcheck gegen /health (Restart-Policy für OOM-Recovery aktiv)",
+    "docs/scaling.md:39-43 — Resource-Limit-Strategie dokumentiert (Requests < Limits, ulimit -n ≥ 4096, restart-policy)",
+    "render.yaml:5 — Produktiv-Deployment auf Render mit plan: starter; Limits dort nur implizit plattformseitig über den Plan, nicht als explizite Konfiguration im Repo"
+   ],
+   "gaps": [
+    "OOM-Verhalten nicht getestet/dokumentiert (kein Stress-Test, kein docker-inspect-Nachweis OOMKilled/RestartPolicy).",
+    "Explizite Limits existieren nur im als Beispiel deklarierten docker-compose.yml (Kommentar Zeile 1); im tatsächlichen Render-Deployment sind Memory/CPU nur über den Starter-Plan implizit gedeckelt."
+   ],
+   "evaluator_notes": "Memory-, CPU- und FD-Limits sowie restart-policy sind vollständig und korrekt dimensioniert konfiguriert — aber im Beispiel-Compose, nicht im produktiven Render-Pfad, und der geforderte OOM-Test fehlt. 4 von 5 Kriterien erfüllt → partial."
+  },
+  "SDK-001": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "high",
+   "evidence": [
+    "Lifespan mit @asynccontextmanager, an den FastMCP-Konstruktor übergeben, Cleanup im finally (src/swiss_environment_mcp/server.py:296-307, 310-322)",
+    "Geteilter httpx.AsyncClient mit startup()/shutdown()-Lifecycle statt pro Tool-Call: einzige AsyncClient-Instanziierung im Repo in _new_client (src/swiss_environment_mcp/api_client.py:180-214, Instanziierung nur api_client.py:185)",
+    "Auch der neue lindas/-Pfad nutzt den Lifespan-Client: run_sparql übergibt get_client() an lindas.client.select, das den injizierten Client verwendet statt einen eigenen zu öffnen (api_client.py:271-278, lindas/client.py:96-136)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Single-Server-Setup, daher kein AsyncExitStack nötig. Die neue lindas/-Schicht ist bewusst transportfrei gebaut (Client wird injiziert) und erzeugt keine per-Call-Clients — das Pass-Kriterium gilt auch für den neuen Code."
+  },
+  "SDK-002": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "medium",
+   "evidence": [
+    "Pydantic >= 2.0 als Dependency (pyproject.toml:26-27)",
+    "Typisierter ResponseEnvelope als BaseModel mit source/provenance/count/match_type(Literal)/results(Field default_factory)/note (src/swiss_environment_mcp/server.py:343-381)",
+    "Envelope konsistent in den Such-/Listen-Tools inkl. des neuen env_bathing_water (JSON-Modus via _envelope_json mit match_type exact/fuzzy/none, server.py:1541-1549, 1594-1606); Envelope-Struktur getestet (tests/test_unit.py:328-336)",
+    "Alle 18 Tools haben explizite Return-Annotationen (-> str, z.B. server.py:1482) und Literal-/Enum-Typen für enumerierbare Werte (MatchType server.py:343, ResponseFormat server.py:337-339)"
+   ],
+   "gaps": [
+    "Markdown-String bleibt Default-Rückgabeformat; die Tools annotieren -> str statt BaseModel direkt, FastMCP exponiert daher kein strukturiertes Output-Schema im tools/list-Manifest (bewusste UX-Entscheidung, JSON-Modus liefert den validierten Pydantic-Dump)"
+   ],
+   "evaluator_notes": "Der Envelope ist ein validiertes Pydantic-Modell und wurde für das neue LINDAS-Tool konsistent weitergeführt (inkl. Lizenz im source-Feld); der bekannte, bereits im letzten Audit akzeptierte Trade-off (str-Serialisierung statt Modell-Return) bleibt als Gap dokumentiert."
+  },
+  "SDK-003": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "medium",
+   "evidence": [
+    "Alle 18 Tools deklarieren ctx: Context | None und werden per FastMCP-DI versorgt, auch das neue env_bathing_water (src/swiss_environment_mcp/server.py:819-2512, z.B. 1482)",
+    "Fehler werden nicht stumm geschluckt: zentrale _handle_tool_error meldet via ctx.warning an den Client und loggt strukturiert (server.py:79-101; genutzt z.B. in env_bathing_water server.py:1627-1630); Verhalten getestet (tests/test_unit.py:260-270)",
+    "Kein print()/stdout-Logging: structlog schreibt ausschliesslich nach stderr (src/swiss_environment_mcp/logging_setup.py:34-35), grep nach print( in src/ liefert 0 Treffer — stdio-Transport-sicher"
+   ],
+   "gaps": [
+    "ctx.report_progress wird nirgends genutzt; env_bathing_water kettet bis zu 4 sequentielle SPARQL-Queries und könnte bei langsamem LINDAS >2 s laufen, ohne Progress-Events"
+   ],
+   "evaluator_notes": "Context-Injection und Fehler-Reporting sind flächendeckend; die Tools sind kurze API-Calls, nur der neue Mehrfach-Query-Pfad des Badegewässer-Tools wäre ein Kandidat für Progress-Reports. Keine schreibenden Tools, daher kein ctx.elicit nötig."
+  },
+  "SDK-004": {
+   "status": "pass",
+   "category": "SDK",
+   "severity": "high",
+   "evidence": [
+    "CORS-Middleware um die Streamable-HTTP-App mit expose_headers=['Mcp-Session-Id'] und Mcp-Session-Id in allow_headers (src/swiss_environment_mcp/server.py:2629-2653)",
+    "Origins nicht hardcoded: konfigurierbar via MCP_CORS_ALLOW_ORIGINS (Settings, server.py:61-66); Wildcard-Default löst explizite Produktions-Warnung aus (server.py:2640-2644); allow_credentials=False, damit '*' CORS-spec-konform bleibt (server.py:2651-2652)",
+    "Runtime-verifiziert per Test: test_cors_exposes_and_allows_session_id_header prüft, dass die Response access-control-expose-headers mit Mcp-Session-Id trägt (tests/test_unit.py:430-442)"
+   ],
+   "gaps": [
+    "Default MCP_CORS_ALLOW_ORIGINS='*' im Dev-Modus — für Produktion nur als dokumentierte Pflicht (Kommentar + Log-Warnung), nicht technisch erzwungen"
+   ],
+   "evaluator_notes": "Das kritische expose_headers/allow_headers-Paar für Mcp-Session-Id ist gesetzt und getestet; da der Server ohne Auth/Credentials läuft, ist die Wildcard-Default-Kombination mit allow_credentials=False zulässig und wird beim Start gewarnt."
+  },
+  "SEC-004": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "src/swiss_environment_mcp/api_client.py:149-150 — assert_host_allowed() erzwingt HTTPS (SecurityError bei anderem Schema) vor jedem Request",
+    "src/swiss_environment_mcp/api_client.py:84-97 — Egress-Allow-List ALLOWED_HOSTS als frozenset (10 fixe Gov-Hosts); Host-Check in Zeile 152-153; kein Tool nimmt URLs aus User-Input entgegen",
+    "src/swiss_environment_mcp/api_client.py:111-119 — _is_blocked_ip blockt private/loopback/link_local (inkl. 169.254.169.254)/reserved/multicast/unspecified; deckt via ipaddress auch IPv6 ::1 und fe80::/10 ab",
+    "src/swiss_environment_mcp/api_client.py:157-175 — _PinnedTransport: Resolution + Blocklist-Check + Connect auf geprüfte IP im selben Schritt (kein TOCTOU); Zeile 192 follow_redirects=False",
+    "src/swiss_environment_mcp/api_client.py:217-223 und 271-278 — jeder GET-Pfad (_get_json) ruft assert_host_allowed; LINDAS-Pfad run_sparql übergibt egress_check=assert_host_allowed an lindas.client.select",
+    "src/swiss_environment_mcp/lindas/client.py:113-114 — select() ruft den injizierten egress_check(endpoint) vor GET wie POST auf; genutzter HTTP-Client ist der geteilte Pinned-Client (api_client.py:183-193)",
+    "tests/test_unit.py:169-200 — Tests: unbekannter Host blockiert, Nicht-HTTPS blockiert, interne aufgelöste IP (169.254.169.254) blockiert"
+   ],
+   "gaps": [
+    "Kein Egress-Proxy (z.B. Smokescreen) im Production-Deployment (Render/Compose); Network-Layer-Filtering ist in docs/security.md nur als Empfehlung dokumentiert, nicht umgesetzt",
+    "assert_host_allowed löst zusätzlich zur Transport-Pinning-Resolution auf (redundanter zweiter DNS-Lookup; kein Sicherheitsrisiko, da die Connect-IP separat geprüft und gepinnt wird)"
+   ],
+   "evaluator_notes": "SSRF-Schutz mehrschichtig und auch im neuen LINDAS-Pfad lückenlos: Host-Allow-List (keine User-URLs), HTTPS-Zwang, IP-Blocklist nach Resolution, DNS-Pinning-Transport, keine Redirects. Einziger offener Punkt ist die Defense-in-Depth via Egress-Proxy/NetworkPolicy im Deployment."
+  },
+  "SEC-005": {
+   "status": "partial",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/api_client.py:157-175 — _PinnedTransport löst auf, prüft die IP und setzt request.url.copy_with(host=ip): die geprüfte IP wird für den TCP-Connect verwendet",
+    "src/swiss_environment_mcp/api_client.py:171-174 — sni_hostname-Extension trägt den Original-Hostnamen (TLS-SNI/Zertifikatsprüfung gegen Hostname, nicht IP); Host-Header bleibt der Original-Hostname (beim Request-Bau gesetzt, URL-Rewrite ändert ihn nicht)",
+    "src/swiss_environment_mcp/api_client.py:183-193 — geteilter Client wird mit _PinnedTransport erzeugt; run_sparql (Zeile 271-278) nutzt get_client(), damit gilt das Pinning auch für den neuen LINDAS-Pfad (GET und POST in lindas/client.py laufen über diesen Client)",
+    "tests/test_unit.py:193-215 — test_dns_pin_blocks_internal_ip (169.254.169.254 → SecurityError), test_dns_pin_returns_public_ip, test_client_uses_pinned_transport"
+   ],
+   "gaps": [
+    "Pass-Kriterium 'DNS-Resolution erfolgt einmalig' formal verfehlt: assert_host_allowed (api_client.py:154) und _PinnedTransport (Zeile 169) lösen je Request beide auf — zwei getaddrinfo-Calls; die Connect-IP stammt aber aus dem geprüften zweiten Lookup, daher kein ausnutzbares TOCTOU-Fenster",
+    "Kein Test, der 'nur 1 DNS-Call pro Request' verifiziert (Pass-Kriterium); in den gemockten Suiten ist dns_pin_enabled sogar deaktiviert (tests/test_lindas.py:38-39, tests/test_unit.py:56-60), der Pinning-Pfad wird nicht end-to-end getestet"
+   ],
+   "evaluator_notes": "DNS-Pinning ist korrekt implementiert (Check und Connect atomar im Transport, SNI/Host erhalten) und greift auch für LINDAS über den geteilten Client. Partial, weil die Einmal-Resolution nur in der Substanz, nicht im Wortlaut erfüllt ist und der geforderte 1-DNS-Call-Test fehlt."
+  },
+  "SEC-006": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:58 — Settings.mcp_transport Default 'stdio'; HTTP nur via expliziter Env-Var MCP_TRANSPORT",
+    "src/swiss_environment_mcp/server.py:2661-2680 — main(): nur der streamable-http-Zweig startet uvicorn, der sse-Zweig mcp.run('sse'); Default-/Fallback-Zweig ist mcp.run(transport='stdio') — Default-Start öffnet keinen TCP-Port",
+    "README.md:96-115 — lokaler Use-Case primär dokumentiert (Claude Desktop, uvx, claude_desktop_config.json mit vollem Befehl)",
+    "README.md:117-135 — Cloud-Deployment separat dokumentiert ('stdio for the developer laptop, SSE for the browser'); .env.example:8-13 dokumentiert stdio-Default und 127.0.0.1-Binding"
+   ],
+   "gaps": [
+    "Unbekannte MCP_TRANSPORT-Werte fallen still auf stdio zurück statt mit ValueError zu scheitern (Pass-Pattern verlangt explizite Ablehnung; Fallback geht immerhin in die sichere Richtung)",
+    "Runtime-Test (ss/nmap gegen Default-Start) im Audit-Environment nicht ausführbar (mcp-Paket nicht installiert); Befund beruht auf Code-Review"
+   ],
+   "evaluator_notes": "Default-Transport ist stdio ohne Netzwerk-Binding, HTTP/SSE nur per expliziter Env-Var, lokale und Cloud-Nutzung sind sauber getrennt dokumentiert. Kleine Härtungslücke: fehlende Validierung unbekannter Transport-Werte."
+  },
+  "SEC-007": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Dockerfile:20-22 — Non-root-User mit UID/GID 10001 (groupadd --system --gid 10001 / useradd --uid 10001, --no-create-home)",
+    "Dockerfile:35 — 'USER app' vor dem CMD; Prozess läuft nicht als root",
+    "Dockerfile:1-12 — Multi-Stage-Build (builder baut Wheel, Runtime-Stage installiert nur das Wheel; kein Build-Toolchain im Runtime-Image)",
+    "Dockerfile:38-41 — HEALTHCHECK gegen /health; docker-compose.yml — mem_limit 256m, cpus 0.5, ulimits nofile (Ressourcen-Begrenzung); Docker-Default-seccomp-Profil bleibt aktiv (nirgends 'seccomp:unconfined'/privileged gesetzt)",
+    "Server exponiert keine Filesystem-Tools (alle 18 Tools read-only auf externe APIs) — Volume-Allow-List-Kriterium nicht anwendbar"
+   ],
+   "gaps": [
+    "docker-compose.yml setzt kein read_only: true, kein cap_drop: [ALL] und kein security_opt (no-new-privileges) — Container-Filesystem bleibt beschreibbar",
+    "Keine Kubernetes-Manifeste (runAsNonRoot/readOnlyRootFilesystem/capabilities-Kriterien entfallen); für Render existiert kein deklaratives Sandbox-Hardening"
+   ],
+   "evaluator_notes": "Kern-Kriterien erfüllt: Non-root UID 10001, Multi-Stage-Image, Default-seccomp, Ressourcen-Limits, keine File-Tools. Empfohlene Nachschärfung: read_only/cap_drop im docker-compose-Beispiel."
+  },
+  "SEC-008": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "medium",
+   "evidence": [
+    "pyproject.toml — Build-Backend hatchling ohne cmdclass/Custom-Hooks; einziger Entry-Point [project.scripts] swiss-environment-mcp = 'swiss_environment_mcp.server:main'; kein package.json/pre-/postinstall im Repo",
+    "README.md:100-110 und 435-443 — voller, ungekürzter Installations-Befehl (uvx swiss-environment-mcp) in claude_desktop_config.json transparent gezeigt, ohne versteckte Setup-Steps",
+    ".github/workflows/publish.yml:7-9,35-50 — PyPI-Publish via pypa/gh-action-pypi-publish mit OIDC (permissions: id-token: write, environment pypi) = Trusted Publisher mit Sigstore-Signatur; zusätzlich MCP-Registry-Publish via GitHub-OIDC",
+    "scripts/ enthält nur tool_snapshot.py (im Repo lesbar, CI-Werkzeug, kein Install-Hook); kein dynamisches Code-Loading beim Install"
+   ],
+   "gaps": [
+    "CONTRIBUTING.md dokumentiert Dev-Setup/Tests, aber keinen expliziten Abschnitt zum Build-/Release-Prozess für unabhängige Verifikation (der Build ist nur über publish.yml nachvollziehbar)"
+   ],
+   "evaluator_notes": "Installation ist vollständig transparent (Standard-Wheel via hatchling, uvx-Befehl im README, keine Install-Hooks), Publishing läuft über PyPI-OIDC-Trusted-Publisher. Einzige Lücke ist die fehlende Build-Prozess-Doku in CONTRIBUTING.md."
+  },
+  "SEC-009": {
+   "status": "partial",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "docs/security.md (Abschnitt 'Session-Modell (SEC-009)') — dokumentierter Entscheid: kein Auth-Modell, FastMCP verwaltet die Mcp-Session-Id; keine benutzerbezogenen Sessions, keine sensiblen Daten an Sessions gebunden; verbindliche Vorgaben (crypto IDs, sub-Binding, TTL, Logout-Invalidierung) für künftige OAuth-Einführung festgehalten",
+    "src/swiss_environment_mcp/server.py:2634-2650 — build_cors_app expose_headers/allow_headers für Mcp-Session-Id, allow_credentials=False; Session-Handling vollständig an den MCP-SDK-Transport delegiert, kein eigener (potenziell schwacher) Session-Code im Repo",
+    "pyproject.toml — mcp[cli]>=1.28.1,<2 gepinnt; die SDK-Session-ID-Generierung (uuid4) ist kryptografisch zufällig und wird nicht durch eigenen Code ersetzt",
+    "docs/security.md (Datenklassifikation) — ausschliesslich Public Open Data, alle Tools read-only, keine Personendaten: Session-Hijacking hätte keinen Zugriff auf fremde Daten oder Schreib-Operationen zur Folge"
+   ],
+   "gaps": [
+    "Kein User-Binding (user_id:session_id) — mangels Auth-Modell nicht umsetzbar; die Kriterien 'Binding an validierten sub-Claim' und 'HTTP 401/403 bei Mismatch' sind unerfüllt (dokumentiert als bewusster Verzicht)",
+    "Keine explizite Session-TTL und keine serverseitige Logout-Invalidierung konfiguriert",
+    "Kryptografische Qualität der SDK-Session-IDs im Audit-Environment nicht direkt verifizierbar (mcp-Paket nicht installiert); Beleg stützt sich auf Delegation an das gepinnte SDK"
+   ],
+   "evaluator_notes": "Für einen auth-losen Public-Data-Server ist das Session-Risiko dokumentiert und materiell gering (nichts zu kapern: read-only, keine User-Daten). Die harten Pass-Kriterien (Binding, TTL, Invalidierung) sind aber nicht erfüllt — daher partial mit dokumentierter Risiko-Akzeptanz."
+  },
+  "SEC-013": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "docs/security.md (Abschnitt 'Secret-Management (SEC-013)') — dokumentierter Entscheid: Server benötigt keine Secrets/API-Keys (Public Open Data), Stufe 1 bewusst gewählt; Eskalationspfad auf Stufe 3 (Secret-Manager EU/CH + SecretStr) für künftige authentifizierte Upstreams festgehalten",
+    "src/swiss_environment_mcp/ — kein Secret-Loading im Code: einzige Env-Reads sind OTEL_EXPORTER_OTLP_ENDPOINT/OTEL_SERVICE_NAME (tracing.py:30,44-45) und Transport-Settings (server.py:58-64); grep nach KEY/SECRET/TOKEN/PASSWORD in src/ ohne Treffer",
+    "Dockerfile:28-31 — ENV-Layer enthält nur MCP_TRANSPORT/MCP_HOST/PORT (nicht-geheime Werte); keine Secrets in Image-Layern",
+    ".env.example:4-6 — dokumentiert explizit 'benötigt KEINE Secrets / API-Keys' und listet nur Transport-Variablen",
+    ".github/workflows/security.yml — gitleaks-Scan (History + Working Tree, --redact) auf jedem Push/PR als CI-Gate"
+   ],
+   "gaps": [
+    "Rotation-/Secret-Manager-Kriterien sind mangels Secrets nicht anwendbar; bei künftigem authentifiziertem Upstream ist der dokumentierte Wechsel auf Stufe 3 zwingend umzusetzen"
+   ],
+   "evaluator_notes": "Der Server verarbeitet ausschliesslich Public Open Data und hält null Secrets — die für dieses Profil geforderte dokumentierte Stufe-1-Begründung liegt in docs/security.md vor, flankiert von gitleaks-CI und secret-freien Image-Layern."
+  },
+  "SEC-014": {
+   "status": "fail",
+   "category": "SEC",
+   "severity": "medium",
+   "evidence": [
+    "Repo-weite Suche (find/grep nach allowlist|tool-policy|gateway-config|allowed_tools) ohne Treffer — es existiert keine Team-/Rollen-Allow-List und kein Gateway-Config",
+    "src/swiss_environment_mcp/server.py — keine Group-/Role-Checks (kein require_group, keine OAuth-Claims); Server hat kein Auth-Modell (docs/security.md: 'Auth: keine')",
+    "docs/security.md (Abschnitt 'Tool-Poisoning / Gateway (SEC-015)') — dokumentierter Stand: Server läuft ohne vorgelagertes MCP-Gateway; für Enterprise-Einsatz wird Tool-Allow-Listing (default-deny) am Gateway explizit als nachzurüstende Massnahme benannt",
+    "tool-snapshot.json + .github/workflows/ci.yml:40 (scripts/tool_snapshot.py check) — CI-Gate friert das Tool-Inventar ein (kompensierende Kontrolle gegen Tool-Drift, aber keine team-/rollenspezifische Filterung)"
+   ],
+   "gaps": [
+    "Keine Tool-Allow-List pro Team/Rolle dokumentiert oder konfiguriert (kein Gateway, kein default-deny im tools/list-Response)",
+    "Keine Server-Side Defense-in-Depth via Group-/Role-Check — mangels Auth-Modell derzeit nicht umsetzbar",
+    "Denied-Tool-Aufrufe werden nicht auditiert (kein 403-Pfad existiert)",
+    "tools/list ist für alle Clients identisch, keine rollen-spezifische Filterung"
+   ],
+   "evaluator_notes": "Kein Pflicht-Kriterium erfüllt: der cloud-deploybare Server steht ohne Gateway/Allow-Listing da. Das Risiko ist durch das Profil (read-only, Public Open Data, Snapshot-CI-Gate) gemindert und der Gateway-Bedarf für Enterprise-Kontexte ist dokumentiert — für den Check bleibt es dennoch ein fail."
+  },
+  "SEC-015": {
+   "status": "fail",
+   "category": "SEC",
+   "severity": "medium",
+   "evidence": [
+    "Repo-weite Suche (grep nach tool.poisoning|prompt.injection|sanitize.*description in src/ und deploy-Artefakten) ohne Treffer — kein Pre-Flight-Detection-Layer implementiert",
+    "docs/security.md (Abschnitt 'Tool-Poisoning / Gateway (SEC-015)') — dokumentierte Risiko-Akzeptanz: eigenständiger read-only Public-Data-Server ohne Gateway, Detection 'für dieses Profil nicht erforderlich'; bei Enterprise-Einsatz Prompt-Injection-Filtering am Gateway gefordert",
+    "tool-snapshot.json (Repo-Root) + .github/workflows/ci.yml:40 — Tool-Definition-Snapshot als CI-Gate (SEC-022) sichert die Integrität der eigenen Tool-Definitionen gegen unbemerkte Änderungen (Rug-Pull), ersetzt aber keine Pattern-Detection",
+    "Keine Tests für Injection-/Homoglyph-/Zero-Width-Erkennung in tests/ (grep nach poisoning|injection|homoglyph ohne Treffer in Detection-Kontext)"
+   ],
+   "gaps": [
+    "Kein Detection-Layer, keine der vier geforderten Pattern-Klassen (System-Prompts, Override-Phrasen, Invisible-Characters, Homoglyphs) abgedeckt",
+    "Kein default-deny-Filter für high-risk Tool-Definitionen, kein Logging/SIEM-Alerting von Detection-Events",
+    "Keine Tests für Standard-Angriffsmuster"
+   ],
+   "evaluator_notes": "Pre-Flight-Tool-Poisoning-Detection ist nicht vorhanden — bewusst und in docs/security.md begründet (nur eigene Tool-Definitionen, Snapshot-CI-Gate als kompensierende Integritätskontrolle). Gegen die Pass-Kriterien gemessen (0/6) ergibt das ein fail; das Restrisiko ist beim aktuellen Single-Server-Profil gering."
+  },
+  "SEC-016": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "src/swiss_environment_mcp/server.py:59 — Settings.mcp_host Default '127.0.0.1'; Docstring Zeile 52-53 dokumentiert den SEC-016-Entscheid explizit; kein '0.0.0.0' als Code-Default (repo-weiter grep: 0.0.0.0 nur in Dockerfile/compose/render.yaml/.env.example-Kommentar)",
+    "src/swiss_environment_mcp/server.py:2661-2676 — Host/Port ausschliesslich aus Env-Settings (MCP_HOST/PORT); Default-Transport stdio öffnet gar keinen Port",
+    "Dockerfile:28-31 — ENV MCP_HOST=0.0.0.0 NUR im Container, mit Kommentar 'der Code-Default bleibt 127.0.0.1 (Audit SEC-016)'; render.yaml setzt MCP_HOST=0.0.0.0 ebenfalls explizit mit Begründung",
+    ".env.example:11-13 und SECURITY.md:26 — Differenzierung lokal (127.0.0.1) vs. Container/Cloud (0.0.0.0) dokumentiert ('Network transports default to 127.0.0.1 (SEC-016)')"
+   ],
+   "gaps": [
+    "docker-compose.yml mappt 'ports: 8000:8000' ohne Bind-Adresse — auf einem Dev-Host wird der Container-Port damit auf allen Host-Interfaces exponiert (empfohlen: '127.0.0.1:8000:8000')",
+    "Optionales Kriterium nicht umgesetzt: keine Laufzeit-Warnung beim Start mit 0.0.0.0 ausserhalb eines Container-Kontexts"
+   ],
+   "evaluator_notes": "Alle Pflicht-Kriterien erfüllt: 127.0.0.1 als Code-Default, 0.0.0.0 nur explizit in Container-Artefakten, Differenzierung dokumentiert. Nachschärfen sollte man das Port-Mapping im docker-compose-Beispiel."
+  },
+  "SEC-018": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Alle 18 Tools nehmen Pydantic-Input-Modelle mit extra='forbid' entgegen (src/swiss_environment_mcp/server.py:384-686; z.B. NabelCurrentInput server.py:392-407, BathingWaterInput server.py:502-522)",
+    "Whitelist-Patterns + feld-level strict=True auf kritischen Feldern: station ^[A-Za-z]{2,10}$ (server.py:399-400), station_id ^[0-9]{2,10}$ (server.py:456-457), dataset_id Slug-Whitelist (server.py:683-684), canton ^[A-Za-z]{0,2}$ inkl. neuem BathingWaterInput (server.py:513-514), species/data_type (server.py:627,640)",
+    "Numerische Constraints ge/le überall: days 1-30 (server.py:479-480), min_level 1-5 (server.py:489-490), limit 1-50 im neuen BathingWaterInput (server.py:519-520), rows 1-50/offset ge=0 (server.py:665-671), value 0-100000 (server.py:418-419)",
+    "Edge-Case-Tests: ValidationError bei rows=999 (tests/test_unit.py:274-277), Injection 'station_id=2099; DROP TABLE' abgewiesen (tests/test_unit.py:283-289), Path-Traversal '../../etc/passwd' abgewiesen (tests/test_unit.py:292-298)",
+    "Downstream-Defense für Freitext-Felder des neuen LINDAS-Pfads: sparql_escape (src/swiss_environment_mcp/lindas/cube.py:65-73) und _safe_uri-Whitelist-Regex (cube.py:49,76-80) mit Injection-Test (tests/test_lindas.py:167-169)"
+   ],
+   "gaps": [
+    "strict=True nur feld-level auf kritischen Feldern, nicht global im model_config (Pydantic-Lax-Coercion auf übrigen Feldern möglich)",
+    "Freitext-Felder (location, water_body, region, query) haben max_length aber kein Whitelist-Pattern — kompensiert durch sparql_escape/URL-Parametrisierung"
+   ],
+   "evaluator_notes": "Der neue BathingWaterInput folgt der etablierten Konvention (extra='forbid', Kanton-Whitelist, limit 1-50); location ist pattern-frei, wird aber nur via sparql_escape in CONTAINS-Literale interpoliert. Alle Pflicht-Kriterien substanziell erfüllt, 5 Evidenzpunkte (>3)."
+  },
+  "SEC-019": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "Dokumentierte Trifecta-Bewertung mit Tabelle und Ergebnis 'maximal eine Fähigkeit' (docs/security.md:17-35)",
+    "Server ist vollständig read-only: alle 18 Tools tragen readOnlyHint=true/destructiveHint=false (z.B. src/swiss_environment_mcp/server.py:808-816, 1471-1479); keine send_mail/smtplib/webhook/POST-an-Fremdziele-Funktionen im Code (einziger POST ist die SPARQL-Query an lindas.admin.ch, lindas/client.py:128-136, Egress-geprüft)",
+    "Kein exfiltrierbarer Kanal: ausgehende Requests nur an frozenset-Allow-List von 10 Gov-/SLF-Hosts (src/swiss_environment_mcp/api_client.py:84-97), follow_redirects=False (api_client.py:192), keine Empfänger-Ziele aus User-Input",
+    "Eskalations-Trigger dokumentiert: Neubewertung bei künftigen Write-/Send-Tools (docs/security.md:33-35, docs/roadmap.md:30)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Nur öffentliche BAFU/SLF-Daten, keine privaten Daten, kein Write/Send — Trifecta-Score bleibt auch mit den neuen LINDAS-/SLF-/Jagd-Tools bei maximal 1 von 3. Die neuen Hosts sind in derselben Allow-List erfasst."
+  },
+  "SEC-020": {
+   "status": "pass",
+   "category": "SEC",
+   "severity": "critical",
+   "evidence": [
+    "Keine verbotenen Patterns: grep über src/ und scripts/ nach os.system|shell=True|eval(|exec(|os.popen liefert 0 Treffer; das Projekt ruft überhaupt keine Subprocesses/externen Binaries auf (nur httpx-Library-Calls)",
+    "User-Input erreicht ausschliesslich parametrisierte HTTP-Calls (httpx params-Dict, z.B. src/swiss_environment_mcp/api_client.py:443-450, 588-589) bzw. escaped/validierte SPARQL-Interpolation: sparql_escape (lindas/cube.py:65-73), _safe_uri-Whitelist ^https?://[^\\s<>\"'{}|\\\\^`]+$ (lindas/cube.py:49,76-80), int()-Cast für limit (cube.py:187,258,352)",
+    "Timeouts gegen Resource-Exhaustion auf allen Aufrufpfaden: httpx.Timeout(15.0, connect=5.0) (api_client.py:80), LINDAS-Client-Timeout 45 s vor dem Server-Abbruch (lindas/client.py:38,116)",
+    "Injection-Tests: _safe_uri weist SPARQL-Struktur-Injection zurück (tests/test_lindas.py:167-169), sparql_escape-Verhalten getestet (tests/test_unit.py:822-824), Shell-artiger Input '2099; DROP TABLE' scheitert bereits an der Pydantic-Whitelist (tests/test_unit.py:283-289)"
+   ],
+   "gaps": [],
+   "evaluator_notes": "Library-First-Architektur ohne jegliche Shell-/Subprocess-Nutzung; der neue lindas/-Code interpoliert User-Input nur über sparql_escape bzw. die _SAFE_URI-Whitelist und castet numerische Limits hart auf int. Kein Command-Injection-Vektor gefunden."
+  },
+  "SEC-021": {
+   "status": "partial",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Code-Layer Allow-List als nicht-mutierbares frozenset mit 10 explizit benannten Gov-/SLF-Hosts (src/swiss_environment_mcp/api_client.py:82-97)",
+    "Pre-Request-Check assert_host_allowed (HTTPS-Zwang + Host-Whitelist + IP-Blocklist) vor jedem ausgehenden Request: _get_json (api_client.py:217-221), _get_json_retry (api_client.py:524-538), LINDAS-Pfad via egress_check-Injection (api_client.py:271-278, lindas/client.py:113-114)",
+    "Defense-in-Depth im Code: DNS-Pinning-Transport ohne TOCTOU-Fenster + Blocklist privater/loopback/link-local IPs (api_client.py:111-175), follow_redirects=False (api_client.py:192)",
+    "Dokumentation der Egress-Policy inkl. DNS-Hinweis in docs/security.md:74-81; Allow-List-Hosts im Modul-Header benannt (api_client.py:11-15)"
+   ],
+   "gaps": [
+    "Network-Layer Egress Control ist nur als Empfehlung dokumentiert ('empfohlen für Cloud', docs/security.md:79-81) — kein deploybares Policy-Artefakt (keine NetworkPolicy/Security-Group in render.yaml, docker-compose.yml oder Dockerfile)",
+    "Kein dokumentiertes Update-Verfahren für Allow-List-Erweiterungen (PR-Review + CHANGELOG-Pflicht) in docs/ oder CONTRIBUTING"
+   ],
+   "evaluator_notes": "Der Code-Layer ist vorbildlich und deckt auch die neuen LINDAS-/SLF-/Jagd-Hosts ab, aber der vom Check explizit verlangte zweite (Network-)Layer existiert nur als Prosa-Empfehlung; bei striktem Massstab 4 von 6 Pass-Kriterien erfüllt → partial trotz 4 gesammelter Evidenzpunkte."
+  },
+  "SEC-022": {
+   "status": "partial",
+   "category": "SEC",
+   "severity": "high",
+   "evidence": [
+    "Konsistentes env_-Namespace-Präfix über alle 18 Tools inkl. des neuen env_bathing_water (tool-snapshot.json:3-22; @mcp.tool(name=...) z.B. src/swiss_environment_mcp/server.py:809,1472)",
+    "Tool-Definition-Hash-Snapshot regeneriert und aktuell: tool-snapshot.json mit tool_count=18 und sha256=3dd4498f... (tool-snapshot.json:2,24); Live-Check bestanden: 'python scripts/tool_snapshot.py check' → 'tool-snapshot OK (18 Tools, 3dd4498f540b)'",
+    "Rug-Pull-Gate doppelt verankert: CI-Step (.github/workflows/ci.yml:40) und Test test_tool_snapshot_is_current (tests/test_unit.py:309-322)",
+    "CHANGELOG nennt Tool-Definition-Änderungen explizit: 0.3.0 neues Tool env_bathing_water + 'Tool-Definitionen geändert → tool-snapshot.json neu erzeugt' (CHANGELOG.md:9-17,58-59); Versions-Bump 0.2.0→0.3.0 (pyproject.toml:7)"
+   ],
+   "gaps": [
+    "Kein expliziter User-Re-Approval-Hinweis im CHANGELOG, obwohl 0.3.0 bestehende Tool-Definitionen geändert hat (BUG-01: env_flood_warnings/env_hydro_history) und der Snapshot-Hash damit wechselte",
+    "Präfix 'env_' ist konsistent, trägt aber nicht die volle Server-Identität (z.B. 'swiss_environment__') — Rest-Kollisionsrisiko mit anderen Umwelt-/Environment-Servern"
+   ],
+   "evaluator_notes": "Hash-Pinning, CI-Gate und CHANGELOG-Disziplin sind vorhanden und für 0.3.0 nachweislich gepflegt; strikt gewertet fehlt aber der geforderte Re-Approval-Hinweis bei geänderten Tool-Definitionen, daher partial (5 von 6 Kriterien)."
+  }
+ }
+}
