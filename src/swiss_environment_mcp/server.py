@@ -1703,7 +1703,10 @@ async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None =
 
     <use_case>Tagesaktuelles Naturgefahren-Bulletin (Lawinen, Hochwasser,
     Sturm, Rutschungen) für die ganze Schweiz.</use_case>
-    <important_notes>Quelle SLF/BAFU, mehrsprachig (de/fr/it/en).</important_notes>
+    <important_notes>Quelle SLF/BAFU, mehrsprachig (de/fr/it/en). ⚠️ Der frühere
+    naturgefahren.ch-REST-Endpoint ist stillgelegt (2026); das Tool liefert dann
+    kuratierte Direktlinks zur Warnplattform. Vollwertige Warndaten sind über
+    MeteoSchweiz verfügbar (→ meteoswiss-mcp, Follow-up).</important_notes>
 
     Args:
         params (HazardOverviewInput):
@@ -1778,8 +1781,9 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
 
     <use_case>Regionsspezifische Gefahren für Events, Schulausflüge oder
     Infrastrukturplanung.</use_case>
-    <important_notes>Region + optional Gefahrentyp filtern; bei leerem Resultat
-    werden Karten-Links geliefert.</important_notes>
+    <important_notes>Region + optional Gefahrentyp filtern. ⚠️ Der frühere
+    naturgefahren.ch-REST-Endpoint ist stillgelegt (2026); bei leerem/degradiertem
+    Resultat werden Karten-Direktlinks geliefert.</important_notes>
 
     Args:
         params (HazardRegionsInput):
@@ -1854,7 +1858,10 @@ async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None =
 
     <use_case>Waldbrandgefahr-Index pro Region/Kanton, z.B. für Forstbetriebe
     oder Event-Planung.</use_case>
-    <important_notes>5-stufige Skala, tagesaktuell (de/fr/it).</important_notes>
+    <important_notes>5-stufige Skala, tagesaktuell (de/fr/it/en). Ohne
+    Kanton-Filter werden die höchsten Stufen zuerst und auf 40 Regionen begrenzt
+    gezeigt. Datenzugriff über einen zweistufigen, HTML-getragenen Vertrag
+    (react-props der Startseite → signierte Blob-JSON-URL).</important_notes>
 
     Args:
         params (WildfireDangerInput):
@@ -1875,26 +1882,50 @@ async def env_wildfire_danger(params: WildfireDangerInput, ctx: Context | None =
             "**Gefahrenstufen:** 1=Gering | 2=Mässig | 3=Erheblich | 4=Gross | 5=Sehr gross\n",
         ]
 
-        if regions:
+        # Passende Regionen sammeln (Kanton-Filter), höchste Gefahr zuerst.
+        matched = []
+        for r in regions:
+            canton = str(r.get("canton", r.get("kanton", "–"))).upper()
+            if params.canton and params.canton.upper() != canton:
+                continue
+            matched.append(
+                {
+                    "name": r.get("name", r.get("region", canton)),
+                    "canton": canton,
+                    "level": int(r.get("danger_level", r.get("level", 0))),
+                }
+            )
+        matched.sort(key=lambda m: m["level"], reverse=True)
+
+        # Ohne Kanton-Filter sind es schweizweit ~140 Regionen → begrenzen.
+        cap = 40 if not params.canton else len(matched)
+
+        if matched:
             lines += [
-                "| Region | Kanton | Gefahrenstufe | Status |",
-                "|--------|--------|---------------|--------|",
+                "| Region | Kanton | Gefahrenstufe | Bedeutung |",
+                "|--------|--------|---------------|-----------|",
             ]
-            for r in regions:
-                canton = str(r.get("canton", r.get("kanton", "–"))).upper()
-                if params.canton and params.canton.upper() != canton:
-                    continue
-                name = r.get("name", r.get("region", canton))
-                level = int(r.get("danger_level", r.get("level", 0)))
+            for m in matched[:cap]:
+                level = m["level"]
                 level_info = WILDFIRE_DANGER_LEVELS.get(level, {"label": "–", "color": "–"})
                 icon = (
                     "🟢" if level <= 1 else ("🟡" if level == 2 else ("🟠" if level == 3 else "🔴"))
                 )
                 lines.append(
-                    f"| {name} | {canton} | {icon} Stufe {level} | {level_info['label']} |"
+                    f"| {m['name']} | {m['canton']} | {icon} Stufe {level} | {level_info['label']} |"
                 )
+            if len(matched) > cap:
+                lines.append(
+                    f"\n*…und {len(matched) - cap} weitere Regionen. Mit `canton` filtern "
+                    "(z.B. 'VS', 'TI') für die vollständige Liste eines Kantons.*"
+                )
+        elif not data.get("found", True):
+            lines.append(
+                "*Waldbrandgefahr aktuell nicht auslesbar (Datenquelle im Umbau). "
+                "Direktzugang unten.*"
+            )
         else:
-            lines.append("*Keine Regionaldaten verfügbar.*")
+            lines.append(f"*Keine Regionaldaten für Filter Kanton={params.canton or 'alle'}.*")
 
         lines += [
             "",

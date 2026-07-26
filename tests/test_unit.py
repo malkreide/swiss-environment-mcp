@@ -652,7 +652,32 @@ def test_lindas_host_is_allowed():
 
 _HAZARD_OVERVIEW_URL = "https://www.naturgefahren.ch/api/v1/warnings/overview/ch"
 _HAZARD_REGIONS_URL = "https://www.naturgefahren.ch/api/v1/warnings/regions"
-_WILDFIRE_URL = "https://www.waldbrandgefahr.ch/api/danger"
+# waldbrandgefahr.ch: Zwei-Schritt (Startseite → react-props → Blob-JSON).
+_WILDFIRE_HOME_URL = "https://www.waldbrandgefahr.ch/"
+_WILDFIRE_BLOB_PATH = "/rails/active_storage/blobs/proxy/signed-blob/fire_warn_levels.json"
+_WILDFIRE_BLOB_URL = f"https://www.waldbrandgefahr.ch{_WILDFIRE_BLOB_PATH}"
+
+
+def _wildfire_home_html() -> str:
+    """Minimale Startseite mit dem `data-react-props`-Vertrag (Blob-Pfad + Kantone)."""
+    import html as _h
+    import json as _j
+
+    props = {
+        "warnMapJsonPath": _WILDFIRE_BLOB_PATH,
+        "cantons": [
+            {"id": 24, "name": "Wallis", "abbr": "VS"},
+            {"id": 1, "name": "Aargau", "abbr": "AG"},
+        ],
+    }
+    return f'<div data-react-props="{_h.escape(_j.dumps(props), quote=True)}"></div>'
+
+
+def _wildfire_blob_rows() -> list:
+    return [
+        {"region_name_de": "Unterwallis", "canton_id": 24, "level": 4, "valid_from": "2026-07-20"},
+        {"region_name_de": "Aaretal", "canton_id": 1, "level": 1, "valid_from": "2026-07-19"},
+    ]
 
 
 @respx.mock
@@ -710,28 +735,33 @@ async def test_hazard_regions_error_raises_tool_error():
 
 @respx.mock
 async def test_wildfire_danger_happy_filters_canton():
-    """env_wildfire_danger zeigt Stufe + Label und filtert auf den Kanton."""
-    respx.get(_WILDFIRE_URL).mock(
-        return_value=httpx.Response(
-            200,
-            json={
-                "regions": [
-                    {"name": "Unterwallis", "canton": "VS", "danger_level": 4},
-                    {"name": "Zürich", "canton": "ZH", "danger_level": 1},
-                ]
-            },
-        )
-    )
+    """env_wildfire_danger: Zwei-Schritt-Zugriff, Stufe + Label, Kanton-Filter.
+
+    canton_id 24 → 'VS' wird aus den react-props der Startseite aufgelöst.
+    """
+    respx.get(_WILDFIRE_HOME_URL).mock(return_value=httpx.Response(200, text=_wildfire_home_html()))
+    respx.get(_WILDFIRE_BLOB_URL).mock(return_value=httpx.Response(200, json=_wildfire_blob_rows()))
     out = await env_wildfire_danger(WildfireDangerInput(language="de", canton="VS"))
     assert "Unterwallis" in out and "Stufe 4" in out and "Gross" in out
-    assert "Zürich" not in out  # Kantonsfilter greift
+    assert "Aaretal" not in out  # Kantonsfilter greift (AG herausgefiltert)
+
+
+@respx.mock
+async def test_wildfire_danger_schema_guard_graceful():
+    """Fehlt der react-props-Block, degradiert das Tool graceful (kein Crash)."""
+    respx.get(_WILDFIRE_HOME_URL).mock(
+        return_value=httpx.Response(200, text="<html>ohne props</html>")
+    )
+    out = await env_wildfire_danger(WildfireDangerInput(language="de"))
+    assert "Traceback" not in out
+    assert "waldbrandgefahr" in out  # Direktzugang bleibt
 
 
 @respx.mock
 async def test_wildfire_danger_error_raises_tool_error():
     from mcp.server.fastmcp.exceptions import ToolError
 
-    respx.get(_WILDFIRE_URL).mock(return_value=httpx.Response(503))
+    respx.get(_WILDFIRE_HOME_URL).mock(return_value=httpx.Response(503))
     with pytest.raises(ToolError) as exc:
         await env_wildfire_danger(WildfireDangerInput(language="de"))
     assert "Waldbranddaten nicht abrufbar" in str(exc.value)

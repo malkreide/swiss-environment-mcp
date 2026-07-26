@@ -19,7 +19,10 @@ Audit SDK-001). Er wird über startup()/shutdown() im FastMCP-Lifespan
 verwaltet, statt pro Tool-Call neu erzeugt zu werden.
 """
 
+import html as html_lib
 import ipaddress
+import json
+import re
 import socket
 from typing import Any
 from urllib.parse import unquote, urlparse
@@ -494,10 +497,70 @@ async def fetch_regional_hazards(region: str = "", language: str = "de") -> dict
 # --- Waldbrand-Client ---------------------------------------------------------
 
 
+# Regex, um den `data-react-props`-Block der waldbrandgefahr.ch-Startseite zu
+# extrahieren (undokumentierter Rails/ActiveStorage-Vertrag, siehe Docstring).
+_WB_REACT_PROPS = re.compile(r'data-react-props="([^"]+)"')
+
+
 async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
-    """Ruft die aktuelle Waldbrandgefahr nach Regionen ab."""
-    response = await _get_json(f"{WALDBRAND_BASE}/api/danger", params={"lang": language})
-    return response.json()
+    """Ruft die aktuelle Waldbrandgefahr je Region ab (Zwei-Schritt-Zugriff).
+
+    **Fundstück 2026-07-26:** Der frühere REST-Endpoint
+    `waldbrandgefahr.ch/api/danger` ist stillgelegt (404). Die Seite ist neu
+    eine Rails/React-App **ohne stabile JSON-API**: die aktuellen
+    Gefahrenstufen liegen unter einer *signierten* ActiveStorage-Blob-URL, deren
+    Pfad (Feld `warnMapJsonPath`) samt Kanton-Mapping (`cantons`) im
+    `data-react-props`-Attribut der Startseite steht. Zugriff daher zweistufig:
+    Startseite laden → `data-react-props` parsen → Blob-JSON laden.
+
+    Undokumentierter, HTML-getragener Vertrag → Schema-Guard: `found=False`,
+    wenn die erwartete Struktur fehlt (Aufrufer degradiert dann graceful).
+
+    Returns:
+        Normalisiertes Dict `{"found": True, "regions": [...]}` mit je Region
+        `name`, `canton` (Kürzel), `danger_level` (1–5), `valid_from` — oder
+        `{"found": False}`.
+    """
+    # 1) Startseite laden und die eingebetteten React-Props parsen.
+    home = await _get_json(f"{WALDBRAND_BASE}/")
+    match = _WB_REACT_PROPS.search(home.text)
+    if not match:
+        return {"found": False}
+    try:
+        props = json.loads(html_lib.unescape(match.group(1)))
+    except (ValueError, TypeError):
+        return {"found": False}
+
+    json_path = props.get("warnMapJsonPath")
+    cantons = props.get("cantons")
+    if not isinstance(json_path, str) or not isinstance(cantons, list):
+        return {"found": False}
+
+    # canton_id → Kürzel (aus den React-Props, z.B. 4 → "BE", 24 → "VS").
+    canton_by_id = {c.get("id"): c.get("abbr") for c in cantons if isinstance(c, dict)}
+
+    # 2) Blob-JSON mit den Gefahrenstufen laden (gleicher, erlaubter Host).
+    blob_url = json_path if json_path.startswith("http") else f"{WALDBRAND_BASE}{json_path}"
+    blob = await _get_json(blob_url)
+    rows = blob.json()
+    if not isinstance(rows, list):
+        return {"found": False}
+
+    lang = language if language in {"de", "fr", "it", "en"} else "de"
+    regions: list[dict[str, Any]] = []
+    for r in rows:
+        if not isinstance(r, dict) or "level" not in r:
+            continue
+        name = r.get(f"region_name_{lang}") or r.get("region_name_de") or "–"
+        regions.append(
+            {
+                "name": name,
+                "canton": canton_by_id.get(r.get("canton_id"), "–"),
+                "danger_level": int(r.get("level") or 0),
+                "valid_from": r.get("valid_from"),
+            }
+        )
+    return {"found": True, "regions": regions}
 
 
 # --- BAFU Webseite (Luftqualität/NABEL) ---------------------------------------
