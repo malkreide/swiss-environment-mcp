@@ -2,7 +2,7 @@
 
 # 🌿 swiss-environment-mcp
 
-![Version](https://img.shields.io/badge/version-0.4.0-blue)
+![Version](https://img.shields.io/badge/version-0.4.1-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
@@ -178,8 +178,8 @@ resources instead of tools.
 
 | Tool | Description | Data Source |
 |---|---|---|
-| `env_hazard_overview` | Current natural hazard bulletin (SLF/BAFU) in DE/FR/IT/EN | naturgefahren.ch |
-| `env_hazard_regions` | Region-specific warnings (floods, avalanches, rockfall) | naturgefahren.ch |
+| `env_hazard_overview` | Router: points to the dedicated live hazard tools + official portals (no network call — the aggregate `naturgefahren.ch` API was discontinued) | local |
+| `env_hazard_regions` | Router: maps a hazard type (flood/avalanche/wildfire/snow) to the right live tool + portal (no network call) | local |
 | `env_wildfire_danger` | Wildfire danger index by canton and region | waldbrandgefahr.ch |
 
 ### ❄️ Snow & Avalanches / SLF (3 tools)

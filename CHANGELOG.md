@@ -5,6 +5,15 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.4.1] – 2026-07-26
+
+Wartungs-Release: Behebt die Upstream-Endpoint-Drift bei den Naturgefahren-/
+Waldbrand-Tools (nicht breaking — Tool-Namen/-Parameter unverändert).
+`env_wildfire_danger` liefert wieder echte Live-Gefahrenstufen; die
+`naturgefahren.ch`-Tools sind zu deterministischen Routing-Tools umgebaut, weil
+kein stabiler öffentlicher Warn-Feed mehr existiert (MeteoSchweiz-Probe
+dokumentiert).
+
 ### Geändert / Changed
 
 - **`env_hazard_overview` / `env_hazard_regions` → netzwerkfreie Routing-Tools
@@ -37,11 +46,13 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 - **`naturgefahren.ch`-API stillgelegt:** Die Endpoints
   `/api/v1/warnings/overview/ch` und `/api/v1/warnings/regions` liefern
-  301→404, ohne Drop-in-Ersatz. `env_hazard_overview` / `env_hazard_regions`
-  degradieren daher auf kuratierte Direktlinks (seit OBS-001 als
-  `isError:true`-Antwort). Autoritative Quelle wäre MeteoSchweiz
-  (Überschneidung mit `meteoswiss-mcp`) → als Follow-up vermerkt.
-- Beide Funde in [`docs/probe-naturgefahren-waldbrand.md`](docs/probe-naturgefahren-waldbrand.md)
+  301→404, ohne Drop-in-Ersatz. Konsequenz (in diesem Release umgesetzt):
+  `env_hazard_overview` / `env_hazard_regions` sind zu netzwerkfreien
+  Routing-Tools umgebaut (kein toter Endpoint, kein Scraping mehr) — siehe
+  «Geändert». Aggregierte Wetterwarnungen bleiben bewusst an MeteoSchweiz/
+  `meteoswiss-mcp` abgegrenzt.
+- Funde in [`docs/probe-naturgefahren-waldbrand.md`](docs/probe-naturgefahren-waldbrand.md)
+  und [`docs/probe-naturgefahren-hazards.md`](docs/probe-naturgefahren-hazards.md)
   dokumentiert; READMEs unter «Known Limitations» ergänzt.
 
 ### Tests

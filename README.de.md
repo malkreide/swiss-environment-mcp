@@ -4,7 +4,7 @@
 
 # 🌿 swiss-environment-mcp
 
-![Version](https://img.shields.io/badge/version-0.4.0-blue)
+![Version](https://img.shields.io/badge/version-0.4.1-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
@@ -178,8 +178,8 @@ Listen-Tools stattdessen zu MCP-Resources migriert werden sollten.
 
 | Tool | Beschreibung | Datenquelle |
 |---|---|---|
-| `env_hazard_overview` | Aktuelles Naturgefahren-Bulletin (SLF/BAFU) auf DE/FR/IT/EN | naturgefahren.ch |
-| `env_hazard_regions` | Regionsspezifische Warnungen (Hochwasser, Lawinen, Steinschlag) | naturgefahren.ch |
+| `env_hazard_overview` | Router: verweist auf die dedizierten Live-Gefahren-Tools + offizielle Portale (kein Netzwerk-Call — die aggregierte `naturgefahren.ch`-API wurde stillgelegt) | lokal |
+| `env_hazard_regions` | Router: ordnet einen Gefahrentyp (Hochwasser/Lawine/Waldbrand/Schnee) dem passenden Live-Tool + Portal zu (kein Netzwerk-Call) | lokal |
 | `env_wildfire_danger` | Waldbrandgefahren-Index nach Kantonen und Regionen | waldbrandgefahr.ch |
 
 ### ❄️ Schnee & Lawinen / SLF (3 Tools)
