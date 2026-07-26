@@ -42,9 +42,11 @@ gegen `meteoswiss-mcp` (Schnee-/Niederschlags-Überschneidung).
 - `env://nabel/stationen` — vollständige NABEL-Stationsliste
 - `env://hochwasser/gefahrenstufen` — Hochwasser-Gefahrenstufen 1–5
 
-**Egress-Allow-List (aktuell):** `www.hydrodaten.admin.ch`, `opendata.swiss`,
-`www.naturgefahren.ch`, `www.waldbrandgefahr.ch`, `www.bafu.admin.ch`,
-`map.bafu.admin.ch`.
+**Egress-Allow-List (Stand 2026-07-26):** `www.hydrodaten.admin.ch`,
+`opendata.swiss`, `www.waldbrandgefahr.ch`, `www.bafu.admin.ch`,
+`map.bafu.admin.ch`, `lindas.admin.ch`, `measurement-api.slf.ch`, `aws.slf.ch`,
+`www.jagdstatistik.ch`. (`www.naturgefahren.ch` entfernt — API stillgelegt, nur
+noch Text-Link; `env_hazard_*` sind netzwerkfreie Routing-Tools.)
 
 ---
 

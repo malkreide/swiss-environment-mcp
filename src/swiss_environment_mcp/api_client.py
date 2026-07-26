@@ -46,8 +46,9 @@ HYDRO_XML_STATIONS = f"{HYDRO_BASE}/lhg/az/xml/hydroweb.xml"
 
 OPENDATA_SWISS_API = "https://opendata.swiss/api/3/action"
 
-NATURGEFAHREN_BASE = "https://www.naturgefahren.ch"
-NATURGEFAHREN_API = f"{NATURGEFAHREN_BASE}/api"
+# naturgefahren.ch wird nicht mehr per HTTP kontaktiert (API stillgelegt, s.u.);
+# die Domain erscheint nur noch als Text-Link in der Tool-Ausgabe und ist daher
+# aus der Egress-Allow-List entfernt (SEC-021, Angriffsfläche minimieren).
 
 WALDBRAND_BASE = "https://www.waldbrandgefahr.ch"
 
@@ -94,7 +95,6 @@ ALLOWED_HOSTS: frozenset[str] = frozenset(
     {
         "www.hydrodaten.admin.ch",
         "opendata.swiss",
-        "www.naturgefahren.ch",
         "www.waldbrandgefahr.ch",
         "www.bafu.admin.ch",
         "map.bafu.admin.ch",
@@ -474,24 +474,15 @@ async def get_bafu_dataset(dataset_id: str) -> dict[str, Any]:
     return response.json()
 
 
-# --- Naturgefahren-Client -----------------------------------------------------
-
-
-async def fetch_hazard_overview(language: str = "de") -> dict[str, Any]:
-    """Ruft das aktuelle Naturgefahren-Bulletin der Schweiz ab."""
-    response = await _get_json(
-        f"{NATURGEFAHREN_API}/v1/warnings/overview/ch", params={"lang": language}
-    )
-    return response.json()
-
-
-async def fetch_regional_hazards(region: str = "", language: str = "de") -> dict[str, Any]:
-    """Ruft regionsspezifische Naturgefahrenwarnungen ab."""
-    params: dict[str, Any] = {"lang": language}
-    if region:
-        params["region"] = region
-    response = await _get_json(f"{NATURGEFAHREN_API}/v1/warnings/regions", params=params)
-    return response.json()
+# --- Naturgefahren -------------------------------------------------------------
+# Die früheren REST-Fetcher (`fetch_hazard_overview` / `fetch_regional_hazards`)
+# wurden entfernt: die aggregierte naturgefahren.ch-Warnungs-API ist stillgelegt
+# (2026, 301→404) und es existiert kein stabiler, dokumentierter öffentlicher
+# Ersatz-Feed (MeteoSchweiz-OGD/STAC, opendata.swiss, App-API — alle geprüft, s.
+# docs/probe-naturgefahren-hazards.md). Die Tools env_hazard_overview /
+# env_hazard_regions sind daher netzwerkfreie Orientierungs-/Routing-Tools; die
+# einzelnen Gefahren liefern die dedizierten Tools (Hochwasser via LINDAS,
+# Lawine/Schnee via SLF, Waldbrand via waldbrandgefahr.ch).
 
 
 # --- Waldbrand-Client ---------------------------------------------------------

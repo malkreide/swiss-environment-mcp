@@ -5,6 +5,24 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Geändert / Changed
+
+- **`env_hazard_overview` / `env_hazard_regions` → netzwerkfreie Routing-Tools
+  (MeteoSchweiz-Follow-up):** Probe 2026-07-26
+  ([`docs/probe-naturgefahren-hazards.md`](docs/probe-naturgefahren-hazards.md))
+  bestätigt: Für die aggregierten Naturgefahren-/Wetterwarnungen existiert **kein
+  stabiler, dokumentierter öffentlicher JSON-Feed** (MeteoSchweiz-OGD/STAC,
+  opendata.swiss, App-API — alle geprüft). Statt eines fragilen Scrapings
+  verweisen beide Tools jetzt **deterministisch** auf die dedizierten Live-Tools
+  (Hochwasser→`env_flood_warnings`, Lawine→`env_avalanche_bulletin`,
+  Waldbrand→`env_wildfire_danger`, Schnee→`env_snow_current`) und offizielle
+  Portale; aggregierte Wetterwarnungen sind sauber an MeteoSchweiz/`meteoswiss-mcp`
+  abgegrenzt. Kein toter Endpoint mehr.
+- **Egress-Allow-List verkleinert (SEC-021):** `www.naturgefahren.ch` entfernt
+  (kein HTTP-Call mehr) — aus `ALLOWED_HOSTS` und
+  `deploy/network-policy.example.yaml`. Tote Fetcher `fetch_hazard_overview` /
+  `fetch_regional_hazards` entfernt.
+
 ### Behoben / Fixed
 
 - **`env_wildfire_danger` repariert (Upstream-Drift):** `waldbrandgefahr.ch`

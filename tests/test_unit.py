@@ -650,8 +650,6 @@ def test_lindas_host_is_allowed():
 
 # --- Naturgefahren & Waldbrand (OPS-001: Fehlerpfade in CI abgedeckt) ---------
 
-_HAZARD_OVERVIEW_URL = "https://www.naturgefahren.ch/api/v1/warnings/overview/ch"
-_HAZARD_REGIONS_URL = "https://www.naturgefahren.ch/api/v1/warnings/regions"
 # waldbrandgefahr.ch: Zwei-Schritt (Startseite → react-props → Blob-JSON).
 _WILDFIRE_HOME_URL = "https://www.waldbrandgefahr.ch/"
 _WILDFIRE_BLOB_PATH = "/rails/active_storage/blobs/proxy/signed-blob/fire_warn_levels.json"
@@ -680,57 +678,28 @@ def _wildfire_blob_rows() -> list:
     ]
 
 
-@respx.mock
-async def test_hazard_overview_happy():
-    """env_hazard_overview parst die Gefahrenübersicht und listet die Warnungen."""
-    respx.get(_HAZARD_OVERVIEW_URL).mock(
-        return_value=httpx.Response(
-            200,
-            json={"warnings": [{"type": "Lawinen", "danger_level": 3, "text": "Erheblich"}]},
-        )
-    )
+async def test_hazard_overview_is_network_free_router():
+    """env_hazard_overview ist netzwerkfrei und routet auf die dedizierten Tools.
+
+    Die aggregierte naturgefahren.ch-API ist stillgelegt; das Tool liefert eine
+    deterministische Orientierung (Gefahr → zuständiges Tool) + Portallinks.
+    Kein respx-Mock nötig — ein versehentlicher Netzwerk-Call würde ohne Mock
+    unter respx/`assert_all_mocked` auffallen; hier genügt der Inhaltscheck.
+    """
     out = await env_hazard_overview(HazardOverviewInput(language="de"))
-    assert "Lawinen" in out and "Gefahrenstufe 3" in out
+    assert "env_flood_warnings" in out
+    assert "env_avalanche_bulletin" in out
+    assert "env_wildfire_danger" in out
+    assert "meteoswiss-mcp" in out  # Wetterwarnungen sauber abgegrenzt
+    assert "naturgefahren.ch" in out  # Portal-Link bleibt
 
 
-@respx.mock
-async def test_hazard_overview_error_raises_tool_error():
-    """Upstream-503 → terminaler Fehler als ToolError (isError:true, OBS-001)."""
-    from mcp.server.fastmcp.exceptions import ToolError
-
-    respx.get(_HAZARD_OVERVIEW_URL).mock(return_value=httpx.Response(503))
-    with pytest.raises(ToolError) as exc:
-        await env_hazard_overview(HazardOverviewInput(language="de"))
-    assert "Bulletin nicht abrufbar" in str(exc.value)
-
-
-@respx.mock
-async def test_hazard_regions_happy_filters_region():
-    """env_hazard_regions filtert auf die angefragte Region."""
-    respx.get(_HAZARD_REGIONS_URL).mock(
-        return_value=httpx.Response(
-            200,
-            json={
-                "regions": [
-                    {"name": "Zürich", "warnings": [{"type": "hochwasser", "danger_level": 2}]},
-                    {"name": "Wallis", "warnings": [{"type": "lawinen", "danger_level": 4}]},
-                ]
-            },
-        )
-    )
-    out = await env_hazard_regions(HazardRegionsInput(region="Zürich"))
-    assert "Zürich" in out and "hochwasser" in out
-    assert "Wallis" not in out  # Regionsfilter greift
-
-
-@respx.mock
-async def test_hazard_regions_error_raises_tool_error():
-    from mcp.server.fastmcp.exceptions import ToolError
-
-    respx.get(_HAZARD_REGIONS_URL).mock(return_value=httpx.Response(500))
-    with pytest.raises(ToolError) as exc:
-        await env_hazard_regions(HazardRegionsInput(region="Zürich"))
-    assert "Regionaldaten nicht abrufbar" in str(exc.value)
+async def test_hazard_regions_is_network_free_router():
+    """env_hazard_regions echot die Region und routet auf die Live-Tools."""
+    out = await env_hazard_regions(HazardRegionsInput(region="Graubünden"))
+    assert "Graubünden" in out  # Region wird gespiegelt
+    assert "env_wildfire_danger" in out and "canton=" in out
+    assert "map.bafu.admin.ch" in out
 
 
 @respx.mock

@@ -1685,156 +1685,120 @@ async def env_bathing_water(params: BathingWaterInput, ctx: Context | None = Non
 @mcp.tool(
     name="env_hazard_overview",
     annotations={
-        "title": "Naturgefahren-Bulletin Schweiz",
+        "title": "Naturgefahren-Überblick Schweiz",
         "readOnlyHint": True,
         "destructiveHint": False,
-        "idempotentHint": False,
-        "openWorldHint": True,
+        "idempotentHint": True,
+        "openWorldHint": False,
     },
 )
 @trace_tool
 async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None = None) -> str:
     """
-    Ruft das aktuelle Naturgefahren-Bulletin für die Schweiz ab.
+    Orientierungsübersicht zu Schweizer Naturgefahren: welche Gefahr über welches
+    Tool bzw. welche offizielle Warnplattform abrufbar ist.
 
-    Das Bulletin wird täglich vom Institut für Schnee- und Lawinenforschung (SLF)
-    und BAFU herausgegeben und umfasst: Hochwasser, Lawinen, Steinschlag,
-    Rutschungen und Sturm.
+    Hintergrund (verifiziert 2026-07-26, docs/probe-naturgefahren-hazards.md): Die
+    frühere aggregierte `naturgefahren.ch`-Bulletin-API ist ersatzlos stillgelegt,
+    und es existiert **kein** stabiler, dokumentierter öffentlicher JSON-Feed für
+    die aggregierten Warnungen (weder MeteoSchweiz-OGD/STAC, opendata.swiss noch
+    die undokumentierte App-API liefern einen sauberen Zugang). Statt eines
+    fragilen Scrapings routet dieses Tool daher auf die **dedizierten, live
+    funktionierenden** Tools dieses Servers und die offiziellen Warnplattformen.
+    Aggregierte Wetter-/Unwetterwarnungen (Sturm/Gewitter/Hitze) sind Domäne von
+    MeteoSchweiz bzw. `meteoswiss-mcp` (Zuständigkeitsmatrix).
 
-    <use_case>Tagesaktuelles Naturgefahren-Bulletin (Lawinen, Hochwasser,
-    Sturm, Rutschungen) für die ganze Schweiz.</use_case>
-    <important_notes>Quelle SLF/BAFU, mehrsprachig (de/fr/it/en). ⚠️ Der frühere
-    naturgefahren.ch-REST-Endpoint ist stillgelegt (2026); das Tool liefert dann
-    kuratierte Direktlinks zur Warnplattform. Vollwertige Warndaten sind über
-    MeteoSchweiz verfügbar (→ meteoswiss-mcp, Follow-up).</important_notes>
+    <use_case>Einstieg in die Schweizer Naturgefahrenlage: zu welcher Gefahr
+    liefert welches Tool Live-Daten, und wo liegen die offiziellen Bulletins.</use_case>
+    <important_notes>Netzwerkfrei/deterministisch. Für Live-Werte die verlinkten
+    Tools nutzen: Hochwasser→env_flood_warnings, Lawine→env_avalanche_bulletin,
+    Waldbrand→env_wildfire_danger, Schnee→env_snow_current.</important_notes>
 
     Args:
         params (HazardOverviewInput):
-            - language: Sprache ('de', 'fr', 'it', 'en')
+            - language: Sprache ('de', 'fr', 'it', 'en') — für die Portallinks
 
     Returns:
-        str: Aktuelles Naturgefahren-Bulletin inkl. direkter Links.
+        str: Gefahren→Tool-Routing plus offizielle Warnplattform-Links.
     """
-    try:
-        data = await api.fetch_hazard_overview(params.language)
-
-        lines = [
-            "## 🏔️ Naturgefahren-Bulletin Schweiz\n",
-            f"*Sprache: {params.language} | Quelle: naturgefahren.ch (SLF/BAFU)*\n",
-        ]
-
-        # Gefahrentypen verarbeiten
-        hazards = data.get("warnings", data.get("dangers", []))
-        if hazards:
-            lines += ["### Aktuelle Gefahrenübersicht", ""]
-            for h in hazards:
-                htype = h.get("type", h.get("hazard_type", "–"))
-                level = h.get("danger_level", h.get("level", "–"))
-                desc = h.get("text", h.get("description", ""))
-                lines.append(f"**{htype}** – Gefahrenstufe {level}")
-                if desc:
-                    lines.append(f"  {desc[:200]}")
-                lines.append("")
-        else:
-            lines.append("*Keine spezifischen Warnungen in den API-Daten.*")
-
-        lines += [
-            "### Direkte Links",
-            "- **naturgefahren.ch:** https://www.naturgefahren.ch",
-            "- **Lawinenbulletin (SLF):** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/",
-            "- **Hochwasserwarnung:** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
-            "- **Waldbrandgefahr:** https://www.waldbrandgefahr.ch",
-        ]
-        return "\n".join(lines)
-
-    except Exception as e:
-        error_msg = await _handle_tool_error(
-            "env_hazard_overview", e, ctx, language=params.language
-        )
-        raise _terminal_failure(
-            f"⚠️ Bulletin nicht abrufbar: {error_msg}\n\n"
-            "**Direktzugang:**\n"
-            "- https://www.naturgefahren.ch\n"
-            "- https://www.slf.ch/de/lawinenbulletin-und-schneesituation/\n"
-            "- https://www.hydrodaten.admin.ch/de/hochwasserwarnungen\n"
-            "- https://www.waldbrandgefahr.ch\n"
-        )
+    lines = [
+        "## 🏔️ Naturgefahren Schweiz – Überblick & Routing\n",
+        "Die einzelnen Naturgefahren werden über dedizierte Tools dieses Servers "
+        "mit Live-Daten abgedeckt. Eine aggregierte Bulletin-API bietet "
+        "`naturgefahren.ch` nicht mehr an; aggregierte Wetter-/Unwetterwarnungen "
+        "(Sturm/Gewitter/Hitze) sind Domäne von MeteoSchweiz (→ `meteoswiss-mcp`).\n",
+        "### Gefahr → zuständiges Tool (Live-Daten)",
+        "| Gefahr | Tool | Quelle |",
+        "|--------|------|--------|",
+        "| Hochwasser / Pegel | `env_flood_warnings`, `env_hydro_current` | BAFU via LINDAS |",
+        "| Lawinen | `env_avalanche_bulletin` | SLF |",
+        "| Waldbrand | `env_wildfire_danger` | waldbrandgefahr.ch |",
+        "| Schneelage | `env_snow_current`, `env_snow_stations` | SLF IMIS |",
+        "| Unwetter (Sturm/Gewitter/Hitze) | → `meteoswiss-mcp` | MeteoSchweiz |",
+        "",
+        "### Offizielle Warnplattformen",
+        "- **Naturgefahren-Portal:** https://www.naturgefahren.ch",
+        "- **Lawinenbulletin (SLF):** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/",
+        "- **Hochwasserwarnung (BAFU):** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
+        "- **Waldbrandgefahr:** https://www.waldbrandgefahr.ch",
+        "- **Wetterwarnungen (MeteoSchweiz):** https://www.meteoschweiz.admin.ch/wetter/warnungen.html",
+    ]
+    return "\n".join(lines)
 
 
 @mcp.tool(
     name="env_hazard_regions",
     annotations={
-        "title": "Regionsspezifische Naturgefahrenwarnungen",
+        "title": "Regionale Naturgefahren – Orientierung",
         "readOnlyHint": True,
         "destructiveHint": False,
-        "idempotentHint": False,
-        "openWorldHint": True,
+        "idempotentHint": True,
+        "openWorldHint": False,
     },
 )
 @trace_tool
 async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = None) -> str:
     """
-    Ruft regionsspezifische Naturgefahrenwarnungen ab.
+    Regionsbezogene Orientierung zu Naturgefahren: verweist für eine Region auf
+    die dedizierten Live-Tools und die offiziellen Gefahrenkarten.
 
-    Ermöglicht gezielte Abfragen für Schulausflüge, Events oder
-    Infrastrukturplanung in einem spezifischen Gebiet der Schweiz.
+    Wie `env_hazard_overview` netzwerkfrei: die aggregierte
+    `naturgefahren.ch`-Regionen-API ist stillgelegt (2026), ohne stabilen Ersatz.
+    Für regionsscharfe Live-Werte liefern die verlinkten Tools die Daten
+    (Waldbrand z.B. via `env_wildfire_danger` mit Kanton-Filter).
 
-    <use_case>Regionsspezifische Gefahren für Events, Schulausflüge oder
-    Infrastrukturplanung.</use_case>
-    <important_notes>Region + optional Gefahrentyp filtern. ⚠️ Der frühere
-    naturgefahren.ch-REST-Endpoint ist stillgelegt (2026); bei leerem/degradiertem
-    Resultat werden Karten-Direktlinks geliefert.</important_notes>
+    <use_case>Regionsbezogener Einstieg (Event-, Schulausflug-, Infrastruktur-
+    Planung): welches Tool liefert für die Region welche Gefahr.</use_case>
+    <important_notes>Netzwerkfrei/deterministisch. Regionsscharfe Waldbrand-Stufen:
+    `env_wildfire_danger` (canton-Filter). Karten: naturgefahren.ch / BAFU GIS.</important_notes>
 
     Args:
         params (HazardRegionsInput):
-            - region: Regionsname (z.B. 'Zürich', 'Graubünden', 'Wallis')
+            - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Wallis')
             - hazard_type: Gefahrentyp ('hochwasser', 'lawinen', 'steinschlag', 'rutschungen')
             - language: Sprache
 
     Returns:
-        str: Warnungen für die angegebene Region inkl. Links zu Karten.
+        str: Regionsbezogenes Tool-Routing plus Karten-/Portal-Links.
     """
-    try:
-        data = await api.fetch_regional_hazards(params.region, params.language)
-
-        lines = [
-            "## 🗺️ Regionale Naturgefahrenwarnungen\n",
-            f"*Region: {params.region or 'Gesamte Schweiz'}"
-            f"{', Typ: ' + params.hazard_type if params.hazard_type else ''}*\n",
-        ]
-
-        regions_data = data.get("regions", data.get("warnings", []))
-
-        if not regions_data:
-            lines.append("*Keine spezifischen Warnungen für diese Region.*")
-        else:
-            for region in regions_data[:20]:
-                r_name = region.get("name", region.get("region", "–"))
-                if params.region and params.region.lower() not in r_name.lower():
-                    continue
-                warnings = region.get("warnings", [region])
-                for w in warnings:
-                    htype = w.get("type", w.get("hazard_type", "–"))
-                    if params.hazard_type and params.hazard_type.lower() not in htype.lower():
-                        continue
-                    level = w.get("danger_level", "–")
-                    lines.append(f"- **{r_name}** | {htype}: Stufe {level}")
-
-        lines += [
-            "",
-            "**Interaktive Karte:** https://www.naturgefahren.ch",
-            "**Gefahrenkarten BAFU:** https://map.bafu.admin.ch/?topic=bafu&lang=de",
-        ]
-        return "\n".join(lines)
-
-    except Exception as e:
-        error_msg = await _handle_tool_error("env_hazard_regions", e, ctx, region=params.region)
-        raise _terminal_failure(
-            f"⚠️ Regionaldaten nicht abrufbar: {error_msg}\n\n"
-            "**Manuelle Abfrage:**\n"
-            "- https://www.naturgefahren.ch\n"
-            "- https://map.bafu.admin.ch (BAFU GIS – Gefahrenkarten)\n"
-        )
+    region = params.region or "Gesamte Schweiz"
+    typ = f", Typ: {params.hazard_type}" if params.hazard_type else ""
+    lines = [
+        f"## 🗺️ Naturgefahren – {region}{typ}\n",
+        "Für regionsscharfe Live-Werte die dedizierten Tools nutzen (die "
+        "aggregierte naturgefahren.ch-Regionen-API ist stillgelegt):\n",
+        f"- **Waldbrandgefahr** (regionsscharf): `env_wildfire_danger` mit "
+        f"`canton='{params.region[:2].upper() if params.region else 'ZH'}'`",
+        "- **Hochwasser/Pegel:** `env_flood_warnings`, `env_hydro_current`",
+        "- **Lawinen:** `env_avalanche_bulletin`",
+        "- **Schneelage:** `env_snow_current` (canton-Filter)",
+        "- **Unwetter (Sturm/Gewitter/Hitze):** → `meteoswiss-mcp` (MeteoSchweiz)",
+        "",
+        "### Karten & Portale",
+        "- **Interaktive Naturgefahrenkarte:** https://www.naturgefahren.ch",
+        "- **Gefahrenkarten BAFU (GIS):** https://map.bafu.admin.ch/?topic=bafu&lang=de",
+    ]
+    return "\n".join(lines)
 
 
 @mcp.tool(

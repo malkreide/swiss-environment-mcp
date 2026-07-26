@@ -61,7 +61,6 @@ spec:
     - toFQDNs:  # MUSS mit ALLOWED_HOSTS synchron sein
         - matchName: www.hydrodaten.admin.ch
         - matchName: opendata.swiss
-        - matchName: www.naturgefahren.ch
         - matchName: www.waldbrandgefahr.ch
         - matchName: www.bafu.admin.ch
         - matchName: map.bafu.admin.ch
