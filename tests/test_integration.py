@@ -17,6 +17,8 @@ import sys
 
 import pytest
 
+from mcp.server.fastmcp.exceptions import ToolError
+
 # Diese Datei trifft echte BAFU-Live-APIs. Alle hier gesammelten Tests werden
 # als `live` markiert und in der Standard-CI via `pytest -m "not live"`
 # übersprungen (Audit OPS-001). Mocked Unit-Tests siehe tests/test_unit.py.
@@ -67,6 +69,24 @@ def check(name: str, condition: bool, detail: str = "") -> None:
     else:
         print(f"  ❌ {name}" + (f": {detail}" if detail else ""))
         _fail += 1
+
+
+async def _tool_text(coro) -> str:
+    """Führt einen Tool-Call aus und liefert dessen Text — oder, bei einem
+    terminalen `ToolError`, dessen Meldung.
+
+    Seit OBS-001 werfen die Tools bei einem nicht erreichbaren/degradierten
+    Upstream (z.B. HTTP 301/404 von naturgefahren.ch bzw. waldbrandgefahr.ch)
+    einen `ToolError` mit `isError:true`, dessen Content weiterhin die
+    Recovery-Links trägt. Für die Live-Smoke-Checks (kein Traceback, Link
+    vorhanden) ist das eine gültige Graceful-Degradation — wir prüfen daher
+    gegen den Fehler-Content, statt an der Exception zu scheitern. So bleiben
+    die Live-Tests robust gegenüber Upstream-Ausfällen (wie vor OBS-001, als
+    derselbe Text als regulärer String zurückkam)."""
+    try:
+        return await coro
+    except ToolError as e:
+        return str(e)
 
 
 # --- Luft-Tests ---------------------------------------------------------------
@@ -151,7 +171,7 @@ async def test_hydro_current() -> None:
         return
 
     # Station 2099 = Limmat Zürich/Unterwerk
-    result = await env_hydro_current(HydroCurrentInput(station_id="2099"))
+    result = await _tool_text(env_hydro_current(HydroCurrentInput(station_id="2099")))
     check("Station 2099: Kein Python-Traceback", "Traceback" not in result)
     check("Station 2099: Datenportal-Link", "hydrodaten.admin.ch" in result)
 
@@ -193,7 +213,7 @@ async def test_bathing_water_lindas() -> None:
         dims = {d["dimension"].rsplit("/", 1)[-1] for d in structure}
         check("Struktur: location-Dimension vorhanden", "location" in dims)
 
-    result = await env_bathing_water(BathingWaterInput(location="Clendy"))
+    result = await _tool_text(env_bathing_water(BathingWaterInput(location="Clendy")))
     check("Tool: Kein Python-Traceback", "Traceback" not in result)
     check("Tool: Label statt Code-URI", "ld.admin.ch/dimension" not in result)
     check("Tool: Lizenzfeld vorhanden", "Lizenz" in result or "Open-Use" in result)
@@ -230,7 +250,7 @@ async def test_snow_stations_tool() -> None:
 
     from swiss_environment_mcp.server import SnowStationsInput, env_snow_stations
 
-    result = await env_snow_stations(SnowStationsInput(canton="GR"))
+    result = await _tool_text(env_snow_stations(SnowStationsInput(canton="GR")))
     check("Snow-Stations: Kein Python-Traceback", "Traceback" not in result)
     check("Snow-Stations: SLF/IMIS erwähnt", "IMIS" in result or "SLF" in result)
 
@@ -245,7 +265,7 @@ async def test_avalanche_bulletin_tool() -> None:
     from swiss_environment_mcp.server import AvalancheBulletinInput, env_avalanche_bulletin
 
     # Ausserhalb der Saison ein reguläres „kein aktives Bulletin" — kein Fehler.
-    result = await env_avalanche_bulletin(AvalancheBulletinInput(language="de"))
+    result = await _tool_text(env_avalanche_bulletin(AvalancheBulletinInput(language="de")))
     check("Avalanche: Kein Python-Traceback", "Traceback" not in result)
     check("Avalanche: Lawinen-Kontext", "Lawinen" in result or "Bulletin" in result)
 
@@ -280,12 +300,12 @@ async def test_flood_warnings() -> None:
         print("  ⏭️  Live-Test übersprungen")
         return
 
-    result = await env_flood_warnings(FloodWarningsInput(min_level=1))
+    result = await _tool_text(env_flood_warnings(FloodWarningsInput(min_level=1)))
     check("Warnungen: Kein Python-Traceback", "Traceback" not in result)
     check("Warnungen: Link zu Hochwasser-Portal", "hydrodaten" in result or "Direktzugang" in result)
 
     # Stufe 5 = meist leer
-    result_high = await env_flood_warnings(FloodWarningsInput(min_level=5))
+    result_high = await _tool_text(env_flood_warnings(FloodWarningsInput(min_level=5)))
     check("Stufe 5: Rückmeldung vorhanden", len(result_high) > 20)
 
 
@@ -299,7 +319,7 @@ async def test_hazard_overview() -> None:
         print("  ⏭️  Live-Test übersprungen")
         return
 
-    result = await env_hazard_overview(HazardOverviewInput(language="de"))
+    result = await _tool_text(env_hazard_overview(HazardOverviewInput(language="de")))
     check("Bulletin: Kein Python-Traceback", "Traceback" not in result)
     check("Bulletin: naturgefahren.ch erwähnt", "naturgefahren.ch" in result)
 
@@ -311,7 +331,7 @@ async def test_hazard_regions() -> None:
         print("  ⏭️  Live-Test übersprungen")
         return
 
-    result = await env_hazard_regions(HazardRegionsInput(region="Zürich"))
+    result = await _tool_text(env_hazard_regions(HazardRegionsInput(region="Zürich")))
     check("Zürich-Region: Kein Traceback", "Traceback" not in result)
     check("Zürich-Region: GIS-Link", "map.bafu.admin.ch" in result or "naturgefahren" in result)
 
@@ -323,7 +343,7 @@ async def test_wildfire_danger() -> None:
         print("  ⏭️  Live-Test übersprungen")
         return
 
-    result = await env_wildfire_danger(WildfireDangerInput(language="de"))
+    result = await _tool_text(env_wildfire_danger(WildfireDangerInput(language="de")))
     check("Waldbrand: Kein Traceback", "Traceback" not in result)
     check("Waldbrand: Gefahrenstufen erklärt", "Gering" in result or "waldbrandgefahr" in result)
 
@@ -339,12 +359,12 @@ async def test_bafu_datasets() -> None:
         return
 
     # Suche nach Luftqualität
-    result = await env_bafu_datasets(BafuDatasetsInput(query="Luftqualität", rows=5))
+    result = await _tool_text(env_bafu_datasets(BafuDatasetsInput(query="Luftqualität", rows=5)))
     check("Suche Luftqualität: Kein Traceback", "Traceback" not in result)
     check("Suche Luftqualität: Ergebnisse", "opendata.swiss" in result)
 
     # Leere Suche (alle BAFU-Datensätze)
-    result_all = await env_bafu_datasets(BafuDatasetsInput(query="", rows=3))
+    result_all = await _tool_text(env_bafu_datasets(BafuDatasetsInput(query="", rows=3)))
     check("Leere Suche: Rückmeldung", len(result_all) > 50)
 
 
@@ -355,17 +375,19 @@ async def test_bafu_dataset_detail() -> None:
         print("  ⏭️  Live-Test übersprungen")
         return
 
-    result = await env_bafu_dataset_detail(
-        BafuDatasetDetailInput(
-            dataset_id="nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"
+    result = await _tool_text(
+        env_bafu_dataset_detail(
+            BafuDatasetDetailInput(
+                dataset_id="nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"
+            )
         )
     )
     check("NABEL-Datensatz: Kein Traceback", "Traceback" not in result)
     check("NABEL-Datensatz: Ressourcen-Liste", "Ressourcen" in result or "opendata" in result)
 
-    # Ungültige ID
-    result_invalid = await env_bafu_dataset_detail(
-        BafuDatasetDetailInput(dataset_id="gibts-nicht-xyzabc")
+    # Ungültige ID → terminaler ToolError (isError:true), Content nennt env_bafu_datasets
+    result_invalid = await _tool_text(
+        env_bafu_dataset_detail(BafuDatasetDetailInput(dataset_id="gibts-nicht-xyzabc"))
     )
     check("Ungültige ID: Fehlermeldung mit Hilfehinweis", "env_bafu_datasets" in result_invalid)
 
