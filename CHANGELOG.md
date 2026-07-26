@@ -5,6 +5,36 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Behoben / Fixed
+
+- **`env_wildfire_danger` repariert (Upstream-Drift):** `waldbrandgefahr.ch`
+  hat seinen REST-Endpoint `/api/danger` stillgelegt (404) und ist neu eine
+  Rails/React-App. Der Client nutzt jetzt einen **zweistufigen Zugriff**
+  (Startseite → `data-react-props`/`warnMapJsonPath` → signierte
+  ActiveStorage-Blob-JSON) mit Schema-Guard; das Tool liefert wieder echte
+  Gefahrenstufen je Region (Kanton-Mapping aus den react-props, höchste Stufen
+  zuerst, ohne Filter auf 40 Regionen begrenzt).
+
+### Bekannte Einschränkungen / Known findings
+
+- **`naturgefahren.ch`-API stillgelegt:** Die Endpoints
+  `/api/v1/warnings/overview/ch` und `/api/v1/warnings/regions` liefern
+  301→404, ohne Drop-in-Ersatz. `env_hazard_overview` / `env_hazard_regions`
+  degradieren daher auf kuratierte Direktlinks (seit OBS-001 als
+  `isError:true`-Antwort). Autoritative Quelle wäre MeteoSchweiz
+  (Überschneidung mit `meteoswiss-mcp`) → als Follow-up vermerkt.
+- Beide Funde in [`docs/probe-naturgefahren-waldbrand.md`](docs/probe-naturgefahren-waldbrand.md)
+  dokumentiert; READMEs unter «Known Limitations» ergänzt.
+
+### Tests
+
+- Wildfire-Mocks auf den Zwei-Schritt-Vertrag umgestellt (Happy Path,
+  Schema-Guard-Degradation, Fehlerpfad→`ToolError`). Mocked Suite 79 → 80.
+- `tool-snapshot.json` regeneriert: die Tool-Descriptions von
+  `env_hazard_overview` / `env_hazard_regions` / `env_wildfire_danger` wurden um
+  die neuen Zugriffs-/Abkündigungs-Hinweise ergänzt (Description-Änderung,
+  Namen/Parameter unverändert → nicht breaking für Clients).
+
 ## [0.4.0] – 2026-07-25
 
 Erster getaggter Release seit v0.2.3 — bündelt die Hydro-Phase-2 (neues Tool
