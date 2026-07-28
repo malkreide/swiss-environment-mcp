@@ -19,6 +19,12 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Behoben / Fixed
 
+- **`server.json` auf 0.5.0 nachgezogen.** Das MCP-Registry-Manifest stand seit
+  v0.2.3 auf einer veralteten Version und war damit über mehrere Releases hinweg
+  nicht mit `pyproject.toml` synchron. Rein kosmetisch: `publish.yml`
+  synchronisiert die Version beim Veröffentlichen ohnehin aus dem Tag-Namen,
+  weshalb in der Registry korrekt 0.5.0 publiziert wurde. Die committete Datei
+  spiegelt jetzt den tatsächlichen Stand, statt beim Lesen in die Irre zu führen.
 - **Draft Release: führende und nachfolgende Leerzeilen im Release-Body.** Die
   Extraktion begann bei der Leerzeile unter der CHANGELOG-Überschrift und endete
   bei den Leerzeilen vor der nächsten — im ersten Lauf (v0.5.0-Entwurf) als
