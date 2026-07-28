@@ -4,7 +4,7 @@
 
 # 🌿 swiss-environment-mcp
 
-![Version](https://img.shields.io/badge/version-0.4.1-blue)
+![Version](https://img.shields.io/badge/version-0.5.0-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
@@ -144,17 +144,22 @@ Einbinden mehrerer MCP-Server nicht kollidieren. Tool-Definitionen (Name,
 Beschreibung, Input-Schema) sind über `tool-snapshot.json` gepinnt; Änderungen
 erfordern einen CHANGELOG-Eintrag (siehe CONTRIBUTING).
 
-**Tool-Budget (18 Tools, 6 Cluster).** Jedes Tool entspricht einer eigenen
-Nutzerfrage, nicht einem REST-Endpoint — kein CRUD-/Endpoint-Mapping, und die
-Anchor-Queries sind je in einem Call beantwortbar. Die Anzahl liegt über der
-Faustregel ≤12, weil der Server bewusst sechs Umweltdomänen abdeckt (Luft,
-Wasser, Naturgefahren, Schnee, Jagd, Katalog), die je ein Listen-/Detail-Paar
-oder eine domänenspezifische Aktion brauchen. Weitere Zusammenlegung wurde
-geprüft und verworfen: Die `*_stations`/`*_current`-Paare (NABEL, Hydro, Schnee)
-bedienen echte unterschiedliche Absichten (Finden vs. Auslesen einer bekannten
-Station); ein Zusammenlegen würde die Parameter eines einzelnen Tools
-überladen. Eine siebte Domäne würde eine Prüfung auslösen, ob einzelne
-Listen-Tools stattdessen zu MCP-Resources migriert werden sollten.
+**Tool-Budget (21 Tools, 7 Cluster) — ausgeschöpft.** Jedes Tool entspricht einer
+eigenen Nutzerfrage, nicht einem REST-Endpoint — kein CRUD-/Endpoint-Mapping, und
+die Anchor-Queries sind je in einem Call beantwortbar. Die Anzahl liegt über der
+Faustregel ≤12, weil der Server bewusst sieben Umweltdomänen abdeckt (Luft,
+Wasser, Naturgefahren, Schnee, Jagd, Katalog, Fluglärm), die je ein
+Listen-/Detail-Paar oder eine domänenspezifische Aktion brauchen. Weitere
+Zusammenlegung wurde geprüft und verworfen: Die `*_stations`/`*_current`-Paare
+(NABEL, Hydro, Schnee) bedienen echte unterschiedliche Absichten (Finden vs.
+Auslesen einer bekannten Station); ein Zusammenlegen würde die Parameter eines
+einzelnen Tools überladen.
+
+**Damit ist die Obergrenze erreicht.** Mit dem Fluglärm-Cluster ist das
+Tool-Budget dieses Servers ausgeschöpft: Jede weitere Datenquelle gehört in einen
+eigenen `*-mcp`-Server, nicht hierher. Eine nächste Erweiterung würde stattdessen
+eine Prüfung auslösen, ob einzelne Listen-Tools zu MCP-Resources migriert werden
+sollten.
 
 ### 🌬️ Luftqualität / NABEL (3 Tools)
 
@@ -204,6 +209,54 @@ Listen-Tools stattdessen zu MCP-Resources migriert werden sollten.
 | `env_bafu_datasets` | BAFU-Datensätze auf opendata.swiss suchen (CKAN-API) | opendata.swiss |
 | `env_bafu_dataset_detail` | Vollständige Metadaten und Download-URLs eines Datensatzes | opendata.swiss |
 
+### ✈️ Fluglärm / BAZL-Lärmbelastungskataster (3 Tools)
+
+| Tool | Beschreibung | Datenquelle |
+|---|---|---|
+| `env_noise_aircraft_at` | Fluglärmbelastung an einem **LV95**-Punkt — löst die überlappenden Lärmkurven auf und liefert eine dB-Klammer mit dem höchsten Wert als oberer Schranke | **api3.geo.admin.ch** (BAZL) |
+| `env_noise_aircraft_registers` | Welche Flugplätze haben einen publizierten Kataster, mit Gültigkeitsdatum, dB-Bereich und amtlichem Plan (PDF) — das Provenienz-Tool | **api3.geo.admin.ch** (BAZL) |
+| `env_noise_limits_check` | Vergleich eines Beurteilungspegels gegen die LSV-Belastungsgrenzwerte (Planungswert / Immissionsgrenzwert / Alarmwert) nach Empfindlichkeitsstufe ES I–IV | eingebaut (SR 814.41, Anhang 5) |
+
+> ⚖️ **Rechtlicher Hinweis — steht in jeder Antwort dieser drei Tools.** Der
+> Lärmbelastungskataster ist eine *Orientierungsgrundlage*. Rechtsverbindliche
+> Auskünfte zu Bauvorhaben erteilen die zuständige kantonale Fachstelle bzw. das
+> BAZL. Diese Tools ersetzen keine Baubewilligungsabklärung.
+
+**Koordinaten müssen LV95 sein** (EPSG:2056, Meter: E ca. 2'480'000–2'840'000,
+N ca. 1'070'000–1'300'000). WGS84-Grad wie `8.54 / 47.37` werden **fail-fast**
+mit einem Umrechnungshinweis abgewiesen — das ist der häufigste LLM-Fehler bei
+Schweizer Geodaten. Umrechnung über swisstopo REFRAME oder `convert_coordinates`
+in [swisstopo-mcp](https://github.com/malkreide/swisstopo-mcp).
+
+**Die Kurven sind Linien, keine Flächen.** Der Kataster publiziert
+`MultiLineString`-Isolinien; `identify` führt deshalb eine *Näherungsabfrage* im
+Suchradius durch, keinen Punkt-in-Fläche-Test. `env_noise_aircraft_at` liefert
+darum eine **Klammer** («der Punkt liegt zwischen der 61-dB- und der
+62-dB-Kurve») mit dem höchsten Wert als ausgewiesener **oberer Schranke**, nie
+einen interpolierten Punktwert. Der Suchradius steht in jeder Antwort; ihn zu
+vergrössern überschätzt das Ergebnis (an einem Punkt bei Kloten: 100 m →
+61–62 dB, aber 500 m → 58–75 dB, weil die 75-dB-Pistenkurve 1,5 km entfernt liegt).
+
+### Anchor Demo Query
+
+> **«Liegt der geplante Schulhausstandort in einer Fluglärmzone mit Bauauflagen —
+> und in welcher dB-Stufe?»**
+
+Cross-Server-Ablauf: Adresse oder EGID über
+[swiss-housing-mcp](https://github.com/malkreide/swiss-housing-mcp) auflösen → in
+eine LV95-Koordinate umrechnen → `env_noise_aircraft_at(east=…, north=…,
+period="day")` → den resultierenden `level_db` an
+`env_noise_limits_check(level_db=…, sensitivity_level="II", period="day")` für
+die rechtliche Einordnung übergeben.
+
+```
+swiss-housing-mcp  →  Adresse / EGID  →  LV95 E/N
+                                           ↓
+                           env_noise_aircraft_at   → 62 dB (obere Schranke, LBK Zürich, gültig ab 03.07.2015)
+                                           ↓
+                           env_noise_limits_check  → Immissionsgrenzwert ES II (60 dB) um 2 dB überschritten
+```
+
 ### Beispiel-Abfragen
 
 | Abfrage | Tool |
@@ -216,6 +269,9 @@ Listen-Tools stattdessen zu MCP-Resources migriert werden sollten.
 | *«Naturgefahren-Bulletin für Graubünden?»* | `env_hazard_overview` |
 | *«Waldbrandgefahr im Kanton Wallis?»* | `env_wildfire_danger` |
 | *«BAFU-Biodiversitätsdatensätze auf opendata.swiss?»* | `env_bafu_datasets` |
+| *«Liegt der geplante Schulhausstandort in einer Fluglärmzone — in welcher dB-Stufe?»* | `env_noise_aircraft_at` |
+| *«Wie alt ist der Lärmbelastungskataster für den Flughafen Genf?»* | `env_noise_aircraft_registers` |
+| *«Überschreiten 62 dB nachts den LSV-Grenzwert in einer ES-II-Wohnzone?»* | `env_noise_limits_check` |
 
 ---
 
@@ -240,7 +296,7 @@ Listen-Tools stattdessen zu MCP-Resources migriert werden sollten.
 │   Claude / KI   │────▶│   Swiss Environment MCP   │────▶│  BAFU / Bundesbehörden   │
 │   (MCP Host)    │◀────│   (MCP Server)            │◀────│                          │
 └─────────────────┘     │                           │     │  hydrodaten.admin.ch     │
-                        │  18 Tools · 3 Resources   │     │  naturgefahren.ch        │
+                        │  21 Tools · 3 Resources   │     │  naturgefahren.ch        │
                         │  Stdio | SSE              │     │  waldbrandgefahr.ch      │
                         │                           │     │  opendata.swiss (CKAN)   │
                         │  api_client.py            │     └──────────────────────────┘
@@ -260,6 +316,35 @@ Retry 2 s/4 s/8 s); `cube.py` kennt das cube.link-Vokabular (zwingender
 ausschliesslich `cube.py` auf. Das Modul wird nach `lindas-mcp` gehoben,
 sobald ein zweiter Server LINDAS nutzt (Kandidat: `wsl-envidat-mcp`).
 
+### Architektur-Entscheid — Live-API für den Fluglärmkataster
+
+Der übrige Server folgt dem **Dump-first**-Standard des Portfolios. Der
+Fluglärm-Cluster weicht bewusst ab: `env_noise_aircraft_at` und
+`env_noise_aircraft_registers` fragen `api3.geo.admin.ch` bei **jedem Aufruf
+live** ab.
+
+Das ist *kein* Grössenargument. Am 2026-07-28 gemessen umfasst der gesamte
+Kataster **747 Objekte (~3 MB GeoJSON)** über alle acht Sublayer — er liesse sich
+ohne Weiteres spiegeln. Ausschlaggebend sind zwei andere Gründe:
+
+1. **Ein Spiegel würde die Frischezusage entwerten.** Die Kataster werden je
+   Flugplatz einzeln und unangekündigt nachgeführt (Gültigkeitsdaten 2009–2024).
+   Aus einem Dump gelesen wäre `source_freshness` das `validfrom` zum
+   Spiegelzeitpunkt — das Tool würde Provenienz *behaupten*, die es nicht mehr
+   hat. Für einen Cluster, dessen drittes Tool genau die Frage «wie alt ist die
+   Grundlage» beantwortet, ist das der schlechtestmögliche Fehlermodus.
+2. **Die räumliche Abfrage ist der Wert, nicht die Attribute.** Lokal
+   ausgewertet bedeutet sie Punkt-zu-Linie-Distanzen über 26'000+ Stützpunkte je
+   Layer. Das erfordert entweder **shapely/GEOS** — die erste kompilierte
+   Abhängigkeit in einem bewusst binärfreien `pyproject.toml` (Docker-Image,
+   Wheel-Matrix und Security-Surface ändern sich alle) — oder eigene
+   Distanzmathematik. Letztere wäre machbar, da LV95 eine metrische Projektion
+   ist und euklidische Distanz exakt stimmt; dann verantwortete aber *dieser
+   Server* die Richtigkeit einer amtlichen Lärmkatasterauskunft statt des
+   Bundesamts.
+
+Vollständige Messwerte und Begründung: [`docs/probe-fluglaerm.md`](docs/probe-fluglaerm.md).
+
 ### Datenquellen
 
 | Quelle | Daten | Lizenz |
@@ -270,6 +355,7 @@ sobald ein zweiter Server LINDAS nutzt (Kandidat: `wsl-envidat-mcp`).
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Waldbrandgefahren-Index | BAFU |
 | [SLF-Datenservice](https://www.slf.ch/de/services-und-produkte/slf-datenservice/) | Schneehöhe, Neuschnee (IMIS); Lawinenbulletin | SLF (WSL) CC BY 4.0 |
 | [jagdstatistik.ch](https://www.jagdstatistik.ch/de/home) | Eidg. Jagdstatistik (Abschuss, Fallwild, Bestand) | BAFU — Quellenangabe erforderlich (keine explizite Lizenz publiziert) |
+| [api3.geo.admin.ch](https://api3.geo.admin.ch) | BAZL-Lärmbelastungskataster Fluglärm (`identify`, LV95) | swisstopo / BAZL — freie Nutzung mit Quellenangabe |
 | [opendata.swiss](https://opendata.swiss/de/organization/bafu) | BAFU-Datenkatalog (CKAN-API) | OGD |
 
 Alle Daten: öffentlich zugänglich, keine Authentifizierung erforderlich.  
@@ -283,7 +369,7 @@ Alle Daten: öffentlich zugänglich, keine Authentifizierung erforderlich.
 swiss-environment-mcp/
 ├── src/swiss_environment_mcp/
 │   ├── __init__.py          # Paket
-│   ├── server.py            # FastMCP-Server: 18 Tools, 3 Resources
+│   ├── server.py            # FastMCP-Server: 21 Tools, 3 Resources
 │   ├── api_client.py        # HTTP-Client + Egress-Allow-List (SSRF-Schutz)
 │   └── logging_setup.py     # structlog -> stderr
 ├── tests/
@@ -302,7 +388,7 @@ swiss-environment-mcp/
 └── pyproject.toml           # Build-Konfiguration (hatchling)
 ```
 
-> **Single-Modul-Layout (Begründung, Audit ARCH-011):** Die 18 Tools liegen in
+> **Single-Modul-Layout (Begründung, Audit ARCH-011):** Die 21 Tools liegen in
 > einer `server.py` statt in einem `tools/`-Paket. Sie sind schlanke, uniforme
 > Wrapper über `api_client.py` mit gleichem Input-/Response-Muster — ein gut
 > gegliedertes Einzelmodul bleibt navigierbarer als 4 fast identische Dateien.
@@ -344,6 +430,9 @@ Skalierungs-/Session-Strategie: [`docs/scaling.md`](docs/scaling.md).
 - **Naturgefahren (`env_hazard_overview` / `env_hazard_regions`)**: Die früheren `naturgefahren.ch/api/v1/warnings/*`-REST-Endpoints sind **stillgelegt (2026)** und — am 2026-07-26 verifiziert — es existiert **kein stabiler, dokumentierter öffentlicher JSON-Feed** für die aggregierten Warnungen (MeteoSchweiz-OGD/STAC, opendata.swiss und die undokumentierte App-API wurden alle geprüft). Statt eines fragilen Scrapings sind beide Tools jetzt **netzwerkfreie Orientierungs-/Routing-Tools**: Sie verweisen deterministisch auf die dedizierten Live-Tools dieses Servers (Hochwasser→`env_flood_warnings`, Lawine→`env_avalanche_bulletin`, Waldbrand→`env_wildfire_danger`, Schnee→`env_snow_current`) und die offiziellen Portale. Aggregierte **Wetterwarnungen** (Sturm/Gewitter/Hitze) sind Domäne von MeteoSchweiz und gehören in `meteoswiss-mcp`. Siehe [`docs/probe-naturgefahren-hazards.md`](docs/probe-naturgefahren-hazards.md).
 - **Waldbrandgefahr (`env_wildfire_danger`)**: `waldbrandgefahr.ch` hat 2026 seine REST-API durch eine Rails/React-App ersetzt; es gibt **keinen stabilen JSON-Endpoint** mehr. Die aktuellen Gefahrenstufen werden über einen **zweistufigen, HTML-getragenen Vertrag** gelesen: Die `data-react-props` der Startseite liefern eine *signierte* ActiveStorage-Blob-URL (`warnMapJsonPath`) plus das Kanton-Mapping, die dann abgerufen wird. Ein Schema-Guard degradiert graceful, falls sich die Struktur ändert. Ohne Filter werden die Resultate auf 40 Regionen begrenzt (höchste Stufen zuerst); mit `canton` filtern für die vollständige Kantonsliste. Siehe [`docs/probe-naturgefahren-waldbrand.md`](docs/probe-naturgefahren-waldbrand.md).
 - **Jagdstatistik (`env_hunting_stats`)**: Das `jagdstatistik.ch`-Backend ist **undokumentiert** (content-negotiierter Web-App-Endpoint). Ein Schema-Guard fängt Strukturänderungen sauber ab. Tierart-/Kanton-/Datentyp-Codes sind eingebettet (Stand 2026-07-19), die Zahlen werden live abgefragt (2015–2024). **Lizenz (recherchiert 2026-07-19):** Die Daten gehören dem **BAFU** (aus kantonalen Stellen zusammengetragen; Technik durch Wildtier Schweiz) und sind **nicht** als lizenzierter Datensatz auf opendata.swiss publiziert; **auf der Quelle ist keine explizite Lizenz ausgewiesen**. Antworten enthalten daher die Quellenangabe zum BAFU; eine formelle Lizenzbestätigung des BAFU steht noch aus. Siehe [`docs/probe-jagdstatistik.md`](docs/probe-jagdstatistik.md).
+- **Strassen- und Bahnlärm sind out of scope (`ch.bafu.laerm-*`, `ch.bav.laermbelastung-*`)**: am 2026-07-28 verifiziert. Die BAFU-Strassenlärm-Layer `ch.bafu.laerm-strassenlaerm_tag` / `_nacht` quittieren dieselbe `identify`-Anfrage mit **HTTP 400** — es sind reine Rasterdienste (`type: wmts`, `tooltip: false`) ohne Attributabfrage, eine Punktabfrage ist damit technisch unmöglich. Beim Bahnlärm ist es anders: `ch.bav.laermbelastung-eisenbahn_*` antwortet **mit HTTP 200** und echten Attributen (`de_es`, `de_pointofdetermination`) — Bahnlärm ist also *abfragbar* und trotzdem bewusst **nicht angebunden**: das Tool-Budget ist bei 21 ausgeschöpft, und Bahnlärm bräuchte ein eigenes Perioden-/Attributmodell. Merksatz: *Fluglärm hat Linien, Strassenlärm hat nur Pixel* — Bahnlärm hätte Daten, ist aber eine bewusste Auslassung. Siehe [`docs/probe-fluglaerm.md`](docs/probe-fluglaerm.md).
+- **Fluglärm ist ein Stichtagskataster, kein Live-Dienst (`env_noise_*`)**: `validfrom` reicht von **01.03.2009** (CDB Genève) bis **16.04.2024** (LBK St. Gallen-Altenrhein), und jeder Flugplatz wird einzeln und unangekündigt nachgeführt. `source_freshness` behauptet deshalb nie «live» — es trägt das `validfrom` des tatsächlich gefundenen Registers. Die Abdeckung beschränkt sich auf die Umgebung von Flugplätzen; für den grössten Teil der Schweiz existiert kein Kataster, was das Tool ausdrücklich meldet statt eine leere Liste zurückzugeben. Null Treffer bei kleinem Radius ist **zweideutig** (ausserhalb jedes Katasters *oder* innerhalb der innersten Kurve — auf der Piste Kloten sieht beides bei 100 m identisch aus); das Tool fasst deshalb einmal mit Fernradius nach und unterscheidet `no_cadastre` von `wide_area_only`.
+- **Die LSV-Grenzwertprüfung schliesst Militärflugplätze aus**: Anhang 5 der Lärmschutz-Verordnung gilt ausdrücklich für *zivile* Flugplätze. Für Militärflugplätze ist Anhang 8 einschlägig; er wurde nicht verifiziert, weshalb `env_noise_limits_check` die Prüfung für `period="military"` **verweigert** und auf die richtige Grundlage verweist, statt eine plausibel aussehende falsche Tabelle anzuwenden.
 
 ### Zuständigkeitsmatrix — Gewässer, Schnee & Niederschlag (Abgrenzung zu `meteoswiss-mcp`)
 

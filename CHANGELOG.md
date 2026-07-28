@@ -5,6 +5,151 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.5.0] – 2026-07-28
+
+Additive Erweiterung um den **Lärmbelastungskataster Fluglärm** des BAZL
+(via `api3.geo.admin.ch`). Drei neue Tools, keine Änderung an den 18
+bestehenden. Damit ist das Tool-Budget des Servers bei **21 Tools**
+ausgeschöpft — weitere Datenquellen gehören in einen eigenen `*-mcp`-Server.
+
+### Neu / Added
+
+- **`env_noise_aircraft_at`** — Fluglärmbelastung an einer LV95-Koordinate.
+  Löst die überlappenden Lärmkurven auf und liefert eine **dB-Klammer** mit dem
+  höchsten Wert als ausgewiesener oberer Schranke, dazu alle gefundenen Kurven,
+  Kataster-Provenienz und den amtlichen PDF-Link. Kein Treffer ergibt ein
+  sprechendes «kein Kataster an diesem Standort», nie ein stilles `[]`.
+- **`env_noise_aircraft_registers`** — Provenienz-Tool: welche Flugplätze haben
+  einen publizierten Kataster, mit welchem Gültigkeitsdatum, welchem
+  dB-Bereich und welchem amtlichen Plan. Beantwortet «wie alt ist die
+  Grundlage».
+- **`env_noise_limits_check`** — Vergleich eines Beurteilungspegels gegen die
+  LSV-Belastungsgrenzwerte (Planungswert / Immissionsgrenzwert / Alarmwert)
+  nach Empfindlichkeitsstufe ES I–IV. Rein lokale Berechnung, kein Netzwerk.
+- **Neues Modul `geoadmin.py`** — extraktionsfähig aufgebaut wie `lindas/`:
+  kennt weder den geteilten HTTP-Client noch den Egress-Guard, beide werden
+  vom Aufrufer übergeben. Enthält LV95-Validator, identify-Transport,
+  Kurvenauflösung und die verifizierten LSV-Tabellen.
+- **LV95-Plausibilitätsvalidator (fail-fast).** Eingaben müssen LV95 sein
+  (E 2'480'000–2'840'000 / N 1'070'000–1'300'000). WGS84-Grad wie `8.54/47.37`
+  scheitern **vor** der Typkoerzierung mit einem Umrechnungshinweis statt mit
+  «keine gültige Ganzzahl» — der häufigste LLM-Fehler bei Schweizer Geodaten.
+  Portiert aus `swisstopo-mcp/coords.py`.
+- **Erweiterter Response-Envelope `NoiseEnvelope`** mit `retrieved_at`,
+  `source_freshness` und `legal_notice`. Bewusst ein eigenes Modell statt einer
+  Änderung am bestehenden `ResponseEnvelope` — die 18 Bestands-Tools bleiben
+  unangetastet.
+- **Rechtlicher Hinweis in jeder Antwort** der drei Tools (auch im
+  degraded-Fall), nicht nur im README: der Kataster ist eine
+  Orientierungsgrundlage, rechtsverbindlich sind kantonale Fachstelle bzw. BAZL.
+
+### Geändert / Changed
+
+- **Egress-Allow-List** um `api3.geo.admin.ch` ergänzt (Code-Layer +
+  `deploy/network-policy.example.yaml`, Audit SEC-021).
+- **User-Agent korrigiert:** hing seit v0.2.0 fest auf `swiss-environment-mcp/0.2.0`
+  und meldete damit gegenüber jedem Upstream eine falsche Version. Jetzt 0.5.0.
+- **`period`-Enum gegenüber dem ursprünglichen Entwurf erweitert.** Mit den vier
+  ursprünglich geplanten Werten (`day`, `night_first`, `night_second`,
+  `night_last`) wären die Hälfte der Sublayer und **18 der 38 Register**
+  unerreichbar geblieben — Regionalflugplätze wie Grenchen, Birrfeld oder
+  Schänis erscheinen ausschliesslich im Kleinluftfahrzeug-Layer. Ergänzt um
+  `light_aircraft`, `helicopter`, `helicopter_max`, `military`. Kein zusätzliches
+  Tool, dieselbe Signatur.
+
+### Architektur-Entscheid
+
+- **Live-API statt Dump** — Abweichung vom Dump-first-Standard des Portfolios.
+  **Nicht** aus Grössengründen: der gesamte Kataster umfasst gemessene 747
+  Objekte (~3 MB GeoJSON) und wäre problemlos spiegelbar. Ausschlaggebend ist,
+  dass die Kataster je Flugplatz einzeln und unangekündigt nachgeführt werden
+  (Gültigkeitsdaten 2009–2024): ein Spiegel würde die `validfrom`-Angabe in
+  `source_freshness` entwerten. Zweitens läge die räumliche Auswertung
+  (Punkt-zu-Linie über 26'000+ Stützpunkte) dann bei diesem Server statt beim
+  Bundesamt — und erforderte mit shapely/GEOS die erste kompilierte
+  Abhängigkeit in einem bewusst binärfreien `pyproject.toml`.
+
+### Bekannte Einschränkungen / Known findings
+
+Alle Befunde stammen aus der Live-Probe vom 2026-07-28, protokolliert in
+[`docs/probe-fluglaerm.md`](docs/probe-fluglaerm.md).
+
+1. **Strassenlärm ist nicht abfragbar.** `ch.bafu.laerm-strassenlaerm_tag` und
+   `_nacht` quittieren dieselbe identify-Anfrage mit **HTTP 400** — reine
+   Rasterdienste (`type: wmts`, `tooltip: false`) ohne Attributabfrage.
+   Strassenlärm ist damit **out of scope**, und zwar dauerhaft, nicht als TODO.
+   ⚠️ **Korrektur einer Vorannahme:** Der BAV-Bahnlärm
+   (`ch.bav.laermbelastung-eisenbahn_effektive_immissionen_tag`) antwortet
+   dagegen mit **HTTP 200** und echten Attributen (`de_es`,
+   `de_pointofdetermination` = «Fassadenpunkt»). Bahnlärm ist *abfragbar* und
+   bleibt trotzdem out of scope — als bewusste Abgrenzung, nicht als technische
+   Unmöglichkeit.
+2. **Die Layer-ID braucht zwingend den Sublayer-Suffix.** Die Basis-ID
+   `ch.bazl.laermbelastungskataster-zivilflugplaetze` allein → HTTP 400. Acht
+   gültige Sublayer, **alle acht identify-fähig** (die Nullen an einem
+   bestimmten Punkt sind geografisch, nicht technisch).
+3. **Attributnamen** sind exakt dokumentiert (`noisepollutionregister_*`,
+   `exposuregroup_exposuretype`, `exposurecurve_level_db`, `label`) — siehe
+   Probe-Protokoll, Abschnitt 4.
+4. **Die Lärmkurven sind `MultiLineString`-Isolinien, keine Flächen.**
+   `identify` macht deshalb *keinen* Punkt-in-Fläche-Test, sondern eine
+   Näherungsabfrage im Toleranzradius. Der Radius entscheidet das Ergebnis: am
+   selben Punkt liefern 100 m → 61–62 dB, aber 500 m → 58–75 dB (die 75-dB-Kurve
+   liegt 1,5 km entfernt auf der Piste). Das Tool liefert daher eine Klammer mit
+   dem höchsten Wert als oberer Schranke, nie einen interpolierten Punktwert.
+5. **`exposurecurve_level_db` kommt als String**, nicht als Zahl — zentral in
+   `geoadmin.clean_level_db()` nach `float` normalisiert. Ohne Normalisierung
+   dieselbe Fehlerklasse wie bei den EFV-Reframe-Werten im Portfolio
+   (String-Sortierung: `'9' > '62'`).
+6. **Stichtagskataster, kein Echtzeitdienst.** `validfrom` streut von
+   **01.03.2009** (CDB Genève) bis **16.04.2024** (LBK St. Gallen-Altenrhein).
+   `source_freshness` behauptet deshalb nie «live», sondern trägt das
+   `validfrom` des *gefundenen* Registers.
+7. **Null Treffer ist zweideutig** — und wäre fast ein stiller Fehler geworden.
+   Auf der Piste Kloten liefert ein Suchradius von 100 m dasselbe leere Resultat
+   wie in Chur, obwohl dort 75 dB anliegen (der Punkt liegt *innerhalb* der
+   innersten Kurve, es ist also keine Kurve in der Nähe). Das Tool fasst bei
+   null Treffern einmal mit Fernradius nach und unterscheidet `no_cadastre` von
+   `wide_area_only`.
+8. **Anhang 5 LSV gilt nur für zivile Flugplätze.** Für Militärflugplätze ist
+   Anhang 8 einschlägig — nicht verifiziert, daher verweigert
+   `env_noise_limits_check` für `period='military'` die Prüfung und verweist auf
+   die richtige Grundlage, statt eine plausibel aussehende falsche Tabelle
+   anzuwenden.
+9. **Der `layersConfig`-Endpoint trägt einen maschinenlesbaren
+   Abfragbarkeits-Indikator:** abfragbare Layer haben `"tooltip": true`, reine
+   Rasterdienste `"tooltip": false`. Das ist der saubere Vorab-Check statt
+   Trial-and-Error gegen identify.
+
+> **Merksatz:** *Fluglärm hat Linien, Strassenlärm hat nur Pixel* — Bahnlärm
+> hätte Daten, ist aber bewusst nicht angebunden.
+
+### Rechtsgrundlage
+
+- **Lärmschutz-Verordnung (LSV), SR 814.41, Anhang 5** «Belastungsgrenzwerte
+  für den Lärm ziviler Flugplätze» (zu Art. 40 Abs. 1), konsolidierte Fassung
+  **in Kraft seit 01.04.2026**, verifiziert am **28.07.2026** gegen den
+  amtlichen Text auf Fedlex. Die Werte wurden über den Fedlex-SPARQL-Endpoint
+  ermittelt und aus dem amtlichen HTML ausgelesen — **nicht** aus dem
+  Modellgedächtnis hardcodiert. SR-Nummer, Anhang, Ziffer, Fassung und
+  Abrufdatum stehen als Kommentar im Code (`geoadmin.py`) und in jeder Antwort
+  des Tools.
+- Berücksichtigt ist auch die Fussnote zu Ziff. 222 («Die höheren Werte gelten
+  für die erste Nachtstunde»), die **ausschliesslich ES II** betrifft — der
+  Fall, den eine Grenzwertprüfung sonst still falsch rechnet.
+
+### Tests
+
+- Neue Suite `tests/test_noise.py` (50 gemockte Tests + 4 Live-Tests):
+  Happy Path, Retry bei 503, Timeout, **HTTP 400 bei ungültiger Layer-ID ohne
+  Retry**, **WGS84-Eingabe scheitert fail-fast**, vertauschte Achsen,
+  dB-String-Normalisierung, Segment-Deduplizierung, die Auflösung von
+  `no_cadastre` gegen `wide_area_only`, degraded-Envelope mit letztem
+  erfolgreichem Abruf, sowie tabellenweise Verifikation der LSV-Werte inkl. der
+  ES-II-Sonderregel für die erste Nachtstunde und der Verweigerung bei
+  `military`.
+- Live-Tests unter Marker `live`, aus der CI ausgeschlossen (`pytest -m "not live"`).
+
 ## [0.4.1] – 2026-07-26
 
 Wartungs-Release: Behebt die Upstream-Endpoint-Drift bei den Naturgefahren-/

@@ -68,6 +68,7 @@ spec:
         - matchName: measurement-api.slf.ch
         - matchName: aws.slf.ch
         - matchName: www.jagdstatistik.ch
+        - matchName: api3.geo.admin.ch
       toPorts:
         - ports:
             - { port: "443", protocol: TCP }

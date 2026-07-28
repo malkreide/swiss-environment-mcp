@@ -2,7 +2,7 @@
 Swiss Environment MCP Server
 
 MCP-Server für Schweizer Umweltdaten des BAFU (Bundesamt für Umwelt) und SLF.
-Bietet 18 Tools in 6 thematischen Clustern:
+Bietet 21 Tools in 7 thematischen Clustern:
 
   Luft (3):        env_nabel_stations, env_nabel_current, env_air_limits_check
   Wasser (5):      env_hydro_stations, env_hydro_current, env_hydro_history,
@@ -11,6 +11,11 @@ Bietet 18 Tools in 6 thematischen Clustern:
   Schnee/SLF (3):  env_snow_stations, env_snow_current, env_avalanche_bulletin
   Jagd (2):        env_hunting_species, env_hunting_stats
   Umweltdaten (2): env_bafu_datasets, env_bafu_dataset_detail
+  Fluglärm (3):    env_noise_aircraft_at, env_noise_aircraft_registers,
+                   env_noise_limits_check
+
+Damit ist das Tool-Budget dieses Servers ausgeschöpft (Portfolio-Obergrenze):
+weitere Datenquellen gehören in einen eigenen `*-mcp`-Server.
 
 Datenquellen:
   - BAFU NABEL (Nationale Luftmessstation-Daten)
@@ -21,6 +26,7 @@ Datenquellen:
   - SLF-Datenservice (Schnee/Lawinen: measurement-api.slf.ch, aws.slf.ch)
   - jagdstatistik.ch (Eidg. Jagdstatistik, BAFU)
   - opendata.swiss CKAN (BAFU-Datenkatalog)
+  - api3.geo.admin.ch (BAZL-Lärmbelastungskataster Fluglärm, identify)
 
 Alle Daten: öffentlich, keine Authentifizierung erforderlich.
 Lizenz der Quelldaten: BAFU-Nutzungsbedingungen / Open Government Data (OGD)
@@ -35,12 +41,13 @@ from typing import Any, Literal
 
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.fastmcp.exceptions import ToolError
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from . import api_client as api
+from . import geoadmin
 from .lindas import cube as lindas_cube
 from .logging_setup import configure_logging, get_logger
 from .tracing import configure_tracing, trace_tool
@@ -724,6 +731,149 @@ class BafuDatasetDetailInput(BaseModel):
         pattern=r"^[A-Za-z0-9_-]{3,200}$",  # Whitelist: Slug-Zeichen (SEC-018)
         strict=True,
     )
+
+
+# --- Fluglärm: Envelope und Eingabemodelle ------------------------------------
+
+_PERIOD_DESCRIPTION = (
+    "Beurteilungszeitraum bzw. Verkehrsart: "
+    "'day' (Gesamtverkehr Tag 06–22 Uhr, Lr) · "
+    "'night_first' (erste Nachtstunde 22–23 Uhr) · "
+    "'night_second' (zweite Nachtstunde 23–24 Uhr) · "
+    "'night_last' (letzte Nachtstunde 05–06 Uhr) · "
+    "'light_aircraft' (Kleinluftfahrzeuge ≤ 8618 kg — der flächendeckendste "
+    "Layer, deckt die Regionalflugplätze ab) · "
+    "'helicopter' (Helikopter, Lr) · "
+    "'helicopter_max' (Helikopter, Maximalpegel Lmax) · "
+    "'military' (Militärflugplatz-Gesamtverkehr)"
+)
+
+NoisePeriod = Literal[
+    "day",
+    "night_first",
+    "night_second",
+    "night_last",
+    "light_aircraft",
+    "helicopter",
+    "helicopter_max",
+    "military",
+]
+
+
+class NoiseEnvelope(BaseModel):
+    """Response-Envelope der Fluglärm-Tools.
+
+    Erweitert den Bestands-`ResponseEnvelope` um die drei Felder, die für einen
+    **Stichtagskataster** unverzichtbar sind: `retrieved_at` (wann abgerufen),
+    `source_freshness` (Stand der amtlichen Grundlage — trägt das
+    `validfrom`-Datum und behauptet nie «live») und `legal_notice`. Bewusst ein
+    eigenes Modell statt einer Änderung am bestehenden Envelope, damit die
+    18 Bestands-Tools unverändert bleiben.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    source: str
+    provenance: str
+    retrieved_at: str
+    source_freshness: str
+    status: Literal["ok", "degraded"] = "ok"
+    legal_notice: str
+    count: int
+    results: list[dict[str, Any]] = Field(default_factory=list)
+    note: str | None = None
+    query: dict[str, Any] | None = None
+    #: Nur im degraded-Fall gesetzt: Zeitpunkt des letzten erfolgreichen Abrufs.
+    last_success: str | None = None
+
+
+class _Lv95PointMixin(BaseModel):
+    """Fail-fast-Validierung der LV95-Eingabe (häufigster LLM-Fehler).
+
+    Die Prüfung läuft im `mode="before"`-Validator, also **vor** der
+    Typkoerzierung: sonst würde eine WGS84-Eingabe wie 8.54 schon an
+    «keine gültige Ganzzahl» scheitern statt am aussagekräftigen
+    Umrechnungshinweis.
+    """
+
+    @model_validator(mode="before")
+    @classmethod
+    def _check_lv95(cls, data: Any) -> Any:
+        if not isinstance(data, dict):
+            return data
+        east, north = data.get("east"), data.get("north")
+        if east is None or north is None:
+            return data
+        try:
+            e, n = float(east), float(north)
+        except (TypeError, ValueError):
+            return data  # Typfehler meldet Pydantic selbst
+        geoadmin.validate_lv95(e, n)
+        return data
+
+
+class NoiseAircraftAtInput(_Lv95PointMixin):
+    model_config = ConfigDict(extra="forbid")
+    east: int = Field(
+        ...,
+        description=(
+            "LV95-Ostwert in Metern (EPSG:2056, ca. 2'480'000–2'840'000). "
+            "NICHT WGS84-Längengrad. Beispiel Zürich HB: 2683146"
+        ),
+    )
+    north: int = Field(
+        ...,
+        description=(
+            "LV95-Nordwert in Metern (EPSG:2056, ca. 1'070'000–1'300'000). "
+            "NICHT WGS84-Breitengrad. Beispiel Zürich HB: 1247993"
+        ),
+    )
+    period: NoisePeriod = Field(default="day", description=_PERIOD_DESCRIPTION)
+    radius_m: int = Field(
+        default=geoadmin.DEFAULT_RADIUS_M,
+        description=(
+            "Suchradius in Metern um den Punkt (10–1000, Default 100). Die "
+            "Lärmkurven sind Isolinien — ein grosser Radius fängt weit entfernte "
+            "Kurven ein und überschätzt die Belastung erheblich. Nur erhöhen, "
+            "wenn der Default nichts findet."
+        ),
+        ge=geoadmin.MIN_RADIUS_M,
+        le=geoadmin.MAX_RADIUS_M,
+    )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
+
+
+class NoiseAircraftRegistersInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    period: NoisePeriod | None = Field(
+        default=None,
+        description=(
+            "Optionaler Filter auf einen Sublayer. Ohne Angabe werden alle acht "
+            "abgefragt (acht Upstream-Requests). " + _PERIOD_DESCRIPTION
+        ),
+    )
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
+
+
+class NoiseLimitsCheckInput(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    level_db: float = Field(
+        ...,
+        description="Beurteilungspegel in dB(A), z.B. aus `env_noise_aircraft_at`",
+        ge=0.0,
+        le=200.0,
+    )
+    sensitivity_level: str = Field(
+        ...,
+        description=(
+            "Empfindlichkeitsstufe nach Art. 43 LSV: 'I', 'II', 'III' oder 'IV' "
+            "(auch 'ES II' oder '2' werden erkannt). ES II = Wohnzonen, "
+            "ES III = Misch-/Gewerbezonen, ES IV = Industriezonen."
+        ),
+        max_length=10,
+    )
+    period: NoisePeriod = Field(default="day", description=_PERIOD_DESCRIPTION)
+    response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
 
 
 # --- Hilfsfunktionen ----------------------------------------------------------
@@ -2623,6 +2773,444 @@ async def env_bafu_dataset_detail(
             f"⚠️ Datensatz '{params.dataset_id}' nicht gefunden: {error_msg}\n\n"
             "**Tipp:** Nutze `env_bafu_datasets` um gültige Dataset-IDs zu finden.\n"
             "**BAFU-Datenkatalog:** https://opendata.swiss/de/organization/bafu"
+        )
+
+
+# --- TOOLS: FLUGLÄRM / BAZL-LÄRMBELASTUNGSKATASTER ----------------------------
+#
+# Architektur-Entscheid: Live-API statt Dump — Begründung in api_client.py und
+# im README. Die Fachlogik (LV95-Validierung, Kurvenauflösung, LSV-Tabellen)
+# liegt im extraktionsfähigen Modul `geoadmin.py`; hier nur Ein-/Ausgabe.
+
+
+def _noise_envelope_markdown(env: NoiseEnvelope) -> list[str]:
+    """Provenienz-Fussnote — steht unter JEDER Antwort der drei Lärm-Tools."""
+    lines = [
+        "",
+        "---",
+        f"*Quelle: {env.source}*",
+        f"*Provenance: `{env.provenance}` · Abruf: {env.retrieved_at}*",
+        f"*Stand der Grundlage: {env.source_freshness}*",
+    ]
+    if env.status == "degraded":
+        last = env.last_success or "keiner in dieser Sitzung"
+        lines.append(f"*Status: ⚠️ degraded — letzter erfolgreicher Abruf: {last}*")
+    lines += ["", f"> ⚖️ **Rechtlicher Hinweis:** {env.legal_notice}"]
+    return lines
+
+
+def _noise_result(env: NoiseEnvelope, body: list[str], response_format: ResponseFormat) -> str:
+    if response_format == ResponseFormat.JSON:
+        return env.model_dump_json(indent=2, exclude_none=True)
+    return "\n".join(body + _noise_envelope_markdown(env))
+
+
+async def env_noise_aircraft_at_impl(params: NoiseAircraftAtInput) -> str:
+    """Testbare Implementation von `env_noise_aircraft_at` (ohne MCP-Wrapper)."""
+    spec = geoadmin.PERIODS[params.period]
+    query = {
+        "east": params.east,
+        "north": params.north,
+        "period": params.period,
+        "radius_m": params.radius_m,
+    }
+    try:
+        data = await api.fetch_aircraft_noise(
+            params.period, params.east, params.north, params.radius_m
+        )
+    except Exception as exc:
+        # Graceful Degradation: auswertbarer Envelope statt Stacktrace.
+        logger.warning("noise_aircraft_at_degraded", error_type=type(exc).__name__, detail=str(exc))
+        env = NoiseEnvelope(
+            source=geoadmin.SOURCE,
+            provenance=geoadmin.PROVENANCE,
+            retrieved_at=geoadmin.utc_now(),
+            source_freshness="unbekannt — Dienst beim Abruf nicht erreichbar",
+            status="degraded",
+            last_success=api.geoadmin_last_success(params.period),
+            legal_notice=geoadmin.LEGAL_NOTICE,
+            count=0,
+            results=[],
+            note=(
+                f"Der Kataster-Dienst war nicht erreichbar ({api.handle_http_error(exc)}) "
+                "Die Abfrage ist wiederholbar — die Daten sind ein Stichtagskataster und "
+                "ändern sich nicht kurzfristig. Amtliche Katasterpläne direkt beim BAZL: "
+                "https://www.bazl.admin.ch/bazl/de/home/fachleute/regulation-und-grundlagen/"
+                "laermbelastungskataster.html"
+            ),
+            query=query,
+        )
+        return _noise_result(
+            env, [f"## ✈️ Fluglärmbelastung — {spec.label_de}\n"], params.response_format
+        )
+
+    freshness = (
+        f"Stichtagskataster, gültig ab {data['valid_from']}"
+        if data.get("valid_from")
+        else "kein Kataster an diesem Standort — kein Gültigkeitsdatum"
+    )
+    env = NoiseEnvelope(
+        source=geoadmin.SOURCE,
+        provenance=geoadmin.PROVENANCE,
+        retrieved_at=geoadmin.utc_now(),
+        source_freshness=freshness,
+        legal_notice=geoadmin.LEGAL_NOTICE,
+        count=data["curves_found"],
+        results=[data],
+        note=data["note"],
+        query=query,
+    )
+
+    lines = [
+        f"## ✈️ Fluglärmbelastung — {spec.label_de}\n",
+        f"**Standort:** LV95 E {params.east} / N {params.north}",
+        f"**Kataster:** {data['register_name'] or '–'} · Herausgeber: {data['editor'] or '–'}",
+        "",
+    ]
+    if not data["found"]:
+        lines += [
+            "### Kein Lärmbelastungskataster an diesem Standort",
+            "",
+            data["note"],
+            "",
+            "*Der Fluglärmkataster deckt ausschliesslich die Umgebung von Flugplätzen ab. "
+            "Für Strassen- und Bahnlärm siehe «Bekannte Einschränkungen» im README.*",
+        ]
+    else:
+        lines += [
+            f"### Massgebender Wert: **{data['level_db']:g} dB** "
+            f"({'obere Schranke' if data['resolution'] != 'no_cadastre' else '–'})",
+            "",
+            f"- **Klammer:** {data['level_db_lower']:g}–{data['level_db']:g} dB",
+            f"- **Expositionstyp:** `{data['exposure_type']}`",
+            f"- **Gefundene Kurven:** {data['curves_found']} (Suchradius {data['search_radius_m']} m)",
+            f"- **Auflösung:** `{data['resolution']}`",
+            "",
+            f"> {data['note']}",
+            "",
+            "#### Alle gefundenen Kurven",
+            "",
+            "| dB | Expositionstyp | Kataster | Gültig ab |",
+            "|---:|----------------|----------|-----------|",
+        ]
+        for c in data["curves"]:
+            lvl = f"{c['level_db']:g}" if c["level_db"] is not None else "–"
+            lines.append(
+                f"| {lvl} | {c['exposure_type'] or '–'} | {c['register_name'] or '–'} "
+                f"| {c['valid_from'] or '–'} |"
+            )
+        if data.get("document_link"):
+            lines += ["", f"**Amtlicher Katasterplan (PDF):** {data['document_link']}"]
+        lines += [
+            "",
+            f"*Grenzwertprüfung dieses Wertes → `env_noise_limits_check` "
+            f"(level_db={data['level_db']:g}, period='{params.period}', "
+            "sensitivity_level='II'…'IV' je nach Zonenordnung).*",
+        ]
+    return _noise_result(env, lines, params.response_format)
+
+
+@mcp.tool(
+    name="env_noise_aircraft_at",
+    annotations={
+        "title": "Fluglärmbelastung an einem LV95-Punkt",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": True,
+    },
+)
+@trace_tool
+async def env_noise_aircraft_at(params: NoiseAircraftAtInput, ctx: Context | None = None) -> str:
+    """
+    Fluglärmbelastung an einem Punkt aus dem BAZL-Lärmbelastungskataster.
+
+    Beantwortet: «Liegt dieser Standort in einer Fluglärmzone — und in welcher
+    dB-Stufe?» Grundlage sind die amtlichen Lärmkurven der zivilen Flugplätze
+    (und, für `period='military'`, von Locarno-Magadino).
+
+    <use_case>Standortabklärung für Bauvorhaben, Schulhaus- oder Wohnbau-
+    planung: dB-Belastung und Kataster-Referenz an einer LV95-Koordinate.</use_case>
+    <important_notes>Eingabe MUSS LV95 sein (EPSG:2056, Meter: E ~2.48–2.84 Mio,
+    N ~1.07–1.30 Mio). WGS84-Grad (z.B. 8.54/47.37) wird abgewiesen. Die Kurven
+    sind Isolinien, keine Flächen — das Ergebnis ist eine dB-Klammer mit dem
+    höchsten Wert als oberer Schranke, kein interpolierter Punktwert.
+    Orientierungsgrundlage, keine Baubewilligungsauskunft.</important_notes>
+
+    Args:
+        params (NoiseAircraftAtInput):
+            - east/north: LV95-Koordinate in Metern
+            - period: Beurteilungszeitraum bzw. Verkehrsart (8 Werte, s. Schema)
+            - radius_m: Suchradius in Metern (10–1000, Default 100)
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Massgebender dB-Wert, dB-Klammer, alle gefundenen Kurven,
+        Kataster-Provenienz und amtlicher PDF-Link.
+    """
+    try:
+        return await env_noise_aircraft_at_impl(params)
+    except Exception as e:
+        error_msg = await _handle_tool_error(
+            "env_noise_aircraft_at", e, ctx, east=params.east, north=params.north
+        )
+        raise _terminal_failure(
+            f"⚠️ Fluglärmkataster nicht abrufbar: {error_msg}\n\n"
+            "**Direktzugang:** https://map.geo.admin.ch (Layer «Lärmbelastungskataster "
+            "Zivilflugplätze»)\n"
+        )
+
+
+async def env_noise_aircraft_registers_impl(params: NoiseAircraftRegistersInput) -> str:
+    """Testbare Implementation von `env_noise_aircraft_registers`."""
+    query = {"period": params.period}
+    try:
+        entries = await api.fetch_aircraft_noise_registers(params.period)
+    except Exception as exc:
+        logger.warning(
+            "noise_aircraft_registers_degraded", error_type=type(exc).__name__, detail=str(exc)
+        )
+        env = NoiseEnvelope(
+            source=geoadmin.SOURCE,
+            provenance=geoadmin.PROVENANCE,
+            retrieved_at=geoadmin.utc_now(),
+            source_freshness="unbekannt — Dienst beim Abruf nicht erreichbar",
+            status="degraded",
+            last_success=api.geoadmin_last_success(params.period or "*"),
+            legal_notice=geoadmin.LEGAL_NOTICE,
+            count=0,
+            results=[],
+            note=(
+                f"Die Registerübersicht war nicht abrufbar ({api.handle_http_error(exc)}) "
+                "Amtliche Katasterpläne direkt beim BAZL: "
+                "https://www.bazl.admin.ch/bazl/de/home/fachleute/regulation-und-grundlagen/"
+                "laermbelastungskataster.html"
+            ),
+            query=query,
+        )
+        return _noise_result(
+            env, ["## ✈️ Lärmbelastungskataster — Übersicht\n"], params.response_format
+        )
+
+    oldest = geoadmin.oldest_valid_from(entries)
+    dates = sorted({e["valid_from"] for e in entries if e.get("valid_from")})
+    freshness = (
+        f"Stichtagskataster, Gültigkeitsdaten {oldest} bis {dates[-1]}"
+        if oldest and dates
+        else "keine Gültigkeitsdaten ermittelbar"
+    )
+    env = NoiseEnvelope(
+        source=geoadmin.SOURCE,
+        provenance=geoadmin.PROVENANCE,
+        retrieved_at=geoadmin.utc_now(),
+        source_freshness=freshness,
+        legal_notice=geoadmin.LEGAL_NOTICE,
+        count=len(entries),
+        results=entries,
+        note=(
+            "Die Kataster werden je Flugplatz einzeln und unangekündigt nachgeführt. "
+            "Das Gültigkeitsdatum (`valid_from`) ist der Stichtag der jeweiligen "
+            "Grundlage, nicht der Abrufzeitpunkt."
+        ),
+        query=query,
+    )
+
+    lines = [
+        "## ✈️ Lärmbelastungskataster — Übersicht der Flugplätze\n",
+        f"*{len(entries)} Kataster-Einträge*"
+        + (f" *· gefiltert auf `{params.period}`*" if params.period else " *· alle acht Sublayer*"),
+        "",
+        "| Flugplatz / Kataster | Zeitraum / Verkehrsart | Gültig ab | Kurven | dB-Bereich | Plan |",
+        "|---|---|---|---:|---|---|",
+    ]
+    for e in entries:
+        lo, hi = e["level_min_db"], e["level_max_db"]
+        span = f"{lo:g}–{hi:g}" if lo is not None and hi is not None else "–"
+        pdf = f"[PDF]({e['document_link']})" if e.get("document_link") else "–"
+        lines.append(
+            f"| {e['register_name']} | {e['period_label']} | {e['valid_from'] or '–'} "
+            f"| {e['curve_count']} | {span} | {pdf} |"
+        )
+    if entries:
+        lines += [
+            "",
+            f"**Älteste Grundlage:** {oldest} · **Neueste:** {dates[-1]}",
+            "",
+            f"*Herausgeber: {entries[0].get('editor') or 'BAZL'}*",
+        ]
+    else:
+        lines.append("\n*Keine Kataster-Einträge gefunden.*")
+    return _noise_result(env, lines, params.response_format)
+
+
+@mcp.tool(
+    name="env_noise_aircraft_registers",
+    annotations={
+        "title": "Lärmbelastungskataster — Flugplätze und Gültigkeitsdaten",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": True,
+    },
+)
+@trace_tool
+async def env_noise_aircraft_registers(
+    params: NoiseAircraftRegistersInput, ctx: Context | None = None
+) -> str:
+    """
+    Übersicht der publizierten Fluglärm-Lärmbelastungskataster.
+
+    Das Provenienz-Tool: Es beantwortet «wie alt ist die Grundlage». Für jeden
+    Flugplatz die Gültigkeitsdaten, die Anzahl Lärmkurven, den abgedeckten
+    dB-Bereich und den Link auf den amtlichen Katasterplan.
+
+    <use_case>Vor einer Standortabklärung prüfen, ob für den betreffenden
+    Flugplatz überhaupt ein Kataster existiert und wie aktuell er ist.</use_case>
+    <important_notes>Ohne `period` werden alle acht Sublayer abgefragt (acht
+    Upstream-Requests). Die Gültigkeitsdaten streuen erheblich (2009–2024) —
+    ein Kataster ist ein Stichtagsdokument, kein Echtzeitdienst.</important_notes>
+
+    Args:
+        params (NoiseAircraftRegistersInput):
+            - period: optionaler Filter auf einen Sublayer
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Tabelle der Kataster mit Gültigkeitsdaten und amtlichen PDF-Links.
+    """
+    try:
+        return await env_noise_aircraft_registers_impl(params)
+    except Exception as e:
+        error_msg = await _handle_tool_error("env_noise_aircraft_registers", e, ctx)
+        raise _terminal_failure(
+            f"⚠️ Kataster-Übersicht nicht abrufbar: {error_msg}\n\n"
+            "**Direktzugang:** https://map.geo.admin.ch (Layer «Lärmbelastungskataster "
+            "Zivilflugplätze»)\n"
+        )
+
+
+def env_noise_limits_check_impl(params: NoiseLimitsCheckInput) -> str:
+    """Testbare Implementation von `env_noise_limits_check` (rein lokal)."""
+    query = {
+        "level_db": params.level_db,
+        "sensitivity_level": params.sensitivity_level,
+        "period": params.period,
+    }
+    try:
+        assessment = geoadmin.check_limits(params.level_db, params.sensitivity_level, params.period)
+    except geoadmin.LimitsUnavailableError as exc:
+        env = NoiseEnvelope(
+            source=f"Lärmschutz-Verordnung {geoadmin.LSV_SR}, {geoadmin.LSV_ANNEX}",
+            provenance="static_legal_reference",
+            retrieved_at=geoadmin.utc_now(),
+            source_freshness=f"{geoadmin.LSV_VERSION}, verifiziert am {geoadmin.LSV_VERIFIED_ON}",
+            status="degraded",
+            legal_notice=geoadmin.LEGAL_NOTICE,
+            count=0,
+            results=[],
+            note=str(exc),
+            query=query,
+        )
+        return _noise_result(
+            env,
+            ["## ⚖️ LSV-Grenzwertprüfung\n", "### Keine Grenzwerte anwendbar", "", str(exc)],
+            params.response_format,
+        )
+
+    ref = assessment["legal_reference"]
+    env = NoiseEnvelope(
+        source=f"Lärmschutz-Verordnung {geoadmin.LSV_SR}, {geoadmin.LSV_ANNEX}",
+        provenance="static_legal_reference",
+        retrieved_at=geoadmin.utc_now(),
+        source_freshness=f"{ref['version']}, verifiziert am {ref['verified_on']}",
+        legal_notice=geoadmin.LEGAL_NOTICE,
+        count=len(assessment["thresholds"]),
+        results=[assessment],
+        note=assessment["verdict"],
+        query=query,
+    )
+
+    icon = {"ok": "🟢", "planning_value": "🟡", "immission_limit": "🟠", "alarm_value": "🔴"}
+    lines = [
+        "## ⚖️ LSV-Grenzwertprüfung — Fluglärm\n",
+        f"**Beurteilungspegel:** {params.level_db:g} dB(A) ({assessment['quantity']})",
+        f"**Empfindlichkeitsstufe:** ES {assessment['sensitivity_level']} (Art. 43 LSV)",
+        f"**Beurteilungszeitraum:** {assessment['period_label']}",
+        "",
+        f"### {icon.get(assessment['severity'], '•')} {assessment['verdict']}",
+        "",
+        "| Schwelle | Grenzwert | Überschritten | Differenz | Rechtsgrundlage |",
+        "|---|---:|:---:|---:|---|",
+    ]
+    for t in assessment["thresholds"]:
+        mark = "**JA**" if t["exceeded"] else "nein"
+        sign = "+" if t["margin_db"] > 0 else ""
+        lines.append(
+            f"| {t['label']} | {t['limit_db']:g} dB | {mark} | {sign}{t['margin_db']:g} dB "
+            f"| {t['legal_basis']} |"
+        )
+    lines += [
+        "",
+        f"**Angewandte Tabelle:** {ref['citation']} — {assessment['description']}",
+        f"**Fassung:** {ref['version']} · verifiziert am {ref['verified_on']}",
+        f"**Volltext:** {ref['url']}",
+        "",
+        "*Empfindlichkeitsstufen: ES I = erhöhter Lärmschutz (z.B. Kurzonen), "
+        "ES II = keine störenden Betriebe (Wohnzonen), ES III = mässig störende "
+        "Betriebe (Misch-/Gewerbezonen), ES IV = stark störende Betriebe "
+        "(Industriezonen). Die Zuordnung trifft die Gemeinde in der Nutzungsplanung.*",
+    ]
+    return _noise_result(env, lines, params.response_format)
+
+
+@mcp.tool(
+    name="env_noise_limits_check",
+    annotations={
+        "title": "Fluglärmwert gegen LSV-Grenzwerte prüfen",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+)
+@trace_tool
+async def env_noise_limits_check(params: NoiseLimitsCheckInput, ctx: Context | None = None) -> str:
+    """
+    Vergleicht einen Fluglärm-Beurteilungspegel gegen die LSV-Belastungsgrenzwerte.
+
+    Grundlage: Lärmschutz-Verordnung (LSV, SR 814.41), Anhang 5
+    «Belastungsgrenzwerte für den Lärm ziviler Flugplätze» — differenziert nach
+    Empfindlichkeitsstufe (ES I–IV) und Schwelle (Planungswert /
+    Immissionsgrenzwert / Alarmwert).
+
+    <use_case>Einen dB-Wert aus `env_noise_aircraft_at` (oder aus einem Gutachten)
+    rechtlich einordnen: welche Schwelle ist überschritten und mit welcher
+    Folge.</use_case>
+    <important_notes>Rein lokale Berechnung (kein Netzwerk). Für
+    `period='military'` wird die Prüfung bewusst verweigert — Anhang 5 gilt nur
+    für zivile Flugplätze, für Militärflugplätze ist Anhang 8 einschlägig.
+    Die Werte für ES II in der ersten Nachtstunde weichen von den übrigen
+    Nachtstunden ab (Fussnote zu Ziff. 222).</important_notes>
+
+    Args:
+        params (NoiseLimitsCheckInput):
+            - level_db: Beurteilungspegel in dB(A)
+            - sensitivity_level: 'I', 'II', 'III' oder 'IV' (auch 'ES II', '2')
+            - period: Beurteilungszeitraum bzw. Verkehrsart
+            - response_format: 'markdown' oder 'json'
+
+    Returns:
+        str: Überschreitung je Schwelle mit Grenzwert, Differenz und
+        Rechtsgrundlage im Klartext.
+    """
+    try:
+        return env_noise_limits_check_impl(params)
+    except Exception as e:
+        error_msg = await _handle_tool_error(
+            "env_noise_limits_check", e, ctx, level_db=params.level_db
+        )
+        raise _terminal_failure(
+            f"⚠️ Grenzwertprüfung nicht möglich: {error_msg}\n\n**LSV-Volltext:** {geoadmin.LSV_URL}"
         )
 
 
