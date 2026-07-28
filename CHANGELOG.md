@@ -17,6 +17,15 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   daher bleibt der letzte Schritt ein bewusster Klick. Release-Verfahren in
   `CONTRIBUTING.md` / `CONTRIBUTING.de.md` dokumentiert.
 
+### Behoben / Fixed
+
+- **Draft Release: führende und nachfolgende Leerzeilen im Release-Body.** Die
+  Extraktion begann bei der Leerzeile unter der CHANGELOG-Überschrift und endete
+  bei den Leerzeilen vor der nächsten — im ersten Lauf (v0.5.0-Entwurf) als
+  Abstand am Anfang sichtbar. Der Abschnitt wird jetzt getrimmt; die
+  Leer-Prüfung greift neu **nach** dem Trimmen, damit ein Abschnitt aus reinen
+  Leerzeilen genauso abbricht wie ein fehlender.
+
 ## [0.5.0] – 2026-07-28
 
 Additive Erweiterung um den **Lärmbelastungskataster Fluglärm** des BAZL
