@@ -82,21 +82,28 @@ jobs:
         run: |
           set -euo pipefail
           # Abschnitt zwischen '## [<version>]' und der nächsten '## ['-Zeile.
-          awk -v ver="$VERSION" '
+          # Die awk-Ausgabe beginnt mit der Leerzeile unter der Überschrift und
+          # endet mit den Leerzeilen vor der nächsten — beide würden im
+          # Release-Body als Abstand sichtbar. `sed '/./,$!d'` entfernt die
+          # führenden, die Befehlssubstitution die nachfolgenden Leerzeilen.
+          BODY="$(awk -v ver="$VERSION" '
             $0 ~ "^## \\[" ver "\\]" { flag = 1; next }
             flag && /^## \[/ { exit }
             flag { print }
-          ' CHANGELOG.md > release-notes.md
-          if [ ! -s release-notes.md ]; then
-            echo "::error::Kein CHANGELOG-Abschnitt '## [$VERSION]' gefunden. Erst den Eintrag schreiben."
+          ' CHANGELOG.md | sed -e '/./,$!d')"
+          # Prüfung nach dem Trimmen: ein Abschnitt aus reinen Leerzeilen ist
+          # ebenso wenig ein Release-Text wie ein fehlender.
+          if [ -z "$BODY" ]; then
+            echo "::error::Kein CHANGELOG-Abschnitt '## [$VERSION]' gefunden (oder er ist leer). Erst den Eintrag schreiben."
             exit 1
           fi
           {
+            printf '%s\n' "$BODY"
             echo ""
             echo "---"
             echo ""
             echo "Vollständiges Änderungsprotokoll: [CHANGELOG.md](CHANGELOG.md)"
-          } >> release-notes.md
+          } > release-notes.md
           echo "Extrahiert: $(wc -l < release-notes.md) Zeilen"
 
       - name: Draft-Release anlegen
