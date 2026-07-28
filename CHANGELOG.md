@@ -5,6 +5,14 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.5.1] – 2026-07-28
+
+Wartungs-Release der **Release-Infrastruktur**. Funktional ändert sich nichts:
+die 21 Tools sind unverändert, die einzige Anpassung in `src/` ist der
+Versionsstring im User-Agent. Wer das Paket nutzt, bekommt nichts Neues — der
+Release existiert, damit die neuen CI-/Release-Bausteine einen getaggten Stand
+haben.
+
 ### Neu / Added
 
 - **Workflow «Draft Release»** (`.github/workflows/draft-release.yml`, manuell
@@ -23,6 +31,13 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   `publish.yml` überschreibt die Version beim Veröffentlichen aus dem Tag,
   weshalb die committete Datei nie auffällig wurde. Nur Standardbibliothek
   (`tomllib`), lokal ausführbar.
+
+### Geändert / Changed
+
+- **User-Agent auf 0.5.1 mitgezogen.** Der Versionsstring in `api_client.py`
+  wird bei jedem Release von Hand gepflegt — bleibt er stehen, entsteht genau
+  die Drift, die in v0.5.0 nach drei Releases aufgefallen ist. Bis er aus den
+  Paket-Metadaten gelesen wird, gehört er in jeden Versionsbump.
 
 ### Behoben / Fixed
 
