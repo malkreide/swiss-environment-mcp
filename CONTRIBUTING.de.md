@@ -14,6 +14,7 @@ Danke für dein Interesse, zu diesem Projekt beizutragen! Dieser MCP-Server ist 
 - [Code-Stil](#code-stil)
 - [Tests](#tests)
 - [Pull Request einreichen](#pull-request-einreichen)
+- [Releases](#releases)
 - [Datenquellen & Quellenangabe](#datenquellen--quellenangabe)
 
 ---
@@ -154,6 +155,36 @@ scripts/tool_snapshot.py`) und einen CHANGELOG-Eintrag ergänzen. Ist die
 in den CHANGELOG aufnehmen (der Snapshot-Hash wechselt; Downstreams, die
 Tool-Definitionen pinnen, müssen neu zustimmen). Das `env_`-Tool-Präfix ist eine
 bewusste, stabile Namespace-Wahl — siehe README.
+
+## Releases
+
+Releases entstehen aus `CHANGELOG.md`. Den mechanischen Teil erledigt der
+Workflow **Draft Release** (`.github/workflows/draft-release.yml`): im
+Actions-Tab manuell starten (`workflow_dispatch`), optional mit einer Version;
+ohne Eingabe wird die Version aus `pyproject.toml` genommen.
+
+Der Workflow
+
+1. prüft die Version gegen `pyproject.toml` und bricht bei Abweichung ab — ein
+   Tag, der nicht zur paketierten Version passt, schöbe ein falsch nummeriertes
+   Artefakt nach PyPI;
+2. bricht ab, wenn Tag oder Release bereits existieren;
+3. extrahiert den Abschnitt `## [<version>]` aus `CHANGELOG.md` (Abbruch, wenn
+   keiner existiert) und legt ein **Draft**-Release auf dem Commit an, auf dem
+   er lief.
+
+**Der Entwurf wird bewusst nicht automatisch veröffentlicht.** GitHub legt den
+Tag erst beim Veröffentlichen an — ein Entwurf ist also folgenlos und jederzeit
+löschbar. Das Veröffentlichen startet `publish.yml`
+(`on: release: [published]`) → **PyPI** und **MCP Registry**, und eine
+PyPI-Version lässt sich nie erneut hochladen. Dieser letzte, unumkehrbare
+Schritt bleibt ein bewusster Klick eines Menschen im Release-UI.
+
+`publish.yml` synchronisiert `server.json` beim Veröffentlichen aus dem
+Tag-Namen — die im Repo committete Version dort muss nicht von Hand gepflegt
+werden.
+
+---
 
 ## Datenquellen & Quellenangabe
 

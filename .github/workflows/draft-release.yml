@@ -1,0 +1,126 @@
+# Draft-Release aus dem CHANGELOG erzeugen (manuell ausgelöst).
+#
+# Zweck: Ein Release anlegen, ohne lokal einen Tag pushen zu müssen. GitHub
+# legt den Tag bei einem Draft **nicht** sofort an, sondern erst beim
+# Veröffentlichen — der Entwurf ist also folgenlos und jederzeit löschbar.
+#
+# WICHTIG — dieser Workflow veröffentlicht bewusst NICHT. Er erzeugt
+# ausschliesslich Entwürfe. Das Veröffentlichen löst über
+# `publish.yml` (`on: release: [published]`) die Publikation nach **PyPI** und
+# in die **MCP Registry** aus, und eine PyPI-Version lässt sich nicht erneut
+# hochladen. Dieser letzte, unumkehrbare Schritt bleibt deshalb ein bewusster
+# Klick eines Menschen im Release-UI — er ist absichtlich nicht automatisiert.
+#
+# Der Release-Text wird aus `CHANGELOG.md` gezogen: der Abschnitt zwischen
+# `## [<version>]` und der nächsten `## [`-Überschrift.
+
+name: Draft Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version ohne 'v', z.B. 0.5.0. Leer = Version aus pyproject.toml"
+        required: false
+        type: string
+
+permissions:
+  contents: write # Release anlegen
+
+jobs:
+  draft:
+    name: Draft-Release aus CHANGELOG
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Vollständige History inkl. Tags — der Standard-Shallow-Checkout holt
+          # keine Tags, dann liefe die Tag-Existenzprüfung unten ins Leere und
+          # täuschte Sicherheit vor.
+          fetch-depth: 0
+
+      - name: Version bestimmen und gegen pyproject.toml prüfen
+        id: version
+        run: |
+          set -euo pipefail
+          PYPROJECT_VERSION="$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)"
+          VERSION="${{ inputs.version }}"
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ]; then
+            VERSION="$PYPROJECT_VERSION"
+            echo "Keine Version angegeben — nutze pyproject.toml: $VERSION"
+          elif [ "$VERSION" != "$PYPROJECT_VERSION" ]; then
+            # Ein Release, dessen Tag nicht zur paketierten Version passt, würde
+            # in publish.yml ein Artefakt mit abweichender Versionsnummer nach
+            # PyPI schieben. Hier abbrechen, nicht dort.
+            echo "::error::Version '$VERSION' weicht von pyproject.toml ('$PYPROJECT_VERSION') ab. Erst die Version bumpen (oder den Input korrigieren)."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Prüfen, ob Tag oder Release bereits existieren
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "::error::Tag $TAG existiert bereits. Ein Release für eine bereits getaggte Version gehört nicht hierher."
+            exit 1
+          fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::Für $TAG existiert bereits ein Release (ggf. als Entwurf). Erst löschen oder dort weiterarbeiten."
+            exit 1
+          fi
+
+      - name: Release-Notizen aus CHANGELOG.md extrahieren
+        id: notes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          # Abschnitt zwischen '## [<version>]' und der nächsten '## ['-Zeile.
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { flag = 1; next }
+            flag && /^## \[/ { exit }
+            flag { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::Kein CHANGELOG-Abschnitt '## [$VERSION]' gefunden. Erst den Eintrag schreiben."
+            exit 1
+          fi
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "Vollständiges Änderungsprotokoll: [CHANGELOG.md](CHANGELOG.md)"
+          } >> release-notes.md
+          echo "Extrahiert: $(wc -l < release-notes.md) Zeilen"
+
+      - name: Draft-Release anlegen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # --draft: der Tag entsteht erst beim Veröffentlichen, nicht jetzt.
+          # --target: exakt der Commit, auf dem dieser Lauf ausgeführt wurde.
+          gh release create "$TAG" \
+            --draft \
+            --target "$GITHUB_SHA" \
+            --title "$TAG" \
+            --notes-file release-notes.md
+          URL="$(gh release view "$TAG" --json url --jq .url)"
+          {
+            echo "## Draft-Release angelegt"
+            echo ""
+            echo "- **Tag (noch nicht erstellt):** \`$TAG\`"
+            echo "- **Ziel-Commit:** \`$GITHUB_SHA\`"
+            echo "- **Entwurf:** $URL"
+            echo ""
+            echo "Der Tag entsteht erst beim Veröffentlichen. Das Veröffentlichen"
+            echo "startet \`publish.yml\` → PyPI + MCP Registry und ist nicht"
+            echo "rückgängig zu machen."
+          } >> "$GITHUB_STEP_SUMMARY"
