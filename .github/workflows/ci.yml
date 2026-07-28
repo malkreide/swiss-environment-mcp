@@ -61,3 +61,7 @@ jobs:
       - run: ruff check src/
 
       - run: ruff format --check src/
+
+      # Nur Standardbibliothek (tomllib ab 3.11) — kein Projekt-Install nötig.
+      - name: Versions-Sync server.json ↔ pyproject.toml
+        run: python scripts/check_version_sync.py

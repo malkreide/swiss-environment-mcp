@@ -181,8 +181,17 @@ PyPI-Version lässt sich nie erneut hochladen. Dieser letzte, unumkehrbare
 Schritt bleibt ein bewusster Klick eines Menschen im Release-UI.
 
 `publish.yml` synchronisiert `server.json` beim Veröffentlichen aus dem
-Tag-Namen — die im Repo committete Version dort muss nicht von Hand gepflegt
-werden.
+Tag-Namen — die committete Version erreicht das publizierte Artefakt also nie.
+Genau deshalb driftete sie unbemerkt von v0.2.3 bis v0.5.0: funktional
+folgenlos, beim Lesen aber irreführend. **`pyproject.toml` und `server.json`
+im selben Commit bumpen**; die CI erzwingt das:
+
+```bash
+python scripts/check_version_sync.py
+```
+
+Der Check läuft im `lint`-Job und vergleicht `pyproject.toml` mit
+`server.json → version` **und** jedem `packages[*].version`.
 
 ---
 

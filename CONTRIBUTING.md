@@ -177,7 +177,17 @@ Registry**, and a PyPI version can never be re-uploaded. That last, irreversible
 step stays a deliberate human click in the release UI.
 
 `publish.yml` syncs `server.json` from the tag name at publish time, so the
-version committed in that file does not need to be bumped by hand.
+committed version in that file never reaches the published artifact. That is
+exactly why it drifted unnoticed from v0.2.3 to v0.5.0 — harmless in effect,
+misleading to read. **Bump `pyproject.toml` and `server.json` in the same
+commit**; CI enforces it:
+
+```bash
+python scripts/check_version_sync.py
+```
+
+The check runs in the `lint` job and compares `pyproject.toml` against both
+`server.json → version` and every `packages[*].version`.
 
 ---
 
