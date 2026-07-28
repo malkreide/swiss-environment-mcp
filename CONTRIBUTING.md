@@ -14,6 +14,7 @@ Thank you for your interest in contributing to this project! This MCP server is 
 - [Code Style](#code-style)
 - [Testing](#testing)
 - [Submitting a Pull Request](#submitting-a-pull-request)
+- [Releases](#releases)
 - [Data Sources & Attribution](#data-sources--attribution)
 
 ---
@@ -152,6 +153,33 @@ CHANGELOG entry. If the change is breaking for clients, add an explicit
 **client re-approval note** to the CHANGELOG (the snapshot hash changes, so
 downstreams that pin tool definitions must re-approve). The `env_` tool-name
 prefix is a deliberate, stable namespace choice — see the README.
+
+## Releases
+
+Releases are cut from `CHANGELOG.md`. The **Draft Release** workflow
+(`.github/workflows/draft-release.yml`) does the mechanical part — run it from
+the Actions tab (`workflow_dispatch`), optionally passing a version; with no
+input it takes the version from `pyproject.toml`.
+
+The workflow:
+
+1. checks the version against `pyproject.toml` and aborts on a mismatch — a tag
+   that disagrees with the packaged version would push a wrongly-numbered
+   artifact to PyPI;
+2. aborts if the tag or a release for it already exists;
+3. extracts the `## [<version>]` section from `CHANGELOG.md` (aborting if there
+   is none) and creates a **draft** release against the commit it ran on.
+
+**The draft is deliberately not published automatically.** GitHub creates the
+tag only on publish, so a draft is consequence-free and can be deleted. Publishing
+triggers `publish.yml` (`on: release: [published]`) → **PyPI** and the **MCP
+Registry**, and a PyPI version can never be re-uploaded. That last, irreversible
+step stays a deliberate human click in the release UI.
+
+`publish.yml` syncs `server.json` from the tag name at publish time, so the
+version committed in that file does not need to be bumped by hand.
+
+---
 
 ## Data Sources & Attribution
 

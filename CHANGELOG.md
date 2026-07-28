@@ -5,6 +5,18 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Neu / Added
+
+- **Workflow «Draft Release»** (`.github/workflows/draft-release.yml`, manuell
+  via `workflow_dispatch`): legt aus dem passenden `CHANGELOG.md`-Abschnitt ein
+  **Draft**-Release an, ohne dass lokal ein Tag gepusht werden muss — GitHub
+  erzeugt den Tag erst beim Veröffentlichen. Mit Guards gegen
+  Versionsabweichung zu `pyproject.toml`, bereits existierende Tags/Releases und
+  fehlende CHANGELOG-Abschnitte. Veröffentlicht **bewusst nicht** selbst: das
+  löst über `publish.yml` PyPI und die MCP Registry aus und ist unumkehrbar,
+  daher bleibt der letzte Schritt ein bewusster Klick. Release-Verfahren in
+  `CONTRIBUTING.md` / `CONTRIBUTING.de.md` dokumentiert.
+
 ## [0.5.0] – 2026-07-28
 
 Additive Erweiterung um den **Lärmbelastungskataster Fluglärm** des BAZL
