@@ -16,6 +16,13 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   löst über `publish.yml` PyPI und die MCP Registry aus und ist unumkehrbar,
   daher bleibt der letzte Schritt ein bewusster Klick. Release-Verfahren in
   `CONTRIBUTING.md` / `CONTRIBUTING.de.md` dokumentiert.
+- **CI-Check «Versions-Sync»** (`scripts/check_version_sync.py`, im `lint`-Job):
+  vergleicht `pyproject.toml` mit `server.json → version` **und** jedem
+  `packages[*].version` und bricht bei Abweichung ab. Schliesst die Lücke, durch
+  die das Registry-Manifest von v0.2.3 bis v0.5.0 unbemerkt veraltet war —
+  `publish.yml` überschreibt die Version beim Veröffentlichen aus dem Tag,
+  weshalb die committete Datei nie auffällig wurde. Nur Standardbibliothek
+  (`tomllib`), lokal ausführbar.
 
 ### Behoben / Fixed
 
