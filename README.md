@@ -2,7 +2,7 @@
 
 # 🌿 swiss-environment-mcp
 
-![Version](https://img.shields.io/badge/version-0.4.1-blue)
+![Version](https://img.shields.io/badge/version-0.5.0-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-purple)](https://modelcontextprotocol.io/)
@@ -144,17 +144,20 @@ servers are mounted together. Tool definitions (name, description, input schema)
 are pinned via `tool-snapshot.json`; changes require a CHANGELOG entry (see
 CONTRIBUTING).
 
-**Tool budget (18 tools, 6 clusters).** Every tool maps to a distinct user
-question, not to a REST endpoint — there is no CRUD/endpoint mirroring, and the
-anchor queries are each answerable in a single call. The count sits above the
-≤12 rule of thumb because the server deliberately spans six environmental
-domains (air, water, hazards, snow, hunting, catalogue), each needing a
-list/detail pair or a domain-specific action. Further consolidation was
+**Tool budget (21 tools, 7 clusters) — exhausted.** Every tool maps to a distinct
+user question, not to a REST endpoint — there is no CRUD/endpoint mirroring, and
+the anchor queries are each answerable in a single call. The count sits above the
+≤12 rule of thumb because the server deliberately spans seven environmental
+domains (air, water, hazards, snow, hunting, catalogue, aircraft noise), each
+needing a list/detail pair or a domain-specific action. Further consolidation was
 considered and rejected: the `*_stations`/`*_current` pairs (NABEL, hydro, snow)
 serve genuinely different intents (discovery vs. reading a known station) and
-collapsing them would overload a single tool's parameters. Adding a seventh
-domain would trigger a review of whether some listings should migrate to MCP
-resources instead of tools.
+collapsing them would overload a single tool's parameters.
+
+**This is the ceiling.** With the aircraft-noise cluster the server's tool budget
+is spent: any further data source belongs in a separate `*-mcp` server, not here.
+The next addition would instead trigger a review of whether some listings should
+migrate to MCP resources rather than tools.
 
 ### 🌬️ Air Quality / NABEL (3 tools)
 
@@ -204,6 +207,53 @@ resources instead of tools.
 | `env_bafu_datasets` | Search BAFU datasets on opendata.swiss (CKAN API) | opendata.swiss |
 | `env_bafu_dataset_detail` | Full metadata and download URLs for a specific dataset | opendata.swiss |
 
+### ✈️ Aircraft Noise / BAZL noise cadastre (3 tools)
+
+| Tool | Description | Data Source |
+|------|-------------|-------------|
+| `env_noise_aircraft_at` | Aircraft noise exposure at an **LV95** point — resolves the overlapping noise contours and returns a dB bracket with the highest value as an upper bound | **api3.geo.admin.ch** (BAZL) |
+| `env_noise_aircraft_registers` | Which airfields have a published cadastre, with validity dates, dB range and the official plan (PDF) — the provenance tool | **api3.geo.admin.ch** (BAZL) |
+| `env_noise_limits_check` | Compare a rating level against the LSV exposure limit values (planning value / immission limit / alarm value) by sensitivity level ES I–IV | Built-in (SR 814.41, Annex 5) |
+
+> ⚖️ **Legal notice — carried in every response of these three tools.** The noise
+> cadastre is an *orientation aid*. Legally binding information on construction
+> projects is issued by the competent cantonal office or by the FOCA (BAZL).
+> These tools do not replace a building permit clarification.
+
+**Coordinates must be LV95** (EPSG:2056, metres: E ≈ 2'480'000–2'840'000,
+N ≈ 1'070'000–1'300'000). WGS84 degrees such as `8.54 / 47.37` are rejected
+**fail-fast** with a conversion hint — this is the single most common LLM error
+with Swiss geodata. Convert via swisstopo REFRAME or `convert_coordinates` in
+[swisstopo-mcp](https://github.com/malkreide/swisstopo-mcp).
+
+**The contours are lines, not areas.** The cadastre publishes `MultiLineString`
+isolines, so `identify` performs a *proximity* query within a search radius — not
+a point-in-polygon test. `env_noise_aircraft_at` therefore returns a **bracket**
+(«the point lies between the 61 dB and the 62 dB contour») with the highest value
+as a stated **upper bound**, never an interpolated point value. The search radius
+is reported in every response; enlarging it inflates the result (at one Kloten
+point: 100 m → 61–62 dB, but 500 m → 58–75 dB, because the 75 dB runway contour
+sits 1.5 km away).
+
+### Anchor demo query
+
+> **"Is the planned school site inside an aircraft-noise zone with building
+> restrictions — and at which dB level?"**
+
+Cross-server flow: resolve an address or EGID via
+[swiss-housing-mcp](https://github.com/malkreide/swiss-housing-mcp) → convert to
+an LV95 coordinate → `env_noise_aircraft_at(east=…, north=…, period="day")` →
+feed the resulting `level_db` into `env_noise_limits_check(level_db=…,
+sensitivity_level="II", period="day")` for the legal classification.
+
+```
+swiss-housing-mcp  →  address / EGID  →  LV95 E/N
+                                          ↓
+                          env_noise_aircraft_at   → 62 dB (upper bound, LBK Zürich, valid from 03.07.2015)
+                                          ↓
+                          env_noise_limits_check  → immission limit ES II (60 dB) exceeded by 2 dB
+```
+
 ### Example Use Cases
 
 | Query | Tool |
@@ -216,6 +266,9 @@ resources instead of tools.
 | *"Natural hazard bulletin for Graubünden?"* | `env_hazard_overview` |
 | *"Wildfire danger in Canton Valais?"* | `env_wildfire_danger` |
 | *"BAFU biodiversity datasets on opendata.swiss?"* | `env_bafu_datasets` |
+| *"Is the planned school site in an aircraft-noise zone — at which dB level?"* | `env_noise_aircraft_at` |
+| *"How old is the noise cadastre for Geneva airport?"* | `env_noise_aircraft_registers` |
+| *"Does 62 dB at night exceed the LSV limit in an ES II residential zone?"* | `env_noise_limits_check` |
 
 ---
 
@@ -240,7 +293,7 @@ resources instead of tools.
 │   Claude / AI   │────▶│   Swiss Environment MCP   │────▶│  BAFU / Swiss Agencies   │
 │   (MCP Host)    │◀────│   (MCP Server)            │◀────│                          │
 └─────────────────┘     │                           │     │  hydrodaten.admin.ch     │
-                        │  18 Tools · 3 Resources   │     │  naturgefahren.ch        │
+                        │  21 Tools · 3 Resources   │     │  naturgefahren.ch        │
                         │  Stdio | SSE              │     │  waldbrandgefahr.ch      │
                         │                           │     │  opendata.swiss (CKAN)   │
                         │  api_client.py            │     └──────────────────────────┘
@@ -260,6 +313,33 @@ resolution, licence lookup); the tools only ever call `cube.py`. The module
 will be lifted into a shared `lindas-mcp` as soon as a second server uses
 LINDAS (candidate: `wsl-envidat-mcp`).
 
+### Architecture decision — live API for the aircraft-noise cadastre
+
+The rest of this server follows the portfolio's **dump-first** standard. The
+aircraft-noise cluster deliberately deviates: `env_noise_aircraft_at` and
+`env_noise_aircraft_registers` query `api3.geo.admin.ch` **live on every call**.
+
+This is *not* a size argument. Measured on 2026-07-28, the entire cadastre is
+**747 objects (~3 MB of GeoJSON)** across all eight sublayers — it would mirror
+without difficulty. Two other reasons decide it:
+
+1. **A mirror would falsify the freshness claim.** The cadastres are revised per
+   airfield, individually and without announcement (validity dates 2009–2024).
+   Read from a dump, `source_freshness` would report the `validfrom` as of the
+   mirroring date — the tool would *assert* provenance it no longer has. For a
+   cluster whose third tool exists precisely to answer "how old is the basis",
+   that is the worst possible failure mode.
+2. **The spatial query is the value, not the attributes.** Evaluated locally it
+   means point-to-line distances over 26'000+ vertices per layer. That requires
+   either **shapely/GEOS** — the first compiled dependency in a deliberately
+   binary-free `pyproject.toml` (Docker image, wheel matrix and security surface
+   all change) — or hand-rolled distance maths. The latter is feasible, since
+   LV95 is a metric projection and Euclidean distance is exact; but then *this
+   server* would own the correctness of an official noise-cadastre statement
+   instead of the federal office.
+
+Full measurements and reasoning: [`docs/probe-fluglaerm.md`](docs/probe-fluglaerm.md).
+
 ### Data Sources
 
 | Source | Data | Licence |
@@ -270,6 +350,7 @@ LINDAS (candidate: `wsl-envidat-mcp`).
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
 | [SLF data service](https://www.slf.ch/en/services-and-products/slf-data-service/) | Snow depth, new snow (IMIS); avalanche bulletin | SLF (WSL) CC BY 4.0 |
 | [jagdstatistik.ch](https://www.jagdstatistik.ch/de/home) | Federal hunting statistics (cull, game loss, population) | BAFU — source attribution required (no explicit licence published) |
+| [api3.geo.admin.ch](https://api3.geo.admin.ch) | BAZL aircraft noise cadastre (`identify`, LV95) | swisstopo / BAZL — free reuse with attribution |
 | [opendata.swiss](https://opendata.swiss/en/organization/bafu) | BAFU data catalogue (CKAN API) | OGD |
 
 All data: publicly accessible, no authentication required.  
@@ -283,7 +364,7 @@ All data: publicly accessible, no authentication required.
 swiss-environment-mcp/
 ├── src/swiss_environment_mcp/
 │   ├── __init__.py          # Package
-│   ├── server.py            # FastMCP server: 18 tools, 3 resources
+│   ├── server.py            # FastMCP server: 21 tools, 3 resources
 │   ├── api_client.py        # HTTP client + egress allow-list (SSRF guard)
 │   └── logging_setup.py     # structlog -> stderr
 ├── tests/
@@ -302,7 +383,7 @@ swiss-environment-mcp/
 └── pyproject.toml           # Build configuration (hatchling)
 ```
 
-> **Single-module layout (rationale, audit ARCH-011):** the 18 tools live in one
+> **Single-module layout (rationale, audit ARCH-011):** the 21 tools live in one
 > `server.py` rather than a `tools/` package. They are thin, uniform wrappers over
 > `api_client.py` sharing the same input/response patterns, so a single
 > well-sectioned module stays more navigable than 4 near-identical files. This is a
@@ -342,6 +423,9 @@ Scaling/session strategy: [`docs/scaling.md`](docs/scaling.md).
 - **Natural hazards (`env_hazard_overview` / `env_hazard_regions`)**: the former `naturgefahren.ch/api/v1/warnings/*` REST endpoints were **decommissioned (2026)** and — verified 2026-07-26 — there is **no stable, documented public JSON feed** for the aggregated warnings (MeteoSwiss OGD/STAC, opendata.swiss and the undocumented app API were all checked). Rather than a fragile scrape, both tools are now **network-free orientation/router tools**: they deterministically point to this server's dedicated live tools (flood→`env_flood_warnings`, avalanche→`env_avalanche_bulletin`, wildfire→`env_wildfire_danger`, snow→`env_snow_current`) and the official portals. Aggregated **weather warnings** (storm/thunderstorm/heat) are MeteoSwiss's domain and belong to `meteoswiss-mcp`. See [`docs/probe-naturgefahren-hazards.md`](docs/probe-naturgefahren-hazards.md).
 - **Wildfire danger (`env_wildfire_danger`)**: `waldbrandgefahr.ch` replaced its REST API with a Rails/React app in 2026; there is **no stable JSON endpoint**. Current danger levels are read via a **two-step, HTML-borne contract**: the homepage's `data-react-props` yields a *signed* ActiveStorage blob URL (`warnMapJsonPath`) plus the canton mapping, which is then fetched. A schema-guard degrades gracefully if that structure changes. Unfiltered results are capped at 40 regions (highest levels first); filter by `canton` for a full cantonal list. See [`docs/probe-naturgefahren-waldbrand.md`](docs/probe-naturgefahren-waldbrand.md).
 - **Hunting statistics (`env_hunting_stats`)**: The `jagdstatistik.ch` backend is **undocumented** (a content-negotiated web-app endpoint). A schema-guard degrades gracefully if the structure changes. Species/canton/datatype lookups are embedded (harvested 2026-07-19); figures are fetched live for 2015–2024. **Licence (researched 2026-07-19):** the data is owned by **BAFU** (compiled from cantonal offices; site tech by Wildtier Schweiz) and is **not** published as a licensed dataset on opendata.swiss; **no explicit licence is stated on the source**. Responses therefore require source attribution to BAFU; formal licence confirmation from BAFU is still pending. See [`docs/probe-jagdstatistik.md`](docs/probe-jagdstatistik.md).
+- **Road and railway noise are out of scope (`ch.bafu.laerm-*`, `ch.bav.laermbelastung-*`)**: verified 2026-07-28. The BAFU road-noise layers `ch.bafu.laerm-strassenlaerm_tag` / `_nacht` answer the same `identify` request with **HTTP 400** — they are pure raster services (`type: wmts`, `tooltip: false`) with no attribute query, so a point lookup is technically impossible. Railway noise is different: `ch.bav.laermbelastung-eisenbahn_*` **does** answer with HTTP 200 and real attributes (`de_es`, `de_pointofdetermination`), so it is *queryable* but deliberately **not connected** — the server's tool budget is exhausted at 21 and rail noise would need its own period/attribute model. Mnemonic: *aircraft noise has lines, road noise has only pixels* — rail noise would have data, but is a conscious omission. See [`docs/probe-fluglaerm.md`](docs/probe-fluglaerm.md).
+- **Aircraft noise is a cut-off-date cadastre, not a live service (`env_noise_*`)**: `validfrom` ranges from **01.03.2009** (CDB Genève) to **16.04.2024** (LBK St. Gallen-Altenrhein), and each airfield is revised individually and without notice. `source_freshness` therefore never claims "live" — it carries the `validfrom` of the register actually matched. Coverage is limited to the surroundings of airfields; most of Switzerland has no cadastre at all, which the tool reports explicitly rather than returning an empty list. A zero-hit result at a small radius is **ambiguous** (outside any cadastre *or* inside the innermost contour — on the Kloten runway both look identical at 100 m), so the tool re-queries once at a far radius and distinguishes `no_cadastre` from `wide_area_only`.
+- **LSV limit check excludes military airfields**: Annex 5 of the Noise Abatement Ordinance applies expressly to *civil* airfields. For military airfields Annex 8 governs; it was not verified, so `env_noise_limits_check` **refuses** the check for `period="military"` and points to the correct basis instead of applying a plausible-looking wrong table.
 
 ### Responsibility matrix — water, snow & precipitation (delineation vs. `meteoswiss-mcp`)
 

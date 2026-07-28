@@ -446,7 +446,7 @@ async def test_all_tools_have_use_case_tag():
     from swiss_environment_mcp.server import mcp
 
     tools = await mcp.list_tools()
-    assert len(tools) == 18
+    assert len(tools) == 21
     missing = [t.name for t in tools if "<use_case>" not in (t.description or "")]
     assert not missing, f"Tools ohne <use_case>-Tag: {missing}"
 

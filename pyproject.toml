@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "swiss-environment-mcp"
-version = "0.4.1"
+version = "0.5.0"
 description = "MCP Server für Schweizer Umweltdaten des BAFU – Luft, Wasser, Naturgefahren und Umweltindikatoren"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
-keywords = ["mcp", "bafu", "umwelt", "switzerland", "open-data", "air-quality", "hydrology"]
+keywords = ["mcp", "bafu", "umwelt", "switzerland", "open-data", "air-quality", "hydrology", "noise", "bazl"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3.11",

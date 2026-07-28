@@ -7,6 +7,7 @@ Quellen:
   - naturgefahren.ch      – Naturgefahren-Bulletin (SLF/BAFU)
   - waldbrandgefahr.ch    – Waldbrandgefahr Schweiz
   - map.bafu.admin.ch     – BAFU Web-GIS (Gefahrenkarten)
+  - api3.geo.admin.ch     – BAZL-Fluglärmbelastungskataster (identify)
 
 Sicherheit (siehe Audit SEC-004 / SEC-021):
   - Egress-Allow-List auf Code-Ebene (nur die fest definierten Gov-Hosts)
@@ -29,7 +30,7 @@ from urllib.parse import unquote, urlparse
 
 import httpx
 
-from . import sparql_client
+from . import geoadmin, sparql_client
 from .lindas import client as lindas_client
 from .logging_setup import get_logger
 
@@ -87,6 +88,15 @@ SLF_BULLETIN_API = "https://aws.slf.ch/api/bulletin"
 JAGD_STATISTICS_URL = "https://www.jagdstatistik.ch/de/statistics"
 JAGD_AJAX_HEADERS = {"X-Requested-With": "XMLHttpRequest", "Accept": "application/json"}
 
+# --- geo.admin.ch (BAZL-Fluglärmbelastungskataster) ---------------------------
+# Punktabfragen gegen den identify-Endpoint der Bundes-Geodaten-Infrastruktur.
+# Transport und Fachlogik liegen im extraktionsfähigen Modul `geoadmin.py`
+# (analog `lindas/`); hier nur die dünne Bindung an den geteilten Client und
+# den Egress-Guard. Retry: 2 s/4 s/8 s (Tests monkeypatchen auf 0).
+GEOADMIN_HOST = geoadmin.GEOADMIN_HOST
+GEOADMIN_RETRY_MAX_ATTEMPTS = geoadmin.RETRY_MAX_ATTEMPTS
+GEOADMIN_RETRY_BASE_DELAY = geoadmin.RETRY_BASE_DELAY
+
 TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 
 # Egress-Allow-List (Code-Layer, Audit SEC-021). Nur diese Hosts dürfen
@@ -102,6 +112,7 @@ ALLOWED_HOSTS: frozenset[str] = frozenset(
         "measurement-api.slf.ch",
         "aws.slf.ch",
         "www.jagdstatistik.ch",
+        geoadmin.GEOADMIN_HOST,
     }
 )
 
@@ -201,7 +212,7 @@ def _new_client() -> httpx.AsyncClient:
         transport=_PinnedTransport(),
         timeout=TIMEOUT,
         headers={
-            "User-Agent": "swiss-environment-mcp/0.2.0 (https://github.com/malkreide/swiss-environment-mcp)",
+            "User-Agent": "swiss-environment-mcp/0.5.0 (https://github.com/malkreide/swiss-environment-mcp)",
             "Accept": "application/json, application/xml, */*",
         },
         follow_redirects=False,
@@ -678,3 +689,68 @@ async def fetch_jagd_statistics(species: str, datatype: str, canton: str) -> dic
         "years": years,
         "series": series,
     }
+
+
+# --- Fluglärmbelastungskataster (BAZL via geo.admin.ch) -----------------------
+#
+# Architektur-Entscheid: **Live-API statt Dump** (siehe README «Architektur-
+# Entscheid»). Nicht aus Grössengründen — der gesamte Kataster umfasst 747
+# Objekte (~3 MB) und wäre ohne Weiteres spiegelbar. Ausschlaggebend ist, dass
+# die Kataster je Flugplatz einzeln und unangekündigt nachgeführt werden
+# (Gültigkeitsdaten 2009–2024): ein Spiegel würde die `validfrom`-Angabe in
+# `source_freshness` entwerten und die Auslegung amtlicher Lärmkurven aus dem
+# Bundesamt in diesen Server verlagern.
+
+# Zeitpunkt des letzten erfolgreichen Abrufs je Periode — ausschliesslich für
+# den degraded-Envelope (Graceful Degradation). Bewusst **kein Datencache**:
+# gespeichert wird nur der Zeitstempel, nie ein Messwert oder eine Kurve.
+_geoadmin_last_success: dict[str, str] = {}
+
+
+def geoadmin_last_success(period: str) -> str | None:
+    """Letzter erfolgreicher Abruf für eine Periode (ISO-8601-UTC) oder None."""
+    return _geoadmin_last_success.get(period)
+
+
+def _note_geoadmin_success(period: str) -> None:
+    _geoadmin_last_success[period] = geoadmin.utc_now()
+
+
+async def fetch_aircraft_noise(
+    period: str,
+    east: int,
+    north: int,
+    radius_m: int = geoadmin.DEFAULT_RADIUS_M,
+) -> dict[str, Any]:
+    """Fluglärmbelastung an einem LV95-Punkt (BAZL-Kataster via identify)."""
+    _logger.debug("upstream_request", method="GET", url=geoadmin.IDENTIFY_URL, period=period)
+    result = await geoadmin.noise_at_point(
+        get_client(),
+        period=period,
+        east=east,
+        north=north,
+        radius_m=radius_m,
+        egress_check=assert_host_allowed,
+        base_delay=GEOADMIN_RETRY_BASE_DELAY,
+        max_attempts=GEOADMIN_RETRY_MAX_ATTEMPTS,
+    )
+    _note_geoadmin_success(period)
+    return result
+
+
+async def fetch_aircraft_noise_registers(
+    period: str | None = None,
+    limit: int = 1000,
+) -> list[dict[str, Any]]:
+    """Übersicht der publizierten Lärmbelastungskataster (Provenienz-Abfrage)."""
+    _logger.debug("upstream_request", method="GET", url=geoadmin.IDENTIFY_URL, period=period)
+    entries = await geoadmin.registers(
+        get_client(),
+        period=period,
+        limit=limit,
+        egress_check=assert_host_allowed,
+        base_delay=GEOADMIN_RETRY_BASE_DELAY,
+        max_attempts=GEOADMIN_RETRY_MAX_ATTEMPTS,
+    )
+    _note_geoadmin_success(period or "*")
+    return entries

@@ -1,5 +1,5 @@
 {
-  "tool_count": 18,
+  "tool_count": 21,
   "tool_names": [
     "env_air_limits_check",
     "env_avalanche_bulletin",
@@ -16,9 +16,12 @@
     "env_hydro_stations",
     "env_nabel_current",
     "env_nabel_stations",
+    "env_noise_aircraft_at",
+    "env_noise_aircraft_registers",
+    "env_noise_limits_check",
     "env_snow_current",
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "7fe82135afc9533ca19ca3b0e469d05b03dd67083b314a2ab8ebbb6d923f4dd0"
+  "sha256": "972a4bf953d3c848e82eccccefed9b75d47a3af4839c018cf160b1a7c3d37d79"
 }
