@@ -95,7 +95,7 @@ async def _tool_text(coro):
     dessen Meldung. Hält die Live-Szenarien robust gegenüber degradierten
     Upstreams (z.B. 301/404 von naturgefahren.ch / waldbrandgefahr.ch): der
     Fehler-Content trägt weiterhin die Recovery-Links, gegen die geprüft wird."""
-    from mcp.server.fastmcp.exceptions import ToolError
+    from mcp.server.mcpserver.exceptions import ToolError
 
     try:
         return await coro
@@ -470,7 +470,7 @@ async def scenario_20():
 
     # Ungueltige ID → seit OBS-001 ein terminaler ToolError (isError:true),
     # dessen Content weiterhin den Bezug zu env_bafu_datasets enthaelt.
-    from mcp.server.fastmcp.exceptions import ToolError
+    from mcp.server.mcpserver.exceptions import ToolError
 
     try:
         await env_bafu_dataset_detail(

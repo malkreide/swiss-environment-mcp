@@ -17,7 +17,7 @@ import sys
 
 import pytest
 
-from mcp.server.fastmcp.exceptions import ToolError
+from mcp.server.mcpserver.exceptions import ToolError
 
 # Diese Datei trifft echte BAFU-Live-APIs. Alle hier gesammelten Tests werden
 # als `live` markiert und in der Standard-CI via `pytest -m "not live"`

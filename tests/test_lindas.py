@@ -299,7 +299,7 @@ async def test_bathing_water_unknown_location_actionable():
 async def test_bathing_water_upstream_down_raises_tool_error(monkeypatch):
     """LINDAS down → terminaler Fehler als ToolError (isError:true, OBS-001),
     Fehler-Content trägt weiterhin den Direktzugang statt eines Stacktrace."""
-    from mcp.server.fastmcp.exceptions import ToolError
+    from mcp.server.mcpserver.exceptions import ToolError
 
     monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
     respx.get(_URL).mock(side_effect=httpx.ConnectError("boom"))
