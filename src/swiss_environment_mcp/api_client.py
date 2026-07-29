@@ -30,7 +30,7 @@ from urllib.parse import unquote, urlparse
 
 import httpx
 
-from . import geoadmin, sparql_client
+from . import USER_AGENT, geoadmin, sparql_client
 from .lindas import client as lindas_client
 from .logging_setup import get_logger
 
@@ -207,12 +207,16 @@ _client: httpx.AsyncClient | None = None
 
 
 def _new_client() -> httpx.AsyncClient:
-    """Erstellt einen konfigurierten AsyncClient mit DNS-Pinning-Transport."""
+    """Erstellt einen konfigurierten AsyncClient mit DNS-Pinning-Transport.
+
+    Der User-Agent kommt aus `__init__.USER_AGENT` und damit aus den
+    Paket-Metadaten — hier steht bewusst keine Versionsnummer mehr.
+    """
     return httpx.AsyncClient(
         transport=_PinnedTransport(),
         timeout=TIMEOUT,
         headers={
-            "User-Agent": "swiss-environment-mcp/0.5.1 (https://github.com/malkreide/swiss-environment-mcp)",
+            "User-Agent": USER_AGENT,
             "Accept": "application/json, application/xml, */*",
         },
         follow_redirects=False,

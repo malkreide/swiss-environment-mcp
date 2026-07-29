@@ -1,5 +1,6 @@
 """
-Versions-Synchronität zwischen `pyproject.toml` und `server.json` prüfen.
+Versions-Synchronität zwischen `pyproject.toml` und `server.json` prüfen —
+und sicherstellen, dass in `src/` keine Version von Hand gepflegt wird.
 
 Hintergrund: `server.json` ist das MCP-Registry-Manifest. Beim Release
 synchronisiert `publish.yml` dessen Version zur Laufzeit aus dem Tag-Namen —
@@ -10,6 +11,11 @@ veralteten Version stand: funktional folgenlos, beim Lesen aber irreführend.
 Dieser Check schliesst die Lücke: er hält die committete Datei ehrlich, ohne
 am Release-Mechanismus etwas zu ändern.
 
+Zweiter Teil (seit dem Umbau des User-Agents auf `importlib.metadata`): in
+`src/` darf überhaupt keine Versionsnummer mehr stehen. Der Laufzeit-Wert
+kommt aus den Paket-Metadaten; ein wieder eingefügtes Literal wäre der Beginn
+derselben Drift, die den User-Agent von v0.2.0 bis v0.5.0 falsch melden liess.
+
 Verwendung:
     python scripts/check_version_sync.py     # exit 1 bei Abweichung
 
@@ -19,6 +25,7 @@ lint-Job der CI ohne Projekt-Installation.
 """
 
 import json
+import re
 import sys
 import tomllib
 from pathlib import Path
@@ -26,6 +33,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PYPROJECT = ROOT / "pyproject.toml"
 SERVER_JSON = ROOT / "server.json"
+SRC = ROOT / "src"
+
+# Ein von Hand gepflegter Versionsstring in `src/`. Beide Formen, die es hier
+# tatsächlich gab: der User-Agent (`swiss-environment-mcp/0.5.1`) und das
+# Dunder in `__init__.py`. Gesucht wird jeweils eine gepunktete Zahl —
+# das trennt echte Versionen sowohl von der GitHub-URL im User-Agent als auch
+# vom Fallback `"0+unknown"`, der ja gerade *keine* Version behauptet.
+_HARDCODED = re.compile(r"""swiss-environment-mcp/\d+\.\d|__version__\s*=\s*["']\d+\.\d""")
+
+
+def check_no_hardcoded_version() -> list[tuple[str, int, str]]:
+    """Findet manuell gepflegte Versionsnummern in `src/`."""
+    hits: list[tuple[str, int, str]] = []
+    for path in sorted(SRC.rglob("*.py")):
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            if _HARDCODED.search(line):
+                hits.append((str(path.relative_to(ROOT)), lineno, line.strip()))
+    return hits
 
 
 def main() -> None:
@@ -56,8 +81,25 @@ def main() -> None:
         )
         sys.exit(1)
 
+    hardcoded = check_no_hardcoded_version()
+    if hardcoded:
+        print("HARDCODED: Versionsnummer in src/ gefunden:", file=sys.stderr)
+        for path, lineno, line in hardcoded:
+            print(f"  {path}:{lineno}: {line}", file=sys.stderr)
+        print(
+            "\nDie Laufzeit-Version kommt aus den Paket-Metadaten "
+            "(`swiss_environment_mcp.__version__`, gespeist aus "
+            "importlib.metadata). Statt eines Literals von dort lesen — "
+            "sonst beginnt dieselbe Drift von vorn.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     checked = ", ".join(where.split("→ ")[1] for where, _ in found)
-    print(f"Versions-Sync OK ({pyproject_version}; geprüft: {checked})")
+    print(
+        f"Versions-Sync OK ({pyproject_version}; geprüft: {checked}; "
+        "keine hartkodierte Version in src/)"
+    )
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@ Live-Tests gegen echte BAFU-APIs stehen in tests/test_integration.py (Marker `li
 
 import os
 import sys
+import tomllib
 
 import httpx
 import pytest
@@ -15,6 +16,7 @@ import respx
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+import swiss_environment_mcp  # noqa: E402
 from swiss_environment_mcp import api_client as api  # noqa: E402
 from swiss_environment_mcp.server import (  # noqa: E402
     AirLimitsCheckInput,
@@ -257,6 +259,38 @@ async def test_pinned_transport_resolves_once(monkeypatch):
     assert resp.status_code == 200
     assert calls["n"] == 1  # exakt eine Resolution
     assert captured["host"] == "185.27.134.1"  # Connect-Ziel = gepinnte IP
+
+
+# --- Versions-Herkunft: User-Agent aus den Paket-Metadaten --------------------
+
+
+def test_user_agent_has_no_hardcoded_version():
+    """Der UA-Header wird aus `__version__` gebaut, nicht als Literal gepflegt.
+
+    Bis v0.5.1 stand die Nummer direkt im Header-Dict und musste bei jedem
+    Release von Hand mitgezogen werden — dreimal ist das nachweislich
+    vergessen worden (v0.2.0 → v0.5.0).
+    """
+    ua = api._new_client().headers["User-Agent"]
+    assert ua == (
+        f"swiss-environment-mcp/{swiss_environment_mcp.__version__} "
+        "(https://github.com/malkreide/swiss-environment-mcp)"
+    )
+
+
+def test_version_matches_pyproject():
+    """Die gemeldete Version ist die des Pakets — kein eigenständiger String."""
+    if swiss_environment_mcp.__version__ == "0+unknown":
+        pytest.skip("Paket nicht installiert (Quell-Checkout) — nichts zu vergleichen")
+
+    with open(os.path.join(os.path.dirname(__file__), "..", "pyproject.toml"), "rb") as fh:
+        expected = tomllib.load(fh)["project"]["version"]
+
+    assert swiss_environment_mcp.__version__ == expected, (
+        f"Installierte Metadaten melden {swiss_environment_mcp.__version__}, "
+        f"pyproject.toml steht auf {expected}. Bei einem editable Install nach "
+        "einem Versionsbump: `pip install -e .` erneut ausführen."
+    )
 
 
 # --- Health-Endpoint (SCALE-004 / SEC-016) ------------------------------------

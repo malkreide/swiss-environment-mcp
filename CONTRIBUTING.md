@@ -189,6 +189,18 @@ python scripts/check_version_sync.py
 The check runs in the `lint` job and compares `pyproject.toml` against both
 `server.json → version` and every `packages[*].version`.
 
+**Those two files are the only ones carrying a version number.** Nothing under
+`src/` does: `__version__` reads the version from the installed distribution via
+`importlib.metadata.version()`, and the User-Agent sent on every upstream
+request is built from it (`USER_AGENT` in `__init__.py`). The same check
+therefore rejects any version literal reintroduced under `src/` — while it was
+maintained by hand, the User-Agent sat on the wrong version from v0.2.0 through
+v0.5.0.
+
+After a version bump in an **editable install**, re-run `pip install -e .`:
+metadata is written at install time, not at import time. The unit test
+`test_version_matches_pyproject` points this out.
+
 ---
 
 ## Data Sources & Attribution
