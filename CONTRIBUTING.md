@@ -186,10 +186,11 @@ commit**; CI enforces it:
 python scripts/check_version_sync.py
 ```
 
-The check runs in the `lint` job and compares `pyproject.toml` against both
-`server.json → version` and every `packages[*].version`.
+The check runs in the `lint` job and compares `pyproject.toml` against
+`server.json → version`, every `packages[*].version`, and the version badge in
+both READMEs.
 
-**Those two files are the only ones carrying a version number.** Nothing under
+**Those are the only places carrying a version number.** Nothing under
 `src/` does: `__version__` reads the version from the installed distribution via
 `importlib.metadata.version()`, and the User-Agent sent on every upstream
 request is built from it (`USER_AGENT` in `__init__.py`). The same check

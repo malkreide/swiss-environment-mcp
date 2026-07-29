@@ -5,6 +5,13 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.5.2] – 2026-07-29
+
+Wartungs-Release. Beseitigt den letzten von Hand gepflegten Versionsstring in
+`src/`: der User-Agent kommt neu aus den Paket-Metadaten. Für Nutzende ändert
+sich nichts — die 21 Tools sind unverändert, der ausgehende User-Agent ist bei
+installiertem Paket bitgleich zu v0.5.1. Er entsteht nur nicht mehr manuell.
+
 ### Geändert / Changed
 
 - **User-Agent kommt aus den Paket-Metadaten.** `__version__` wird neu über
@@ -32,6 +39,10 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   zusätzlich jedes Versionsliteral unter `src/` (User-Agent-Form und
   `__version__`-Zuweisung). Läuft weiterhin ohne Projekt-Installation im
   `lint`-Job.
+- **Die Versions-Badges beider READMEs sind neu im selben Check.** Sie waren
+  die dritte Stelle mit einer Versionsnummer und die einzige, die nichts
+  erzwang — beim Bump auf 0.5.2 aufgefallen. Rein kosmetisch, aber dieselbe
+  Drift-Klasse wie `server.json`: nur sichtbar, wenn jemand hinschaut.
 - **Zwei Unit-Tests** (`tests/test_unit.py`): der UA-Header muss aus
   `__version__` gebaut sein, und die installierten Metadaten müssen zu
   `pyproject.toml` passen. Der zweite Test hat beim Schreiben sofort einen

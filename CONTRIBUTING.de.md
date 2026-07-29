@@ -191,9 +191,10 @@ python scripts/check_version_sync.py
 ```
 
 Der Check läuft im `lint`-Job und vergleicht `pyproject.toml` mit
-`server.json → version` **und** jedem `packages[*].version`.
+`server.json → version`, jedem `packages[*].version` **und** dem
+Versions-Badge beider READMEs.
 
-**Das sind die einzigen beiden Dateien mit einer Versionsnummer.** In `src/`
+**Das sind die einzigen Stellen mit einer Versionsnummer.** In `src/`
 steht keine mehr: `__version__` liest die Version über
 `importlib.metadata.version()` aus der installierten Distribution, und der
 User-Agent für alle Upstream-Requests wird daraus gebaut (`USER_AGENT` in

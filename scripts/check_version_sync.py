@@ -34,6 +34,10 @@ ROOT = Path(__file__).resolve().parent.parent
 PYPROJECT = ROOT / "pyproject.toml"
 SERVER_JSON = ROOT / "server.json"
 SRC = ROOT / "src"
+READMES = ("README.md", "README.de.md")
+
+# Shields.io-Badge im README: ![Version](https://img.shields.io/badge/version-X.Y.Z-blue)
+_BADGE = re.compile(r"img\.shields\.io/badge/version-([^-\s)]+)-")
 
 # Ein von Hand gepflegter Versionsstring in `src/`. Beide Formen, die es hier
 # tatsächlich gab: der User-Agent (`swiss-environment-mcp/0.5.1`) und das
@@ -63,17 +67,26 @@ def main() -> None:
     for i, pkg in enumerate(server.get("packages", [])):
         found.append((f"server.json → packages[{i}].version", pkg.get("version", "")))
 
+    # Die Versions-Badges der READMEs. Rein kosmetisch, aber dieselbe
+    # Drift-Klasse: nichts erzwingt sie, also bleiben sie beim Bump stehen.
+    for name in READMES:
+        path = ROOT / name
+        if not path.exists():
+            continue
+        for match in _BADGE.finditer(path.read_text(encoding="utf-8")):
+            found.append((f"{name} → Versions-Badge", match.group(1)))
+
     mismatches = [(where, value) for where, value in found if value != pyproject_version]
     if mismatches:
         print(
             f"DRIFT: pyproject.toml steht auf {pyproject_version!r}, "
-            "server.json weicht ab:",
+            "folgende Stellen weichen ab:",
             file=sys.stderr,
         )
         for where, value in mismatches:
             print(f"  {where} = {value!r}", file=sys.stderr)
         print(
-            "\nBeide Dateien im selben Commit bumpen (siehe CONTRIBUTING, Abschnitt "
+            "\nAlle Stellen im selben Commit bumpen (siehe CONTRIBUTING, Abschnitt "
             "«Releases»). Hinweis: publish.yml überschreibt server.json beim "
             "Veröffentlichen ohnehin aus dem Tag — die committete Version bleibt "
             "trotzdem die, die Menschen lesen.",
@@ -95,7 +108,9 @@ def main() -> None:
         )
         sys.exit(1)
 
-    checked = ", ".join(where.split("→ ")[1] for where, _ in found)
+    # Volle Bezeichnung statt nur des Feldnamens — sonst stünde für die beiden
+    # READMEs zweimal dasselbe «Versions-Badge» da.
+    checked = ", ".join(where for where, _ in found)
     print(
         f"Versions-Sync OK ({pyproject_version}; geprüft: {checked}; "
         "keine hartkodierte Version in src/)"
