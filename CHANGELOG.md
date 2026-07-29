@@ -5,6 +5,39 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Geändert / Changed
+
+- **User-Agent kommt aus den Paket-Metadaten.** `__version__` wird neu über
+  `importlib.metadata.version()` aus der installierten Distribution gelesen,
+  der User-Agent daraus zusammengesetzt (`USER_AGENT` in `__init__.py`). Damit
+  entfällt der letzte von Hand gepflegte Versionsstring in `src/` — die
+  Fehlerklasse, die den Server von v0.2.0 bis v0.5.0 mit einer falschen
+  Version gegenüber jedem Upstream auftreten liess und in v0.5.1 erneut
+  manuell nachgezogen werden musste. Ohne Installation (reiner
+  Quell-Checkout) meldet der Server `0+unknown` statt einer erfundenen
+  Nummer.
+
+### Behoben / Fixed
+
+- **`__version__` stand auf `0.1.0`.** Das Dunder in `__init__.py` war seit
+  dem Initial-Release nie mitgezogen worden und damit noch weiter abgedriftet
+  als der User-Agent. Es wurde bislang nirgends ausgewertet, wäre aber die
+  naheliegende Quelle für jede Integration gewesen, die die Serverversion
+  wissen will. Entfällt jetzt als eigenständiger Wert.
+
+### Tests / CI
+
+- **`check_version_sync.py` verbietet hartkodierte Versionen in `src/`.** Der
+  Check vergleicht weiterhin `pyproject.toml` mit `server.json` und meldet
+  zusätzlich jedes Versionsliteral unter `src/` (User-Agent-Form und
+  `__version__`-Zuweisung). Läuft weiterhin ohne Projekt-Installation im
+  `lint`-Job.
+- **Zwei Unit-Tests** (`tests/test_unit.py`): der UA-Header muss aus
+  `__version__` gebaut sein, und die installierten Metadaten müssen zu
+  `pyproject.toml` passen. Der zweite Test hat beim Schreiben sofort einen
+  veralteten editable Install aufgedeckt und wird ohne Installation
+  übersprungen statt zu scheitern.
+
 ## [0.5.1] – 2026-07-28
 
 Wartungs-Release der **Release-Infrastruktur**. Funktional ändert sich nichts:
