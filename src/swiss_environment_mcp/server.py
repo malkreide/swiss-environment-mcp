@@ -39,8 +39,8 @@ from contextlib import asynccontextmanager
 from enum import Enum
 from typing import Any, Literal
 
-from mcp.server.fastmcp import Context, FastMCP
-from mcp.server.fastmcp.exceptions import ToolError
+from mcp.server.mcpserver import Context, MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from starlette.requests import Request
@@ -113,7 +113,7 @@ async def _handle_tool_error(
 def _terminal_failure(message: str) -> ToolError:
     """Signalisiert einen terminalen Ausführungsfehler als MCP `isError:true` (OBS-001).
 
-    Wird via `raise` genutzt: FastMCP setzt daraufhin `isError=true` im
+    Wird via `raise` genutzt: MCPServer setzt daraufhin `isError=true` im
     CallToolResult (statt einen Fehlertext als reguläres, erfolgreiches Resultat
     zurückzugeben). Die enthaltenen Direktlinks/Recovery-Hinweise bleiben im
     Fehler-Content erhalten — der Client bekommt weiterhin die Hilfestellung,
@@ -336,7 +336,7 @@ def _mcp_protocol_version() -> str:
 
 
 @asynccontextmanager
-async def lifespan(_server: FastMCP) -> AsyncIterator[None]:
+async def lifespan(_server: MCPServer) -> AsyncIterator[None]:
     """Gemeinsames Lifecycle-Management für alle Transports (Audit SDK-001).
 
     Erzeugt den geteilten HTTP-Client beim Start und schliesst ihn beim
@@ -355,7 +355,7 @@ async def lifespan(_server: FastMCP) -> AsyncIterator[None]:
         await api.shutdown()
 
 
-mcp = FastMCP(
+mcp = MCPServer(
     "swiss_environment_mcp",
     instructions="""
     MCP-Server für Schweizer Umweltdaten des BAFU.
@@ -365,8 +365,6 @@ mcp = FastMCP(
     Zeitzone: Schweiz (CET/CEST). Masseinheiten: µg/m³ (Luft), m (Pegel), m³/s (Abfluss).
     """,
     lifespan=lifespan,
-    host=settings.mcp_host,
-    port=settings.port,
 )
 
 
@@ -3289,9 +3287,8 @@ def main() -> None:
     transport = settings.mcp_transport.replace("_", "-")
 
     if transport == "streamable-http":
-        # Host/Port am FastMCP-Konstruktor gesetzt; hier synchronisieren.
-        mcp.settings.host = settings.mcp_host
-        mcp.settings.port = settings.port
+        # Bind-Adresse geht direkt an uvicorn; unter mcp 2.x traegt
+        # MCPServer.settings kein host/port mehr.
         import uvicorn
 
         uvicorn.run(
@@ -3301,9 +3298,8 @@ def main() -> None:
             log_level="info",
         )
     elif transport == "sse":
-        mcp.settings.host = settings.mcp_host
-        mcp.settings.port = settings.port
-        mcp.run(transport="sse")
+        # mcp 2.x: Bind-Adresse ist ein run()-kwarg.
+        mcp.run(transport="sse", host=settings.mcp_host, port=settings.port)
     else:
         mcp.run(transport="stdio")
 

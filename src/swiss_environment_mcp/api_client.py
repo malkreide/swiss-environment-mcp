@@ -16,7 +16,7 @@ Sicherheit (siehe Audit SEC-004 / SEC-021):
   - follow_redirects=False — kein Redirect auf interne Ziele
 
 Der HTTP-Client ist ein einzelner, wiederverwendeter AsyncClient (siehe
-Audit SDK-001). Er wird über startup()/shutdown() im FastMCP-Lifespan
+Audit SDK-001). Er wird über startup()/shutdown() im MCPServer-Lifespan
 verwaltet, statt pro Tool-Call neu erzeugt zu werden.
 """
 

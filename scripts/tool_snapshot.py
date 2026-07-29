@@ -38,7 +38,7 @@ async def _collect_tools() -> list[dict]:
     tools = await mcp.list_tools()
     result = []
     for t in sorted(tools, key=lambda x: x.name):
-        schema = t.inputSchema or {}
+        schema = t.input_schema or {}
         params = sorted((schema.get("properties") or {}).keys())
         required = sorted(schema.get("required") or [])
         # Whitespace kollabieren: Python 3.13 dedentet Docstrings anders als 3.11/3.12,

@@ -330,10 +330,10 @@ async def test_execution_error_path_logs_and_reports():
     """Execution-Error-Pfad: isError via ToolError, ctx.warning, strukturiertes Log (OBS-001).
 
     Seit v0.3.x wird ein terminaler Ausführungsfehler als `ToolError` geworfen —
-    FastMCP setzt daraufhin `isError:true`. Die maskierte Meldung + der
+    MCPServer setzt daraufhin `isError:true`. Die maskierte Meldung + der
     Direktzugang-Hinweis stehen im Fehler-Content; keine Internals leaken.
     """
-    from mcp.server.fastmcp.exceptions import ToolError
+    from mcp.server.mcpserver.exceptions import ToolError
     from structlog.testing import capture_logs
 
     from swiss_environment_mcp.server import env_bafu_datasets
@@ -762,7 +762,7 @@ async def test_wildfire_danger_schema_guard_graceful():
 
 @respx.mock
 async def test_wildfire_danger_error_raises_tool_error():
-    from mcp.server.fastmcp.exceptions import ToolError
+    from mcp.server.mcpserver.exceptions import ToolError
 
     respx.get(_WILDFIRE_HOME_URL).mock(return_value=httpx.Response(503))
     with pytest.raises(ToolError) as exc:
