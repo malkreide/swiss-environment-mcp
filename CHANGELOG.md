@@ -5,6 +5,39 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Streamable-HTTP wies unter jedem echten Hostnamen mit 421 ab (SEC-005).**
+  `build_cors_app()` rief `mcp.streamable_http_app()` ohne `host` auf. Unter
+  mcp 2.x ist das kein neutraler Default: das SDK leitet daraus seine
+  Host-Allow-List ab und aktiviert bei loopback-artigem Wert automatisch
+  `127.0.0.1:*`. Da das Argument selbst auf `127.0.0.1` defaultet, traf das jeden
+  Container mit `MCP_HOST=0.0.0.0` (Dockerfile/render.yaml). Vor der Migration
+  ging `host` an den `FastMCP`-Konstruktor, wo dieselbe Logik den echten Bind sah
+  und den Schutz korrekt ausliess.
+
+  Der **SSE-Zweig war nicht betroffen**: dort geht `host` an `mcp.run()`, wo das
+  SDK den echten Bind sieht. Nur der Streamable-HTTP-Pfad liess ihn aus.
+
+  Der Bind reist jetzt in die App, und eine echte Allow-List wird aus dem neuen
+  `MCP_ALLOWED_HOSTS` gebaut. Ohne diese Variable bleibt der Schutz auf einem
+  Nicht-Loopback-Bind bewusst aus und der Aufrufer warnt — eine geratene Liste
+  wäre genau der 421-Fall.
+
+  Der CORS-Default dieses Servers ist `*`; als Transport-Origin wird er bewusst
+  nicht übernommen, weil Origins literal verglichen werden und ein Eintrag `*`
+  nichts erlauben würde. Ein Test hält das fest.
+
+  13 neue Tests, darunter der tragende Fall „richtiger Hostname, falscher Port"
+  — nur er unterscheidet eine portgenaue Allow-List von einer, die alles
+  durchlässt. Mutationsgetestet: nimmt man den `host`-Kwarg wieder weg,
+  reproduziert der Test das 421.
+
+  Geprüft mit den wörtlichen CI-Kommandos: 143 passed / 1 skipped / 23
+  deselected, `ruff check src/` clean, `ruff format --check src/` (10 files
+  already formatted).
+
+
 ## [0.5.2] – 2026-07-29
 
 Wartungs-Release. Beseitigt den letzten von Hand gepflegten Versionsstring in
