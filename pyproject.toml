@@ -68,3 +68,7 @@ markers = [
 
 [tool.ruff.lint.per-file-ignores]
 "src/swiss_environment_mcp/server.py" = ["E501"]
+# Dieser Test nimmt src/ zur Laufzeit in sys.path auf und muss deshalb nach
+# dieser Zeile importieren. E402 laesst sich hier nicht aufloesen, ohne den
+# Import zu brechen.
+"tests/test_integration.py" = ["E402"]

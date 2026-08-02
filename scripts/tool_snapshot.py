@@ -89,7 +89,9 @@ def main() -> None:
         SNAPSHOT_PATH.write_text(
             json.dumps(snap, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )
-        print(f"geschrieben: {SNAPSHOT_PATH.name} ({snap['tool_count']} Tools, {snap['sha256'][:12]})")
+        print(
+            f"geschrieben: {SNAPSHOT_PATH.name} ({snap['tool_count']} Tools, {snap['sha256'][:12]})"
+        )
 
 
 if __name__ == "__main__":

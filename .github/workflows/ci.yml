@@ -27,8 +27,16 @@ jobs:
       - name: Abhängigkeiten installieren
         run: uv pip install -e ".[dev,otel]" --system
 
+      # Pin ruff so an upstream release cannot change the default rule set or
+      # formatter and break CI on unrelated, untouched code.
+      - name: Install pinned ruff
+        run: pip install ruff==0.16.1
+
       - name: Linting mit ruff
-        run: ruff check src/
+        run: ruff check src/ tests/ scripts/
+
+      - name: Format check
+        run: ruff format --check src/ tests/ scripts/
 
       - name: Syntax-Prüfung
         run: python -m py_compile src/swiss_environment_mcp/server.py src/swiss_environment_mcp/api_client.py
@@ -56,11 +64,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: pip install ruff
+      # Pin ruff so an upstream release cannot change the default rule set or
+      # formatter and break CI on unrelated, untouched code.
+      - run: pip install ruff==0.16.1
 
-      - run: ruff check src/
+      - run: ruff check src/ tests/ scripts/
 
-      - run: ruff format --check src/
+      - run: ruff format --check src/ tests/ scripts/
 
       # Nur Standardbibliothek (tomllib ab 3.11) — kein Projekt-Install nötig.
       - name: Versions-Sync server.json ↔ pyproject.toml

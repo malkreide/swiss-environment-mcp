@@ -33,10 +33,12 @@ if sys.platform == "win32":
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+import pytest  # noqa: E402
+
 from swiss_environment_mcp.server import (
     AirLimitsCheckInput,
-    BafuDatasetsInput,
     BafuDatasetDetailInput,
+    BafuDatasetsInput,
     FloodWarningsInput,
     HazardOverviewInput,
     HazardRegionsInput,
@@ -60,8 +62,6 @@ from swiss_environment_mcp.server import (
     env_nabel_stations,
     env_wildfire_danger,
 )
-
-import pytest  # noqa: E402
 
 # Szenarien treffen echte Live-APIs → als live markiert (CI: pytest -m "not live").
 pytestmark = pytest.mark.live
@@ -108,29 +108,48 @@ async def _tool_text(coro):
 # =============================================================================
 async def scenario_01():
     """Alle 16 NABEL-Stationen in Markdown und JSON pruefen."""
-    S = "S01-NABEL-Vollstaendigkeit"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 1: {S}")
-    print(f"{'='*60}")
+    szenario = "S01-NABEL-Vollstaendigkeit"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 1: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_nabel_stations(NabelStationsInput())
 
-    ALL_CODES = ["BAS", "BER", "DAV", "DUB", "HAE", "JUN", "LAE", "LAU",
-                 "LUG", "MAG", "PAY", "RIG", "SIO", "TAE", "ZUE", "ZUR"]
-    for code in ALL_CODES:
-        check(S, f"Station {code} in Markdown", code in result, f"fehlt")
+    all_codes = [
+        "BAS",
+        "BER",
+        "DAV",
+        "DUB",
+        "HAE",
+        "JUN",
+        "LAE",
+        "LAU",
+        "LUG",
+        "MAG",
+        "PAY",
+        "RIG",
+        "SIO",
+        "TAE",
+        "ZUE",
+        "ZUR",
+    ]
+    for code in all_codes:
+        check(szenario, f"Station {code} in Markdown", code in result, "fehlt")
 
     result_json = await env_nabel_stations(NabelStationsInput(response_format=ResponseFormat.JSON))
     data = json.loads(result_json)
     # JSON nutzt seit v0.2.x den ResponseEnvelope (count/results statt total/nabel_stationen).
-    check(S, "JSON: count=16", data.get("count") == 16, f"count={data.get('count')}")
-    check(S, "JSON: Schluessel results", "results" in data)
+    check(szenario, "JSON: count=16", data.get("count") == 16, f"count={data.get('count')}")
+    check(szenario, "JSON: Schluessel results", "results" in data)
     stations = data.get("results", [])
-    check(S, "JSON: Jede Station hat name", all("name" in s for s in stations))
+    check(szenario, "JSON: Jede Station hat name", all("name" in s for s in stations))
     # Kanton-Key kann 'canton' oder 'kanton' heissen
-    check(S, "JSON: Jede Station hat Kanton-Info",
-          all("canton" in s or "kanton" in s for s in stations),
-          f"Erste Station Keys: {list(stations[0].keys()) if stations else 'leer'}")
+    check(
+        szenario,
+        "JSON: Jede Station hat Kanton-Info",
+        all("canton" in s or "kanton" in s for s in stations),
+        f"Erste Station Keys: {list(stations[0].keys()) if stations else 'leer'}",
+    )
 
 
 # =============================================================================
@@ -138,15 +157,17 @@ async def scenario_01():
 # =============================================================================
 async def scenario_02():
     """Daten einer extremen Bergstation - Jungfraujoch (3580 m)."""
-    S = "S02-NABEL-Jungfraujoch"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 2: {S}")
-    print(f"{'='*60}")
+    szenario = "S02-NABEL-Jungfraujoch"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 2: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_nabel_current(NabelCurrentInput(station="JUN"))
-    check(S, "Station JUN gefunden", "Jungfraujoch" in result, f"Inhalt: {result[:200]}")
-    check(S, "Messparameter-Tabelle", "Parameter" in result or "NO" in result or "O3" in result)
-    check(S, "BAFU-Link vorhanden", "bafu.admin.ch" in result)
+    check(szenario, "Station JUN gefunden", "Jungfraujoch" in result, f"Inhalt: {result[:200]}")
+    check(
+        szenario, "Messparameter-Tabelle", "Parameter" in result or "NO" in result or "O3" in result
+    )
+    check(szenario, "BAFU-Link vorhanden", "bafu.admin.ch" in result)
 
 
 # =============================================================================
@@ -154,14 +175,19 @@ async def scenario_02():
 # =============================================================================
 async def scenario_03():
     """Station Lugano mit Kleinschreibung -> Validator muss uppercase konvertieren."""
-    S = "S03-NABEL-Lowercase-Lugano"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 3: {S}")
-    print(f"{'='*60}")
+    szenario = "S03-NABEL-Lowercase-Lugano"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 3: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_nabel_current(NabelCurrentInput(station="lug"))
-    check(S, "Lugano erkannt (lowercase -> uppercase)", "Lugano" in result, f"Inhalt: {result[:200]}")
-    check(S, "Kanton TI erwaehnt", "TI" in result)
+    check(
+        szenario,
+        "Lugano erkannt (lowercase -> uppercase)",
+        "Lugano" in result,
+        f"Inhalt: {result[:200]}",
+    )
+    check(szenario, "Kanton TI erwaehnt", "TI" in result)
 
 
 # =============================================================================
@@ -169,14 +195,19 @@ async def scenario_03():
 # =============================================================================
 async def scenario_04():
     """Ungueltiger Stationscode -> nuetzliche Fehlermeldung mit Stationsliste."""
-    S = "S04-NABEL-Ungueltig"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 4: {S}")
-    print(f"{'='*60}")
+    szenario = "S04-NABEL-Ungueltig"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 4: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_nabel_current(NabelCurrentInput(station="FAKE"))
-    check(S, "Fehlermeldung: nicht gefunden", "nicht gefunden" in result, f"Inhalt: {result[:200]}")
-    check(S, "Hilfe: Stationsliste angeboten", "ZUE" in result and "BAS" in result)
+    check(
+        szenario,
+        "Fehlermeldung: nicht gefunden",
+        "nicht gefunden" in result,
+        f"Inhalt: {result[:200]}",
+    )
+    check(szenario, "Hilfe: Stationsliste angeboten", "ZUE" in result and "BAS" in result)
 
 
 # =============================================================================
@@ -184,16 +215,23 @@ async def scenario_04():
 # =============================================================================
 async def scenario_05():
     """NO2 = 30.0 -> exakt LRV-Grenzwert -> Eingehalten (nicht ueberschritten)."""
-    S = "S05-Grenzwert-exakt"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 5: {S}")
-    print(f"{'='*60}")
+    szenario = "S05-Grenzwert-exakt"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 5: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_air_limits_check(AirLimitsCheckInput(pollutant="NO2", value=30.0))
-    check(S, "NO2=30: LRV Eingehalten (Grenzwert nicht ueberschritten)",
-          "Eingehalten" in result, f"Inhalt: {result[:300]}")
-    check(S, "NO2=30: WHO ueberschritten (WHO=10)",
-          "BERSCHRITTEN" in result or "berschritten" in result.lower())
+    check(
+        szenario,
+        "NO2=30: LRV Eingehalten (Grenzwert nicht ueberschritten)",
+        "Eingehalten" in result,
+        f"Inhalt: {result[:300]}",
+    )
+    check(
+        szenario,
+        "NO2=30: WHO ueberschritten (WHO=10)",
+        "BERSCHRITTEN" in result or "berschritten" in result.lower(),
+    )
 
 
 # =============================================================================
@@ -201,19 +239,21 @@ async def scenario_05():
 # =============================================================================
 async def scenario_06():
     """Jeden unterstuetzten Schadstoff einzeln testen (hoher Wert -> ueberschritten)."""
-    S = "S06-Alle-Schadstoffe"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 6: {S}")
-    print(f"{'='*60}")
+    szenario = "S06-Alle-Schadstoffe"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 6: {szenario}")
+    print(f"{'=' * 60}")
 
     pollutants = {"NO2": 50, "PM10": 40, "PM2.5": 20, "O3": 150, "SO2": 60, "CO": 15000}
     for p, val in pollutants.items():
         result = await env_air_limits_check(AirLimitsCheckInput(pollutant=p, value=float(val)))
-        check(S, f"{p}={val}: Antwort vorhanden",
-              len(result) > 50, f"Laenge: {len(result)}")
-        check(S, f"{p}={val}: LRV ueberschritten",
-              "BERSCHRITTEN" in result or "berschritten" in result.lower(),
-              f"Inhalt: {result[:150]}")
+        check(szenario, f"{p}={val}: Antwort vorhanden", len(result) > 50, f"Laenge: {len(result)}")
+        check(
+            szenario,
+            f"{p}={val}: LRV ueberschritten",
+            "BERSCHRITTEN" in result or "berschritten" in result.lower(),
+            f"Inhalt: {result[:150]}",
+        )
 
 
 # =============================================================================
@@ -221,14 +261,19 @@ async def scenario_06():
 # =============================================================================
 async def scenario_07():
     """Ungueltiger Schadstoff H2S -> Fehlermeldung mit gueltiger Liste."""
-    S = "S07-Schadstoff-ungueltig"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 7: {S}")
-    print(f"{'='*60}")
+    szenario = "S07-Schadstoff-ungueltig"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 7: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_air_limits_check(AirLimitsCheckInput(pollutant="H2S", value=10.0))
-    check(S, "Fehlermeldung: nicht erkannt", "nicht erkannt" in result, f"Inhalt: {result[:200]}")
-    check(S, "Hilfe: gueltige Schadstoffe aufgelistet", "NO2" in result and "PM10" in result)
+    check(
+        szenario,
+        "Fehlermeldung: nicht erkannt",
+        "nicht erkannt" in result,
+        f"Inhalt: {result[:200]}",
+    )
+    check(szenario, "Hilfe: gueltige Schadstoffe aufgelistet", "NO2" in result and "PM10" in result)
 
 
 # =============================================================================
@@ -236,15 +281,15 @@ async def scenario_07():
 # =============================================================================
 async def scenario_08():
     """Messstationen im Kanton BE - Filter testen."""
-    S = "S08-Hydro-Kanton-BE"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 8: {S}")
-    print(f"{'='*60}")
+    szenario = "S08-Hydro-Kanton-BE"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 8: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_hydro_stations(HydroStationsInput(canton="BE"))
-    check(S, "Kein Python-Traceback", "Traceback" not in result)
-    check(S, "Kanton BE in Filterinfo", "BE" in result)
-    check(S, "hydrodaten.admin.ch Link", "hydrodaten" in result)
+    check(szenario, "Kein Python-Traceback", "Traceback" not in result)
+    check(szenario, "Kanton BE in Filterinfo", "BE" in result)
+    check(szenario, "hydrodaten.admin.ch Link", "hydrodaten" in result)
 
 
 # =============================================================================
@@ -252,14 +297,19 @@ async def scenario_08():
 # =============================================================================
 async def scenario_09():
     """Gewaesserfilter Rhein - nur Rhein-Stationen."""
-    S = "S09-Hydro-Rhein"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 9: {S}")
-    print(f"{'='*60}")
+    szenario = "S09-Hydro-Rhein"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 9: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_hydro_stations(HydroStationsInput(water_body="Rhein"))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "Rhein erwaehnt", "Rhein" in result or "rhein" in result.lower(), f"Inhalt: {result[:200]}")
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(
+        szenario,
+        "Rhein erwaehnt",
+        "Rhein" in result or "rhein" in result.lower(),
+        f"Inhalt: {result[:200]}",
+    )
 
 
 # =============================================================================
@@ -267,24 +317,30 @@ async def scenario_09():
 # =============================================================================
 async def scenario_10():
     """JSON-Ausgabe der Hydrostationen pruefen."""
-    S = "S10-Hydro-JSON"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 10: {S}")
-    print(f"{'='*60}")
+    szenario = "S10-Hydro-JSON"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 10: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await env_hydro_stations(HydroStationsInput(response_format=ResponseFormat.JSON))
-    check(S, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "Kein Traceback", "Traceback" not in result)
     try:
         data = json.loads(result)
-        check(S, "JSON parsebar", True)
-        check(S, "Enthaelt strukturierte Daten",
-              isinstance(data, dict) and len(data) > 0,
-              f"Schluessel: {list(data.keys())[:5]}")
+        check(szenario, "JSON parsebar", True)
+        check(
+            szenario,
+            "Enthaelt strukturierte Daten",
+            isinstance(data, dict) and len(data) > 0,
+            f"Schluessel: {list(data.keys())[:5]}",
+        )
     except json.JSONDecodeError:
         # API kann 404 liefern -> Fallback auf Markdown mit Direktlinks
-        check(S, "JSON oder Fallback-Antwort mit Links",
-              "hydrodaten" in result or "Fehler" in result,
-              f"Inhalt: {result[:200]}")
+        check(
+            szenario,
+            "JSON oder Fallback-Antwort mit Links",
+            "hydrodaten" in result or "Fehler" in result,
+            f"Inhalt: {result[:200]}",
+        )
 
 
 # =============================================================================
@@ -292,17 +348,24 @@ async def scenario_10():
 # =============================================================================
 async def scenario_11():
     """Aktuelle Messwerte der Limmat in Zuerich abrufen."""
-    S = "S11-Hydro-Limmat-Aktuell"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 11: {S}")
-    print(f"{'='*60}")
+    szenario = "S11-Hydro-Limmat-Aktuell"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 11: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await _tool_text(env_hydro_current(HydroCurrentInput(station_id="2099")))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "Portal-Link vorhanden", "hydrodaten.admin.ch" in result)
-    has_params = any(p in result for p in ["Pegel", "Abfluss", "Temperatur", "m3/s", "m/s", "Fehler", "hydrodaten"])
-    check(S, "Messparameter oder Fallback vorhanden", has_params,
-          f"Inhalt: {result[:200].encode('ascii', 'replace').decode()}")
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "Portal-Link vorhanden", "hydrodaten.admin.ch" in result)
+    has_params = any(
+        p in result
+        for p in ["Pegel", "Abfluss", "Temperatur", "m3/s", "m/s", "Fehler", "hydrodaten"]
+    )
+    check(
+        szenario,
+        "Messparameter oder Fallback vorhanden",
+        has_params,
+        f"Inhalt: {result[:200].encode('ascii', 'replace').decode()}",
+    )
 
 
 # =============================================================================
@@ -310,17 +373,17 @@ async def scenario_11():
 # =============================================================================
 async def scenario_12():
     """Historische Wassertemperatur der Limmat - 3 Tage."""
-    S = "S12-Hydro-Historie-Temperatur"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 12: {S}")
-    print(f"{'='*60}")
+    szenario = "S12-Hydro-Historie-Temperatur"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 12: {szenario}")
+    print(f"{'=' * 60}")
 
-    result = await env_hydro_history(HydroHistoryInput(
-        station_id="2099", parameter="Temperatur", days=3
-    ))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "Portal-Link", "hydrodaten" in result)
-    check(S, "Datenportal erwaehnt", "opendata.swiss" in result or "hydrodaten" in result)
+    result = await env_hydro_history(
+        HydroHistoryInput(station_id="2099", parameter="Temperatur", days=3)
+    )
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "Portal-Link", "hydrodaten" in result)
+    check(szenario, "Datenportal erwaehnt", "opendata.swiss" in result or "hydrodaten" in result)
 
 
 # =============================================================================
@@ -328,18 +391,18 @@ async def scenario_12():
 # =============================================================================
 async def scenario_13():
     """Hochwasserwarnungen: alle Stufen vs. nur Stufe 5 (selten aktiv)."""
-    S = "S13-Hochwasser-Stufen"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 13: {S}")
-    print(f"{'='*60}")
+    szenario = "S13-Hochwasser-Stufen"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 13: {szenario}")
+    print(f"{'=' * 60}")
 
     result_all = await _tool_text(env_flood_warnings(FloodWarningsInput(min_level=1)))
-    check(S, "Stufe 1: Kein Traceback", "Traceback" not in result_all)
-    check(S, "Stufe 1: Antwort > 20 Zeichen", len(result_all) > 20)
+    check(szenario, "Stufe 1: Kein Traceback", "Traceback" not in result_all)
+    check(szenario, "Stufe 1: Antwort > 20 Zeichen", len(result_all) > 20)
 
     result_5 = await _tool_text(env_flood_warnings(FloodWarningsInput(min_level=5)))
-    check(S, "Stufe 5: Kein Traceback", "Traceback" not in result_5)
-    check(S, "Stufe 5: Rueckmeldung vorhanden", len(result_5) > 20)
+    check(szenario, "Stufe 5: Kein Traceback", "Traceback" not in result_5)
+    check(szenario, "Stufe 5: Rueckmeldung vorhanden", len(result_5) > 20)
 
 
 # =============================================================================
@@ -347,17 +410,20 @@ async def scenario_13():
 # =============================================================================
 async def scenario_14():
     """Hochwasserwarnungen nur fuer den Kanton Graubuenden."""
-    S = "S14-Hochwasser-Kanton-GR"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 14: {S}")
-    print(f"{'='*60}")
+    szenario = "S14-Hochwasser-Kanton-GR"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 14: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await _tool_text(env_flood_warnings(FloodWarningsInput(min_level=1, canton="GR")))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "Antwort nicht leer", len(result) > 20)
-    check(S, "GR erwaehnt oder keine Warnungen",
-          "GR" in result or "keine" in result.lower() or "Keine" in result or "Fehler" in result,
-          f"Inhalt: {result[:200].encode('ascii', 'replace').decode()}")
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "Antwort nicht leer", len(result) > 20)
+    check(
+        szenario,
+        "GR erwaehnt oder keine Warnungen",
+        "GR" in result or "keine" in result.lower() or "Keine" in result or "Fehler" in result,
+        f"Inhalt: {result[:200].encode('ascii', 'replace').decode()}",
+    )
 
 
 # =============================================================================
@@ -365,16 +431,20 @@ async def scenario_14():
 # =============================================================================
 async def scenario_15():
     """Bulletin in de, fr, it, en - alle muessen antworten."""
-    S = "S15-Bulletin-Mehrsprachig"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 15: {S}")
-    print(f"{'='*60}")
+    szenario = "S15-Bulletin-Mehrsprachig"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 15: {szenario}")
+    print(f"{'=' * 60}")
 
     for lang in ["de", "fr", "it", "en"]:
         result = await _tool_text(env_hazard_overview(HazardOverviewInput(language=lang)))
-        check(S, f"Sprache {lang}: Kein Traceback", "Traceback" not in result)
-        check(S, f"Sprache {lang}: Antwort > 50 Zeichen", len(result) > 50,
-              f"Laenge: {len(result)}")
+        check(szenario, f"Sprache {lang}: Kein Traceback", "Traceback" not in result)
+        check(
+            szenario,
+            f"Sprache {lang}: Antwort > 50 Zeichen",
+            len(result) > 50,
+            f"Laenge: {len(result)}",
+        )
 
 
 # =============================================================================
@@ -382,19 +452,27 @@ async def scenario_15():
 # =============================================================================
 async def scenario_16():
     """Regionale Warnungen fuer Graubuenden, gefiltert auf Lawinen."""
-    S = "S16-Gefahren-GR-Lawinen"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 16: {S}")
-    print(f"{'='*60}")
+    szenario = "S16-Gefahren-GR-Lawinen"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 16: {szenario}")
+    print(f"{'=' * 60}")
 
-    result = await _tool_text(env_hazard_regions(HazardRegionsInput(
-        region="Graubuenden", hazard_type="lawinen", language="de"
-    )))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "Antwort vorhanden", len(result) > 30)
-    check(S, "Relevanter Inhalt",
-          "naturgefahren" in result or "map.bafu" in result or "Graub" in result or "Warnung" in result,
-          f"Inhalt: {result[:200]}")
+    result = await _tool_text(
+        env_hazard_regions(
+            HazardRegionsInput(region="Graubuenden", hazard_type="lawinen", language="de")
+        )
+    )
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "Antwort vorhanden", len(result) > 30)
+    check(
+        szenario,
+        "Relevanter Inhalt",
+        "naturgefahren" in result
+        or "map.bafu" in result
+        or "Graub" in result
+        or "Warnung" in result,
+        f"Inhalt: {result[:200]}",
+    )
 
 
 # =============================================================================
@@ -402,16 +480,19 @@ async def scenario_16():
 # =============================================================================
 async def scenario_17():
     """Waldbrandgefahr im Kanton Wallis (haeufig erhoeht im Sommer)."""
-    S = "S17-Waldbrand-VS"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 17: {S}")
-    print(f"{'='*60}")
+    szenario = "S17-Waldbrand-VS"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 17: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await _tool_text(env_wildfire_danger(WildfireDangerInput(language="de", canton="VS")))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "Antwort vorhanden", len(result) > 30)
-    has_content = any(w in result for w in ["Gering", "Maessig", "Erheblich", "Gross", "waldbrandgefahr", "Wallis", "VS"])
-    check(S, "Relevanter Inhalt (Stufe oder Kanton)", has_content, f"Inhalt: {result[:200]}")
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "Antwort vorhanden", len(result) > 30)
+    has_content = any(
+        w in result
+        for w in ["Gering", "Maessig", "Erheblich", "Gross", "waldbrandgefahr", "Wallis", "VS"]
+    )
+    check(szenario, "Relevanter Inhalt (Stufe oder Kanton)", has_content, f"Inhalt: {result[:200]}")
 
 
 # =============================================================================
@@ -419,14 +500,14 @@ async def scenario_17():
 # =============================================================================
 async def scenario_18():
     """Waldbrandgefahr in Franzoesisch abfragen."""
-    S = "S18-Waldbrand-FR"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 18: {S}")
-    print(f"{'='*60}")
+    szenario = "S18-Waldbrand-FR"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 18: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await _tool_text(env_wildfire_danger(WildfireDangerInput(language="fr")))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "Antwort vorhanden", len(result) > 30)
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "Antwort vorhanden", len(result) > 30)
 
 
 # =============================================================================
@@ -434,20 +515,22 @@ async def scenario_18():
 # =============================================================================
 async def scenario_19():
     """Datensatz-Suche: Biodiversitaet mit 3 Ergebnissen, dann Offset=3."""
-    S = "S19-Datenkatalog-Suche"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 19: {S}")
-    print(f"{'='*60}")
+    szenario = "S19-Datenkatalog-Suche"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 19: {szenario}")
+    print(f"{'=' * 60}")
 
     result = await _tool_text(env_bafu_datasets(BafuDatasetsInput(query="Biodiversitaet", rows=3)))
-    check(S, "Kein Traceback", "Traceback" not in result)
-    check(S, "opendata.swiss erwaehnt", "opendata.swiss" in result)
-    check(S, "Ergebnisse vorhanden", len(result) > 100, f"Laenge: {len(result)}")
+    check(szenario, "Kein Traceback", "Traceback" not in result)
+    check(szenario, "opendata.swiss erwaehnt", "opendata.swiss" in result)
+    check(szenario, "Ergebnisse vorhanden", len(result) > 100, f"Laenge: {len(result)}")
 
     # Pagination: Offset 3
-    result_page2 = await _tool_text(env_bafu_datasets(BafuDatasetsInput(query="Biodiversitaet", rows=3, offset=3)))
-    check(S, "Pagination: Kein Traceback", "Traceback" not in result_page2)
-    check(S, "Pagination: Antwort vorhanden", len(result_page2) > 50)
+    result_page2 = await _tool_text(
+        env_bafu_datasets(BafuDatasetsInput(query="Biodiversitaet", rows=3, offset=3))
+    )
+    check(szenario, "Pagination: Kein Traceback", "Traceback" not in result_page2)
+    check(szenario, "Pagination: Antwort vorhanden", len(result_page2) > 50)
 
 
 # =============================================================================
@@ -455,18 +538,25 @@ async def scenario_19():
 # =============================================================================
 async def scenario_20():
     """Detailabruf des NABEL-Datensatzes + Fehlerbehandlung bei ungueltiger ID."""
-    S = "S20-Datensatz-Detail"
-    print(f"\n{'='*60}")
-    print(f"  Szenario 20: {S}")
-    print(f"{'='*60}")
+    szenario = "S20-Datensatz-Detail"
+    print(f"\n{'=' * 60}")
+    print(f"  Szenario 20: {szenario}")
+    print(f"{'=' * 60}")
 
-    result = await _tool_text(env_bafu_dataset_detail(
-        BafuDatasetDetailInput(dataset_id="nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen")
-    ))
-    check(S, "NABEL-Datensatz: Kein Traceback", "Traceback" not in result)
-    check(S, "NABEL-Datensatz: Ressourcen erwaehnt",
-          "Ressourcen" in result or "ressource" in result.lower() or "opendata" in result)
-    check(S, "NABEL-Datensatz: Download-URL(s)", "http" in result)
+    result = await _tool_text(
+        env_bafu_dataset_detail(
+            BafuDatasetDetailInput(
+                dataset_id="nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"
+            )
+        )
+    )
+    check(szenario, "NABEL-Datensatz: Kein Traceback", "Traceback" not in result)
+    check(
+        szenario,
+        "NABEL-Datensatz: Ressourcen erwaehnt",
+        "Ressourcen" in result or "ressource" in result.lower() or "opendata" in result,
+    )
+    check(szenario, "NABEL-Datensatz: Download-URL(s)", "http" in result)
 
     # Ungueltige ID → seit OBS-001 ein terminaler ToolError (isError:true),
     # dessen Content weiterhin den Bezug zu env_bafu_datasets enthaelt.
@@ -476,12 +566,15 @@ async def scenario_20():
         await env_bafu_dataset_detail(
             BafuDatasetDetailInput(dataset_id="non-existent-dataset-xyz-12345")
         )
-        check(S, "Ungueltige ID: ToolError erwartet", False, "kein Fehler geworfen")
+        check(szenario, "Ungueltige ID: ToolError erwartet", False, "kein Fehler geworfen")
     except ToolError as exc:
         msg = str(exc)
-        check(S, "Ungueltige ID: Fehlermeldung",
-              "nicht gefunden" in msg or "env_bafu_datasets" in msg,
-              f"Inhalt: {msg[:200]}")
+        check(
+            szenario,
+            "Ungueltige ID: Fehlermeldung",
+            "nicht gefunden" in msg or "env_bafu_datasets" in msg,
+            f"Inhalt: {msg[:200]}",
+        )
 
 
 # =============================================================================
@@ -489,10 +582,26 @@ async def scenario_20():
 # =============================================================================
 
 _SCENARIOS = [
-    scenario_01, scenario_02, scenario_03, scenario_04, scenario_05,
-    scenario_06, scenario_07, scenario_08, scenario_09, scenario_10,
-    scenario_11, scenario_12, scenario_13, scenario_14, scenario_15,
-    scenario_16, scenario_17, scenario_18, scenario_19, scenario_20,
+    scenario_01,
+    scenario_02,
+    scenario_03,
+    scenario_04,
+    scenario_05,
+    scenario_06,
+    scenario_07,
+    scenario_08,
+    scenario_09,
+    scenario_10,
+    scenario_11,
+    scenario_12,
+    scenario_13,
+    scenario_14,
+    scenario_15,
+    scenario_16,
+    scenario_17,
+    scenario_18,
+    scenario_19,
+    scenario_20,
 ]
 
 
