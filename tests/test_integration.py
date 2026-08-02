@@ -16,7 +16,6 @@ import os
 import sys
 
 import pytest
-
 from mcp.server.mcpserver.exceptions import ToolError
 
 # Diese Datei trifft echte BAFU-Live-APIs. Alle hier gesammelten Tests werden
@@ -29,8 +28,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from swiss_environment_mcp.server import (
     AirLimitsCheckInput,
-    BafuDatasetsInput,
     BafuDatasetDetailInput,
+    BafuDatasetsInput,
     FloodWarningsInput,
     HazardOverviewInput,
     HazardRegionsInput,
@@ -302,7 +301,9 @@ async def test_flood_warnings() -> None:
 
     result = await _tool_text(env_flood_warnings(FloodWarningsInput(min_level=1)))
     check("Warnungen: Kein Python-Traceback", "Traceback" not in result)
-    check("Warnungen: Link zu Hochwasser-Portal", "hydrodaten" in result or "Direktzugang" in result)
+    check(
+        "Warnungen: Link zu Hochwasser-Portal", "hydrodaten" in result or "Direktzugang" in result
+    )
 
     # Stufe 5 = meist leer
     result_high = await _tool_text(env_flood_warnings(FloodWarningsInput(min_level=5)))
