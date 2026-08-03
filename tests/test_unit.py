@@ -1035,3 +1035,136 @@ async def test_sc_egress_check_blocks():
     async with httpx.AsyncClient() as c:
         with pytest.raises(api.SecurityError):
             await sc.get_bindings(c, _SC_URL, "q", egress_check=block)
+
+
+# --- Live-Marker: Transportfehler ist kein Vertragsbruch (conftest-Hook) ------
+#
+# Der nächtliche Live-Lauf scheiterte mehrfach an einem `httpx.ConnectTimeout`
+# gegen `measurement-api.slf.ch`, obwohl dieselbe API kurz davor und danach
+# antwortete. Der Hook in `conftest.py` stuft solche Läufe zu SKIPPED herab —
+# aber nur sie. Die folgenden Tests halten beide Seiten dieser Grenze fest.
+
+from conftest import (  # noqa: E402
+    _UPSTREAM_SKIPS,
+    _describe,
+    _transport_cause,
+    pytest_runtest_makereport,
+)
+
+_REQ = httpx.Request("GET", "https://measurement-api.slf.ch/public/api/imis/stations")
+
+
+def test_transport_cause_direct():
+    exc = httpx.ConnectTimeout("", request=_REQ)
+    assert _transport_cause(exc) is exc
+
+
+def test_transport_cause_walks_wrapping_chain():
+    """Die Tools reichen den httpx-Fehler nicht durch, sie packen ihn ein."""
+    try:
+        try:
+            raise httpx.ConnectError("nope", request=_REQ)
+        except httpx.ConnectError as inner:
+            raise RuntimeError("Tool-Fehler") from inner
+    except RuntimeError as outer:
+        found = _transport_cause(outer)
+    assert isinstance(found, httpx.ConnectError)
+
+
+def test_transport_cause_ignores_answered_requests():
+    """HTTP 500 heisst: die Gegenstelle hat geantwortet — das ist ein Befund."""
+    status = httpx.HTTPStatusError("HTTP 500", request=_REQ, response=httpx.Response(500))
+    assert _transport_cause(status) is None
+    assert _transport_cause(AssertionError("Schema kaputt")) is None
+    assert _transport_cause(None) is None
+
+
+def test_transport_cause_survives_exception_cycle():
+    """Selbstbezügliche Ketten dürfen die Suche nicht endlos laufen lassen."""
+    a = RuntimeError("a")
+    b = RuntimeError("b")
+    a.__context__ = b
+    b.__context__ = a
+    assert _transport_cause(a) is None
+
+
+def test_describe_names_host_even_without_message():
+    """`ConnectTimeout` trägt oft keine Meldung — dann trägt der Host sie."""
+    text = _describe(httpx.ConnectTimeout("", request=_REQ))
+    assert "measurement-api.slf.ch" in text
+    assert "ConnectTimeout" in text
+
+
+class _FakeReport:
+    def __init__(self, when="call", failed=True):
+        self.when = when
+        self.failed = failed
+        self.outcome = "failed"
+        self.longrepr = "boom"
+
+
+class _FakeExcInfo:
+    def __init__(self, value):
+        self.value = value
+
+
+class _FakeCall:
+    def __init__(self, value):
+        self.excinfo = _FakeExcInfo(value) if value is not None else None
+
+
+class _FakeItem:
+    def __init__(self, *, live: bool):
+        self._live = live
+        self.path = "/repo/tests/test_integration.py"
+        self.location = ("tests/test_integration.py", 228, "test_slf_snow")
+        self.nodeid = "tests/test_integration.py::test_slf_snow"
+        self.config = type("C", (), {"stash": pytest.Stash()})()
+
+    def get_closest_marker(self, name):
+        return pytest.mark.live if (self._live and name == "live") else None
+
+
+def _run_hook(item, call, report):
+    """Treibt den Wrapper-Hook von Hand: bis zum `yield`, dann Report hinein."""
+    gen = pytest_runtest_makereport(item, call)
+    next(gen)
+    try:
+        gen.send(report)
+    except StopIteration as stop:
+        return stop.value
+    raise AssertionError("Hook hat nicht terminiert")
+
+
+def test_hook_downgrades_live_transport_failure_to_skip():
+    report = _FakeReport()
+    item = _FakeItem(live=True)
+    result = _run_hook(item, _FakeCall(httpx.ConnectTimeout("", request=_REQ)), report)
+    assert result.outcome == "skipped"
+    # 3-Tupel (Datei, Zeile, Meldung) — nur so stellt pytest einen Skip dar.
+    assert isinstance(result.longrepr, tuple) and len(result.longrepr) == 3
+    assert "measurement-api.slf.ch" in result.longrepr[2]
+    assert item.config.stash.get(_UPSTREAM_SKIPS, [])
+
+
+def test_hook_keeps_contract_failures_red():
+    report = _FakeReport()
+    result = _run_hook(_FakeItem(live=True), _FakeCall(AssertionError("Schema kaputt")), report)
+    assert result.outcome == "failed"
+
+
+def test_hook_ignores_tests_without_live_marker():
+    """Ein Transportfehler im gemockten Lauf ist immer ein echter Fehler."""
+    report = _FakeReport()
+    result = _run_hook(
+        _FakeItem(live=False), _FakeCall(httpx.ConnectTimeout("", request=_REQ)), report
+    )
+    assert result.outcome == "failed"
+
+
+def test_hook_ignores_setup_and_teardown_phases():
+    report = _FakeReport(when="teardown")
+    result = _run_hook(
+        _FakeItem(live=True), _FakeCall(httpx.ConnectTimeout("", request=_REQ)), report
+    )
+    assert result.outcome == "failed"
