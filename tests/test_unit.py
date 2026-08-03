@@ -1168,3 +1168,50 @@ def test_hook_ignores_setup_and_teardown_phases():
         _FakeItem(live=True), _FakeCall(httpx.ConnectTimeout("", request=_REQ)), report
     )
     assert result.outcome == "failed"
+
+
+# --- CKAN-Organisationsfilter (opendata.swiss) -------------------------------
+#
+# `fq=organization:bafu` filterte jede Suche auf null Treffer: den Slug gibt es
+# auf opendata.swiss nicht, und CKAN meldet das nicht als Fehler, sondern
+# antwortet mit `count: 0`. `env_bafu_datasets` fand deshalb nie etwas und
+# `env_nabel_current` zeigte nie den Datensatz-Block. Diese Tests nageln den
+# geprüften Slug fest — er ist die einzige Stelle, an der ein Tippfehler
+# folgenlos aussieht und trotzdem alles abschneidet.
+
+
+def test_bafu_org_slug_is_the_ckan_name():
+    assert api.OPENDATA_BAFU_ORG == "bundesamt-fur-umwelt-bafu"
+    assert api.OPENDATA_BAFU_URL.endswith("/organization/bundesamt-fur-umwelt-bafu")
+
+
+@respx.mock
+async def test_dataset_search_filters_on_the_real_org():
+    route = respx.get("https://opendata.swiss/api/3/action/package_search").mock(
+        return_value=httpx.Response(200, json={"result": {"count": 0, "results": []}})
+    )
+    await api.search_bafu_datasets(query="luft")
+    assert route.calls.last.request.url.params["fq"] == "organization:bundesamt-fur-umwelt-bafu"
+
+
+@respx.mock
+async def test_nabel_lookup_filters_on_the_real_org():
+    route = respx.get("https://opendata.swiss/api/3/action/package_search").mock(
+        return_value=httpx.Response(200, json={"result": {"count": 0, "results": []}})
+    )
+    await api.fetch_nabel_data("ZUE", parameter="NO2")
+    assert route.calls.last.request.url.params["fq"] == "organization:bundesamt-fur-umwelt-bafu"
+
+
+def test_no_dead_bafu_portal_link_left():
+    """Der Portal-Link wird aus demselben Slug gebaut — `/organization/bafu` ist tot."""
+    from pathlib import Path
+
+    src = Path(__file__).resolve().parent.parent / "src" / "swiss_environment_mcp"
+    stale = [
+        f"{path.name}:{i}"
+        for path in src.rglob("*.py")
+        for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1)
+        if "opendata.swiss/de/organization/bafu" in line
+    ]
+    assert not stale, f"Toter Portal-Link (Organisation 'bafu' existiert nicht): {stale}"
