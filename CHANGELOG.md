@@ -33,6 +33,37 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   REST-Pfad wird nicht mehr angefasst" (`call_count == 0`) und der Nachweis, dass
   der Egress-Guard den Host jetzt blockt.
 
+- **Der Rug-Pull-Schutz sah die Parameter der Tools nie (SEC-022).** Der
+  Snapshot las `input_schema["properties"].keys()` — und ein Tool dieses Servers
+  hat dort genau **eine** Property: `params`, deren Pydantic-Modell unter
+  `$defs` liegt und per `$ref` referenziert wird. Für alle 21 Tools stand
+  deshalb dieselbe Liste `["params"]` im Hash. Eine umbenannte, entfernte oder
+  in ihrer Bedeutung gedrehte Eingabe war unsichtbar; abgedeckt waren faktisch
+  nur Tool-Namen und Tool-Descriptions.
+
+  Genau dieser blinde Fleck hat den Fehler durchgelassen, den der Review am
+  Kantonsfilter fand: das Tool sagte längst ab, die Feld-Beschreibung im Schema
+  warb weiter mit „Kantonskürzel zum Filtern" — und der Snapshot merkte nichts.
+  MCP-Clients lesen aber genau dieses Schema.
+
+  Der `$ref` wird jetzt aufgelöst (auch der zweite, unter dem Pydantic Enums
+  ablegt). Gehasht werden je Feld: Name, Pflicht-Status, Beschreibung, Default
+  und die Validierungs-Schranken — `pattern`, Längen, Grenzwerte, `enum`. Eine
+  still gelockerte SEC-018-Whitelist fällt damit ebenfalls auf.
+
+  Bewusst **nicht** aufgenommen: `type`. Optionale Felder erscheinen je nach
+  Pydantic-Version als `type` oder als `anyOf` — genau die Nicht-Reproduzierbar-
+  keit, wegen der der ursprüngliche Snapshot das rohe Schema mied. Der neue Hash
+  ist auf allen drei CI-Versionen identisch: 3.11.15, 3.12.3 und 3.13.12 liefern
+  `2e8b4c721ca1`.
+
+  Die normalisierten Definitionen stehen neu **im File**, nicht nur als Hash.
+  Bei Drift will man sehen, was sich geändert hat — `git diff tool-snapshot.json`
+  zeigt die umbenannte Eingabe statt nur einer anderen Prüfsumme.
+
+  6 Tests, darunter die beiden tragenden Mutationen: eine geänderte
+  Feld-Beschreibung und eine gelockerte `pattern` müssen den Hash bewegen.
+
 - **Drei weitere Live-Tests bestanden bei totem Netz.** Nach `env_snow_stations`
   und `env_avalanche_bulletin` (#59) blieben `test_hydro_stations`,
   `test_hydro_history` und `test_nabel_current`: alle drei prüften nur Inhalte,

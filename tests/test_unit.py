@@ -1333,3 +1333,110 @@ def test_no_dead_bafu_portal_link_left():
         if "opendata.swiss/de/organization/bafu" in line
     ]
     assert not stale, f"Toter Portal-Link (Organisation 'bafu' existiert nicht): {stale}"
+
+
+# --- Rug-Pull-Schutz: die Parameter-Ebene (SEC-022) --------------------------
+#
+# Das Input-Schema eines Tools hat genau eine Property — `params` —, deren Modell
+# unter `$defs` liegt. Der Snapshot las `properties.keys()` und schrieb deshalb
+# für jedes der 21 Tools dieselbe Liste `["params"]`. Eine umbenannte, entfernte
+# oder in ihrer Bedeutung gedrehte Eingabe war unsichtbar: genau das war bei
+# `env_hydro_stations.canton` passiert, wo die Feld-Beschreibung noch «zum
+# Filtern» versprach, während das Tool längst absagte.
+
+
+def _snapshot_tool(name: str) -> dict:
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+    from tool_snapshot import build_snapshot
+
+    return next(t for t in build_snapshot()["tools"] if t["name"] == name)
+
+
+def test_snapshot_sees_real_parameters_not_the_wrapper():
+    entry = _snapshot_tool("env_flood_warnings")
+    assert entry["params"] != ["params"], "der `params`-Wrapper wurde nicht durchstossen"
+    assert entry["params"] == ["canton", "min_level", "response_format"]
+
+
+def test_snapshot_covers_field_descriptions_defaults_and_bounds():
+    """Alles, was die Bedeutung einer Eingabe ausmacht, muss im Hash landen."""
+    fields = {f["name"]: f for f in _snapshot_tool("env_flood_warnings")["fields"]}
+    assert "Gefahrenstufe" in fields["min_level"]["description"]
+    assert fields["min_level"]["default"] == 2
+    assert fields["min_level"]["minimum"] == 1 and fields["min_level"]["maximum"] == 5
+    # SEC-018-Whitelist: eine still gelockerte pattern wäre ein Rug-Pull.
+    assert fields["canton"]["pattern"] == r"^[A-Za-z]{0,2}$"
+    # Enums liegen hinter einem eigenen $ref — auch der muss aufgelöst sein.
+    assert fields["response_format"]["enum"] == ["markdown", "json"]
+
+
+def _snapshot_module():
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+    import tool_snapshot
+
+    return tool_snapshot
+
+
+# Die Form, die ein Tool-Input-Schema dieses Servers tatsächlich hat: eine
+# einzige Property `params`, dahinter das Modell unter `$defs`.
+def _wrapped_schema(canton_description: str) -> dict:
+    return {
+        "$defs": {
+            "Fmt": {"enum": ["markdown", "json"], "title": "Fmt"},
+            "In": {
+                "properties": {
+                    "canton": {
+                        "description": canton_description,
+                        "default": "",
+                        "pattern": "^[A-Za-z]{0,2}$",
+                        "maxLength": 2,
+                    },
+                    "response_format": {"allOf": [{"$ref": "#/$defs/Fmt"}], "default": "markdown"},
+                    "station_id": {"description": "Stationsnummer"},
+                },
+                "required": ["station_id"],
+            },
+        },
+        "properties": {"params": {"$ref": "#/$defs/In"}},
+        "required": ["params"],
+    }
+
+
+def test_snapshot_resolves_the_ref_to_the_actual_model():
+    fields = _snapshot_module()._fields(_wrapped_schema("egal"))
+    by_name = {f["name"]: f for f in fields}
+    assert sorted(by_name) == ["canton", "response_format", "station_id"]
+    assert by_name["station_id"]["required"] is True
+    assert by_name["canton"]["required"] is False
+    # Enum hinter `allOf` + `$ref` — auch das muss aufgelöst sein.
+    assert by_name["response_format"]["enum"] == ["markdown", "json"]
+    assert by_name["response_format"]["default"] == "markdown"
+
+
+def test_snapshot_hash_reacts_to_a_changed_field_description():
+    """Die Mutation, die den ganzen Punkt ausmacht.
+
+    Vorher liess sich die Beschreibung einer Eingabe beliebig umschreiben, ohne
+    dass der Hash es merkte — obwohl genau sie steuert, wofür ein Modell den
+    Parameter einsetzt. Bei `env_hydro_stations.canton` war das der Fall: das
+    Tool sagte längst ab, das Schema warb weiter mit «zum Filtern».
+    """
+    snap = _snapshot_module()
+    honest = [{"name": "t", "fields": snap._fields(_wrapped_schema("NICHT UNTERSTÜTZT"))}]
+    misleading = [{"name": "t", "fields": snap._fields(_wrapped_schema("Kanton zum Filtern"))}]
+    assert snap._compute_hash(honest) != snap._compute_hash(misleading)
+
+
+def test_snapshot_hash_reacts_to_a_loosened_input_pattern():
+    """Eine still gelockerte SEC-018-Whitelist ist ein Rug-Pull."""
+    snap = _snapshot_module()
+    strict = _wrapped_schema("x")
+    loose = _wrapped_schema("x")
+    loose["$defs"]["In"]["properties"]["canton"]["pattern"] = ".*"
+    assert snap._compute_hash([{"fields": snap._fields(strict)}]) != snap._compute_hash(
+        [{"fields": snap._fields(loose)}]
+    )

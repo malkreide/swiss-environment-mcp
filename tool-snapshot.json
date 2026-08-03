@@ -23,5 +23,707 @@
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "48af7b68a5f716bc2b8800f8b22e4b81795935ccb0810fcaa478366bb175893e"
+  "sha256": "dd912fbb462224b484ddbb9da37c021764c3e65d3fc139838377a3ed47f29f1e",
+  "tools": [
+    {
+      "name": "env_air_limits_check",
+      "description": "Bewertet einen gemessenen Luftschadstoffwert gegen Schweizer LRV-Grenzwerte und WHO 2021-Richtwerte. Unterstützte Schadstoffe: NO2, PM10, PM2.5, O3, SO2, CO. Grenzwerte gemäss Schweizer Luftreinhalte-Verordnung (LRV, SR 814.318.142.1). <use_case>Einen gemessenen Schadstoffwert gegen Schweizer LRV + WHO 2021 einordnen (Überschreitung ja/nein, Verhältnis zum Grenzwert).</use_case> <important_notes>Rein lokale Berechnung (kein Netzwerk). Unterstützt NO2, PM10, PM2.5, O3, SO2, CO.</important_notes> Args: params (AirLimitsCheckInput): - pollutant: Schadstoffkürzel ('NO2', 'PM10', 'PM2.5', 'O3', 'SO2', 'CO') - value: Gemessener Wert in µg/m³ - averaging_period: Mittelungszeitraum ('annual', 'daily', 'hourly') Returns: str: Grenzwert-Vergleich mit Schweizer LRV und WHO 2021, inkl. Überschreitungs-Flag.",
+      "params": [
+        "averaging_period",
+        "pollutant",
+        "value"
+      ],
+      "required": [
+        "pollutant",
+        "value"
+      ],
+      "fields": [
+        {
+          "name": "averaging_period",
+          "required": false,
+          "description": "Mittelungszeitraum: 'annual' (Jahresmittel), 'daily', 'hourly'",
+          "default": "annual"
+        },
+        {
+          "name": "pollutant",
+          "required": true,
+          "description": "Schadstoff: 'NO2', 'PM10', 'PM2.5', 'O3', 'SO2', 'CO'"
+        },
+        {
+          "name": "value",
+          "required": true,
+          "description": "Gemessener Wert in µg/m³ (bzw. µg/m³ für CO: mg/m³)",
+          "minimum": 0.0,
+          "maximum": 100000.0
+        }
+      ]
+    },
+    {
+      "name": "env_avalanche_bulletin",
+      "description": "Ruft das aktuelle Lawinenbulletin des SLF ab (Warnstufen je Region). Gefahrenstufen nach europäischer EAWS-Skala 1–5 (Gering bis Sehr gross). Ausserhalb der Lawinensaison wird kein Bulletin publiziert – dann meldet das Tool explizit «kein aktives Bulletin» (kein Fehler). <use_case>Aktuelle Lawinengefahr je Warnregion für Tourenplanung oder Sicherheitsbeurteilung.</use_case> <important_notes>EAWS-Skala 1–5. Saisonal (Winter). Datenquelle SLF (CC BY 4.0). Für Schneehöhen → `env_snow_current`.</important_notes> Args: params (AvalancheBulletinInput): - language: 'de', 'fr', 'it', 'en' - region: Regionsname/-code (Teilstring) zum Filtern Returns: str: Warnstufen je Region oder Hinweis, dass kein Bulletin aktiv ist.",
+      "params": [
+        "language",
+        "region"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "language",
+          "required": false,
+          "description": "Sprache: 'de', 'fr', 'it', 'en'",
+          "default": "de",
+          "pattern": "^[a-z]{2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "region",
+          "required": false,
+          "description": "Regionsname/-code zum Filtern (Teilstring) – leer = alle Warnregionen",
+          "default": "",
+          "maxLength": 60
+        }
+      ]
+    },
+    {
+      "name": "env_bafu_dataset_detail",
+      "description": "Ruft vollständige Metadaten und Download-URLs eines BAFU-Datensatzes ab. Liefert: Titel, Beschreibung, Ressourcen mit Direktlinks (CSV, JSON, WMS/WFS), Lizenz, Aktualisierungsintervall und Kontaktinformationen. <use_case>Vollständige Metadaten + Download-URLs eines konkreten Datensatzes.</use_case> <important_notes>dataset_id/Slug zuerst via `env_bafu_datasets` ermitteln.</important_notes> Args: params (BafuDatasetDetailInput): - dataset_id: Dataset-ID oder Slug (z.B. 'nabel-luftqualitaet-stationen') Returns: str: Vollständige Metadaten inkl. aller Download-Ressourcen.",
+      "params": [
+        "dataset_id"
+      ],
+      "required": [
+        "dataset_id"
+      ],
+      "fields": [
+        {
+          "name": "dataset_id",
+          "required": true,
+          "description": "Dataset-ID oder Slug von opendata.swiss (z.B. 'nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen')",
+          "pattern": "^[A-Za-z0-9_-]{3,200}$",
+          "minLength": 3,
+          "maxLength": 200
+        }
+      ]
+    },
+    {
+      "name": "env_bafu_datasets",
+      "description": "Sucht BAFU-Datensätze auf dem Schweizer Open-Data-Portal opendata.swiss. Das BAFU publiziert Datensätze zu Luft, Wasser, Boden, Biodiversität, Lärm, Klima, Wald und weiteren Umweltthemen als offene Daten (OGD). Ergebnisse enthalten Titel, Beschreibung und Download-URLs (CSV, JSON, WMS). <use_case>BAFU-Open-Data auf opendata.swiss durchsuchen (CSV/JSON/WMS), um danach mit `env_bafu_dataset_detail` Details/Download-URLs zu holen.</use_case> <important_notes>Paginierung via offset/rows. 0 Treffer → match_type \"none\", dann breitere Begriffe versuchen.</important_notes> Args: params (BafuDatasetsInput): - query: Suchbegriff ('Luftqualität', 'Hochwasser', 'NABEL', etc.) - rows: Anzahl Resultate (1–50) - offset: Offset für Paginierung Returns: str: Liste der BAFU-Datensätze mit Kurzbeschreibung und Links.",
+      "params": [
+        "offset",
+        "query",
+        "response_format",
+        "rows"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "offset",
+          "required": false,
+          "description": "Offset für Paginierung",
+          "default": 0,
+          "minimum": 0
+        },
+        {
+          "name": "query",
+          "required": false,
+          "description": "Suchbegriff (z.B. 'Luftqualität', 'Hochwasser', 'Biodiversität')",
+          "default": "",
+          "maxLength": 200
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "name": "rows",
+          "required": false,
+          "description": "Anzahl Resultate (1–50)",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 50
+        }
+      ]
+    },
+    {
+      "name": "env_bathing_water",
+      "description": "Ruft die Badegewässerqualität der BAFU-Erhebung ab (LINDAS-Data-Cube). Die Erhebung misst die hygienische Qualität von Badestellen an Schweizer Seen und Flüssen über E.coli- und Enterokokken-Konzentrationen. Im Gegensatz zu Pegel/Abfluss ist dies eine echte Mehrjahres-Zeitreihe (Saisondaten seit 2020, jährliche Nachführung). <use_case>Wasserqualität einer Badestelle prüfen («Kann man bei X baden?») oder Badestellen eines Kantons auflisten.</use_case> <important_notes>Ohne `location` wird eine Badestellen-Übersicht geliefert; mit `location` die letzten Probenwerte dieser Stelle. Daten werden jährlich nach der Badesaison nachgeführt (kein Echtzeit-Monitoring).</important_notes> Args: params (BathingWaterInput): - location: Badestellen-Name (Teilstring), leer = Übersicht - canton: Kantonskürzel zum Filtern - limit: max. Anzahl Messwerte bzw. Badestellen - response_format: 'markdown' oder 'json' Returns: str: Probenwerte mit aufgelösten Standort-Labels, Kantonsnummer (Join-Key) und Lizenzfeld — nie rohe Code-URIs.",
+      "params": [
+        "canton",
+        "limit",
+        "location",
+        "response_format"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "canton",
+          "required": false,
+          "description": "Kantonskürzel zum Filtern (z.B. 'ZH', 'VD') – leer = alle",
+          "default": "",
+          "pattern": "^[A-Za-z]{0,2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "limit",
+          "required": false,
+          "description": "Maximale Anzahl Messwerte bzw. Badestellen (1–50)",
+          "default": 12,
+          "minimum": 1,
+          "maximum": 50
+        },
+        {
+          "name": "location",
+          "required": false,
+          "description": "Badestellen-Name zum Suchen (Teilstring, z.B. 'Mythenquai', 'Clendy') – leer = Übersicht",
+          "default": "",
+          "maxLength": 60
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "env_flood_warnings",
+      "description": "Ruft aktuelle Hochwasserwarnungen aller BAFU-Messstationen in der Schweiz ab. Das BAFU gibt Hochwasserwarnungen in 5 Gefahrenstufen aus: 1=Keine, 2=Mässig, 3=Erheblich, 4=Gross, 5=Sehr gross. <use_case>Aktive Hochwasserwarnungen schweizweit oder kantonal für eine Lagebeurteilung.</use_case> <important_notes>5 Gefahrenstufen. \"Keine Warnung\" ist eine explizite Entwarnung, kein Fehler.</important_notes> Args: params (FloodWarningsInput): - min_level: Minimale Gefahrenstufe (Standard: 2) - canton: Kantonskürzel zum Filtern Returns: str: Aktuell aktive Hochwasserwarnungen, gefiltert nach Gefahrenstufe.",
+      "params": [
+        "canton",
+        "min_level",
+        "response_format"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "canton",
+          "required": false,
+          "description": "Kantonskürzel zum Filtern (z.B. 'ZH') – leer = ganze Schweiz",
+          "default": "",
+          "pattern": "^[A-Za-z]{0,2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "min_level",
+          "required": false,
+          "description": "Minimale Gefahrenstufe (1–5): 1=keine, 2=mässig, 3=erheblich, 4=gross, 5=sehr gross",
+          "default": 2,
+          "minimum": 1,
+          "maximum": 5
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "env_hazard_overview",
+      "description": "Orientierungsübersicht zu Schweizer Naturgefahren: welche Gefahr über welches Tool bzw. welche offizielle Warnplattform abrufbar ist. Hintergrund (verifiziert 2026-07-26, docs/probe-naturgefahren-hazards.md): Die frühere aggregierte `naturgefahren.ch`-Bulletin-API ist ersatzlos stillgelegt, und es existiert **kein** stabiler, dokumentierter öffentlicher JSON-Feed für die aggregierten Warnungen (weder MeteoSchweiz-OGD/STAC, opendata.swiss noch die undokumentierte App-API liefern einen sauberen Zugang). Statt eines fragilen Scrapings routet dieses Tool daher auf die **dedizierten, live funktionierenden** Tools dieses Servers und die offiziellen Warnplattformen. Aggregierte Wetter-/Unwetterwarnungen (Sturm/Gewitter/Hitze) sind Domäne von MeteoSchweiz bzw. `meteoswiss-mcp` (Zuständigkeitsmatrix). <use_case>Einstieg in die Schweizer Naturgefahrenlage: zu welcher Gefahr liefert welches Tool Live-Daten, und wo liegen die offiziellen Bulletins.</use_case> <important_notes>Netzwerkfrei/deterministisch. Für Live-Werte die verlinkten Tools nutzen: Hochwasser→env_flood_warnings, Lawine→env_avalanche_bulletin, Waldbrand→env_wildfire_danger, Schnee→env_snow_current.</important_notes> Args: params (HazardOverviewInput): - language: Sprache ('de', 'fr', 'it', 'en') — für die Portallinks Returns: str: Gefahren→Tool-Routing plus offizielle Warnplattform-Links.",
+      "params": [
+        "language"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "language",
+          "required": false,
+          "description": "Sprache: 'de', 'fr', 'it', 'en'",
+          "default": "de"
+        }
+      ]
+    },
+    {
+      "name": "env_hazard_regions",
+      "description": "Regionsbezogene Orientierung zu Naturgefahren: verweist für eine Region auf die dedizierten Live-Tools und die offiziellen Gefahrenkarten. Wie `env_hazard_overview` netzwerkfrei: die aggregierte `naturgefahren.ch`-Regionen-API ist stillgelegt (2026), ohne stabilen Ersatz. Für regionsscharfe Live-Werte liefern die verlinkten Tools die Daten (Waldbrand z.B. via `env_wildfire_danger` mit Kanton-Filter). <use_case>Regionsbezogener Einstieg (Event-, Schulausflug-, Infrastruktur- Planung): welches Tool liefert für die Region welche Gefahr.</use_case> <important_notes>Netzwerkfrei/deterministisch. Regionsscharfe Waldbrand-Stufen: `env_wildfire_danger` (canton-Filter). Karten: naturgefahren.ch / BAFU GIS.</important_notes> Args: params (HazardRegionsInput): - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Wallis') - hazard_type: Gefahrentyp ('hochwasser', 'lawinen', 'steinschlag', 'rutschungen') - language: Sprache Returns: str: Regionsbezogenes Tool-Routing plus Karten-/Portal-Links.",
+      "params": [
+        "hazard_type",
+        "language",
+        "region"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "hazard_type",
+          "required": false,
+          "description": "Gefahrentyp: 'hochwasser', 'lawinen', 'steinschlag', 'rutschungen' – leer = alle",
+          "default": "",
+          "maxLength": 30
+        },
+        {
+          "name": "language",
+          "required": false,
+          "default": "de"
+        },
+        {
+          "name": "region",
+          "required": false,
+          "description": "Regionsname oder -code zum Filtern (z.B. 'Zürich', 'Graubünden')",
+          "default": "",
+          "maxLength": 60
+        }
+      ]
+    },
+    {
+      "name": "env_hunting_species",
+      "description": "Listet die in der Eidg. Jagdstatistik erfassten Tierarten mit ihren Codes auf. Die Liste ist statisch eingebettet (aus der Live-Probe) und dient als Nachschlagewerk für `env_hunting_stats` (Parameter `species`). <use_case>Verfügbare Tierarten + Codes nachschlagen, bevor mit `env_hunting_stats` Abschuss-/Fallwildzahlen abgefragt werden.</use_case> <important_notes>Rein lokal (kein Netzwerk). 36 Arten (Huftiere, Raubtiere, weitere Säuger).</important_notes> Args: params (HuntingSpeciesInput): - response_format: 'markdown' oder 'json' Returns: str: Liste der Tierarten mit sp-Code und Name.",
+      "params": [
+        "response_format"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "env_hunting_stats",
+      "description": "Ruft Zeitreihen der Eidg. Jagdstatistik ab: Abschuss-, Bestand-, Aussetzungs- oder Fallwildzahlen je Tierart und Kanton (Jahre 2015–2024). Datenherr ist das BAFU. Der zugrundeliegende Endpoint ist undokumentiert (Web-App-Backend); ein Schema-Guard fängt Strukturänderungen ab. <use_case>Entwicklung der Abschuss- oder Fallwildzahlen einer Tierart in einem Kanton über die Zeit.</use_case> <important_notes>Tierart via Name oder Code (siehe `env_hunting_species`). Werte je Alters-/Geschlechtsklasse; Total = Summe. Jagdjahr meist 1. Apr.–31. März.</important_notes> Args: params (HuntingStatsInput): - species: Tierart (Name oder sp-Code) - canton: Kantonskürzel oder 'CH' - data_type: 'abschuss', 'bestand', 'aussetzung', 'fallwild' - response_format: 'markdown' oder 'json' Returns: str: Jahreswerte (Total + Klassen) oder aktionabler Hinweis bei Problemen.",
+      "params": [
+        "canton",
+        "data_type",
+        "response_format",
+        "species"
+      ],
+      "required": [
+        "species"
+      ],
+      "fields": [
+        {
+          "name": "canton",
+          "required": false,
+          "description": "Kantonskürzel oder 'CH' für die ganze Schweiz (z.B. 'GR', 'ZH')",
+          "default": "CH",
+          "pattern": "^[A-Za-z]{2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "data_type",
+          "required": false,
+          "description": "Datentyp: 'abschuss', 'bestand', 'aussetzung', 'fallwild'",
+          "default": "abschuss",
+          "pattern": "^[a-z]{5,12}$",
+          "maxLength": 12
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "name": "species",
+          "required": true,
+          "description": "Tierart als Name oder sp-Code (z.B. 'Reh', 'Rothirsch', '2')",
+          "pattern": "^[A-Za-zÀ-ÿ0-9 /]{1,40}$",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      ]
+    },
+    {
+      "name": "env_hydro_current",
+      "description": "Ruft aktuelle Messwerte einer hydrologischen BAFU-Messstation ab. Liefert Pegel (m ü.M.), Abfluss (m³/s), Wassertemperatur (°C) sowie 24h-Min/Max-Werte. Daten werden alle 10 Minuten aktualisiert. Bekannte Zürich-relevante Stationen: - 2099: Limmat – Zürich/Unterwerk - 2243: Sihl – Zürich - 2034: Zürichsee – Zürich/Tiefenbrunnen (Pegel) <use_case>Aktueller Pegel/Abfluss/Temperatur einer Station, z.B. für einen Hochwasser-Lagecheck.</use_case> <important_notes>Station-ID via `env_hydro_stations`. 10-Minuten-Aktualisierung. Quelle ist LINDAS; kennt es die Nummer nicht, meldet das Tool das explizit (kein Ersatzwert aus einer anderen Quelle).</important_notes> Args: params (HydroCurrentInput): - station_id: BAFU-Stationsnummer (z.B. '2099') - response_format: 'markdown' oder 'json' Returns: str: Aktuelle Messwerte inkl. Zeitstempel.",
+      "params": [
+        "response_format",
+        "station_id"
+      ],
+      "required": [
+        "station_id"
+      ],
+      "fields": [
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "name": "station_id",
+          "required": true,
+          "description": "BAFU-Stationsnummer (z.B. '2099' für Zürich/Limmat-Unterwerk, '2243' für Sihl/Zürich)",
+          "pattern": "^[0-9]{2,10}$",
+          "minLength": 2,
+          "maxLength": 10
+        }
+      ]
+    },
+    {
+      "name": "env_hydro_history",
+      "description": "Ruft historische Stundenwerte einer BAFU-Hydromesstations ab. Ermöglicht zeitliche Analysen von Wasserstand, Abfluss und Temperatur über bis zu 30 Tage. Ideal für Trendanalysen und Extremereignis-Recherche. <use_case>Aktuellsten Messwert einer Station holen und den Zugang zu echten historischen Zeitreihen (Tages-/Langzeitmittel) aufzeigen.</use_case> <important_notes>LINDAS liefert nur den aktuellen Wert (keine Zeitreihe). Historische Tages-/Langzeitmittel sind NICHT frei per API verfügbar und müssen bei der BAFU-Abfragezentrale bezogen werden.</important_notes> Args: params (HydroHistoryInput): - station_id: BAFU-Stationsnummer - parameter: 'Abfluss', 'Pegel' oder 'Temperatur' (Kontext) - days: Anzahl Tage (Kontext) Returns: str: Aktuellster Messwert (LINDAS) + Bezugsweg für historische Reihen.",
+      "params": [
+        "days",
+        "parameter",
+        "station_id"
+      ],
+      "required": [
+        "station_id"
+      ],
+      "fields": [
+        {
+          "name": "days",
+          "required": false,
+          "description": "Anzahl Tage in der Vergangenheit (1–30)",
+          "default": 7,
+          "minimum": 1,
+          "maximum": 30
+        },
+        {
+          "name": "parameter",
+          "required": false,
+          "description": "Messparameter: 'Abfluss' (m³/s), 'Pegel' (m ü.M.), 'Temperatur' (°C)",
+          "default": "Abfluss"
+        },
+        {
+          "name": "station_id",
+          "required": true,
+          "description": "BAFU-Stationsnummer",
+          "pattern": "^[0-9]{2,10}$",
+          "minLength": 2,
+          "maxLength": 10
+        }
+      ]
+    },
+    {
+      "name": "env_hydro_stations",
+      "description": "Listet hydrologische Messstationen des BAFU an Schweizer Flüssen und Seen auf. Das BAFU betreibt ca. 260 Messstationen in der Schweiz. Stationen messen Wasserstand (Pegel), Abfluss (m³/s), Wassertemperatur und weitere Parameter in einem 10-Minuten-Intervall. <use_case>Hydromessstationen finden (nach Gewässer), um danach mit `env_hydro_current` Pegel/Abfluss abzurufen.</use_case> <important_notes>`canton` wird derzeit NICHT bedient: die Quelle, die den Kantons-Code mitlieferte, ist stillgelegt, und LINDAS führt keinen — das Tool sagt das explizit, statt eine unvollständige Liste auszugeben. Stattdessen `water_body` nutzen. Bei LINDAS-Ausfall Fallback mit Beispielstationen, im JSON an `provenance` erkennbar. Leeres Filterresultat → match_type \"none\".</important_notes> Args: params (HydroStationsInput): - canton: derzeit nicht bedienbar (Quelle stillgelegt) - water_body: Gewässername zum Filtern (z.B. 'Limmat') - response_format: 'markdown' oder 'json' Returns: str: Stationsliste, Absage zum Kantonsfilter, oder Fallback bei Ausfall.",
+      "params": [
+        "canton",
+        "response_format",
+        "water_body"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "canton",
+          "required": false,
+          "description": "NICHT UNTERSTÜTZT – die Quelle mit Kantons-Code ist stillgelegt, LINDAS führt keinen. Ein gesetzter Wert liefert nur eine Erklärung, keine Stationen. Zum Eingrenzen `water_body` verwenden.",
+          "default": "",
+          "pattern": "^[A-Za-z]{0,2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "name": "water_body",
+          "required": false,
+          "description": "Gewässername zum Filtern (z.B. 'Limmat', 'Rhein', 'Sihl') – der unterstützte Filter dieses Tools",
+          "default": "",
+          "maxLength": 60
+        }
+      ]
+    },
+    {
+      "name": "env_nabel_current",
+      "description": "Ruft aktuelle und historische Luftqualitätsdaten einer NABEL-Station ab. Liefert Metadaten, Download-Links für Messdaten (CSV) sowie direkte Abfrage-URLs für den BAFU-Datenbrowser. Gemessene Parameter: NO₂, O₃, PM10, PM2.5, SO₂, CO, Russ (BC). <use_case>Aktuelle Luftqualität / Datenzugang einer konkreten NABEL-Station.</use_case> <important_notes>Liefert Metadaten + Datenlinks, keine Echtzeit-Rohwerte. Stationskürzel via `env_nabel_stations` ermitteln.</important_notes> Args: params (NabelCurrentInput): - station: Stationskürzel (z.B. 'ZUE', 'DUB', 'BER') Returns: str: Stationsinformationen, Messparameter, Datenlinks und Grenzwertkontext.",
+      "params": [
+        "station"
+      ],
+      "required": [
+        "station"
+      ],
+      "fields": [
+        {
+          "name": "station",
+          "required": true,
+          "description": "NABEL-Stationskürzel (z.B. 'ZUE' für Zürich-Kaserne, 'DUB' für Dübendorf)",
+          "pattern": "^[A-Za-z]{2,10}$",
+          "minLength": 2,
+          "maxLength": 10
+        }
+      ]
+    },
+    {
+      "name": "env_nabel_stations",
+      "description": "Listet alle 16 NABEL-Messstationen des nationalen Luftmessnetzes (BAFU) auf. Das NABEL (Nationales Beobachtungsnetz für Luftfremdstoffe) misst seit 1991 kontinuierlich an 16 Standorten in der Schweiz: NO₂, O₃, PM10, PM2.5, SO₂, CO, Russ und weitere Parameter. <use_case>Einstieg in Luftqualitätsdaten: Stationsübersicht, um danach mit `env_nabel_current` die Messwerte einer konkreten Station zu holen.</use_case> <important_notes>16 feste NABEL-Stationen (statisch, kein Live-Call).</important_notes> Args: params (NabelStationsInput): - response_format: 'markdown' oder 'json' Returns: str: Liste aller NABEL-Stationen mit Kürzel, Name, Kanton und Standorttyp. Enthält auch den Link zur BAFU-Datenabfrage.",
+      "params": [
+        "response_format"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "response_format",
+          "required": false,
+          "description": "Ausgabeformat: 'markdown' (lesbar) oder 'json' (strukturiert)",
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "env_noise_aircraft_at",
+      "description": "Fluglärmbelastung an einem Punkt aus dem BAZL-Lärmbelastungskataster. Beantwortet: «Liegt dieser Standort in einer Fluglärmzone — und in welcher dB-Stufe?» Grundlage sind die amtlichen Lärmkurven der zivilen Flugplätze (und, für `period='military'`, von Locarno-Magadino). <use_case>Standortabklärung für Bauvorhaben, Schulhaus- oder Wohnbau- planung: dB-Belastung und Kataster-Referenz an einer LV95-Koordinate.</use_case> <important_notes>Eingabe MUSS LV95 sein (EPSG:2056, Meter: E ~2.48–2.84 Mio, N ~1.07–1.30 Mio). WGS84-Grad (z.B. 8.54/47.37) wird abgewiesen. Die Kurven sind Isolinien, keine Flächen — das Ergebnis ist eine dB-Klammer mit dem höchsten Wert als oberer Schranke, kein interpolierter Punktwert. Orientierungsgrundlage, keine Baubewilligungsauskunft.</important_notes> Args: params (NoiseAircraftAtInput): - east/north: LV95-Koordinate in Metern - period: Beurteilungszeitraum bzw. Verkehrsart (8 Werte, s. Schema) - radius_m: Suchradius in Metern (10–1000, Default 100) - response_format: 'markdown' oder 'json' Returns: str: Massgebender dB-Wert, dB-Klammer, alle gefundenen Kurven, Kataster-Provenienz und amtlicher PDF-Link.",
+      "params": [
+        "east",
+        "north",
+        "period",
+        "radius_m",
+        "response_format"
+      ],
+      "required": [
+        "east",
+        "north"
+      ],
+      "fields": [
+        {
+          "name": "east",
+          "required": true,
+          "description": "LV95-Ostwert in Metern (EPSG:2056, ca. 2'480'000–2'840'000). NICHT WGS84-Längengrad. Beispiel Zürich HB: 2683146"
+        },
+        {
+          "name": "north",
+          "required": true,
+          "description": "LV95-Nordwert in Metern (EPSG:2056, ca. 1'070'000–1'300'000). NICHT WGS84-Breitengrad. Beispiel Zürich HB: 1247993"
+        },
+        {
+          "name": "period",
+          "required": false,
+          "description": "Beurteilungszeitraum bzw. Verkehrsart: 'day' (Gesamtverkehr Tag 06–22 Uhr, Lr) · 'night_first' (erste Nachtstunde 22–23 Uhr) · 'night_second' (zweite Nachtstunde 23–24 Uhr) · 'night_last' (letzte Nachtstunde 05–06 Uhr) · 'light_aircraft' (Kleinluftfahrzeuge ≤ 8618 kg — der flächendeckendste Layer, deckt die Regionalflugplätze ab) · 'helicopter' (Helikopter, Lr) · 'helicopter_max' (Helikopter, Maximalpegel Lmax) · 'military' (Militärflugplatz-Gesamtverkehr)",
+          "default": "day",
+          "enum": [
+            "day",
+            "night_first",
+            "night_second",
+            "night_last",
+            "light_aircraft",
+            "helicopter",
+            "helicopter_max",
+            "military"
+          ]
+        },
+        {
+          "name": "radius_m",
+          "required": false,
+          "description": "Suchradius in Metern um den Punkt (10–1000, Default 100). Die Lärmkurven sind Isolinien — ein grosser Radius fängt weit entfernte Kurven ein und überschätzt die Belastung erheblich. Nur erhöhen, wenn der Default nichts findet.",
+          "default": 100,
+          "minimum": 10,
+          "maximum": 1000
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "env_noise_aircraft_registers",
+      "description": "Übersicht der publizierten Fluglärm-Lärmbelastungskataster. Das Provenienz-Tool: Es beantwortet «wie alt ist die Grundlage». Für jeden Flugplatz die Gültigkeitsdaten, die Anzahl Lärmkurven, den abgedeckten dB-Bereich und den Link auf den amtlichen Katasterplan. <use_case>Vor einer Standortabklärung prüfen, ob für den betreffenden Flugplatz überhaupt ein Kataster existiert und wie aktuell er ist.</use_case> <important_notes>Ohne `period` werden alle acht Sublayer abgefragt (acht Upstream-Requests). Die Gültigkeitsdaten streuen erheblich (2009–2024) — ein Kataster ist ein Stichtagsdokument, kein Echtzeitdienst.</important_notes> Args: params (NoiseAircraftRegistersInput): - period: optionaler Filter auf einen Sublayer - response_format: 'markdown' oder 'json' Returns: str: Tabelle der Kataster mit Gültigkeitsdaten und amtlichen PDF-Links.",
+      "params": [
+        "period",
+        "response_format"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "period",
+          "required": false,
+          "description": "Optionaler Filter auf einen Sublayer. Ohne Angabe werden alle acht abgefragt (acht Upstream-Requests). Beurteilungszeitraum bzw. Verkehrsart: 'day' (Gesamtverkehr Tag 06–22 Uhr, Lr) · 'night_first' (erste Nachtstunde 22–23 Uhr) · 'night_second' (zweite Nachtstunde 23–24 Uhr) · 'night_last' (letzte Nachtstunde 05–06 Uhr) · 'light_aircraft' (Kleinluftfahrzeuge ≤ 8618 kg — der flächendeckendste Layer, deckt die Regionalflugplätze ab) · 'helicopter' (Helikopter, Lr) · 'helicopter_max' (Helikopter, Maximalpegel Lmax) · 'military' (Militärflugplatz-Gesamtverkehr)",
+          "default": null
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "env_noise_limits_check",
+      "description": "Vergleicht einen Fluglärm-Beurteilungspegel gegen die LSV-Belastungsgrenzwerte. Grundlage: Lärmschutz-Verordnung (LSV, SR 814.41), Anhang 5 «Belastungsgrenzwerte für den Lärm ziviler Flugplätze» — differenziert nach Empfindlichkeitsstufe (ES I–IV) und Schwelle (Planungswert / Immissionsgrenzwert / Alarmwert). <use_case>Einen dB-Wert aus `env_noise_aircraft_at` (oder aus einem Gutachten) rechtlich einordnen: welche Schwelle ist überschritten und mit welcher Folge.</use_case> <important_notes>Rein lokale Berechnung (kein Netzwerk). Für `period='military'` wird die Prüfung bewusst verweigert — Anhang 5 gilt nur für zivile Flugplätze, für Militärflugplätze ist Anhang 8 einschlägig. Die Werte für ES II in der ersten Nachtstunde weichen von den übrigen Nachtstunden ab (Fussnote zu Ziff. 222).</important_notes> Args: params (NoiseLimitsCheckInput): - level_db: Beurteilungspegel in dB(A) - sensitivity_level: 'I', 'II', 'III' oder 'IV' (auch 'ES II', '2') - period: Beurteilungszeitraum bzw. Verkehrsart - response_format: 'markdown' oder 'json' Returns: str: Überschreitung je Schwelle mit Grenzwert, Differenz und Rechtsgrundlage im Klartext.",
+      "params": [
+        "level_db",
+        "period",
+        "response_format",
+        "sensitivity_level"
+      ],
+      "required": [
+        "level_db",
+        "sensitivity_level"
+      ],
+      "fields": [
+        {
+          "name": "level_db",
+          "required": true,
+          "description": "Beurteilungspegel in dB(A), z.B. aus `env_noise_aircraft_at`",
+          "minimum": 0.0,
+          "maximum": 200.0
+        },
+        {
+          "name": "period",
+          "required": false,
+          "description": "Beurteilungszeitraum bzw. Verkehrsart: 'day' (Gesamtverkehr Tag 06–22 Uhr, Lr) · 'night_first' (erste Nachtstunde 22–23 Uhr) · 'night_second' (zweite Nachtstunde 23–24 Uhr) · 'night_last' (letzte Nachtstunde 05–06 Uhr) · 'light_aircraft' (Kleinluftfahrzeuge ≤ 8618 kg — der flächendeckendste Layer, deckt die Regionalflugplätze ab) · 'helicopter' (Helikopter, Lr) · 'helicopter_max' (Helikopter, Maximalpegel Lmax) · 'military' (Militärflugplatz-Gesamtverkehr)",
+          "default": "day",
+          "enum": [
+            "day",
+            "night_first",
+            "night_second",
+            "night_last",
+            "light_aircraft",
+            "helicopter",
+            "helicopter_max",
+            "military"
+          ]
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "name": "sensitivity_level",
+          "required": true,
+          "description": "Empfindlichkeitsstufe nach Art. 43 LSV: 'I', 'II', 'III' oder 'IV' (auch 'ES II' oder '2' werden erkannt). ES II = Wohnzonen, ES III = Misch-/Gewerbezonen, ES IV = Industriezonen.",
+          "maxLength": 10
+        }
+      ]
+    },
+    {
+      "name": "env_snow_current",
+      "description": "Ruft aktuelle Schneehöhe (HS) und Neuschnee 24 h (HN_1D) der SLF-IMIS- Stationen ab. Werte in cm, modelliert aus dem SLF-Schneedeckenmodell. Ausserhalb der Schneesaison sind die Werte 0 (schneefrei) – das ist kein Fehler. <use_case>Aktuelle Schneelage nach Kanton oder Station, z.B. für Tourenplanung oder Schulausflüge.</use_case> <important_notes>HS/HN_1D in cm. Kein Niederschlag (→ meteoswiss-mcp). Datenquelle SLF (CC BY 4.0).</important_notes> Args: params (SnowCurrentInput): - canton: Kantonskürzel zum Filtern - station: IMIS-Stationscode zum Filtern - limit: max. Anzahl Stationen - response_format: 'markdown' oder 'json' Returns: str: Schneehöhe und Neuschnee je Station, nach Schneehöhe absteigend.",
+      "params": [
+        "canton",
+        "limit",
+        "response_format",
+        "station"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "canton",
+          "required": false,
+          "description": "Kantonskürzel zum Filtern (z.B. 'GR', 'VS') – leer = ganze Schweiz",
+          "default": "",
+          "pattern": "^[A-Za-z]{0,2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "limit",
+          "required": false,
+          "description": "Maximale Anzahl Stationen in der Ausgabe (1–100)",
+          "default": 20,
+          "minimum": 1,
+          "maximum": 100
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "name": "station",
+          "required": false,
+          "description": "IMIS-Stationscode zum Filtern (z.B. 'DAV2') – leer = alle",
+          "default": "",
+          "pattern": "^[A-Za-z0-9]{0,10}$",
+          "maxLength": 10
+        }
+      ]
+    },
+    {
+      "name": "env_snow_stations",
+      "description": "Listet die automatischen IMIS-Schneemessstationen des SLF auf. Das SLF betreibt ein Netz automatischer Stationen (IMIS) in den Schweizer Bergen, die u.a. Schneehöhe, Neuschnee, Wind und Temperaturen messen. <use_case>Einstieg in die Schneedaten: Stationsübersicht (nach Kanton), um danach mit `env_snow_current` Schneehöhe/Neuschnee abzurufen.</use_case> <important_notes>Datenquelle SLF (CC BY 4.0). `type`=SNOW_FLAT sind Flachfeld-Schneestationen. Kein Niederschlags-Tool (→ meteoswiss-mcp).</important_notes> Args: params (SnowStationsInput): - canton: Kantonskürzel zum Filtern (z.B. 'GR') - response_format: 'markdown' oder 'json' Returns: str: Stationsliste mit Code, Name, Kanton, Höhe und Typ.",
+      "params": [
+        "canton",
+        "response_format"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "canton",
+          "required": false,
+          "description": "Kantonskürzel zum Filtern (z.B. 'GR', 'VS', 'BE') – leer = alle",
+          "default": "",
+          "pattern": "^[A-Za-z]{0,2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "response_format",
+          "required": false,
+          "default": "markdown",
+          "enum": [
+            "markdown",
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "env_wildfire_danger",
+      "description": "Ruft den aktuellen Waldbrandgefahren-Index nach Regionen ab. Die Waldbrandgefahr wird täglich durch das BAFU berechnet und auf einer 5-stufigen Skala (gering bis sehr gross) kommuniziert. Relevant für Schulausflüge, Events und Forstbetriebe. <use_case>Waldbrandgefahr-Index pro Region/Kanton, z.B. für Forstbetriebe oder Event-Planung.</use_case> <important_notes>5-stufige Skala, tagesaktuell (de/fr/it/en). Ohne Kanton-Filter werden die höchsten Stufen zuerst und auf 40 Regionen begrenzt gezeigt. Datenzugriff über einen zweistufigen, HTML-getragenen Vertrag (react-props der Startseite → signierte Blob-JSON-URL).</important_notes> Args: params (WildfireDangerInput): - language: 'de', 'fr', 'it' - canton: Kantonskürzel zum Filtern Returns: str: Aktuelle Waldbrandgefahr nach Regionen/Kantonen.",
+      "params": [
+        "canton",
+        "language"
+      ],
+      "required": [],
+      "fields": [
+        {
+          "name": "canton",
+          "required": false,
+          "description": "Kantonskürzel zum Filtern (z.B. 'ZH', 'VS', 'TI')",
+          "default": "",
+          "pattern": "^[A-Za-z]{0,2}$",
+          "maxLength": 2
+        },
+        {
+          "name": "language",
+          "required": false,
+          "description": "Sprache: 'de', 'fr', 'it'",
+          "default": "de"
+        }
+      ]
+    }
+  ]
 }
