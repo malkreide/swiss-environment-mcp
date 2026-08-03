@@ -484,16 +484,28 @@ class AirLimitsCheckInput(BaseModel):
 
 class HydroStationsInput(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    # Der Parameter bleibt im Schema, damit ein gesetzter Kanton eine Erklärung
+    # bekommt statt eines Validierungsfehlers — die Beschreibung sagt aber, dass
+    # er nicht bedient wird. MCP-Clients sehen genau diesen Text, nicht den
+    # Docstring des Tools; stünde hier weiter «zum Filtern», würden Modelle den
+    # Parameter wählen und eine Absage ernten.
     canton: str = Field(
         default="",
-        description="Kantonskürzel zum Filtern (z.B. 'ZH', 'BE', 'GR') – leer = alle Kantone",
+        description=(
+            "NICHT UNTERSTÜTZT – die Quelle mit Kantons-Code ist stillgelegt, LINDAS "
+            "führt keinen. Ein gesetzter Wert liefert nur eine Erklärung, keine "
+            "Stationen. Zum Eingrenzen `water_body` verwenden."
+        ),
         max_length=2,
         pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
         strict=True,
     )
     water_body: str = Field(
         default="",
-        description="Gewässername zum Filtern (z.B. 'Limmat', 'Rhein', 'Sihl')",
+        description=(
+            "Gewässername zum Filtern (z.B. 'Limmat', 'Rhein', 'Sihl') – der "
+            "unterstützte Filter dieses Tools"
+        ),
         max_length=60,
     )
     response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
@@ -1202,6 +1214,106 @@ async def env_air_limits_check(params: AirLimitsCheckInput, ctx: Context | None 
 
 # --- TOOLS: WASSER / HYDROLOGIE -----------------------------------------------
 
+_HYDRO_PORTAL = "https://www.hydrodaten.admin.ch"
+_HYDRO_SOURCE = "BAFU Hydrodaten via LINDAS"
+
+# Warum der Kantonsfilter nicht bedient wird — einmal formuliert, in beiden
+# Ausgabeformaten dieselbe Aussage.
+_HYDRO_CANTON_REASON = (
+    "Der Kantonsfilter kann derzeit nicht bedient werden. Den Kantons-Code lieferte "
+    "allein der REST-Endpoint `hydrodaten.admin.ch/lhg/az/json/mobile_stations.json`; "
+    "er ist stillgelegt und antwortet mit HTTP 404. LINDAS — die verbliebene "
+    "Live-Quelle mit voller Stationsabdeckung — führt kein Kantons-Attribut."
+)
+
+# Beispielstationen für den Ausfall der Live-Quelle (ARCH-003). Bewusst als Daten
+# und nicht als Text: so tragen beide Ausgabeformate dieselbe Liste, und der
+# JSON-Modus kann sie über `provenance` als das kennzeichnen, was sie ist.
+_HYDRO_FALLBACK_STATIONS: list[dict[str, Any]] = [
+    {"id": "2099", "name": "Limmat – Zürich/Unterwerk", "canton": "ZH", "water": "Limmat"},
+    {"id": "2243", "name": "Sihl – Zürich", "canton": "ZH", "water": "Sihl"},
+    {"id": "2490", "name": "Glatt – Rheinsfelden", "canton": "ZH", "water": "Glatt"},
+    {"id": "2030", "name": "Rhein – Basel/Rheinhalle", "canton": "BS", "water": "Rhein"},
+    {"id": "2008", "name": "Aare – Bern/Schönau", "canton": "BE", "water": "Aare"},
+]
+
+
+def _hydro_canton_unavailable(params: HydroStationsInput) -> str:
+    """Sagt dem Kantonsfilter ab, statt still eine Beispielliste auszugeben.
+
+    Bis hierher lief jede Kantonsabfrage auf den stillgelegten REST-Endpoint und
+    landete im Fallback: fünf hartkodierte Stationen, gefiltert auf den
+    angefragten Kanton. Für 'ZH' sah das aus wie eine Antwort — drei Stationen,
+    plausible Namen — und war doch nur die Beispielliste. Genau das soll ein
+    Client nicht für eine Stationsliste halten können.
+    """
+    query = {"canton": params.canton, "water_body": params.water_body}
+    if params.response_format == ResponseFormat.JSON:
+        return _envelope_json(
+            source=_HYDRO_SOURCE,
+            provenance="unsupported_filter",
+            results=[],
+            match_type="none",
+            note=(
+                f"{_HYDRO_CANTON_REASON} Die leere Trefferliste ist daher kein Suchergebnis "
+                f"zu '{params.canton.upper()}' — es wurde nicht gesucht. Ohne `canton` "
+                "liefert dieses Tool die vollständige Liste; für eine Eingrenzung "
+                "`water_body` verwenden."
+            ),
+            query=query,
+        )
+    return "\n".join(
+        [
+            "## Hydrologische Messstationen – Kantonsfilter nicht verfügbar\n",
+            f"{_HYDRO_CANTON_REASON}\n",
+            f"**Es wurde nicht gesucht.** Diese Antwort ist kein Suchergebnis zu "
+            f"'{params.canton.upper()}' – der Filter fehlt, nicht die Daten.\n",
+            "**Was stattdessen funktioniert:**",
+            "- `water_body` filtern (z.B. 'Limmat', 'Rhein', 'Aare')",
+            "- ohne Filter die vollständige Stationsliste holen",
+            f"- Karte mit Kantonsbezug: {_HYDRO_PORTAL}/de/seen-und-fluesse",
+        ]
+    )
+
+
+def _hydro_stations_fallback(params: HydroStationsInput, error_msg: str) -> str:
+    """Beispielstationen, wenn LINDAS ausfällt — in beiden Ausgabeformaten.
+
+    Der Markdown-Zweig gab diese Liste schon vorher aus, der JSON-Zweig nicht:
+    der Fallback ignorierte `response_format` und lieferte auch dann Markdown,
+    wenn der Aufrufer die Envelope angefordert hatte. Ein Client, der JSON
+    parst, bekam ausgerechnet im Störungsfall Text.
+    """
+    matching = [
+        s
+        for s in _HYDRO_FALLBACK_STATIONS
+        if not params.water_body or params.water_body.lower() in s["water"].lower()
+    ]
+    if params.response_format == ResponseFormat.JSON:
+        return _envelope_json(
+            source=_HYDRO_SOURCE,
+            provenance="fallback",
+            results=matching,
+            match_type="none",
+            note=(
+                f"Live-Quelle nicht erreichbar ({error_msg}). Die Liste ist eine "
+                "eingebettete Auswahl bekannter Stationen, KEIN Suchergebnis — die "
+                f"vollständige Liste steht auf {_HYDRO_PORTAL}."
+            ),
+            query={"canton": params.canton, "water_body": params.water_body},
+        )
+    lines = [
+        f"⚠️ Live-API nicht erreichbar ({error_msg})\n",
+        f"**Direkter Datenzugang:** {_HYDRO_PORTAL}/de/seen-und-fluesse\n",
+        "**Beispiel-Stationen (eingebettet, kein Suchergebnis):**",
+        "| Station-ID | Name | Kanton | Gewässer |",
+        "|------------|------|--------|---------|",
+    ]
+    for s in matching:
+        lines.append(f"| {s['id']} | {s['name']} | {s['canton']} | {s['water']} |")
+    lines.append(f"\n*→ Vollständige Stationsliste: {_HYDRO_PORTAL}*")
+    return "\n".join(lines)
+
 
 @mcp.tool(
     name="env_hydro_stations",
@@ -1222,141 +1334,68 @@ async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = N
     Wasserstand (Pegel), Abfluss (m³/s), Wassertemperatur und weitere Parameter
     in einem 10-Minuten-Intervall.
 
-    <use_case>Hydromessstationen finden (nach Kanton/Gewässer), um danach mit
+    <use_case>Hydromessstationen finden (nach Gewässer), um danach mit
     `env_hydro_current` Pegel/Abfluss abzurufen.</use_case>
-    <important_notes>Bei API-Ausfall Fallback mit Beispielstationen.
-    Leeres Filterresultat → match_type "none".</important_notes>
+    <important_notes>`canton` wird derzeit NICHT bedient: die Quelle, die den
+    Kantons-Code mitlieferte, ist stillgelegt, und LINDAS führt keinen — das Tool
+    sagt das explizit, statt eine unvollständige Liste auszugeben. Stattdessen
+    `water_body` nutzen. Bei LINDAS-Ausfall Fallback mit Beispielstationen, im
+    JSON an `provenance` erkennbar. Leeres Filterresultat → match_type
+    "none".</important_notes>
 
     Args:
         params (HydroStationsInput):
-            - canton: Kantonskürzel zum Filtern (z.B. 'ZH')
+            - canton: derzeit nicht bedienbar (Quelle stillgelegt)
             - water_body: Gewässername zum Filtern (z.B. 'Limmat')
             - response_format: 'markdown' oder 'json'
 
     Returns:
-        str: Stationsliste oder Fehlertext bei API-Problemen.
+        str: Stationsliste, Absage zum Kantonsfilter, oder Fallback bei Ausfall.
     """
-    # Primärpfad: LINDAS SPARQL — volle Stationsabdeckung (233) + zuverlässige
-    # Gewässernamen. LINDAS führt keinen Kanton-Code; bei gesetztem Kanton-Filter
-    # wird direkt der REST-Pfad (unten) genutzt, der den Kanton mitliefert.
-    if not params.canton:
-        try:
-            ls = await api.fetch_hydro_stations_lindas()
-            filtered = [
-                s
-                for s in ls
-                if not params.water_body or params.water_body.lower() in s["water"].lower()
-            ]
-            if params.response_format == ResponseFormat.JSON:
-                return _envelope_json(
-                    source="BAFU Hydrodaten via LINDAS",
-                    provenance="live_api",
-                    results=filtered[:100],
-                    match_type="none" if not filtered else "exact",
-                    note=(
-                        f"Keine Stationen für Gewässer='{params.water_body}'. "
-                        "Filter weglassen für die vollständige Liste."
-                        if not filtered
-                        else None
-                    ),
-                    query={"canton": params.canton, "water_body": params.water_body},
-                )
-            lines = [
-                f"## Hydrologische Messstationen ({len(filtered)} Resultate)\n",
-                f"*Filter: Gewässer={params.water_body or 'alle'} | Quelle: BAFU via LINDAS*\n",
-                "| Station-ID | Name | Gewässer |",
-                "|------------|------|---------|",
-            ]
-            for s in filtered[:50]:
-                lines.append(f"| {s['id']} | {s['name']} | {s['water'] or '–'} |")
-            if len(filtered) > 50:
-                lines.append(f"\n*…und {len(filtered) - 50} weitere Stationen.*")
-            if not filtered:
-                lines.append(
-                    "\n*Keine Treffer für diesen Filter (match_type: none). "
-                    "Filter weglassen für die vollständige Liste, oder `env_hydro_current` "
-                    "mit einer bekannten Station-ID (z.B. '2099' Limmat/Zürich) aufrufen.*"
-                )
-            lines.append("\n**Datenportal:** https://www.hydrodaten.admin.ch")
-            return "\n".join(lines)
-        except Exception as e:
-            # LINDAS nicht erreichbar → auf REST-Pfad zurückfallen.
-            await _handle_tool_error("env_hydro_stations", e, ctx, water_body=params.water_body)
+    # LINDAS ist die einzige verbliebene Live-Quelle für die Stationsliste. Der
+    # frühere REST-Pfad (hydrodaten.admin.ch/lhg/az/json/mobile_stations.json) —
+    # der als einziger den Kantons-Code mitlieferte — ist stillgelegt und
+    # antwortet mit 404, wie die übrigen Endpoints unter /lhg/az/ (s. api_client).
+    if params.canton:
+        return _hydro_canton_unavailable(params)
 
     try:
-        data = await api.fetch_hydro_stations()
+        stations = await api.fetch_hydro_stations_lindas()
     except Exception as e:
-        error_msg = await _handle_tool_error("env_hydro_stations", e, ctx, canton=params.canton)
-        # Fallback: Bekannte Zürcher Stationen als Beispiel
-        fallback_stations = [
-            {"id": "2099", "name": "Limmat – Zürich/Unterwerk", "canton": "ZH", "water": "Limmat"},
-            {"id": "2243", "name": "Sihl – Zürich", "canton": "ZH", "water": "Sihl"},
-            {"id": "2490", "name": "Glatt – Rheinsfelden", "canton": "ZH", "water": "Glatt"},
-            {"id": "2030", "name": "Rhein – Basel/Rheinhalle", "canton": "BS", "water": "Rhein"},
-            {"id": "2008", "name": "Aare – Bern/Schönau", "canton": "BE", "water": "Aare"},
-        ]
-        lines = [
-            f"⚠️ Live-API nicht erreichbar ({error_msg})\n",
-            "**Direkter Datenzugang:** https://www.hydrodaten.admin.ch/de/seen-und-fluesse\n",
-            "**Beispiel-Stationen für Zürich:**",
-            "| Station-ID | Name | Kanton | Gewässer |",
-            "|------------|------|--------|---------|",
-        ]
-        for s in fallback_stations:
-            if (not params.canton or params.canton.upper() == s["canton"]) and (
-                not params.water_body or params.water_body.lower() in s["water"].lower()
-            ):
-                lines.append(f"| {s['id']} | {s['name']} | {s['canton']} | {s['water']} |")
-        lines.append("\n*→ Vollständige Stationsliste: https://www.hydrodaten.admin.ch*")
-        return "\n".join(lines)
+        error_msg = await _handle_tool_error(
+            "env_hydro_stations", e, ctx, water_body=params.water_body
+        )
+        return _hydro_stations_fallback(params, error_msg)
 
-    # Daten verarbeiten
-    stations = data if isinstance(data, list) else data.get("stations", data.get("features", []))
-
-    # Filter anwenden
-    filtered = []
-    for s in stations:
-        props = s.get("properties", s)
-        canton_val = str(props.get("canton", props.get("kanton", ""))).upper()
-        water_val = str(props.get("water_body_name", props.get("water", ""))).lower()
-
-        if params.canton and params.canton.upper() not in canton_val:
-            continue
-        if params.water_body and params.water_body.lower() not in water_val:
-            continue
-        filtered.append(props)
+    filtered = [
+        s
+        for s in stations
+        if not params.water_body or params.water_body.lower() in s["water"].lower()
+    ]
 
     if params.response_format == ResponseFormat.JSON:
-        note = None
-        if not filtered:
-            note = (
-                f"Keine Stationen für Filter (Kanton={params.canton or '–'}, "
-                f"Gewässer={params.water_body or '–'}). Filter weglassen für die "
-                f"vollständige Liste, oder `env_hydro_current` mit einer bekannten "
-                f"Station-ID (z.B. '2099') aufrufen."
-            )
         return _envelope_json(
-            source="BAFU Hydrodaten",
-            provenance="https://www.hydrodaten.admin.ch",
+            source="BAFU Hydrodaten via LINDAS",
+            provenance="live_api",
             results=filtered[:100],
             match_type="none" if not filtered else "exact",
-            note=note,
+            note=(
+                f"Keine Stationen für Gewässer='{params.water_body}'. "
+                "Filter weglassen für die vollständige Liste."
+                if not filtered
+                else None
+            ),
             query={"canton": params.canton, "water_body": params.water_body},
         )
 
     lines = [
         f"## Hydrologische Messstationen ({len(filtered)} Resultate)\n",
-        f"*Filter: Kanton={params.canton or 'alle'}, Gewässer={params.water_body or 'alle'}*\n",
-        "| Station-ID | Name | Kanton | Gewässer |",
-        "|------------|------|--------|---------|",
+        f"*Filter: Gewässer={params.water_body or 'alle'} | Quelle: BAFU via LINDAS*\n",
+        "| Station-ID | Name | Gewässer |",
+        "|------------|------|---------|",
     ]
     for s in filtered[:50]:
-        sid = s.get("number", s.get("id", "–"))
-        name = s.get("name", "–")
-        canton = s.get("canton", s.get("kanton", "–"))
-        water = s.get("water_body_name", s.get("water", "–"))
-        lines.append(f"| {sid} | {name} | {canton} | {water} |")
-
+        lines.append(f"| {s['id']} | {s['name']} | {s['water'] or '–'} |")
     if len(filtered) > 50:
         lines.append(f"\n*…und {len(filtered) - 50} weitere Stationen.*")
     if not filtered:
@@ -1366,7 +1405,7 @@ async def env_hydro_stations(params: HydroStationsInput, ctx: Context | None = N
             "Filter weglassen für die vollständige Liste, oder `env_hydro_current` "
             "mit einer bekannten Station-ID (z.B. '2099' Limmat/Zürich) aufrufen.*"
         )
-    lines.append("\n**Datenportal:** https://www.hydrodaten.admin.ch")
+    lines.append(f"\n**Datenportal:** {_HYDRO_PORTAL}")
     return "\n".join(lines)
 
 

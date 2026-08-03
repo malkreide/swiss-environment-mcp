@@ -452,23 +452,22 @@ LIMIT 1
 # --- Hydrodaten-Client --------------------------------------------------------
 
 
-async def fetch_hydro_stations() -> dict[str, Any]:
-    """Ruft die Liste aller aktiven BAFU-Hydromesstationen ab."""
-    response = await _get_json(f"{HYDRO_JSON_BASE}/mobile_stations.json")
-    return response.json()
-
-
 async def fetch_hydro_station_data(station_id: str) -> dict[str, Any]:
     """Ruft aktuelle Messwerte für eine einzelne Messstation ab."""
     response = await _get_json(f"{HYDRO_JSON_BASE}/{station_id}.json")
     return response.json()
 
 
-# Hinweis: Die früheren REST-Fetcher `fetch_hydro_warnings` (warnings.json) und
-# `fetch_hydro_station_history` (Hydrological_Data.csv) wurden entfernt — beide
-# Endpoints unter hydrodaten.admin.ch/lhg/az/* sind stillgelegt (404). Ersatz:
-# LINDAS (`fetch_hydro_warnings_lindas`) bzw. der Abfragezentrale-Bezugsweg in
-# `env_hydro_history`.
+# Hinweis: Alles unter hydrodaten.admin.ch/lhg/az/* ist stillgelegt (404). Ent-
+# fernt wurden deshalb `fetch_hydro_warnings` (warnings.json),
+# `fetch_hydro_station_history` (Hydrological_Data.csv) und zuletzt
+# `fetch_hydro_stations` (mobile_stations.json). Ersatz: LINDAS
+# (`fetch_hydro_warnings_lindas`, `fetch_hydro_stations_lindas`) bzw. der
+# Abfragezentrale-Bezugsweg in `env_hydro_history`.
+#
+# `fetch_hydro_station_data` (unten) liegt auf demselben toten Pfad und wird von
+# `env_hydro_current` noch als Fallback aufgerufen — das ist der nächste Kandidat,
+# hier aber bewusst nicht mitgeändert (eigener Tool-Pfad, eigener Review).
 
 
 # --- opendata.swiss CKAN-Client -----------------------------------------------

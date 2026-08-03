@@ -7,6 +7,31 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Fixed
 
+- **Drei weitere Live-Tests bestanden bei totem Netz.** Nach `env_snow_stations`
+  und `env_avalanche_bulletin` (#59) blieben `test_hydro_stations`,
+  `test_hydro_history` und `test_nabel_current`: alle drei prüften nur Inhalte,
+  die auch ohne Upstream im Text stehen — statische Links, das eingebettete
+  `NABEL_STATIONS`-Dict, die Fallback-Tabelle. Dazu `test_bafu_datasets`, dessen
+  Zusicherungen („opendata.swiss steht im Text", „Länge > 50") auch die Antwort
+  «0 Treffer» erfüllten. Genau diese Blindheit liess den falschen CKAN-Slug und
+  den toten Kanton-Pfad monatelang unbemerkt.
+
+  Geprüft wird jetzt der Live-Anteil: der aktuelle LINDAS-Messwert, der
+  CKAN-Datensatzblock, die Trefferzahl (>0 bzw. >100 für den vollen Katalog),
+  die Stationszahl (>100) und der Gewässerfilter. Der Kantonsfilter prüft die
+  Absage samt Nachweis, dass keine Beispielstation als Treffer auftaucht.
+
+  Fängt ein Tool den Upstream-Fehler selbst ab, fehlt dem Hook aus #58 der
+  Transportfehler, an dem er «Leitung» von «Befund» unterscheidet. Fehlt der
+  erwartete Live-Block, ruft der Test die rohe API deshalb direkt auf und holt
+  die verschluckte Exception nach.
+
+  Mutationsgeprüft, indem die beiden gerade behobenen Defekte zurückgespielt
+  wurden (CKAN antwortet mit `count: 0`, LINDAS ohne Stationen — beides
+  *Antworten*, keine Transportfehler): alle vier Tests scheitern. Bei totem Netz
+  bestehen nur noch die vier tatsächlich netzwerkfreien Tools (vorher sieben),
+  der Rest wird übersprungen.
+
 - **`env_bafu_datasets` fand nichts — für jede Suche, seit jeher.** Der CKAN-Filter
   lautete `fq=organization:bafu`. Diesen Slug gibt es auf opendata.swiss nicht
   (`organization_show?id=bafu` liefert kein JSON); die Organisation heisst
@@ -32,6 +57,41 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Gefunden hat das erst der geschärfte Live-Test aus #59 — die alte Zusicherung
   prüfte nur, ob „opendata.swiss" irgendwo im Text steht, was auch „0 Treffer"
   erfüllt.
+
+- **`env_hydro_stations` beantwortete jede Kantonsabfrage mit fünf hartkodierten
+  Beispielstationen.** Den Kantons-Code lieferte allein
+  `hydrodaten.admin.ch/lhg/az/json/mobile_stations.json`; dieser Endpoint ist
+  stillgelegt und antwortet mit 404 — für zwei Nachbar-Endpoints unter `/lhg/az/`
+  war das im Code bereits vermerkt, für diesen nicht. Der Kanton-Pfad ging per
+  Konstruktion dorthin, lief ins 404 und landete im Fallback. Für `canton='ZH'`
+  kamen drei Stationen mit plausiblen Namen zurück; nichts daran war als
+  eingebettete Beispielliste zu erkennen.
+
+  Neu sagt das Tool ab: es nennt die stillgelegte Quelle, hält fest, dass **nicht
+  gesucht** wurde, und verweist auf `water_body` und die vollständige Liste. Kein
+  Request geht dafür mehr raus. `fetch_hydro_stations` ist entfernt — LINDAS
+  trägt die Stationsliste (233 Stationen), führt aber kein Kantons-Attribut.
+
+  Die Absage behauptet bewusst nichts über den übergebenen Wert: `canton` ist
+  nicht gegen die 26 Kantone validiert, ein `XX` kommt durch, und ein Satz wie
+  «dort gibt es Messstationen» wäre dann schlicht falsch.
+
+  Mitgezogen sind die **Feld-Beschreibung** im Input-Schema und beide READMEs.
+  MCP-Clients lesen das Schema, nicht den Docstring des Tools; stünde dort weiter
+  «Kantonskürzel zum Filtern», würden Modelle den Parameter wählen und eine
+  Absage ernten.
+
+- **Der Ausfall-Fallback von `env_hydro_stations` ignorierte
+  `response_format`.** Er baute Markdown und gab es zurück, auch wenn der
+  Aufrufer die Envelope angefordert hatte — ein Client, der JSON parst, bekam
+  ausgerechnet im Störungsfall Text, an dem `json.loads` scheitert. Der Fallback
+  liefert jetzt beide Formate; im JSON steht `provenance: "fallback"` und eine
+  `note`, die die Liste als eingebettete Auswahl statt als Suchergebnis
+  ausweist. Im Markdown steht dasselbe in der Überschrift der Tabelle.
+
+  5 neue bzw. umgeschriebene Tests, darunter der tragende Fall „Kantonsabfrage
+  setzt keinen einzigen Request ab" — nur er unterscheidet die Absage von einem
+  Fallback, der bloss anders formuliert ist.
 
 - **Die Zusicherungen der Live-Suite waren wirkungslos (OPS-001).** `check()`
   druckte bei einem Fehlschlag ein ❌ und zählte hoch — mehr nicht. Unter pytest

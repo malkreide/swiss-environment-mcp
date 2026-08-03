@@ -6,6 +6,7 @@ Diese Tests laufen OHNE Netzwerk: alle ausgehenden httpx-Requests werden mit
 Live-Tests gegen echte BAFU-APIs stehen in tests/test_integration.py (Marker `live`).
 """
 
+import json
 import os
 import sys
 import tomllib
@@ -129,14 +130,87 @@ async def test_bafu_datasets_mocked():
 
 
 @respx.mock
-async def test_hydro_stations_fallback_on_error():
-    """Bei API-Fehler liefert das Tool den dokumentierten Fallback (ARCH-003)."""
-    respx.get("https://www.hydrodaten.admin.ch/lhg/az/json/mobile_stations.json").mock(
-        return_value=httpx.Response(503)
-    )
-    out = await env_hydro_stations(HydroStationsInput(canton="ZH"))
+async def test_hydro_stations_fallback_on_error(monkeypatch):
+    """Fällt LINDAS aus, liefert das Tool den dokumentierten Fallback (ARCH-003)."""
+    monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
+    respx.get(_LINDAS_URL).mock(return_value=httpx.Response(503))
+    out = await env_hydro_stations(HydroStationsInput())
     assert "Live-API nicht erreichbar" in out
     assert "hydrodaten.admin.ch" in out
+    # Die Liste muss sich als das zu erkennen geben, was sie ist.
+    assert "kein Suchergebnis" in out
+
+
+@respx.mock
+async def test_hydro_stations_fallback_honours_json(monkeypatch):
+    """Der Fallback ignorierte `response_format` und lieferte immer Markdown.
+
+    Ein Client, der die Envelope angefordert hat, bekam ausgerechnet im
+    Störungsfall Text — und `json.loads` scheiterte an der ⚠️-Zeile.
+    """
+    monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
+    respx.get(_LINDAS_URL).mock(return_value=httpx.Response(503))
+    env = json.loads(
+        await env_hydro_stations(HydroStationsInput(response_format=ResponseFormat.JSON))
+    )
+    assert env["provenance"] == "fallback"
+    assert env["match_type"] == "none"
+    assert env["count"] == len(env["results"]) == 5
+    assert "KEIN Suchergebnis" in env["note"]
+
+
+@respx.mock
+async def test_hydro_stations_canton_is_refused_not_faked():
+    """Der Kantonsfilter sagt ab, statt die Beispielliste als Antwort auszugeben.
+
+    Vorher lief jede Kantonsabfrage auf den stillgelegten REST-Endpoint (404)
+    und landete im Fallback: für 'ZH' drei hartkodierte Stationen, die wie ein
+    Suchergebnis aussahen. Kein Request darf dafür mehr rausgehen.
+    """
+    route = respx.get(_LINDAS_URL).mock(return_value=httpx.Response(200, json=_sparql_bindings([])))
+    out = await env_hydro_stations(HydroStationsInput(canton="ZH"))
+    assert route.call_count == 0, "Kantonsabfrage darf keine Live-Quelle mehr belasten"
+    assert "Kantonsfilter nicht verfügbar" in out
+    assert "water_body" in out
+    # Keine der Beispielstationen darf als Treffer erscheinen.
+    assert "2099" not in out and "Limmat – Zürich/Unterwerk" not in out
+
+
+async def test_hydro_stations_canton_refusal_as_envelope():
+    env = json.loads(
+        await env_hydro_stations(
+            HydroStationsInput(canton="BE", response_format=ResponseFormat.JSON)
+        )
+    )
+    assert env["provenance"] == "unsupported_filter"
+    assert env["match_type"] == "none" and env["count"] == 0
+    # Die leere Liste darf nicht als «keine Stationen im Kanton» gelesen werden —
+    # ohne dabei zu behaupten, es gebe dort welche: `canton` nimmt jeden Zwei-
+    # Buchstaben-String, auch 'XX'. Die Antwort sagt, dass nicht gesucht wurde.
+    assert "nicht gesucht" in env["note"]
+    assert env["query"]["canton"] == "BE"
+
+
+async def test_hydro_stations_refusal_claims_nothing_about_the_value():
+    """`canton` ist nicht gegen die 26 Kantone validiert — 'XX' kommt durch.
+
+    Die Absage darf deshalb keine Tatsachenbehauptung über den übergebenen Wert
+    enthalten («dort gibt es Messstationen»), sondern nur über sich selbst.
+    """
+    out = await env_hydro_stations(HydroStationsInput(canton="XX"))
+    assert "Es wurde nicht gesucht" in out
+    assert "gibt es Messstationen" not in out
+
+
+async def test_hydro_stations_canton_field_advertises_its_own_uselessness():
+    """MCP-Clients lesen das Input-Schema, nicht den Docstring des Tools.
+
+    Stünde in der Feld-Beschreibung weiter «Kantonskürzel zum Filtern», würden
+    Modelle den Parameter wählen und eine Absage ernten.
+    """
+    field = HydroStationsInput.model_fields["canton"]
+    assert "NICHT UNTERSTÜTZT" in field.description
+    assert "water_body" in field.description
 
 
 @respx.mock
@@ -431,16 +505,18 @@ async def test_hydro_stations_json_match_type_none():
     """Leeres Filterresultat -> match_type 'none' + actionable note (ARCH-003)."""
     import json
 
-    respx.get("https://www.hydrodaten.admin.ch/lhg/az/json/mobile_stations.json").mock(
-        return_value=httpx.Response(200, json={"stations": []})
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200, json=_sparql_bindings([{"id": "2030", "name": "Basel", "water": "Rhein"}])
+        )
     )
     out = await env_hydro_stations(
-        HydroStationsInput(canton="ZH", response_format=ResponseFormat.JSON)
+        HydroStationsInput(water_body="Gibtsnicht", response_format=ResponseFormat.JSON)
     )
     env = json.loads(out)
     assert env["match_type"] == "none"
     assert env["count"] == 0
-    assert env["note"] and "2099" in env["note"]
+    assert env["note"] and "Gibtsnicht" in env["note"]
 
 
 @respx.mock

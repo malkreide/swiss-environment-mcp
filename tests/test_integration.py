@@ -13,6 +13,7 @@ Ausführung:
 import asyncio
 import json
 import os
+import re
 import sys
 
 import pytest
@@ -111,6 +112,23 @@ async def _tool_text(coro) -> str:
         return str(e)
 
 
+async def _upstream_answered(probe) -> None:
+    """Holt einen Fehler nach, den ein Tool selbst abgefangen hat.
+
+    Einige Tools schlucken den Upstream-Fehler und liefern trotzdem eine
+    Antwort — `env_hydro_stations` seine Beispielstationen, `env_hydro_history`
+    und `env_nabel_current` einfach den Rest ihrer Seite ohne den Live-Block.
+    Der Hook in `conftest.py` sieht dann keinen Transportfehler und kann nicht
+    zwischen «Leitung» und «Befund» unterscheiden.
+
+    Fehlt der erwartete Live-Block, ruft der Test deshalb die rohe API direkt
+    auf: wirft sie einen Transportfehler, wird der Lauf übersprungen; antwortet
+    sie, ist der fehlende Block ein Befund und die folgende Zusicherung darf ihn
+    melden.
+    """
+    await probe()
+
+
 # --- Luft-Tests ---------------------------------------------------------------
 
 
@@ -138,11 +156,26 @@ async def test_nabel_stations() -> None:
 async def test_nabel_current() -> None:
     print("\n[Luft] NABEL Aktuelle Daten")
 
+    from swiss_environment_mcp import api_client as api
+
     # Gültige Station
     result = await env_nabel_current(NabelCurrentInput(station="ZUE"))
     check("Station ZUE: Name vorhanden", "Zürich-Kaserne" in result)
     check("Station ZUE: Parameter-Tabelle", "NO₂" in result)
     check("Station ZUE: BAFU-Link", "bafu.admin.ch" in result)
+
+    # Bis hierher prüfte dieser Test ausschliesslich Inhalte aus dem statischen
+    # `NABEL_STATIONS`-Dict — er bestand auch bei totem Netz. Der einzige
+    # Live-Anteil ist die CKAN-Abfrage; sie lieferte über Monate 0 Treffer
+    # (falscher Organisations-Slug), ohne dass der Test es merkte.
+    if "### Verfügbare Datensätze auf opendata.swiss" not in result:
+        await _upstream_answered(lambda: api.fetch_nabel_data("ZUE", parameter="NO2"))
+        check(
+            "Station ZUE: opendata.swiss-Datensätze gelistet",
+            False,
+            "CKAN hat geantwortet, das Tool listet aber keinen Datensatz",
+        )
+    check("Station ZUE: opendata.swiss-Datensätze gelistet", True)
 
     # Ungültige Station
     result_invalid = await env_nabel_current(NabelCurrentInput(station="XXX"))
@@ -178,15 +211,35 @@ async def test_hydro_stations() -> None:
         return
 
     result = await env_hydro_stations(HydroStationsInput())
+    from swiss_environment_mcp import api_client as api
+
+    # Der Fallback („⚠️ Live-API nicht erreichbar" + fünf eingebettete Stationen)
+    # erfüllte beide bisherigen Zusicherungen — der Test bestand bei totem Netz.
+    if "Live-API nicht erreichbar" in result:
+        await _upstream_answered(api.fetch_hydro_stations_lindas)
+        check(
+            "Stationsliste: Live-Daten statt Fallback",
+            False,
+            "LINDAS hat geantwortet, das Tool zeigt trotzdem die Beispielstationen",
+        )
     check(
-        "Stationsliste: Überschrift vorhanden",
-        "Hydrologische" in result or "hydrodaten.admin.ch" in result,
+        "Stationsliste: Überschrift vorhanden", result.startswith("## Hydrologische Messstationen")
     )
+    check("Stationsliste: Tabellenkopf", "| Station-ID | Name | Gewässer |" in result)
+    count = int(re.search(r"\((\d+) Resultate\)", result).group(1))
+    check("Stationsliste: volle Abdeckung (>100)", count > 100, f"nur {count} Stationen")
     check("Stationsliste: Link zu hydrodaten.admin.ch", "hydrodaten" in result)
 
-    # Kanton-Filter ZH
+    # Gewässerfilter — der Pfad, der den Kantonsfilter ersetzt.
+    result_limmat = await env_hydro_stations(HydroStationsInput(water_body="Limmat"))
+    check("Gewässerfilter Limmat: Treffer", "| 2099 |" in result_limmat)
+
+    # Kantonsfilter: die Quelle mit Kantons-Code ist stillgelegt. Das Tool sagt
+    # ab, statt die Beispielliste als Suchergebnis auszugeben.
     result_zh = await env_hydro_stations(HydroStationsInput(canton="ZH"))
-    check("Kanton-Filter ZH: Filterinfo vorhanden", "ZH" in result_zh)
+    check("Kanton-Filter ZH: explizite Absage", "Kantonsfilter nicht verfügbar" in result_zh)
+    check("Kanton-Filter ZH: Ausweg genannt", "water_body" in result_zh)
+    check("Kanton-Filter ZH: keine Beispielstation als Treffer", "2099" not in result_zh)
 
 
 async def test_hydro_current() -> None:
@@ -367,9 +420,24 @@ async def test_hunting_stats() -> None:
 async def test_hydro_history() -> None:
     print("\n[Wasser] Historische Daten")
 
+    from swiss_environment_mcp import api_client as api
+
     result = await env_hydro_history(HydroHistoryInput(station_id="2099", days=7))
     check("Verlaufsdaten: Portal-Link vorhanden", "hydrodaten" in result)
     check("Verlaufsdaten: opendata.swiss erwähnt", "opendata.swiss" in result)
+
+    # Beide Links sind statisch — bis hierher prüfte der Test nichts Lebendiges.
+    # Der Live-Anteil ist der aktuelle LINDAS-Wert; fällt LINDAS aus, verschwindet
+    # der Block einfach, und der Test bemerkte es nicht.
+    if "### Aktuellster Messwert" not in result:
+        await _upstream_answered(lambda: api.fetch_hydro_current_lindas("2099"))
+        check(
+            "Verlaufsdaten: aktueller Messwert der Station 2099",
+            False,
+            "LINDAS hat geantwortet, das Tool zeigt den Messwert aber nicht",
+        )
+    check("Verlaufsdaten: aktueller Messwert der Station 2099", True)
+    check("Verlaufsdaten: Pegel und Abfluss beziffert", "Abfluss" in result and "Pegel" in result)
 
 
 async def test_flood_warnings() -> None:
@@ -439,14 +507,22 @@ async def test_bafu_datasets() -> None:
         print("  ⏭️  Live-Test übersprungen")
         return
 
-    # Suche nach Luftqualität
+    # Die alten Zusicherungen („opendata.swiss steht im Text", „Länge > 50")
+    # erfüllte auch die Antwort «0 Treffer» — und genau die kam über Monate,
+    # weil der Organisationsfilter auf einen Slug zeigte, den es nicht gibt.
+    # Geprüft wird deshalb, dass die Suche etwas findet.
     result = await _tool_text(env_bafu_datasets(BafuDatasetsInput(query="Luftqualität", rows=5)))
     check("Suche Luftqualität: Kein Traceback", "Traceback" not in result)
-    check("Suche Luftqualität: Ergebnisse", "opendata.swiss" in result)
+    found = re.search(r"\*\*(\d+) Datensätze gefunden\*\*", result)
+    check("Suche Luftqualität: Treffer gemeldet", found is not None, result[:200])
+    check("Suche Luftqualität: mindestens ein Treffer", int(found.group(1)) > 0)
+    check("Suche Luftqualität: NABEL-Datensatz dabei", "NABEL" in result)
 
-    # Leere Suche (alle BAFU-Datensätze)
+    # Leere Suche = alle BAFU-Datensätze (aktuell 362).
     result_all = await _tool_text(env_bafu_datasets(BafuDatasetsInput(query="", rows=3)))
-    check("Leere Suche: Rückmeldung", len(result_all) > 50)
+    found_all = re.search(r"\*\*(\d+) Datensätze gefunden\*\*", result_all)
+    check("Leere Suche: Trefferzahl gemeldet", found_all is not None, result_all[:200])
+    check("Leere Suche: voller Katalog (>100)", int(found_all.group(1)) > 100)
 
 
 async def test_bafu_dataset_detail() -> None:
