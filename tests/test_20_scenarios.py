@@ -297,6 +297,7 @@ async def scenario_08():
     )
     check(szenario, "Verweist auf water_body als Ausweg", "water_body" in result)
     check(szenario, "Keine Beispielstation als Treffer", "2099" not in result)
+    check(szenario, "Behauptet nichts ueber den Wert", "Es wurde nicht gesucht" in result)
     check(szenario, "hydrodaten.admin.ch Link", "hydrodaten" in result)
 
 
