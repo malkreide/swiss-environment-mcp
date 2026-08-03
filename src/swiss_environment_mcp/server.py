@@ -484,16 +484,28 @@ class AirLimitsCheckInput(BaseModel):
 
 class HydroStationsInput(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    # Der Parameter bleibt im Schema, damit ein gesetzter Kanton eine Erklärung
+    # bekommt statt eines Validierungsfehlers — die Beschreibung sagt aber, dass
+    # er nicht bedient wird. MCP-Clients sehen genau diesen Text, nicht den
+    # Docstring des Tools; stünde hier weiter «zum Filtern», würden Modelle den
+    # Parameter wählen und eine Absage ernten.
     canton: str = Field(
         default="",
-        description="Kantonskürzel zum Filtern (z.B. 'ZH', 'BE', 'GR') – leer = alle Kantone",
+        description=(
+            "NICHT UNTERSTÜTZT – die Quelle mit Kantons-Code ist stillgelegt, LINDAS "
+            "führt keinen. Ein gesetzter Wert liefert nur eine Erklärung, keine "
+            "Stationen. Zum Eingrenzen `water_body` verwenden."
+        ),
         max_length=2,
         pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
         strict=True,
     )
     water_body: str = Field(
         default="",
-        description="Gewässername zum Filtern (z.B. 'Limmat', 'Rhein', 'Sihl')",
+        description=(
+            "Gewässername zum Filtern (z.B. 'Limmat', 'Rhein', 'Sihl') – der "
+            "unterstützte Filter dieses Tools"
+        ),
         max_length=60,
     )
     response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
@@ -1243,10 +1255,10 @@ def _hydro_canton_unavailable(params: HydroStationsInput) -> str:
             results=[],
             match_type="none",
             note=(
-                f"{_HYDRO_CANTON_REASON} Die leere Trefferliste sagt daher nichts darüber "
-                f"aus, ob es im Kanton {params.canton.upper()} Messstationen gibt — es gibt "
-                "sie. Ohne `canton` liefert dieses Tool die vollständige Liste; für eine "
-                "Eingrenzung `water_body` verwenden."
+                f"{_HYDRO_CANTON_REASON} Die leere Trefferliste ist daher kein Suchergebnis "
+                f"zu '{params.canton.upper()}' — es wurde nicht gesucht. Ohne `canton` "
+                "liefert dieses Tool die vollständige Liste; für eine Eingrenzung "
+                "`water_body` verwenden."
             ),
             query=query,
         )
@@ -1254,8 +1266,8 @@ def _hydro_canton_unavailable(params: HydroStationsInput) -> str:
         [
             "## Hydrologische Messstationen – Kantonsfilter nicht verfügbar\n",
             f"{_HYDRO_CANTON_REASON}\n",
-            f"**Das ist keine Aussage über den Kanton {params.canton.upper()}** – dort gibt es "
-            "Messstationen. Nur der Filter fehlt.\n",
+            f"**Es wurde nicht gesucht.** Diese Antwort ist kein Suchergebnis zu "
+            f"'{params.canton.upper()}' – der Filter fehlt, nicht die Daten.\n",
             "**Was stattdessen funktioniert:**",
             "- `water_body` filtern (z.B. 'Limmat', 'Rhein', 'Aare')",
             "- ohne Filter die vollständige Stationsliste holen",

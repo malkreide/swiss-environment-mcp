@@ -184,9 +184,33 @@ async def test_hydro_stations_canton_refusal_as_envelope():
     )
     assert env["provenance"] == "unsupported_filter"
     assert env["match_type"] == "none" and env["count"] == 0
-    # Die leere Liste darf nicht als «keine Stationen im Kanton» gelesen werden.
-    assert "BE" in env["note"] and "es gibt" in env["note"]
+    # Die leere Liste darf nicht als «keine Stationen im Kanton» gelesen werden —
+    # ohne dabei zu behaupten, es gebe dort welche: `canton` nimmt jeden Zwei-
+    # Buchstaben-String, auch 'XX'. Die Antwort sagt, dass nicht gesucht wurde.
+    assert "nicht gesucht" in env["note"]
     assert env["query"]["canton"] == "BE"
+
+
+async def test_hydro_stations_refusal_claims_nothing_about_the_value():
+    """`canton` ist nicht gegen die 26 Kantone validiert — 'XX' kommt durch.
+
+    Die Absage darf deshalb keine Tatsachenbehauptung über den übergebenen Wert
+    enthalten («dort gibt es Messstationen»), sondern nur über sich selbst.
+    """
+    out = await env_hydro_stations(HydroStationsInput(canton="XX"))
+    assert "Es wurde nicht gesucht" in out
+    assert "gibt es Messstationen" not in out
+
+
+async def test_hydro_stations_canton_field_advertises_its_own_uselessness():
+    """MCP-Clients lesen das Input-Schema, nicht den Docstring des Tools.
+
+    Stünde in der Feld-Beschreibung weiter «Kantonskürzel zum Filtern», würden
+    Modelle den Parameter wählen und eine Absage ernten.
+    """
+    field = HydroStationsInput.model_fields["canton"]
+    assert "NICHT UNTERSTÜTZT" in field.description
+    assert "water_body" in field.description
 
 
 @respx.mock

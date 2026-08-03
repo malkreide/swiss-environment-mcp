@@ -16,11 +16,19 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   kamen drei Stationen mit plausiblen Namen zurück; nichts daran war als
   eingebettete Beispielliste zu erkennen.
 
-  Neu sagt das Tool ab: es nennt die stillgelegte Quelle, hält fest, dass dies
-  **keine** Aussage über den Kanton ist, und verweist auf `water_body` und die
-  vollständige Liste. Kein Request geht dafür mehr raus. `fetch_hydro_stations`
-  ist entfernt — LINDAS trägt die Stationsliste (233 Stationen), führt aber kein
-  Kantons-Attribut.
+  Neu sagt das Tool ab: es nennt die stillgelegte Quelle, hält fest, dass **nicht
+  gesucht** wurde, und verweist auf `water_body` und die vollständige Liste. Kein
+  Request geht dafür mehr raus. `fetch_hydro_stations` ist entfernt — LINDAS
+  trägt die Stationsliste (233 Stationen), führt aber kein Kantons-Attribut.
+
+  Die Absage behauptet bewusst nichts über den übergebenen Wert: `canton` ist
+  nicht gegen die 26 Kantone validiert, ein `XX` kommt durch, und ein Satz wie
+  «dort gibt es Messstationen» wäre dann schlicht falsch.
+
+  Mitgezogen sind die **Feld-Beschreibung** im Input-Schema und beide READMEs.
+  MCP-Clients lesen das Schema, nicht den Docstring des Tools; stünde dort weiter
+  «Kantonskürzel zum Filtern», würden Modelle den Parameter wählen und eine
+  Absage ernten.
 
 - **Der Ausfall-Fallback von `env_hydro_stations` ignorierte
   `response_format`.** Er baute Markdown und gab es zurück, auch wenn der
