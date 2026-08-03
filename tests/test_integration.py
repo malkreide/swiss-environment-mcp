@@ -16,6 +16,7 @@ import os
 import sys
 
 import pytest
+from conftest import _transport_cause
 from mcp.server.mcpserver.exceptions import ToolError
 
 # Diese Datei trifft echte BAFU-Live-APIs. Alle hier gesammelten Tests werden
@@ -61,13 +62,27 @@ _fail = 0
 
 
 def check(name: str, condition: bool, detail: str = "") -> None:
+    """Prüft eine Zusicherung: druckt sie und lässt den Test bei ❌ scheitern.
+
+    Der `raise` ist der Punkt (OPS-001). Vorher wurde nur gedruckt und
+    hochgezählt — unter pytest scheitert ein Test aber ausschliesslich an einer
+    durchschlagenden Exception, und das `sys.exit(1)` in `main()` greift nur im
+    Standalone-Pfad (`python tests/test_integration.py`). Jede Zusicherung
+    dieser Datei war damit für die nächtliche CI wirkungslos; rot wurde der Job
+    nur, wenn ein Tool eine Exception warf. Zwei veraltete Zusicherungen in
+    `test_nabel_stations` scheiterten so über Monate unbemerkt.
+
+    `main()` fängt den Fehler ab, damit der Standalone-Lauf weiterhin alle
+    Tests durchläuft und am Ende die Gesamtbilanz zieht.
+    """
     global _pass, _fail
     if condition:
         print(f"  ✅ {name}")
         _pass += 1
-    else:
-        print(f"  ❌ {name}" + (f": {detail}" if detail else ""))
-        _fail += 1
+        return
+    print(f"  ❌ {name}" + (f": {detail}" if detail else ""))
+    _fail += 1
+    raise AssertionError(f"{name}: {detail}" if detail else name)
 
 
 async def _tool_text(coro) -> str:
@@ -81,10 +96,18 @@ async def _tool_text(coro) -> str:
     vorhanden) ist das eine gültige Graceful-Degradation — wir prüfen daher
     gegen den Fehler-Content, statt an der Exception zu scheitern. So bleiben
     die Live-Tests robust gegenüber Upstream-Ausfällen (wie vor OBS-001, als
-    derselbe Text als regulärer String zurückkam)."""
+    derselbe Text als regulärer String zurückkam).
+
+    **Nicht** abgefangen wird ein `ToolError`, hinter dem ein reiner
+    Transportfehler steckt: dann hat der Upstream gar nicht geantwortet, und
+    der Hook in `conftest.py` soll den Lauf zu SKIPPED herabstufen. Seit
+    `check()` Tests tatsächlich rot macht, würde die Meldung sonst durch die
+    Zusicherungen fallen und ein Netzausfall als Vertragsbruch erscheinen."""
     try:
         return await coro
     except ToolError as e:
+        if _transport_cause(e) is not None:
+            raise
         return str(e)
 
 
@@ -101,11 +124,15 @@ async def test_nabel_stations() -> None:
     check("Enthält DUB (Dübendorf)", "DUB" in result)
     check("Link zu BAFU vorhanden", "bafu.admin.ch" in result)
 
-    # JSON
+    # JSON — Hülle ist der ResponseEnvelope (SDK-002): count/results/match_type.
+    # Die Zusicherungen prüften bis hierher `total` und `nabel_stationen`, also
+    # eine Form, die es seit der Envelope-Umstellung nicht mehr gibt. Sie
+    # scheiterten still, weil `check()` den Test nicht rot machte.
     result_json = await env_nabel_stations(NabelStationsInput(response_format=ResponseFormat.JSON))
     data = json.loads(result_json)
-    check("JSON: 16 Stationen", data.get("total") == 16)
-    check("JSON: nabel_stationen vorhanden", "nabel_stationen" in data)
+    check("JSON: 16 Stationen", data.get("count") == 16, f"count={data.get('count')}")
+    check("JSON: results ist die Stationsliste", len(data.get("results", [])) == 16)
+    check("JSON: match_type gesetzt", data.get("match_type") == "exact")
 
 
 async def test_nabel_current() -> None:
@@ -241,6 +268,19 @@ async def test_slf_snow() -> None:
 
 
 async def test_snow_stations_tool() -> None:
+    """env_snow_stations eigenständig (OPS-001).
+
+    Bewusst **ohne** `_tool_text` und mit `assert` statt `check`: der Test soll
+    scheitern, wenn der Upstream antwortet, aber nicht mehr das liefert, woraus
+    das Tool seine Tabelle baut. Vorher fing `_tool_text` den `ToolError` ab und
+    geprüft wurde nur, ob „SLF" im Text steht — was auch die Fehlermeldung
+    („SLF-Stationsliste nicht abrufbar") erfüllt. Der Test bestand damit bei
+    komplett totem SLF.
+
+    Kam die Verbindung gar nicht zustande, stuft der Hook in `conftest.py` den
+    Lauf zu SKIPPED herab; jede beantwortete Störung (HTTP-Fehler, Schema-Bruch)
+    bleibt ein Befund.
+    """
     print("\n[Schnee] env_snow_stations — Tool eigenständig (OPS-001)")
 
     if SKIP_LIVE:
@@ -249,12 +289,38 @@ async def test_snow_stations_tool() -> None:
 
     from swiss_environment_mcp.server import SnowStationsInput, env_snow_stations
 
-    result = await _tool_text(env_snow_stations(SnowStationsInput(canton="GR")))
-    check("Snow-Stations: Kein Python-Traceback", "Traceback" not in result)
-    check("Snow-Stations: SLF/IMIS erwähnt", "IMIS" in result or "SLF" in result)
+    payload = json.loads(
+        await env_snow_stations(SnowStationsInput(canton="GR", response_format=ResponseFormat.JSON))
+    )
+    stations = payload["results"]
+    assert stations, "GR betreibt IMIS-Stationen — eine leere Trefferliste ist ein Befund"
+    assert payload["count"] == len(stations)
+    assert payload["match_type"] == "exact"
+    assert all(s.get("canton_code") == "GR" for s in stations), "Kantonsfilter greift nicht"
+
+    # Genau die Felder, aus denen das Tool seine Tabelle baut — fällt eines weg,
+    # rendert das Tool stumm Platzhalter statt Daten.
+    for field in ("code", "label", "canton_code", "elevation", "type"):
+        assert field in stations[0], f"Feld '{field}' fehlt in der SLF-Antwort"
+
+    markdown = await env_snow_stations(SnowStationsInput(canton="GR"))
+    assert f"– {len(stations)} Stationen" in markdown
+    assert "| Code | Name | Kanton | Höhe (m) | Typ |" in markdown
+    assert "| GR |" in markdown, "keine einzige Datenzeile gerendert"
+    print(f"  ✅ Snow-Stations: {len(stations)} GR-Stationen gerendert")
 
 
 async def test_avalanche_bulletin_tool() -> None:
+    """env_avalanche_bulletin eigenständig (OPS-001).
+
+    Wie oben ohne `_tool_text`: „Bulletin" stand vorher auch in der
+    Fehlermeldung. Beide Saison-Zweige sind gültig — ausserhalb der Saison
+    publiziert das SLF keins —, aber sie müssen unterscheidbar bleiben. Die
+    Zweig-Logik selbst ist gemockt abgedeckt
+    (`test_avalanche_bulletin_offseason_empty` / `..._winter_danger`); hier
+    zählt, ob die echte Antwort in einem der beiden Zweige landet statt in der
+    Fehlerbehandlung.
+    """
     print("\n[Schnee] env_avalanche_bulletin — Tool eigenständig (OPS-001)")
 
     if SKIP_LIVE:
@@ -263,10 +329,24 @@ async def test_avalanche_bulletin_tool() -> None:
 
     from swiss_environment_mcp.server import AvalancheBulletinInput, env_avalanche_bulletin
 
-    # Ausserhalb der Saison ein reguläres „kein aktives Bulletin" — kein Fehler.
-    result = await _tool_text(env_avalanche_bulletin(AvalancheBulletinInput(language="de")))
-    check("Avalanche: Kein Python-Traceback", "Traceback" not in result)
-    check("Avalanche: Lawinen-Kontext", "Lawinen" in result or "Bulletin" in result)
+    result = await env_avalanche_bulletin(AvalancheBulletinInput(language="de"))
+    assert result.startswith("## 🏔️ Lawinenbulletin SLF")
+    assert "slf.ch/de/lawinenbulletin-und-schneesituation" in result
+
+    if "**Aktuell kein aktives Lawinenbulletin.**" in result:
+        assert "Mai–November" in result
+        print("  ✅ Avalanche: kein aktives Bulletin (regulärer Saisonzyklus)")
+        return
+
+    assert "| Warnregion | Gefahrenstufe |" in result
+    regions = [
+        line
+        for line in result.splitlines()
+        if line.startswith("| ") and "Warnregion" not in line and not line.startswith("|--")
+    ]
+    assert regions, "Bulletin aktiv, aber keine Warnregion gerendert"
+    assert " Warnregionen" in result
+    print(f"  ✅ Avalanche: Bulletin aktiv, {len(regions)} Warnregionen")
 
 
 async def test_hunting_stats() -> None:
@@ -401,24 +481,33 @@ async def main() -> None:
     print("swiss-environment-mcp – Integrationstests")
     print("=" * 60)
 
-    await test_nabel_stations()
-    await test_nabel_current()
-    await test_air_limits()
-    await test_hydro_stations()
-    await test_hydro_current()
-    await test_hydro_history()
-    await test_hydro_current_lindas()
-    await test_bathing_water_lindas()
-    await test_slf_snow()
-    await test_snow_stations_tool()
-    await test_avalanche_bulletin_tool()
-    await test_hunting_stats()
-    await test_flood_warnings()
-    await test_hazard_overview()
-    await test_hazard_regions()
-    await test_wildfire_danger()
-    await test_bafu_datasets()
-    await test_bafu_dataset_detail()
+    # Ein ❌ bricht seinen Test ab (siehe `check`), nicht aber den Lauf: der
+    # Standalone-Pfad soll das ganze Bild zeigen und am Ende bilanzieren.
+    # Unter pytest scheitert derselbe Fehler regulär als FAILED.
+    for test in (
+        test_nabel_stations,
+        test_nabel_current,
+        test_air_limits,
+        test_hydro_stations,
+        test_hydro_current,
+        test_hydro_history,
+        test_hydro_current_lindas,
+        test_bathing_water_lindas,
+        test_slf_snow,
+        test_snow_stations_tool,
+        test_avalanche_bulletin_tool,
+        test_hunting_stats,
+        test_flood_warnings,
+        test_hazard_overview,
+        test_hazard_regions,
+        test_wildfire_danger,
+        test_bafu_datasets,
+        test_bafu_dataset_detail,
+    ):
+        try:
+            await test()
+        except AssertionError:
+            pass  # bereits als ❌ gedruckt und in `_fail` gezählt
 
     print("\n" + "=" * 60)
     total = _pass + _fail
