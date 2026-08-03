@@ -7,6 +7,32 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Fixed
 
+- **`env_hydro_current` fragte bei jeder unbekannten Station einen
+  stillgelegten Endpoint.** Fand LINDAS die Stationsnummer nicht — oder fiel es
+  aus —, ging ein Fallback-Request an
+  `hydrodaten.admin.ch/lhg/az/json/{id}.json`. Dieser Pfad ist seit langem
+  vollständig stillgelegt (404); für drei Nachbar-Endpoints stand das bereits im
+  Code. Der Request konnte nichts liefern, kostete aber einen Roundtrip und
+  färbte die Fehlermeldung mit einem HTTP 404, der nichts über die Station
+  aussagte.
+
+  Der Fallback ist entfernt, und die beiden Fälle sind jetzt unterscheidbar:
+  fällt LINDAS aus, meldet das Tool „nicht abrufbar" samt Ursache; antwortet
+  LINDAS ohne Treffer, meldet es genau das — mit Verweis auf
+  `env_hydro_stations` für gültige Nummern. Der Transportfehler bleibt in der
+  Exception-Kette, damit der Live-Hook aus #58 einen Netzausfall weiterhin von
+  einem Befund unterscheiden kann.
+
+  Damit kontaktiert der Server `hydrodaten.admin.ch` nirgends mehr: der letzte
+  Fetcher auf `/lhg/az/` (`fetch_hydro_station_data`) ist weg, die Basis-URLs
+  dieses Pfads sind aus dem Modul entfernt, und der Host ist — wie zuvor
+  naturgefahren.ch — **aus der Egress-Allow-List** genommen (SEC-021). Als
+  Text-Link in der Tool-Ausgabe bleibt die Domain erhalten.
+
+  3 neue bzw. umgeschriebene Tests, darunter der tragende Fall „der stillgelegte
+  REST-Pfad wird nicht mehr angefasst" (`call_count == 0`) und der Nachweis, dass
+  der Egress-Guard den Host jetzt blockt.
+
 - **Der Rug-Pull-Schutz sah die Parameter der Tools nie (SEC-022).** Der
   Snapshot las `input_schema["properties"].keys()` — und ein Tool dieses Servers
   hat dort genau **eine** Property: `params`, deren Pydantic-Modell unter

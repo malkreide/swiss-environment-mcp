@@ -23,7 +23,7 @@
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "2e8b4c721ca18461acb8bd34ab7162d160b4a90d208ac06af9c26ba1189b5b1d",
+  "sha256": "dd912fbb462224b484ddbb9da37c021764c3e65d3fc139838377a3ed47f29f1e",
   "tools": [
     {
       "name": "env_air_limits_check",
@@ -346,7 +346,7 @@
     },
     {
       "name": "env_hydro_current",
-      "description": "Ruft aktuelle Messwerte einer hydrologischen BAFU-Messstation ab. Liefert Pegel (m ü.M.), Abfluss (m³/s), Wassertemperatur (°C) sowie 24h-Min/Max-Werte. Daten werden alle 10 Minuten aktualisiert. Bekannte Zürich-relevante Stationen: - 2099: Limmat – Zürich/Unterwerk - 2243: Sihl – Zürich - 2034: Zürichsee – Zürich/Tiefenbrunnen (Pegel) <use_case>Aktueller Pegel/Abfluss/Temperatur einer Station, z.B. für einen Hochwasser-Lagecheck.</use_case> <important_notes>Station-ID via `env_hydro_stations`. 10-Minuten-Aktualisierung.</important_notes> Args: params (HydroCurrentInput): - station_id: BAFU-Stationsnummer (z.B. '2099') - response_format: 'markdown' oder 'json' Returns: str: Aktuelle Messwerte inkl. Zeitstempel, oder Fallback mit direktem Link.",
+      "description": "Ruft aktuelle Messwerte einer hydrologischen BAFU-Messstation ab. Liefert Pegel (m ü.M.), Abfluss (m³/s), Wassertemperatur (°C) sowie 24h-Min/Max-Werte. Daten werden alle 10 Minuten aktualisiert. Bekannte Zürich-relevante Stationen: - 2099: Limmat – Zürich/Unterwerk - 2243: Sihl – Zürich - 2034: Zürichsee – Zürich/Tiefenbrunnen (Pegel) <use_case>Aktueller Pegel/Abfluss/Temperatur einer Station, z.B. für einen Hochwasser-Lagecheck.</use_case> <important_notes>Station-ID via `env_hydro_stations`. 10-Minuten-Aktualisierung. Quelle ist LINDAS; kennt es die Nummer nicht, meldet das Tool das explizit (kein Ersatzwert aus einer anderen Quelle).</important_notes> Args: params (HydroCurrentInput): - station_id: BAFU-Stationsnummer (z.B. '2099') - response_format: 'markdown' oder 'json' Returns: str: Aktuelle Messwerte inkl. Zeitstempel.",
       "params": [
         "response_format",
         "station_id"

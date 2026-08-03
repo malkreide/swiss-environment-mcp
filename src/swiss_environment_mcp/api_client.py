@@ -2,7 +2,6 @@
 HTTP-Client für BAFU-Datenquellen.
 
 Quellen:
-  - hydrodaten.admin.ch  – Hydrologische Mess- und Warnungsdaten
   - opendata.swiss        – BAFU-Datensätze (CKAN API)
   - naturgefahren.ch      – Naturgefahren-Bulletin (SLF/BAFU)
   - waldbrandgefahr.ch    – Waldbrandgefahr Schweiz
@@ -41,9 +40,10 @@ _logger = get_logger(component="api_client")
 
 # --- Basis-URLs ---------------------------------------------------------------
 
-HYDRO_BASE = "https://www.hydrodaten.admin.ch"
-HYDRO_JSON_BASE = f"{HYDRO_BASE}/lhg/az/json"
-HYDRO_XML_STATIONS = f"{HYDRO_BASE}/lhg/az/xml/hydroweb.xml"
+# hydrodaten.admin.ch wird nicht mehr per HTTP kontaktiert: alle REST-Endpoints
+# unter /lhg/az/* sind stillgelegt (s.u.), die Daten kommen über LINDAS. Die
+# Domain erscheint nur noch als Text-Link in der Tool-Ausgabe und ist deshalb —
+# wie zuvor naturgefahren.ch — aus der Egress-Allow-List entfernt (SEC-021).
 
 OPENDATA_SWISS_API = "https://opendata.swiss/api/3/action"
 
@@ -111,7 +111,6 @@ TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 # kontaktiert werden — frozenset, damit zur Laufzeit nicht mutierbar.
 ALLOWED_HOSTS: frozenset[str] = frozenset(
     {
-        "www.hydrodaten.admin.ch",
         "opendata.swiss",
         "www.waldbrandgefahr.ch",
         "www.bafu.admin.ch",
@@ -452,22 +451,15 @@ LIMIT 1
 # --- Hydrodaten-Client --------------------------------------------------------
 
 
-async def fetch_hydro_station_data(station_id: str) -> dict[str, Any]:
-    """Ruft aktuelle Messwerte für eine einzelne Messstation ab."""
-    response = await _get_json(f"{HYDRO_JSON_BASE}/{station_id}.json")
-    return response.json()
-
-
-# Hinweis: Alles unter hydrodaten.admin.ch/lhg/az/* ist stillgelegt (404). Ent-
-# fernt wurden deshalb `fetch_hydro_warnings` (warnings.json),
-# `fetch_hydro_station_history` (Hydrological_Data.csv) und zuletzt
-# `fetch_hydro_stations` (mobile_stations.json). Ersatz: LINDAS
-# (`fetch_hydro_warnings_lindas`, `fetch_hydro_stations_lindas`) bzw. der
-# Abfragezentrale-Bezugsweg in `env_hydro_history`.
-#
-# `fetch_hydro_station_data` (unten) liegt auf demselben toten Pfad und wird von
-# `env_hydro_current` noch als Fallback aufgerufen — das ist der nächste Kandidat,
-# hier aber bewusst nicht mitgeändert (eigener Tool-Pfad, eigener Review).
+# Hinweis: Alles unter hydrodaten.admin.ch/lhg/az/* ist stillgelegt (404). Von
+# dort stammten `fetch_hydro_warnings` (warnings.json),
+# `fetch_hydro_station_history` (Hydrological_Data.csv), `fetch_hydro_stations`
+# (mobile_stations.json) und `fetch_hydro_station_data` ({id}.json) — alle
+# entfernt, keiner davon konnte noch Daten liefern. Ersatz ist durchgängig LINDAS
+# (`fetch_hydro_stations_lindas`, `fetch_hydro_current_lindas`,
+# `fetch_hydro_warnings_lindas`) bzw. der Abfragezentrale-Bezugsweg in
+# `env_hydro_history`. Die Basis-URLs dieses Pfads stehen bewusst nicht mehr im
+# Modul: eine Konstante lädt dazu ein, den toten Pfad erneut zu verdrahten.
 
 
 # --- opendata.swiss CKAN-Client -----------------------------------------------

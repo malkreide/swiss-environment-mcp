@@ -706,18 +706,60 @@ async def test_hydro_current_lindas_retry_then_success(monkeypatch):
 
 
 @respx.mock
-async def test_hydro_current_lindas_timeout_falls_back_to_rest(monkeypatch):
-    """LINDAS-Totalausfall → sauberer Fallback auf den REST-Pfad."""
+async def test_hydro_current_lindas_outage_is_terminal(monkeypatch):
+    """LINDAS-Totalausfall → terminaler ToolError statt REST-Fallback.
+
+    Der frühere Fallback lief auf `hydrodaten.admin.ch/lhg/az/json/{id}.json` —
+    stillgelegt, 404. Er konnte nichts liefern und kostete nur einen Roundtrip.
+    """
+    from mcp.server.mcpserver.exceptions import ToolError
+
     monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
-    respx.get(_LINDAS_URL).mock(side_effect=httpx.ConnectError("boom"))
-    respx.get("https://www.hydrodaten.admin.ch/lhg/az/json/2099.json").mock(
-        return_value=httpx.Response(
-            200,
-            json={"name": "Limmat REST", "water_body_name": "Limmat", "parameters": []},
-        )
+    lindas = respx.get(_LINDAS_URL).mock(side_effect=httpx.ConnectError("boom"))
+    dead = respx.get(url__startswith="https://www.hydrodaten.admin.ch/lhg/").mock(
+        return_value=httpx.Response(404)
     )
-    out = await env_hydro_current(HydroCurrentInput(station_id="2099"))
-    assert "Limmat REST" in out  # REST-Pfad hat übernommen
+    with pytest.raises(ToolError) as exc:
+        await env_hydro_current(HydroCurrentInput(station_id="2099"))
+    assert lindas.called
+    assert dead.call_count == 0, "der stillgelegte REST-Pfad darf nicht mehr angefasst werden"
+    assert "nicht abrufbar" in str(exc.value)
+    # Der Transportfehler bleibt in der Kette — sonst könnte der Live-Hook
+    # (conftest) einen Netzausfall nicht mehr von einem Befund unterscheiden.
+    assert isinstance(exc.value.__context__, httpx.ConnectError)
+
+
+@respx.mock
+async def test_hydro_current_unknown_station_says_so(monkeypatch):
+    """Antwort ohne Treffer ≠ «nicht abrufbar».
+
+    Vorher lief dieser Fall in den 404 des toten REST-Pfads und meldete
+    «nicht abrufbar» mit einem HTTP-Fehler, der nichts über die Station aussagte.
+    """
+    from mcp.server.mcpserver.exceptions import ToolError
+
+    monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
+    respx.get(_LINDAS_URL).mock(return_value=httpx.Response(200, json=_sparql_bindings([])))
+    with pytest.raises(ToolError) as exc:
+        await env_hydro_current(HydroCurrentInput(station_id="9999"))
+    msg = str(exc.value)
+    assert "9999" in msg
+    assert "LINDAS hat geantwortet" in msg
+    assert "env_hydro_stations" in msg  # Weg zu gültigen Nummern
+    assert "nicht abrufbar" not in msg
+
+
+def test_hydrodaten_is_out_of_the_egress_allowlist():
+    """Der Host wird nicht mehr kontaktiert — also raus aus der Allow-List.
+
+    Das ist die belastbare Zusage: selbst wenn jemand den stillgelegten Pfad
+    erneut verdrahtet, kommt der Request nicht heraus (SEC-021). Die Domain
+    erscheint weiterhin als Text-Link in der Tool-Ausgabe; genau wie bei
+    naturgefahren.ch ist das kein Grund, den Egress offen zu halten.
+    """
+    assert "www.hydrodaten.admin.ch" not in api.ALLOWED_HOSTS
+    with pytest.raises(api.SecurityError):
+        api.assert_host_allowed("https://www.hydrodaten.admin.ch/lhg/az/json/2099.json")
 
 
 @respx.mock
