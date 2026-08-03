@@ -7,6 +7,32 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Fixed
 
+- **`env_bafu_datasets` fand nichts — für jede Suche, seit jeher.** Der CKAN-Filter
+  lautete `fq=organization:bafu`. Diesen Slug gibt es auf opendata.swiss nicht
+  (`organization_show?id=bafu` liefert kein JSON); die Organisation heisst
+  `bundesamt-fur-umwelt-bafu` und trägt 362 Datensätze. CKAN meldet einen
+  unbekannten Organisationsfilter **nicht** als Fehler, sondern antwortet mit
+  `count: 0` — die Suche sah aus wie ein leeres, gültiges Ergebnis. Live geprüft:
+  `q='Luftqualität'` liefert mit dem falschen Slug 0, mit dem echten 5 Treffer.
+
+  Dieselbe Zeile stand in `fetch_nabel_data`. `env_nabel_current` zeigte deshalb
+  nie den Block „Verfügbare Datensätze auf opendata.swiss"; er erscheint jetzt.
+
+  Betroffen war auch der Portal-Link: `opendata.swiss/de/organization/bafu`
+  zeigt auf eine Organisation, die es nicht gibt — 7 Vorkommen in der
+  Tool-Ausgabe, alle nachgezogen. Slug und Link kommen neu aus je einer
+  Konstante (`OPENDATA_BAFU_ORG`, `OPENDATA_BAFU_URL`), damit es keine zweite
+  Stelle gibt, die man vergessen kann.
+
+  4 neue Tests: der Slug selbst, der ausgehende `fq` beider Aufrufer (nur er
+  beweist, dass der Wert auch ankommt) und ein Scan über `src/`, der den toten
+  Portal-Link nicht zurückkommen lässt. Mutationsgetestet: setzt man den Slug
+  auf `bafu` zurück, fallen drei davon.
+
+  Gefunden hat das erst der geschärfte Live-Test aus #59 — die alte Zusicherung
+  prüfte nur, ob „opendata.swiss" irgendwo im Text steht, was auch „0 Treffer"
+  erfüllt.
+
 - **Die Zusicherungen der Live-Suite waren wirkungslos (OPS-001).** `check()`
   druckte bei einem Fehlschlag ein ❌ und zählte hoch — mehr nicht. Unter pytest
   scheitert ein Test aber ausschliesslich an einer durchschlagenden Exception,

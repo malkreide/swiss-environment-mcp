@@ -1118,7 +1118,7 @@ async def env_nabel_current(params: NabelCurrentInput, ctx: Context | None = Non
         await _handle_tool_error("env_nabel_current", e, ctx, station=code)
 
     data_url = f"https://www.bafu.admin.ch/de/datenabfrage-nabel?station={code}"
-    opendata_url = "https://opendata.swiss/de/organization/bafu"
+    opendata_url = "https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu"
 
     lines = [
         f"## NABEL-Station: {station_info['name']} ({code})\n",
@@ -1539,7 +1539,7 @@ async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = Non
         "der **BAFU Hydrologischen Abfragezentrale** bezogen werden:",
         "- **E-Mail:** abfragezentrale@bafu.admin.ch",
         f"- **Interaktives Portal (Kurzverlauf/Grafik):** {portal_url}",
-        "- **Datenkatalog:** https://opendata.swiss/de/organization/bafu",
+        "- **Datenkatalog:** https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu",
     ]
     return "\n".join(lines)
 
@@ -1830,7 +1830,7 @@ async def env_bathing_water(params: BathingWaterInput, ctx: Context | None = Non
         raise _terminal_failure(
             f"⚠️ Badegewässerdaten nicht abrufbar: {error_msg}\n\n"
             "**Direktzugang:** https://www.bafu.admin.ch (Thema Wasser → "
-            "Badegewässerqualität) bzw. https://opendata.swiss/de/organization/bafu"
+            "Badegewässerqualität) bzw. https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu"
         )
 
 
@@ -2628,7 +2628,7 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
         if params.response_format == ResponseFormat.JSON:
             return _envelope_json(
                 source="BAFU – opendata.swiss (CKAN)",
-                provenance="https://opendata.swiss/de/organization/bafu",
+                provenance="https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu",
                 results=datasets,
                 match_type="none" if not datasets else "exact",
                 note=(
@@ -2647,7 +2647,7 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
                 f"(match_type: none).\n\n"
                 f"*Tipp: Breitere Begriffe nutzen (z.B. 'Luft', 'Wasser', 'Wald'), "
                 f"die Schreibweise prüfen, oder ohne `query` alle BAFU-Datensätze listen.*\n\n"
-                f"**Direktzugang:** https://opendata.swiss/de/organization/bafu"
+                f"**Direktzugang:** https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu"
             )
 
         lines = [
@@ -2691,7 +2691,7 @@ async def env_bafu_datasets(params: BafuDatasetsInput, ctx: Context | None = Non
         raise _terminal_failure(
             f"⚠️ Datensatzsuche fehlgeschlagen: {error_msg}\n\n"
             "**Direktzugang zum BAFU-Datenkatalog:**\n"
-            "- https://opendata.swiss/de/organization/bafu\n"
+            "- https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu\n"
             "- https://www.bafu.admin.ch/de/daten\n"
         )
 
@@ -2777,7 +2777,7 @@ async def env_bafu_dataset_detail(
         raise _terminal_failure(
             f"⚠️ Datensatz '{params.dataset_id}' nicht gefunden: {error_msg}\n\n"
             "**Tipp:** Nutze `env_bafu_datasets` um gültige Dataset-IDs zu finden.\n"
-            "**BAFU-Datenkatalog:** https://opendata.swiss/de/organization/bafu"
+            "**BAFU-Datenkatalog:** https://opendata.swiss/de/organization/bundesamt-fur-umwelt-bafu"
         )
 
 

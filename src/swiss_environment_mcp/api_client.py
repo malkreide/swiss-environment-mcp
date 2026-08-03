@@ -47,6 +47,14 @@ HYDRO_XML_STATIONS = f"{HYDRO_BASE}/lhg/az/xml/hydroweb.xml"
 
 OPENDATA_SWISS_API = "https://opendata.swiss/api/3/action"
 
+# CKAN-Slug des BAFU auf opendata.swiss. Nicht «bafu» — dieser Name existiert
+# dort nicht (`organization_show?id=bafu` liefert kein JSON), und ein `fq` darauf
+# filtert jede Suche auf null Treffer, ohne dass CKAN einen Fehler meldet. Der
+# echte Slug trägt 362 Datensätze. Beide Werte sind gegen die Live-API geprüft;
+# der Slug gehört deshalb genau einmal in den Code.
+OPENDATA_BAFU_ORG = "bundesamt-fur-umwelt-bafu"
+OPENDATA_BAFU_URL = f"https://opendata.swiss/de/organization/{OPENDATA_BAFU_ORG}"
+
 # naturgefahren.ch wird nicht mehr per HTTP kontaktiert (API stillgelegt, s.u.);
 # die Domain erscheint nur noch als Text-Link in der Tool-Ausgabe und ist daher
 # aus der Egress-Allow-List entfernt (SEC-021, Angriffsfläche minimieren).
@@ -474,7 +482,7 @@ async def search_bafu_datasets(
     """Sucht BAFU-Datensätze auf opendata.swiss via CKAN-API."""
     params: dict[str, Any] = {
         "q": query,
-        "fq": "organization:bafu",
+        "fq": f"organization:{OPENDATA_BAFU_ORG}",
         "rows": rows,
         "start": start,
         "sort": "score desc, metadata_modified desc",
@@ -594,7 +602,7 @@ async def fetch_nabel_data(
     """
     params: dict[str, Any] = {
         "q": f"NABEL {station_abbreviation} {parameter}",
-        "fq": "organization:bafu",
+        "fq": f"organization:{OPENDATA_BAFU_ORG}",
         "rows": 5,
     }
     response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
