@@ -1528,3 +1528,27 @@ def test_snapshot_hash_reacts_to_a_loosened_input_pattern():
     assert snap._compute_hash([{"fields": snap._fields(strict)}]) != snap._compute_hash(
         [{"fields": snap._fields(loose)}]
     )
+
+
+# --- Egress-Allow-List ↔ Beispiel-Netzwerkpolicy (SEC-021) -------------------
+
+
+def test_network_policy_example_matches_the_allowlist():
+    """`deploy/network-policy.example.yaml` trägt den Kommentar «MUSS mit
+    ALLOWED_HOSTS synchron sein» — nur geprüft hat das nie jemand.
+
+    Entsprechend war die Datei bereits gedriftet: `www.hydrodaten.admin.ch` stand
+    dort noch, nachdem der letzte Aufrufer entfernt und der Host aus der
+    Allow-List genommen war. Eine Beispiel-Policy, die mehr erlaubt als der
+    Server braucht, ist genau die Art stiller Aufweichung, gegen die SEC-021
+    antritt — und sie wird kopiert.
+    """
+    import re
+    from pathlib import Path
+
+    policy = Path(__file__).resolve().parent.parent / "deploy" / "network-policy.example.yaml"
+    fqdns = set(re.findall(r"- matchName:\s*(\S+)", policy.read_text(encoding="utf-8")))
+    assert fqdns == set(api.ALLOWED_HOSTS), (
+        f"nur in der Policy: {sorted(fqdns - set(api.ALLOWED_HOSTS))} | "
+        f"nur in ALLOWED_HOSTS: {sorted(set(api.ALLOWED_HOSTS) - fqdns)}"
+    )

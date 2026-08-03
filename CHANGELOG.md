@@ -3,116 +3,25 @@
 Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
-## [Unreleased]
+## [0.6.0] – 2026-08-03
+
+Dieses Release beginnt mit einem geröteten Nacht-Job und endet bei fünf stillen
+Datenfehlern. Der `ConnectTimeout`, an dem `test_slf_snow` scheiterte, war ein
+Netzausfall — kein Befund. Beim Schärfen der Tests, die ihn hätten einordnen
+sollen, kam heraus, dass die Zusicherungen der Live-Suite unter pytest nie etwas
+zum Scheitern brachten: sie druckten ein ❌ und zählten hoch. Was danach sichtbar
+wurde, betrifft die Nutzenden direkt — eine Datensatzsuche, die für **jede**
+Anfrage nichts fand, ein Kantonsfilter, der hartkodierte Beispielstationen als
+Suchergebnis ausgab, und ein Rug-Pull-Schutz, der die Parameter der Tools nie
+gesehen hatte.
+
+Die 21 Tools bleiben unverändert, keine Eingabe fällt weg. Geändert hat sich,
+**was drei von ihnen antworten** — und dass `hydrodaten.admin.ch` gar nicht mehr
+kontaktiert wird; die Egress-Allow-List und die Beispiel-Netzwerkpolicy sind
+entsprechend gekürzt. Wer die Policy gespiegelt hat, kann den Host dort
+streichen.
 
 ### Fixed
-
-- **`env_flood_warnings` liess einen gesetzten Kanton wie einen angewendeten
-  Filter aussehen.** LINDAS führt keinen Kantons-Code, die Auswertung ist also
-  immer schweizweit. Das Tool sagte das auch — im Markdown als Klammerzusatz am
-  Ende einer Zeile, und im JSON **gar nicht**, sobald es keine Warnungen gab.
-
-  Genau dort ist der Hinweis am wichtigsten: „keine aktiven Warnungen" plus ein
-  Kanton in der Anfrage liest sich als kantonale Entwarnung. Bei einem
-  Hochwasser-Tool ist das der Fehler, den man nicht machen will.
-
-  Der Hinweis steht jetzt als eigene Warnzeile **über** der Tabelle und geht im
-  JSON nie verloren. Dazu ist `match_type` bei gesetztem, nicht angewendetem
-  Filter `fuzzy` statt `exact` — die maschinenlesbare Fassung derselben Aussage
-  für Clients, die der Envelope vertrauen.
-
-  Die **Feld-Beschreibung** im Input-Schema sagt neu „NICHT ANGEWENDET" statt
-  „Kantonskürzel zum Filtern"; beide READMEs sind nachgezogen. Anders als bei
-  `env_hydro_stations` bleibt der Parameter wirksam beantwortet: die gezeigten
-  Warnungen sind echt, nur eben schweizweit — sie zu verwerfen wäre bei
-  Sicherheitsdaten die schlechtere Antwort.
-
-  5 neue Tests, darunter der tragende Fall „leere Antwort auf eine kantonale
-  Frage nennt den nicht angewendeten Filter" und der Nachweis, dass sich
-  gefilterte und ungefilterte Anfrage nur in `match_type` unterscheiden, nicht in
-  den Daten.
-
-- **`env_hydro_current` fragte bei jeder unbekannten Station einen
-  stillgelegten Endpoint.** Fand LINDAS die Stationsnummer nicht — oder fiel es
-  aus —, ging ein Fallback-Request an
-  `hydrodaten.admin.ch/lhg/az/json/{id}.json`. Dieser Pfad ist seit langem
-  vollständig stillgelegt (404); für drei Nachbar-Endpoints stand das bereits im
-  Code. Der Request konnte nichts liefern, kostete aber einen Roundtrip und
-  färbte die Fehlermeldung mit einem HTTP 404, der nichts über die Station
-  aussagte.
-
-  Der Fallback ist entfernt, und die beiden Fälle sind jetzt unterscheidbar:
-  fällt LINDAS aus, meldet das Tool „nicht abrufbar" samt Ursache; antwortet
-  LINDAS ohne Treffer, meldet es genau das — mit Verweis auf
-  `env_hydro_stations` für gültige Nummern. Der Transportfehler bleibt in der
-  Exception-Kette, damit der Live-Hook aus #58 einen Netzausfall weiterhin von
-  einem Befund unterscheiden kann.
-
-  Damit kontaktiert der Server `hydrodaten.admin.ch` nirgends mehr: der letzte
-  Fetcher auf `/lhg/az/` (`fetch_hydro_station_data`) ist weg, die Basis-URLs
-  dieses Pfads sind aus dem Modul entfernt, und der Host ist — wie zuvor
-  naturgefahren.ch — **aus der Egress-Allow-List** genommen (SEC-021). Als
-  Text-Link in der Tool-Ausgabe bleibt die Domain erhalten.
-
-  3 neue bzw. umgeschriebene Tests, darunter der tragende Fall „der stillgelegte
-  REST-Pfad wird nicht mehr angefasst" (`call_count == 0`) und der Nachweis, dass
-  der Egress-Guard den Host jetzt blockt.
-
-- **Der Rug-Pull-Schutz sah die Parameter der Tools nie (SEC-022).** Der
-  Snapshot las `input_schema["properties"].keys()` — und ein Tool dieses Servers
-  hat dort genau **eine** Property: `params`, deren Pydantic-Modell unter
-  `$defs` liegt und per `$ref` referenziert wird. Für alle 21 Tools stand
-  deshalb dieselbe Liste `["params"]` im Hash. Eine umbenannte, entfernte oder
-  in ihrer Bedeutung gedrehte Eingabe war unsichtbar; abgedeckt waren faktisch
-  nur Tool-Namen und Tool-Descriptions.
-
-  Genau dieser blinde Fleck hat den Fehler durchgelassen, den der Review am
-  Kantonsfilter fand: das Tool sagte längst ab, die Feld-Beschreibung im Schema
-  warb weiter mit „Kantonskürzel zum Filtern" — und der Snapshot merkte nichts.
-  MCP-Clients lesen aber genau dieses Schema.
-
-  Der `$ref` wird jetzt aufgelöst (auch der zweite, unter dem Pydantic Enums
-  ablegt). Gehasht werden je Feld: Name, Pflicht-Status, Beschreibung, Default
-  und die Validierungs-Schranken — `pattern`, Längen, Grenzwerte, `enum`. Eine
-  still gelockerte SEC-018-Whitelist fällt damit ebenfalls auf.
-
-  Bewusst **nicht** aufgenommen: `type`. Optionale Felder erscheinen je nach
-  Pydantic-Version als `type` oder als `anyOf` — genau die Nicht-Reproduzierbar-
-  keit, wegen der der ursprüngliche Snapshot das rohe Schema mied. Der neue Hash
-  ist auf allen drei CI-Versionen identisch: 3.11.15, 3.12.3 und 3.13.12 liefern
-  `2e8b4c721ca1`.
-
-  Die normalisierten Definitionen stehen neu **im File**, nicht nur als Hash.
-  Bei Drift will man sehen, was sich geändert hat — `git diff tool-snapshot.json`
-  zeigt die umbenannte Eingabe statt nur einer anderen Prüfsumme.
-
-  6 Tests, darunter die beiden tragenden Mutationen: eine geänderte
-  Feld-Beschreibung und eine gelockerte `pattern` müssen den Hash bewegen.
-
-- **Drei weitere Live-Tests bestanden bei totem Netz.** Nach `env_snow_stations`
-  und `env_avalanche_bulletin` (#59) blieben `test_hydro_stations`,
-  `test_hydro_history` und `test_nabel_current`: alle drei prüften nur Inhalte,
-  die auch ohne Upstream im Text stehen — statische Links, das eingebettete
-  `NABEL_STATIONS`-Dict, die Fallback-Tabelle. Dazu `test_bafu_datasets`, dessen
-  Zusicherungen („opendata.swiss steht im Text", „Länge > 50") auch die Antwort
-  «0 Treffer» erfüllten. Genau diese Blindheit liess den falschen CKAN-Slug und
-  den toten Kanton-Pfad monatelang unbemerkt.
-
-  Geprüft wird jetzt der Live-Anteil: der aktuelle LINDAS-Messwert, der
-  CKAN-Datensatzblock, die Trefferzahl (>0 bzw. >100 für den vollen Katalog),
-  die Stationszahl (>100) und der Gewässerfilter. Der Kantonsfilter prüft die
-  Absage samt Nachweis, dass keine Beispielstation als Treffer auftaucht.
-
-  Fängt ein Tool den Upstream-Fehler selbst ab, fehlt dem Hook aus #58 der
-  Transportfehler, an dem er «Leitung» von «Befund» unterscheidet. Fehlt der
-  erwartete Live-Block, ruft der Test die rohe API deshalb direkt auf und holt
-  die verschluckte Exception nach.
-
-  Mutationsgeprüft, indem die beiden gerade behobenen Defekte zurückgespielt
-  wurden (CKAN antwortet mit `count: 0`, LINDAS ohne Stationen — beides
-  *Antworten*, keine Transportfehler): alle vier Tests scheitern. Bei totem Netz
-  bestehen nur noch die vier tatsächlich netzwerkfreien Tools (vorher sieben),
-  der Rest wird übersprungen.
 
 - **`env_bafu_datasets` fand nichts — für jede Suche, seit jeher.** Der CKAN-Filter
   lautete `fq=organization:bafu`. Diesen Slug gibt es auf opendata.swiss nicht
@@ -175,6 +84,157 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   setzt keinen einzigen Request ab" — nur er unterscheidet die Absage von einem
   Fallback, der bloss anders formuliert ist.
 
+- **`env_hydro_current` fragte bei jeder unbekannten Station einen
+  stillgelegten Endpoint.** Fand LINDAS die Stationsnummer nicht — oder fiel es
+  aus —, ging ein Fallback-Request an
+  `hydrodaten.admin.ch/lhg/az/json/{id}.json`. Dieser Pfad ist seit langem
+  vollständig stillgelegt (404); für drei Nachbar-Endpoints stand das bereits im
+  Code. Der Request konnte nichts liefern, kostete aber einen Roundtrip und
+  färbte die Fehlermeldung mit einem HTTP 404, der nichts über die Station
+  aussagte.
+
+  Der Fallback ist entfernt, und die beiden Fälle sind jetzt unterscheidbar:
+  fällt LINDAS aus, meldet das Tool „nicht abrufbar" samt Ursache; antwortet
+  LINDAS ohne Treffer, meldet es genau das — mit Verweis auf
+  `env_hydro_stations` für gültige Nummern. Der Transportfehler bleibt in der
+  Exception-Kette, damit der Live-Hook aus #58 einen Netzausfall weiterhin von
+  einem Befund unterscheiden kann.
+
+  Damit kontaktiert der Server `hydrodaten.admin.ch` nirgends mehr: der letzte
+  Fetcher auf `/lhg/az/` (`fetch_hydro_station_data`) ist weg, die Basis-URLs
+  dieses Pfads sind aus dem Modul entfernt, und der Host ist — wie zuvor
+  naturgefahren.ch — **aus der Egress-Allow-List** genommen (SEC-021). Als
+  Text-Link in der Tool-Ausgabe bleibt die Domain erhalten.
+
+  3 neue bzw. umgeschriebene Tests, darunter der tragende Fall „der stillgelegte
+  REST-Pfad wird nicht mehr angefasst" (`call_count == 0`) und der Nachweis, dass
+  der Egress-Guard den Host jetzt blockt.
+
+- **`env_flood_warnings` liess einen gesetzten Kanton wie einen angewendeten
+  Filter aussehen.** LINDAS führt keinen Kantons-Code, die Auswertung ist also
+  immer schweizweit. Das Tool sagte das auch — im Markdown als Klammerzusatz am
+  Ende einer Zeile, und im JSON **gar nicht**, sobald es keine Warnungen gab.
+
+  Genau dort ist der Hinweis am wichtigsten: „keine aktiven Warnungen" plus ein
+  Kanton in der Anfrage liest sich als kantonale Entwarnung. Bei einem
+  Hochwasser-Tool ist das der Fehler, den man nicht machen will.
+
+  Der Hinweis steht jetzt als eigene Warnzeile **über** der Tabelle und geht im
+  JSON nie verloren. Dazu ist `match_type` bei gesetztem, nicht angewendetem
+  Filter `fuzzy` statt `exact` — die maschinenlesbare Fassung derselben Aussage
+  für Clients, die der Envelope vertrauen.
+
+  Die **Feld-Beschreibung** im Input-Schema sagt neu „NICHT ANGEWENDET" statt
+  „Kantonskürzel zum Filtern"; beide READMEs sind nachgezogen. Anders als bei
+  `env_hydro_stations` bleibt der Parameter wirksam beantwortet: die gezeigten
+  Warnungen sind echt, nur eben schweizweit — sie zu verwerfen wäre bei
+  Sicherheitsdaten die schlechtere Antwort.
+
+  5 neue Tests, darunter der tragende Fall „leere Antwort auf eine kantonale
+  Frage nennt den nicht angewendeten Filter" und der Nachweis, dass sich
+  gefilterte und ungefilterte Anfrage nur in `match_type` unterscheiden, nicht in
+  den Daten.
+
+- **Streamable-HTTP wies unter jedem echten Hostnamen mit 421 ab (SEC-005).**
+  `build_cors_app()` rief `mcp.streamable_http_app()` ohne `host` auf. Unter
+  mcp 2.x ist das kein neutraler Default: das SDK leitet daraus seine
+  Host-Allow-List ab und aktiviert bei loopback-artigem Wert automatisch
+  `127.0.0.1:*`. Da das Argument selbst auf `127.0.0.1` defaultet, traf das jeden
+  Container mit `MCP_HOST=0.0.0.0` (Dockerfile/render.yaml). Vor der Migration
+  ging `host` an den `FastMCP`-Konstruktor, wo dieselbe Logik den echten Bind sah
+  und den Schutz korrekt ausliess.
+
+  Der **SSE-Zweig war nicht betroffen**: dort geht `host` an `mcp.run()`, wo das
+  SDK den echten Bind sieht. Nur der Streamable-HTTP-Pfad liess ihn aus.
+
+  Der Bind reist jetzt in die App, und eine echte Allow-List wird aus dem neuen
+  `MCP_ALLOWED_HOSTS` gebaut. Ohne diese Variable bleibt der Schutz auf einem
+  Nicht-Loopback-Bind bewusst aus und der Aufrufer warnt — eine geratene Liste
+  wäre genau der 421-Fall.
+
+  Der CORS-Default dieses Servers ist `*`; als Transport-Origin wird er bewusst
+  nicht übernommen, weil Origins literal verglichen werden und ein Eintrag `*`
+  nichts erlauben würde. Ein Test hält das fest.
+
+  13 neue Tests, darunter der tragende Fall „richtiger Hostname, falscher Port"
+  — nur er unterscheidet eine portgenaue Allow-List von einer, die alles
+  durchlässt. Mutationsgetestet: nimmt man den `host`-Kwarg wieder weg,
+  reproduziert der Test das 421.
+
+  Geprüft mit den wörtlichen CI-Kommandos: 143 passed / 1 skipped / 23
+  deselected, `ruff check src/` clean, `ruff format --check src/` (10 files
+  already formatted).
+
+- **Der Rug-Pull-Schutz sah die Parameter der Tools nie (SEC-022).** Der
+  Snapshot las `input_schema["properties"].keys()` — und ein Tool dieses Servers
+  hat dort genau **eine** Property: `params`, deren Pydantic-Modell unter
+  `$defs` liegt und per `$ref` referenziert wird. Für alle 21 Tools stand
+  deshalb dieselbe Liste `["params"]` im Hash. Eine umbenannte, entfernte oder
+  in ihrer Bedeutung gedrehte Eingabe war unsichtbar; abgedeckt waren faktisch
+  nur Tool-Namen und Tool-Descriptions.
+
+  Genau dieser blinde Fleck hat den Fehler durchgelassen, den der Review am
+  Kantonsfilter fand: das Tool sagte längst ab, die Feld-Beschreibung im Schema
+  warb weiter mit „Kantonskürzel zum Filtern" — und der Snapshot merkte nichts.
+  MCP-Clients lesen aber genau dieses Schema.
+
+  Der `$ref` wird jetzt aufgelöst (auch der zweite, unter dem Pydantic Enums
+  ablegt). Gehasht werden je Feld: Name, Pflicht-Status, Beschreibung, Default
+  und die Validierungs-Schranken — `pattern`, Längen, Grenzwerte, `enum`. Eine
+  still gelockerte SEC-018-Whitelist fällt damit ebenfalls auf.
+
+  Bewusst **nicht** aufgenommen: `type`. Optionale Felder erscheinen je nach
+  Pydantic-Version als `type` oder als `anyOf` — genau die Nicht-Reproduzierbar-
+  keit, wegen der der ursprüngliche Snapshot das rohe Schema mied. Der neue Hash
+  ist auf allen drei CI-Versionen identisch: 3.11.15, 3.12.3 und 3.13.12 liefern
+  `2e8b4c721ca1`.
+
+  Die normalisierten Definitionen stehen neu **im File**, nicht nur als Hash.
+  Bei Drift will man sehen, was sich geändert hat — `git diff tool-snapshot.json`
+  zeigt die umbenannte Eingabe statt nur einer anderen Prüfsumme.
+
+  6 Tests, darunter die beiden tragenden Mutationen: eine geänderte
+  Feld-Beschreibung und eine gelockerte `pattern` müssen den Hash bewegen.
+
+- **Der nächtliche Live-Lauf wurde rot, wenn ein Upstream kurz nicht ans
+  Telefon ging (OPS-001).** Am 03.08.2026 riss `test_slf_snow` den Job mit
+  `httpx.ConnectTimeout` gegen `measurement-api.slf.ch` — dreimal in Folge, denn
+  der Client wiederholt transiente Fehler bereits selbst (3 Versuche in ~16 s).
+  Dieselbe API antwortete davor und danach; von 15 Läufen scheiterten drei, je
+  an einem anderen Host.
+
+  Diese Tests prüfen den **Vertrag** echter Fremd-APIs: liefert die Quelle noch,
+  was dieser Server aus ihr liest? Kam die Verbindung gar nicht erst zustande,
+  beantwortet der Lauf diese Frage nicht — er scheiterte an der Leitung. Ein
+  roter Job behauptet dann einen Befund, den es nicht gibt, und genau das
+  stumpft den nächtlichen Alarm ab.
+
+  Ein Hook in `tests/conftest.py` stuft deshalb einen `live`-Test, der an einem
+  reinen Transportfehler scheitert, zu SKIPPED herab. Die Exception-**Kette**
+  wird dabei mitgelaufen, weil die Tools den httpx-Fehler einpacken
+  (`ToolError` mit `__context__`, LINDAS `QueryTimeoutError` mit `__cause__`) —
+  ohne Kettenlauf würde nur der direkte API-Aufruf erkannt.
+
+  Bewusst weiterhin **rot**: alles, was eine Antwort voraussetzt — HTTP 4xx/5xx,
+  geändertes Schema, verletzte Assertions, ein `SecurityError` des
+  Egress-Guards. Ebenso rot bleibt ein Transportfehler in der gemockten
+  Standard-Suite: dort gibt es kein Netz, das ausfallen könnte.
+
+  Übersprungen heisst nicht unsichtbar: `pytest_terminal_summary` schreibt einen
+  eigenen Block mit Zielhost und Fehlerklasse. Trifft es denselben Host mehrere
+  Nächte hintereinander, ist der Dienst tatsächlich weg — dann untersuchen.
+
+  9 neue Tests, darunter der tragende Fall „HTTP 500 ist kein Transportfehler"
+  — nur er unterscheidet die Herabstufung von einem generellen
+  Live-Fehler-Schlucker. End-to-end mutationsgeprüft: mit einem Transport, der
+  für `*.slf.ch` einen `ConnectTimeout` wirft, meldet `test_slf_snow` ohne den
+  Hook exakt den CI-Fehler (`FAILED … - httpx.ConnectTimeout`) und mit ihm
+  SKIPPED samt genanntem Zielhost.
+
+  Geprüft mit den wörtlichen CI-Kommandos: 152 passed / 1 skipped / 23
+  deselected, `pytest -m live` 23 passed, `ruff check` und
+  `ruff format --check` über `src/ tests/ scripts/` clean.
+
 - **Die Zusicherungen der Live-Suite waren wirkungslos (OPS-001).** `check()`
   druckte bei einem Fehlschlag ein ❌ und zählte hoch — mehr nicht. Unter pytest
   scheitert ein Test aber ausschliesslich an einer durchschlagenden Exception,
@@ -222,74 +282,30 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   unerreichbarem SLF bestanden sie vorher ebenfalls; jetzt werden sie
   übersprungen, mit genanntem Zielhost.
 
-- **Der nächtliche Live-Lauf wurde rot, wenn ein Upstream kurz nicht ans
-  Telefon ging (OPS-001).** Am 03.08.2026 riss `test_slf_snow` den Job mit
-  `httpx.ConnectTimeout` gegen `measurement-api.slf.ch` — dreimal in Folge, denn
-  der Client wiederholt transiente Fehler bereits selbst (3 Versuche in ~16 s).
-  Dieselbe API antwortete davor und danach; von 15 Läufen scheiterten drei, je
-  an einem anderen Host.
+- **Drei weitere Live-Tests bestanden bei totem Netz.** Nach `env_snow_stations`
+  und `env_avalanche_bulletin` (#59) blieben `test_hydro_stations`,
+  `test_hydro_history` und `test_nabel_current`: alle drei prüften nur Inhalte,
+  die auch ohne Upstream im Text stehen — statische Links, das eingebettete
+  `NABEL_STATIONS`-Dict, die Fallback-Tabelle. Dazu `test_bafu_datasets`, dessen
+  Zusicherungen („opendata.swiss steht im Text", „Länge > 50") auch die Antwort
+  «0 Treffer» erfüllten. Genau diese Blindheit liess den falschen CKAN-Slug und
+  den toten Kanton-Pfad monatelang unbemerkt.
 
-  Diese Tests prüfen den **Vertrag** echter Fremd-APIs: liefert die Quelle noch,
-  was dieser Server aus ihr liest? Kam die Verbindung gar nicht erst zustande,
-  beantwortet der Lauf diese Frage nicht — er scheiterte an der Leitung. Ein
-  roter Job behauptet dann einen Befund, den es nicht gibt, und genau das
-  stumpft den nächtlichen Alarm ab.
+  Geprüft wird jetzt der Live-Anteil: der aktuelle LINDAS-Messwert, der
+  CKAN-Datensatzblock, die Trefferzahl (>0 bzw. >100 für den vollen Katalog),
+  die Stationszahl (>100) und der Gewässerfilter. Der Kantonsfilter prüft die
+  Absage samt Nachweis, dass keine Beispielstation als Treffer auftaucht.
 
-  Ein Hook in `tests/conftest.py` stuft deshalb einen `live`-Test, der an einem
-  reinen Transportfehler scheitert, zu SKIPPED herab. Die Exception-**Kette**
-  wird dabei mitgelaufen, weil die Tools den httpx-Fehler einpacken
-  (`ToolError` mit `__context__`, LINDAS `QueryTimeoutError` mit `__cause__`) —
-  ohne Kettenlauf würde nur der direkte API-Aufruf erkannt.
+  Fängt ein Tool den Upstream-Fehler selbst ab, fehlt dem Hook aus #58 der
+  Transportfehler, an dem er «Leitung» von «Befund» unterscheidet. Fehlt der
+  erwartete Live-Block, ruft der Test die rohe API deshalb direkt auf und holt
+  die verschluckte Exception nach.
 
-  Bewusst weiterhin **rot**: alles, was eine Antwort voraussetzt — HTTP 4xx/5xx,
-  geändertes Schema, verletzte Assertions, ein `SecurityError` des
-  Egress-Guards. Ebenso rot bleibt ein Transportfehler in der gemockten
-  Standard-Suite: dort gibt es kein Netz, das ausfallen könnte.
-
-  Übersprungen heisst nicht unsichtbar: `pytest_terminal_summary` schreibt einen
-  eigenen Block mit Zielhost und Fehlerklasse. Trifft es denselben Host mehrere
-  Nächte hintereinander, ist der Dienst tatsächlich weg — dann untersuchen.
-
-  9 neue Tests, darunter der tragende Fall „HTTP 500 ist kein Transportfehler"
-  — nur er unterscheidet die Herabstufung von einem generellen
-  Live-Fehler-Schlucker. End-to-end mutationsgeprüft: mit einem Transport, der
-  für `*.slf.ch` einen `ConnectTimeout` wirft, meldet `test_slf_snow` ohne den
-  Hook exakt den CI-Fehler (`FAILED … - httpx.ConnectTimeout`) und mit ihm
-  SKIPPED samt genanntem Zielhost.
-
-  Geprüft mit den wörtlichen CI-Kommandos: 152 passed / 1 skipped / 23
-  deselected, `pytest -m live` 23 passed, `ruff check` und
-  `ruff format --check` über `src/ tests/ scripts/` clean.
-
-- **Streamable-HTTP wies unter jedem echten Hostnamen mit 421 ab (SEC-005).**
-  `build_cors_app()` rief `mcp.streamable_http_app()` ohne `host` auf. Unter
-  mcp 2.x ist das kein neutraler Default: das SDK leitet daraus seine
-  Host-Allow-List ab und aktiviert bei loopback-artigem Wert automatisch
-  `127.0.0.1:*`. Da das Argument selbst auf `127.0.0.1` defaultet, traf das jeden
-  Container mit `MCP_HOST=0.0.0.0` (Dockerfile/render.yaml). Vor der Migration
-  ging `host` an den `FastMCP`-Konstruktor, wo dieselbe Logik den echten Bind sah
-  und den Schutz korrekt ausliess.
-
-  Der **SSE-Zweig war nicht betroffen**: dort geht `host` an `mcp.run()`, wo das
-  SDK den echten Bind sieht. Nur der Streamable-HTTP-Pfad liess ihn aus.
-
-  Der Bind reist jetzt in die App, und eine echte Allow-List wird aus dem neuen
-  `MCP_ALLOWED_HOSTS` gebaut. Ohne diese Variable bleibt der Schutz auf einem
-  Nicht-Loopback-Bind bewusst aus und der Aufrufer warnt — eine geratene Liste
-  wäre genau der 421-Fall.
-
-  Der CORS-Default dieses Servers ist `*`; als Transport-Origin wird er bewusst
-  nicht übernommen, weil Origins literal verglichen werden und ein Eintrag `*`
-  nichts erlauben würde. Ein Test hält das fest.
-
-  13 neue Tests, darunter der tragende Fall „richtiger Hostname, falscher Port"
-  — nur er unterscheidet eine portgenaue Allow-List von einer, die alles
-  durchlässt. Mutationsgetestet: nimmt man den `host`-Kwarg wieder weg,
-  reproduziert der Test das 421.
-
-  Geprüft mit den wörtlichen CI-Kommandos: 143 passed / 1 skipped / 23
-  deselected, `ruff check src/` clean, `ruff format --check src/` (10 files
-  already formatted).
+  Mutationsgeprüft, indem die beiden gerade behobenen Defekte zurückgespielt
+  wurden (CKAN antwortet mit `count: 0`, LINDAS ohne Stationen — beides
+  *Antworten*, keine Transportfehler): alle vier Tests scheitern. Bei totem Netz
+  bestehen nur noch die vier tatsächlich netzwerkfreien Tools (vorher sieben),
+  der Rest wird übersprungen.
 
 
 ## [0.5.3] - 2026-08-02
