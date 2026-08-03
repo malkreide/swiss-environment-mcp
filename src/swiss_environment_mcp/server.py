@@ -1444,7 +1444,9 @@ async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = Non
 
     <use_case>Aktueller Pegel/Abfluss/Temperatur einer Station, z.B. für einen
     Hochwasser-Lagecheck.</use_case>
-    <important_notes>Station-ID via `env_hydro_stations`. 10-Minuten-Aktualisierung.</important_notes>
+    <important_notes>Station-ID via `env_hydro_stations`. 10-Minuten-Aktualisierung.
+    Quelle ist LINDAS; kennt es die Nummer nicht, meldet das Tool das explizit
+    (kein Ersatzwert aus einer anderen Quelle).</important_notes>
 
     Args:
         params (HydroCurrentInput):
@@ -1452,73 +1454,38 @@ async def env_hydro_current(params: HydroCurrentInput, ctx: Context | None = Non
             - response_format: 'markdown' oder 'json'
 
     Returns:
-        str: Aktuelle Messwerte inkl. Zeitstempel, oder Fallback mit direktem Link.
+        str: Aktuelle Messwerte inkl. Zeitstempel.
     """
-    # Primärpfad: LINDAS SPARQL (typisierte Live-Werte: Abfluss/Pegel/Temperatur/
-    # Gefahrenstufe). Bei Ausfall oder unbekannter Station → REST-Fallback.
+    # LINDAS ist die einzige Quelle: typisierte Live-Werte (Abfluss/Pegel/
+    # Temperatur/Gefahrenstufe). Der frühere REST-Fallback lief auf
+    # hydrodaten.admin.ch/lhg/az/json/{id}.json — stillgelegt, 404. Er kostete
+    # jede unbekannte Station einen Roundtrip und färbte die Fehlermeldung mit
+    # einem 404 ein, der nichts über die Station aussagte.
+    portal_url = f"{_HYDRO_PORTAL}/de/seen-und-fluesse/{params.station_id}"
     try:
         lindas = await api.fetch_hydro_current_lindas(params.station_id)
-        if lindas.get("found"):
-            return _format_hydro_current_lindas(lindas, params.response_format)
-    except Exception as e:
-        await _handle_tool_error("env_hydro_current", e, ctx, station_id=params.station_id)
-
-    try:
-        data = await api.fetch_hydro_station_data(params.station_id)
     except Exception as e:
         error_msg = await _handle_tool_error(
             "env_hydro_current", e, ctx, station_id=params.station_id
         )
-        portal_url = f"https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{params.station_id}"
         raise _terminal_failure(
             f"⚠️ Aktuelle Daten für Station {params.station_id} nicht abrufbar: {error_msg}\n\n"
             f"**Direktzugang:** {portal_url}\n"
-            f"**Vollständiges Datenportal:** https://www.hydrodaten.admin.ch/de"
+            f"**Vollständiges Datenportal:** {_HYDRO_PORTAL}/de"
         )
 
-    if params.response_format == ResponseFormat.JSON:
-        return json.dumps(
-            {"station_id": params.station_id, "daten": data, "quelle": "BAFU Hydrodaten"},
-            ensure_ascii=False,
-            indent=2,
-        )
+    if lindas.get("found"):
+        return _format_hydro_current_lindas(lindas, params.response_format)
 
-    # Werte extrahieren (flexible Struktur je nach API-Version)
-    name = data.get("name", data.get("station_name", f"Station {params.station_id}"))
-    water = data.get("water_body_name", data.get("water", "–"))
-    timestamp = data.get("datetime", data.get("timestamp", "–"))
-
-    params_data = data.get("parameters", data.get("measurements", []))
-
-    lines = [
-        f"## Hydrologische Daten: {name} (Station {params.station_id})\n",
-        f"- **Gewässer:** {water}",
-        f"- **Zeitstempel:** {timestamp}",
-        "",
-        "### Aktuelle Messwerte",
-        "| Parameter | Aktuell | Min 24h | Mittel 24h | Max 24h |",
-        "|-----------|---------|---------|------------|---------|",
-    ]
-
-    if isinstance(params_data, list):
-        for p in params_data:
-            p_name = p.get("name", p.get("parameter", "–"))
-            val = p.get("value", p.get("current", "–"))
-            unit = p.get("unit", "")
-            min24 = p.get("min-24h", p.get("min_24h", "–"))
-            mean24 = p.get("mean-24h", p.get("mean_24h", "–"))
-            max24 = p.get("max-24h", p.get("max_24h", "–"))
-            lines.append(f"| {p_name} {unit} | **{val}** | {min24} | {mean24} | {max24} |")
-    else:
-        lines.append("| – | Keine Parameterdaten verfügbar | – | – | – |")
-
-    lines += [
-        "",
-        f"**Detailansicht:** https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{params.station_id}",
-        "",
-        "*Tipp: Für historische Daten → `env_hydro_history` aufrufen.*",
-    ]
-    return "\n".join(lines)
+    # Die Quelle hat geantwortet, kennt diese Stationsnummer aber nicht. Das ist
+    # eine andere Aussage als «nicht abrufbar» und verdient eine eigene.
+    raise _terminal_failure(
+        f"⚠️ Keine Messwerte zur Station {params.station_id}: LINDAS hat geantwortet, "
+        "führt zu dieser Stationsnummer aber keine Beobachtung.\n\n"
+        "**Mögliche Ursachen:** Stationsnummer falsch, oder die Station liefert derzeit "
+        "keine Werte. Gültige Nummern liefert `env_hydro_stations`.\n"
+        f"**Direktzugang:** {portal_url}"
+    )
 
 
 @mcp.tool(
