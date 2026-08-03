@@ -7,6 +7,45 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Fixed
 
+- **Der nächtliche Live-Lauf wurde rot, wenn ein Upstream kurz nicht ans
+  Telefon ging (OPS-001).** Am 03.08.2026 riss `test_slf_snow` den Job mit
+  `httpx.ConnectTimeout` gegen `measurement-api.slf.ch` — dreimal in Folge, denn
+  der Client wiederholt transiente Fehler bereits selbst (3 Versuche in ~16 s).
+  Dieselbe API antwortete davor und danach; von 15 Läufen scheiterten drei, je
+  an einem anderen Host.
+
+  Diese Tests prüfen den **Vertrag** echter Fremd-APIs: liefert die Quelle noch,
+  was dieser Server aus ihr liest? Kam die Verbindung gar nicht erst zustande,
+  beantwortet der Lauf diese Frage nicht — er scheiterte an der Leitung. Ein
+  roter Job behauptet dann einen Befund, den es nicht gibt, und genau das
+  stumpft den nächtlichen Alarm ab.
+
+  Ein Hook in `tests/conftest.py` stuft deshalb einen `live`-Test, der an einem
+  reinen Transportfehler scheitert, zu SKIPPED herab. Die Exception-**Kette**
+  wird dabei mitgelaufen, weil die Tools den httpx-Fehler einpacken
+  (`ToolError` mit `__context__`, LINDAS `QueryTimeoutError` mit `__cause__`) —
+  ohne Kettenlauf würde nur der direkte API-Aufruf erkannt.
+
+  Bewusst weiterhin **rot**: alles, was eine Antwort voraussetzt — HTTP 4xx/5xx,
+  geändertes Schema, verletzte Assertions, ein `SecurityError` des
+  Egress-Guards. Ebenso rot bleibt ein Transportfehler in der gemockten
+  Standard-Suite: dort gibt es kein Netz, das ausfallen könnte.
+
+  Übersprungen heisst nicht unsichtbar: `pytest_terminal_summary` schreibt einen
+  eigenen Block mit Zielhost und Fehlerklasse. Trifft es denselben Host mehrere
+  Nächte hintereinander, ist der Dienst tatsächlich weg — dann untersuchen.
+
+  9 neue Tests, darunter der tragende Fall „HTTP 500 ist kein Transportfehler"
+  — nur er unterscheidet die Herabstufung von einem generellen
+  Live-Fehler-Schlucker. End-to-end mutationsgeprüft: mit einem Transport, der
+  für `*.slf.ch` einen `ConnectTimeout` wirft, meldet `test_slf_snow` ohne den
+  Hook exakt den CI-Fehler (`FAILED … - httpx.ConnectTimeout`) und mit ihm
+  SKIPPED samt genanntem Zielhost.
+
+  Geprüft mit den wörtlichen CI-Kommandos: 152 passed / 1 skipped / 23
+  deselected, `pytest -m live` 23 passed, `ruff check` und
+  `ruff format --check` über `src/ tests/ scripts/` clean.
+
 - **Streamable-HTTP wies unter jedem echten Hostnamen mit 421 ab (SEC-005).**
   `build_cors_app()` rief `mcp.streamable_http_app()` ohne `host` auf. Unter
   mcp 2.x ist das kein neutraler Default: das SDK leitet daraus seine

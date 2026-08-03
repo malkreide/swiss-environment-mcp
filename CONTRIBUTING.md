@@ -117,7 +117,9 @@ PYTHONPATH=src pytest tests/ -m "live"
 PYTHONPATH=src pytest tests/
 ```
 
-Tests are marked with `@pytest.mark.live` when they call external APIs. The CI pipeline runs only non-live tests to avoid flakiness from external dependencies.
+Tests are marked with `@pytest.mark.live` when they call external APIs. The CI pipeline runs only non-live tests to avoid flakiness from external dependencies; the live suite runs nightly (`.github/workflows/live-tests.yml`).
+
+A `live` test that fails on a pure transport error — the upstream never answered — is reported as SKIPPED rather than failed, and listed in a dedicated block at the end of the run (see the hook in `tests/conftest.py`). Those runs say nothing about the API contract. Everything that presupposes an answer (HTTP 4xx/5xx, changed schema, failed assertion) still fails, and in the mocked suite a transport error is always a real failure. If the same host is skipped several nights in a row, the service is genuinely gone — investigate.
 
 When adding a new tool, please add at least one unit test and one live integration test.
 

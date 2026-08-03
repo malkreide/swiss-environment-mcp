@@ -117,7 +117,9 @@ PYTHONPATH=src pytest tests/ -m "live"
 PYTHONPATH=src pytest tests/
 ```
 
-Tests werden mit `@pytest.mark.live` markiert, wenn sie externe APIs aufrufen. Die CI-Pipeline führt nur Nicht-Live-Tests aus, um Instabilität durch externe Abhängigkeiten zu vermeiden.
+Tests werden mit `@pytest.mark.live` markiert, wenn sie externe APIs aufrufen. Die CI-Pipeline führt nur Nicht-Live-Tests aus, um Instabilität durch externe Abhängigkeiten zu vermeiden; die Live-Suite läuft nächtlich (`.github/workflows/live-tests.yml`).
+
+Scheitert ein `live`-Test an einem reinen Transportfehler — die Gegenstelle hat gar nicht geantwortet —, gilt er als SKIPPED statt als Fehler und steht am Ende des Laufs in einem eigenen Block (Hook in `tests/conftest.py`). Solche Läufe sagen nichts über den API-Vertrag aus. Alles, was eine Antwort voraussetzt (HTTP 4xx/5xx, geändertes Schema, verletzte Assertion), scheitert weiterhin; in der gemockten Suite ist ein Transportfehler immer ein echter Fehler. Wird derselbe Host mehrere Nächte hintereinander übersprungen, ist der Dienst tatsächlich weg — dann untersuchen.
 
 Bei einem neuen Tool bitte mindestens einen Unit-Test und einen Live-Integrationstest hinzufügen.
 
