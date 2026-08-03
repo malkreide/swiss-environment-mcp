@@ -7,6 +7,53 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Fixed
 
+- **Die Zusicherungen der Live-Suite waren wirkungslos (OPS-001).** `check()`
+  druckte bei einem Fehlschlag ein ❌ und zählte hoch — mehr nicht. Unter pytest
+  scheitert ein Test aber ausschliesslich an einer durchschlagenden Exception,
+  und das `sys.exit(1)` steht in `main()`, also im Standalone-Pfad
+  (`python tests/test_integration.py`), den die CI nie aufruft. Alle ~100
+  Zusicherungen von `test_integration.py` waren damit Dekoration; rot wurde der
+  nächtliche Job nur, wenn ein Tool eine Exception warf.
+
+  Nachweis, dass das nicht theoretisch war: zwei Zusicherungen in
+  `test_nabel_stations` scheiterten seit der Envelope-Umstellung (SDK-002)
+  unbemerkt — sie prüften `total` und `nabel_stationen`, während das Tool längst
+  `count`/`results`/`match_type` liefert. Der Job war jede Nacht grün.
+
+  `check()` wirft neu einen `AssertionError`. Bewusst sofort statt gesammelt:
+  so meldet pytest einen regulären FAILED-Test statt eines Fehlers im Teardown.
+  `main()` fängt ihn ab, damit der Standalone-Lauf weiterhin alle Tests
+  durchläuft und am Ende bilanziert. Die zwei veralteten NABEL-Zusicherungen
+  sind auf die Envelope-Form nachgezogen.
+
+  Damit ein Netzausfall dadurch nicht doch als Vertragsbruch erscheint, reicht
+  `_tool_text` einen `ToolError` durch, hinter dem ein reiner Transportfehler
+  steckt — der Hook stuft ihn dann zu SKIPPED herab, statt die Meldung durch die
+  Zusicherungen fallen zu lassen. End-to-end geprüft: mit einem Transport, der
+  jeden Connect in einen Timeout laufen lässt, endet die Live-Suite mit
+  11 skipped / 7 passed (die netzwerkfreien Tools) und **0 failed**.
+
+- **`env_snow_stations` und `env_avalanche_bulletin` bestanden ihre Live-Tests
+  auch bei totem SLF.** Beide Tests liefen über `_tool_text`, das den
+  `ToolError` abfängt, und prüften dann nur, ob „SLF" bzw. „Bulletin" im Text
+  steht — was die Fehlermeldungen („SLF-Stationsliste nicht abrufbar",
+  „Lawinenbulletin nicht abrufbar") ebenfalls erfüllen. Die Tests konnten
+  nichts widerlegen.
+
+  Neu prüfen sie den Nutzinhalt: `env_snow_stations` gegen die JSON-Hülle
+  (nicht-leere GR-Trefferliste, `count` konsistent, Kantonsfilter greift, alle
+  fünf Felder vorhanden, aus denen die Tabelle gebaut wird) und gegen die
+  gerenderte Markdown-Tabelle; `env_avalanche_bulletin` gegen die beiden
+  gültigen Saison-Zweige, die unterscheidbar bleiben müssen (Zweig-Logik selbst
+  ist gemockt abgedeckt). Beide rufen das Tool direkt auf, damit ein `ToolError`
+  durchschlägt.
+
+  Mutationsgeprüft gegen einen Upstream, der **antwortet**, aber nicht mehr das
+  Erwartete: bei umbenanntem Feld (`elevation` → `hoehe`, leeres Kantonsfeld)
+  und bei HTTP 500 bestanden beide Tests vorher — jetzt scheitern sie. Bei
+  unerreichbarem SLF bestanden sie vorher ebenfalls; jetzt werden sie
+  übersprungen, mit genanntem Zielhost.
+
 - **Der nächtliche Live-Lauf wurde rot, wenn ein Upstream kurz nicht ans
   Telefon ging (OPS-001).** Am 03.08.2026 riss `test_slf_snow` den Job mit
   `httpx.ConnectTimeout` gegen `measurement-api.slf.ch` — dreimal in Folge, denn
