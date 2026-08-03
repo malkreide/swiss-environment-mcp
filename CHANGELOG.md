@@ -7,6 +7,33 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Fixed
 
+- **`env_hydro_stations` beantwortete jede Kantonsabfrage mit fünf hartkodierten
+  Beispielstationen.** Den Kantons-Code lieferte allein
+  `hydrodaten.admin.ch/lhg/az/json/mobile_stations.json`; dieser Endpoint ist
+  stillgelegt und antwortet mit 404 — für zwei Nachbar-Endpoints unter `/lhg/az/`
+  war das im Code bereits vermerkt, für diesen nicht. Der Kanton-Pfad ging per
+  Konstruktion dorthin, lief ins 404 und landete im Fallback. Für `canton='ZH'`
+  kamen drei Stationen mit plausiblen Namen zurück; nichts daran war als
+  eingebettete Beispielliste zu erkennen.
+
+  Neu sagt das Tool ab: es nennt die stillgelegte Quelle, hält fest, dass dies
+  **keine** Aussage über den Kanton ist, und verweist auf `water_body` und die
+  vollständige Liste. Kein Request geht dafür mehr raus. `fetch_hydro_stations`
+  ist entfernt — LINDAS trägt die Stationsliste (233 Stationen), führt aber kein
+  Kantons-Attribut.
+
+- **Der Ausfall-Fallback von `env_hydro_stations` ignorierte
+  `response_format`.** Er baute Markdown und gab es zurück, auch wenn der
+  Aufrufer die Envelope angefordert hatte — ein Client, der JSON parst, bekam
+  ausgerechnet im Störungsfall Text, an dem `json.loads` scheitert. Der Fallback
+  liefert jetzt beide Formate; im JSON steht `provenance: "fallback"` und eine
+  `note`, die die Liste als eingebettete Auswahl statt als Suchergebnis
+  ausweist. Im Markdown steht dasselbe in der Überschrift der Tabelle.
+
+  5 neue bzw. umgeschriebene Tests, darunter der tragende Fall „Kantonsabfrage
+  setzt keinen einzigen Request ab" — nur er unterscheidet die Absage von einem
+  Fallback, der bloss anders formuliert ist.
+
 - **Die Zusicherungen der Live-Suite waren wirkungslos (OPS-001).** `check()`
   druckte bei einem Fehlschlag ein ❌ und zählte hoch — mehr nicht. Unter pytest
   scheitert ein Test aber ausschliesslich an einer durchschlagenden Exception,

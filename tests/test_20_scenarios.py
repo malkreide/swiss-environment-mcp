@@ -286,9 +286,17 @@ async def scenario_08():
     print(f"  Szenario 8: {szenario}")
     print(f"{'=' * 60}")
 
+    # Der Kantonsfilter wird nicht mehr bedient: die Quelle, die den Kantons-Code
+    # mitlieferte, ist stillgelegt. Frueher landete diese Abfrage still im
+    # Fallback und gab fuenf eingebettete Beispielstationen aus, gefiltert auf
+    # BE — das sah aus wie ein Suchergebnis. Geprueft wird jetzt die Absage.
     result = await env_hydro_stations(HydroStationsInput(canton="BE"))
     check(szenario, "Kein Python-Traceback", "Traceback" not in result)
-    check(szenario, "Kanton BE in Filterinfo", "BE" in result)
+    check(
+        szenario, "Kantonsfilter wird explizit abgesagt", "Kantonsfilter nicht verfügbar" in result
+    )
+    check(szenario, "Verweist auf water_body als Ausweg", "water_body" in result)
+    check(szenario, "Keine Beispielstation als Treffer", "2099" not in result)
     check(szenario, "hydrodaten.admin.ch Link", "hydrodaten" in result)
 
 
