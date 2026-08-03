@@ -1335,6 +1335,94 @@ def test_no_dead_bafu_portal_link_left():
     assert not stale, f"Toter Portal-Link (Organisation 'bafu' existiert nicht): {stale}"
 
 
+# --- Nicht angewendeter Kantonsfilter (env_flood_warnings) -------------------
+#
+# LINDAS führt keinen Kantons-Code, der Filter wird also nicht angewendet. Anders
+# als bei `env_hydro_stations` sind die gezeigten Daten echt — nur umfassen sie
+# die ganze Schweiz. Der Fehler lag darin, dass die Antwort das nicht deutlich
+# genug sagte: im Markdown als Klammerzusatz am Zeilenende, im JSON gar nicht,
+# sobald es keine Warnungen gab. Genau dort ist der Hinweis am wichtigsten —
+# «keine Warnungen» plus gesetzter Kanton liest sich sonst als kantonale
+# Entwarnung.
+
+
+def test_flood_canton_field_says_it_is_not_applied():
+    """MCP-Clients lesen das Input-Schema, nicht den Docstring."""
+    field = FloodWarningsInput.model_fields["canton"]
+    assert "NICHT ANGEWENDET" in field.description
+    assert "ganze Schweiz" in field.description
+
+
+@respx.mock
+async def test_flood_no_warnings_still_says_canton_was_ignored():
+    """Der gefährlichste Fall: leere Antwort auf eine kantonale Frage."""
+    respx.get(_LINDAS_URL).mock(return_value=httpx.Response(200, json=_sparql_bindings([])))
+    out = await env_flood_warnings(FloodWarningsInput(min_level=2, canton="ZH"))
+    assert "Keine aktiven Hochwasserwarnungen" in out
+    assert "NICHT angewendet" in out
+    assert "ganze Schweiz" in out
+
+
+@respx.mock
+async def test_flood_no_warnings_envelope_keeps_the_hint():
+    """Im JSON fiel der Hinweis bei leerem Resultat komplett weg."""
+    respx.get(_LINDAS_URL).mock(return_value=httpx.Response(200, json=_sparql_bindings([])))
+    env = json.loads(
+        await env_flood_warnings(
+            FloodWarningsInput(min_level=2, canton="ZH", response_format=ResponseFormat.JSON)
+        )
+    )
+    assert env["count"] == 0 and env["match_type"] == "none"
+    assert "Keine aktiven Warnungen" in env["note"]
+    assert "NICHT angewendet" in env["note"]
+
+
+@respx.mock
+async def test_flood_unapplied_filter_is_not_an_exact_match():
+    """`match_type` ist die maschinenlesbare Fassung derselben Aussage.
+
+    Kommt die Antwort ungefiltert zurück, obwohl ein Filter gesetzt war, wäre
+    «exact» eine falsche Zusage an jeden Client, der darauf vertraut.
+    """
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_sparql_bindings(
+                [{"id": "2099", "name": "Zürich", "water": "Limmat", "danger": "3"}]
+            ),
+        )
+    )
+    with_filter = json.loads(
+        await env_flood_warnings(
+            FloodWarningsInput(min_level=2, canton="ZH", response_format=ResponseFormat.JSON)
+        )
+    )
+    without = json.loads(
+        await env_flood_warnings(
+            FloodWarningsInput(min_level=2, response_format=ResponseFormat.JSON)
+        )
+    )
+    assert with_filter["match_type"] == "fuzzy"
+    assert without["match_type"] == "exact"
+    # Dieselben Daten — nur die Zusage über ihre Passgenauigkeit unterscheidet sich.
+    assert with_filter["results"] == without["results"]
+
+
+@respx.mock
+async def test_flood_active_warnings_lead_with_the_hint():
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_sparql_bindings(
+                [{"id": "2099", "name": "Zürich", "water": "Limmat", "danger": "3"}]
+            ),
+        )
+    )
+    out = await env_flood_warnings(FloodWarningsInput(min_level=2, canton="BE"))
+    # Vor der Tabelle, nicht als Fussnote dahinter.
+    assert out.index("NICHT angewendet") < out.index("| Station |")
+
+
 # --- Rug-Pull-Schutz: die Parameter-Ebene (SEC-022) --------------------------
 #
 # Das Input-Schema eines Tools hat genau eine Property — `params` —, deren Modell

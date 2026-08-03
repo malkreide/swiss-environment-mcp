@@ -7,6 +7,31 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Fixed
 
+- **`env_flood_warnings` liess einen gesetzten Kanton wie einen angewendeten
+  Filter aussehen.** LINDAS führt keinen Kantons-Code, die Auswertung ist also
+  immer schweizweit. Das Tool sagte das auch — im Markdown als Klammerzusatz am
+  Ende einer Zeile, und im JSON **gar nicht**, sobald es keine Warnungen gab.
+
+  Genau dort ist der Hinweis am wichtigsten: „keine aktiven Warnungen" plus ein
+  Kanton in der Anfrage liest sich als kantonale Entwarnung. Bei einem
+  Hochwasser-Tool ist das der Fehler, den man nicht machen will.
+
+  Der Hinweis steht jetzt als eigene Warnzeile **über** der Tabelle und geht im
+  JSON nie verloren. Dazu ist `match_type` bei gesetztem, nicht angewendetem
+  Filter `fuzzy` statt `exact` — die maschinenlesbare Fassung derselben Aussage
+  für Clients, die der Envelope vertrauen.
+
+  Die **Feld-Beschreibung** im Input-Schema sagt neu „NICHT ANGEWENDET" statt
+  „Kantonskürzel zum Filtern"; beide READMEs sind nachgezogen. Anders als bei
+  `env_hydro_stations` bleibt der Parameter wirksam beantwortet: die gezeigten
+  Warnungen sind echt, nur eben schweizweit — sie zu verwerfen wäre bei
+  Sicherheitsdaten die schlechtere Antwort.
+
+  5 neue Tests, darunter der tragende Fall „leere Antwort auf eine kantonale
+  Frage nennt den nicht angewendeten Filter" und der Nachweis, dass sich
+  gefilterte und ungefilterte Anfrage nur in `match_type` unterscheiden, nicht in
+  den Daten.
+
 - **`env_hydro_current` fragte bei jeder unbekannten Station einen
   stillgelegten Endpoint.** Fand LINDAS die Stationsnummer nicht — oder fiel es
   aus —, ging ein Fallback-Request an

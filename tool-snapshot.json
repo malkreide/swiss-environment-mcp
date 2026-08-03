@@ -23,7 +23,7 @@
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "dd912fbb462224b484ddbb9da37c021764c3e65d3fc139838377a3ed47f29f1e",
+  "sha256": "e62d89b98973f7f79d4794ec93133827261a859c68a398e5fb2ca9c96cbf5599",
   "tools": [
     {
       "name": "env_air_limits_check",
@@ -195,7 +195,7 @@
     },
     {
       "name": "env_flood_warnings",
-      "description": "Ruft aktuelle Hochwasserwarnungen aller BAFU-Messstationen in der Schweiz ab. Das BAFU gibt Hochwasserwarnungen in 5 Gefahrenstufen aus: 1=Keine, 2=Mässig, 3=Erheblich, 4=Gross, 5=Sehr gross. <use_case>Aktive Hochwasserwarnungen schweizweit oder kantonal für eine Lagebeurteilung.</use_case> <important_notes>5 Gefahrenstufen. \"Keine Warnung\" ist eine explizite Entwarnung, kein Fehler.</important_notes> Args: params (FloodWarningsInput): - min_level: Minimale Gefahrenstufe (Standard: 2) - canton: Kantonskürzel zum Filtern Returns: str: Aktuell aktive Hochwasserwarnungen, gefiltert nach Gefahrenstufe.",
+      "description": "Ruft aktuelle Hochwasserwarnungen aller BAFU-Messstationen in der Schweiz ab. Das BAFU gibt Hochwasserwarnungen in 5 Gefahrenstufen aus: 1=Keine, 2=Mässig, 3=Erheblich, 4=Gross, 5=Sehr gross. <use_case>Aktive Hochwasserwarnungen schweizweit für eine Lagebeurteilung.</use_case> <important_notes>5 Gefahrenstufen. \"Keine Warnung\" ist eine explizite Entwarnung, kein Fehler. `canton` wird NICHT angewendet (LINDAS führt keinen Kantons-Code): die Antwort ist immer schweizweit und weist einen gesetzten Filter als nicht angewendet aus.</important_notes> Args: params (FloodWarningsInput): - min_level: Minimale Gefahrenstufe (Standard: 2) - canton: wird nicht angewendet (siehe Hinweise) Returns: str: Aktuell aktive Hochwasserwarnungen, gefiltert nach Gefahrenstufe.",
       "params": [
         "canton",
         "min_level",
@@ -206,7 +206,7 @@
         {
           "name": "canton",
           "required": false,
-          "description": "Kantonskürzel zum Filtern (z.B. 'ZH') – leer = ganze Schweiz",
+          "description": "NICHT ANGEWENDET – LINDAS führt keinen Kantons-Code. Die Antwort umfasst immer die ganze Schweiz; ein gesetzter Wert ändert daran nichts und wird in der Antwort als nicht angewendet ausgewiesen.",
           "default": "",
           "pattern": "^[A-Za-z]{0,2}$",
           "maxLength": 2

@@ -554,9 +554,19 @@ class FloodWarningsInput(BaseModel):
         ge=1,
         le=5,
     )
+    # Der Filter wird nicht angewendet (LINDAS führt keinen Kantons-Code). Das
+    # steht hier, weil MCP-Clients das Input-Schema lesen und nicht den Docstring:
+    # stünde weiter «zum Filtern», läse ein Modell die schweizweite Antwort als
+    # kantonale — und meldete «keine Warnungen in ZH», obwohl es die ganze
+    # Schweiz gesehen hat. Das Feld bleibt erhalten, damit ein gesetzter Wert
+    # eine Erklärung bekommt statt eines Validierungsfehlers.
     canton: str = Field(
         default="",
-        description="Kantonskürzel zum Filtern (z.B. 'ZH') – leer = ganze Schweiz",
+        description=(
+            "NICHT ANGEWENDET – LINDAS führt keinen Kantons-Code. Die Antwort umfasst "
+            "immer die ganze Schweiz; ein gesetzter Wert ändert daran nichts und wird "
+            "in der Antwort als nicht angewendet ausgewiesen."
+        ),
         max_length=2,
         pattern=r"^[A-Za-z]{0,2}$",  # Whitelist (SEC-018)
         strict=True,
@@ -1568,15 +1578,17 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
     Das BAFU gibt Hochwasserwarnungen in 5 Gefahrenstufen aus:
     1=Keine, 2=Mässig, 3=Erheblich, 4=Gross, 5=Sehr gross.
 
-    <use_case>Aktive Hochwasserwarnungen schweizweit oder kantonal für eine
+    <use_case>Aktive Hochwasserwarnungen schweizweit für eine
     Lagebeurteilung.</use_case>
     <important_notes>5 Gefahrenstufen. "Keine Warnung" ist eine explizite
-    Entwarnung, kein Fehler.</important_notes>
+    Entwarnung, kein Fehler. `canton` wird NICHT angewendet (LINDAS führt keinen
+    Kantons-Code): die Antwort ist immer schweizweit und weist einen gesetzten
+    Filter als nicht angewendet aus.</important_notes>
 
     Args:
         params (FloodWarningsInput):
             - min_level: Minimale Gefahrenstufe (Standard: 2)
-            - canton: Kantonskürzel zum Filtern
+            - canton: wird nicht angewendet (siehe Hinweise)
 
     Returns:
         str: Aktuell aktive Hochwasserwarnungen, gefiltert nach Gefahrenstufe.
@@ -1584,9 +1596,13 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
     # Datenquelle: LINDAS `dangerLevel` (der frühere REST-Endpoint
     # hydrodaten.admin.ch/.../warnings.json ist stillgelegt / 404).
     # LINDAS führt keinen Kanton-Code → der canton-Filter ist hier nicht wirksam.
-    canton_note = (
-        f" (Hinweis: Kantonsfilter '{params.canton}' via LINDAS nicht verfügbar — "
-        "es werden alle Stationen gezeigt)"
+    # Der Hinweis stand bis hierher als Klammerzusatz am Ende einer Zeile — und
+    # im JSON fiel er ganz weg, sobald es keine Warnungen gab. Genau dort ist er
+    # am wichtigsten: «keine Warnungen» plus ein gesetzter Kanton liest sich sonst
+    # als kantonale Entwarnung, obwohl schweizweit ausgewertet wurde.
+    canton_hint = (
+        f"Der Kantonsfilter '{params.canton.upper()}' wurde NICHT angewendet — LINDAS "
+        "führt keinen Kantons-Code. Die folgende Auswertung umfasst die ganze Schweiz."
         if params.canton
         else ""
     )
@@ -1604,29 +1620,32 @@ async def env_flood_warnings(params: FloodWarningsInput, ctx: Context | None = N
         )
 
     if params.response_format == ResponseFormat.JSON:
+        parts = [f"Keine aktiven Warnungen (Stufe ≥ {params.min_level})."] if not warnings else []
+        if canton_hint:
+            parts.append(canton_hint)
         return _envelope_json(
             source="BAFU Hydrodaten via LINDAS – Gefahrenstufen",
             provenance="live_api",
             results=warnings,
-            match_type="none" if not warnings else "exact",
-            note=(
-                f"Keine aktiven Warnungen (Stufe ≥ {params.min_level})."
-                if not warnings
-                else (canton_note.strip() or None)
-            ),
+            # Ein gesetzter, nicht angewendeter Filter macht das Resultat zu einer
+            # Näherung an die Anfrage — «exact» wäre eine falsche Zusage.
+            match_type=("none" if not warnings else ("fuzzy" if params.canton else "exact")),
+            note=" ".join(parts) or None,
             query={"min_level": params.min_level, "canton": params.canton},
         )
 
     if not warnings:
+        hint = f"\n\n⚠️ {canton_hint}" if canton_hint else ""
         return (
             f"✅ **Keine aktiven Hochwasserwarnungen** (Stufe ≥ {params.min_level}).\n\n"
-            f"*Quelle: BAFU via LINDAS.*{canton_note}\n\n"
+            f"*Quelle: BAFU via LINDAS.*{hint}\n\n"
             "**Aktuelle Übersicht:** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen"
         )
 
     lines = [
         f"## ⚠️ Aktive Hochwasserwarnungen ({len(warnings)} Stationen)\n",
-        f"*Filter: Stufe ≥ {params.min_level} | Quelle: BAFU via LINDAS*{canton_note}\n",
+        *([f"⚠️ {canton_hint}\n"] if canton_hint else []),
+        f"*Filter: Stufe ≥ {params.min_level} | Quelle: BAFU via LINDAS*\n",
         "| Station | Gewässer | Gefahrenstufe |",
         "|---------|---------|---------------|",
     ]

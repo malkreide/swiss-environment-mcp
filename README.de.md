@@ -34,7 +34,7 @@ Der Server deckt vier thematische Cluster ab: Luftqualität (NABEL), Hydrologie,
 
 - 🌬️ **Luftqualitäts-Monitoring** – 16 NABEL-Stationen, NO₂/O₃/PM10/PM2.5/SO₂/CO, Schweizer LRV- und WHO-2021-Grenzwertprüfung
 - 💧 **Hydrologie** – Pegel, Abfluss, Temperaturen an Schweizer Messstationen
-- 🚨 **Hochwasserwarnungen** – aktive Warnungen nach Gefahrenstufe und Kanton
+- 🚨 **Hochwasserwarnungen** – aktive Warnungen nach Gefahrenstufe (schweizweit)
 - 🏔️ **Naturgefahren-Bulletin** – SLF/BAFU-Bulletin auf DE/FR/IT/EN, regionsspezifische Warnungen
 - 🔥 **Waldbrandgefahr** – Kantons- und Regionalindex für Waldbrandgefahr
 - ❄️ **Schnee & Lawinen (SLF)** – Schneehöhe, Neuschnee je IMIS-Station; Lawinenwarnstufen (EAWS)
@@ -176,7 +176,7 @@ sollten.
 | `env_hydro_stations` | Hydrologische Messstationen nach Gewässer filtern (Kantonsfilter nicht verfügbar — siehe Hinweise) | **LINDAS SPARQL** → hydrodaten.admin.ch (Fallback) |
 | `env_hydro_current` | Aktueller Pegel, Abfluss und Wassertemperatur einer Station | **LINDAS SPARQL** → hydrodaten.admin.ch (Fallback) |
 | `env_hydro_history` | Historische Stundenwerte (bis 30 Tage) mit Download-Links ⚠️ | hydrodaten.admin.ch |
-| `env_flood_warnings` | Aktive Hochwasserwarnungen nach Gefahrenstufe und Kanton | hydrodaten.admin.ch |
+| `env_flood_warnings` | Aktive Hochwasserwarnungen nach Gefahrenstufe (schweizweit — Kantonsfilter wird nicht angewendet) | **LINDAS SPARQL** |
 | `env_bathing_water` | Badegewässerqualität (E.coli, Enterokokken) je Badestelle — Mehrjahres-Zeitreihe | **LINDAS SPARQL** (Data-Cube `ubd0104`) |
 
 ### 🏔️ Naturgefahren (3 Tools)
@@ -423,7 +423,7 @@ Skalierungs-/Session-Strategie: [`docs/scaling.md`](docs/scaling.md).
 
 - **Hydrologie via LINDAS**: `env_hydro_current`, `env_hydro_stations` und `env_flood_warnings` fragen den BAFU-LINDAS-SPARQL-Endpoint ab (typisierte Live-Werte: Pegel, Abfluss, Wassertemperatur, Gefahrenstufe). LINDAS enthält **nur aktuelle Werte** (eine Observation pro Station) — **keine** historische Zeitreihe. Siehe [`docs/probe-lindas-hydro.md`](docs/probe-lindas-hydro.md).
 - **Historische Hydrologie / `env_hydro_history` (BUG-01 behoben)**: Die alten `hydrodaten.admin.ch/lhg/az/*`-REST-Endpoints (Stunden-CSV, `warnings.json`, Stations-JSON) sind **stillgelegt (404)**. `env_flood_warnings` nutzt neu LINDAS `dangerLevel`. Echte historische Zeitreihen (Tages-/Langzeitmittel — z.B. *Sommer 2024 vs. langjähriges Mittel*) sind **nicht frei per API verfügbar**; sie müssen bei der **BAFU Hydrologischen Abfragezentrale** (abfragezentrale@bafu.admin.ch) bezogen werden. `env_hydro_history` liefert den aktuellsten LINDAS-Wert plus diesen Bezugsweg.
-- **Hochwasserwarnungen**: `env_flood_warnings` liest LINDAS `dangerLevel`; ein Kantonsfilter ist dort nicht verfügbar (LINDAS führt keinen Kanton-Code) und wird gemeldet, aber nicht angewendet.
+- **Hochwasserwarnungen**: `env_flood_warnings` liest LINDAS `dangerLevel`. Ein Kantonsfilter ist dort nicht verfügbar (LINDAS führt keinen Kantons-Code), die Antwort ist deshalb **immer schweizweit**; ein gesetzter `canton` wird zurückgegeben und als nicht angewendet ausgewiesen — im JSON-Envelope über `match_type: "fuzzy"` plus Hinweis, im Markdown als Warnzeile über der Tabelle. Am wichtigsten ist das, wenn es gar keine Warnungen gibt: «keine aktiven Warnungen» plus ein Kanton in der Anfrage liest sich sonst als kantonale Entwarnung.
 - **Messstationen / Kantonsfilter**: `env_hydro_stations` bedient `canton` nicht mehr. Die einzige Quelle mit Kantons-Code — `hydrodaten.admin.ch/lhg/az/json/mobile_stations.json` — ist **stillgelegt (404)**, und LINDAS führt kein Kantons-Attribut. Eine Abfrage mit gesetztem `canton` liefert eine Erklärung statt einer Stationsliste; stattdessen `water_body` nutzen oder die vollständige Liste (233 Stationen) ungefiltert holen.
 - **Badegewässerqualität (`env_bathing_water`)**: liest den LINDAS-Data-Cube `foen/ubd01041prod` — den einzigen Hydro-Cube mit echter Mehrjahres-Zeitreihe (Saisonproben seit 2020). Die Daten werden **jährlich nach der Badesaison** nachgeführt (kein Echtzeit-Monitoring); die Erhebung umfasst nur die offiziell gemeldeten Badestellen (viele populäre Badis fehlen). Die Lizenz ist auf Graph-/Datensatz-Ebene deklariert, nicht am Cube — jede Antwort trägt deshalb ein explizites Lizenzfeld, mit ehrlichem «nicht deklariert»-Hinweis, wo keines existiert. Siehe [`docs/probe-lindas-hydro.md`](docs/probe-lindas-hydro.md) (Nachtrag N1–N7).
 - **Kein Grundwasser in LINDAS**: am 2026-07-24 per mehrsprachiger Cube-Suche verifiziert — LINDAS enthält **keinen Grundwasser-Cube** (NAQUA-Grundwasserstände sind nicht via SPARQL verfügbar).
