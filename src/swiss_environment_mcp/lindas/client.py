@@ -22,17 +22,42 @@ damit das Modul 1:1 nach `lindas-mcp` hebbar bleibt.
 """
 
 import asyncio
+import time
 from collections.abc import Callable
 from typing import Any
 
 import httpx
 
+from ..sparql_client import retry_delay
+
 LINDAS_ENDPOINT = "https://lindas.admin.ch/query"
 
 # Portfolio-Standard: Retry 2 s/4 s/8 s, 4xx (ausser 429) ohne Retry.
-RETRYABLE_STATUS: frozenset[int] = frozenset({429, 502, 503, 504})
+# 500 gehoert dazu: Ein ueberlastetes Gateway antwortet nicht immer mit 502.
+# ARCH-014 nennt die wiederholbare Menge als 5xx, 429, Timeout und
+# Verbindungsfehler — hier fehlte bisher genau die 500.
+RETRYABLE_STATUS: frozenset[int] = frozenset({429, 500, 502, 503, 504})
 DEFAULT_MAX_ATTEMPTS = 4
-DEFAULT_BASE_DELAY = 2.0  # Sekunden; Waits base*2**attempt → 2/4/8. Tests: 0.
+DEFAULT_BASE_DELAY = 2.0  # Sekunden; Leiter vor dem Jitter: 2/4/8. Tests: 0.
+
+# Deckel auf den GESAMTEN Aufruf — alle Versuche und alle Wartezeiten zusammen
+# (ARCH-014). Eine Versuchszahl ist keine Grenze: Vier Versuche gegen einen
+# Endpunkt, der die vollen QUERY_TIMEOUT_SECONDS (45 s) braucht, sind drei
+# Minuten in einem Tool-Aufruf, und DEFAULT_MAX_ATTEMPTS sagt das nirgends.
+# Das httpx-Timeout ist kein Budget: Es begrenzt pro Operation, und sein
+# Read-Timeout beginnt mit jedem Chunk von vorn.
+#
+# 45 s statt der 25 s der uebrigen Server: SPARQL-Abfragen gegen LINDAS
+# laufen laenger als ein REST-Aufruf, und derselbe Wert steht im
+# vendorierten `sparql_client`. Wer ihn senkt, senkt ihn dort mit.
+TOTAL_BUDGET_S = 45.0
+
+# Indirektion, damit Tests die Wartezeit nullen koennen, ohne `asyncio.sleep`
+# selbst zu patchen. Ein `monkeypatch.setattr(client.asyncio, "sleep", ...)`
+# saehe lokal aus und ist es nicht: `client.asyncio` *ist* das stdlib-Modul,
+# der Patch legt das Schlafen prozessweit still — samt fremder Tests, die damit
+# dem Event-Loop das Wort geben und danach nichts mehr messen.
+_sleep = asyncio.sleep
 
 # Client-seitiger Query-Timeout (siehe Modul-Docstring).
 QUERY_TIMEOUT_SECONDS = 45.0
@@ -100,44 +125,69 @@ async def select(
     endpoint: str = LINDAS_ENDPOINT,
     base_delay: float = DEFAULT_BASE_DELAY,
     max_attempts: int = DEFAULT_MAX_ATTEMPTS,
+    total_budget: float = TOTAL_BUDGET_S,
     egress_check: Callable[[str], None] | None = None,
     on_retry: Callable[[int, str, Exception], None] | None = None,
 ) -> list[dict[str, str]]:
     """Führt eine SELECT-Query aus und liefert flache Result-Dicts.
 
     GET für kurze, POST (`application/sparql-query`) für lange Queries.
-    Retry nur bei transienten Fehlern (429/5xx, Timeout/Netzwerk) mit
-    exponentiellem Backoff; HTTP 400 wird sofort als `QueryError` mit der
-    Server-Meldung durchgereicht, andere 4xx als `QueryError` mit Status.
+    Retry nur bei transienten Fehlern (429/5xx, Timeout/Netzwerk). Jede
+    Wartezeit ist gestreut und gedeckelt; ein `Retry-After` auf 429/503 schlaegt
+    die eigene Kurve (`sparql_client.retry_delay`). Der ganze Aufruf ist durch
+    `total_budget` Sekunden Wanduhrzeit begrenzt. HTTP 400 wird sofort als
+    `QueryError` mit der Server-Meldung durchgereicht, andere 4xx als
+    `QueryError` mit Status.
     """
     if egress_check is not None:
         egress_check(endpoint)
 
     timeout = httpx.Timeout(QUERY_TIMEOUT_SECONDS, connect=5.0)
     last_exc: Exception | None = None
+    deadline = time.monotonic() + total_budget
     for attempt in range(max_attempts):
+        if attempt > 0:
+            delay = retry_delay(attempt, last_exc, base_delay)
+            # Eine Wartezeit, die das Budget ueberdauert, ist eine Wartezeit
+            # fuer niemanden: Der Aufrufer hat aufgegeben, bevor sie endet.
+            if delay >= deadline - time.monotonic():
+                break
+            if on_retry is not None:
+                on_retry(attempt, endpoint, last_exc)
+            await _sleep(delay)
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
         try:
-            if len(query) <= _GET_MAX_QUERY_CHARS:
-                response = await http.get(
-                    endpoint,
-                    params={"query": query, "format": _RESULTS_MIME},
-                    headers={"Accept": _RESULTS_MIME},
-                    timeout=timeout,
-                )
-            else:
-                response = await http.post(
-                    endpoint,
-                    content=query.encode("utf-8"),
-                    headers={
-                        "Content-Type": "application/sparql-query",
-                        "Accept": _RESULTS_MIME,
-                    },
-                    timeout=timeout,
-                )
+            # `asyncio.timeout` ist die Wanduhr-Deadline, die das Budget
+            # zusagt; das httpx-Timeout bleibt daneben die Schranke je
+            # Operation.
+            async with asyncio.timeout(remaining):
+                if len(query) <= _GET_MAX_QUERY_CHARS:
+                    response = await http.get(
+                        endpoint,
+                        params={"query": query, "format": _RESULTS_MIME},
+                        headers={"Accept": _RESULTS_MIME},
+                        timeout=timeout,
+                    )
+                else:
+                    response = await http.post(
+                        endpoint,
+                        content=query.encode("utf-8"),
+                        headers={
+                            "Content-Type": "application/sparql-query",
+                            "Accept": _RESULTS_MIME,
+                        },
+                        timeout=timeout,
+                    )
+        except TimeoutError as e:  # Budget weg, nicht bloss dieser Versuch
+            last_exc = QueryTimeoutError()
+            last_exc.__cause__ = e
+            break
         except httpx.TimeoutException as e:
             last_exc = QueryTimeoutError()
             last_exc.__cause__ = e
-        except (httpx.ConnectError, httpx.ReadError) as e:
+        except (httpx.ConnectError, httpx.ReadError, httpx.RequestError) as e:
             last_exc = e
         else:
             status = response.status_code
@@ -151,9 +201,5 @@ async def select(
                 # Deterministisch (4xx ausser 429): Server-Meldung durchreichen.
                 detail = response.text.strip() or f"HTTP {status} ohne Fehlermeldung"
                 raise QueryError(detail, status_code=status)
-        if attempt < max_attempts - 1:
-            if on_retry is not None:
-                on_retry(attempt + 1, endpoint, last_exc)
-            await asyncio.sleep(base_delay * (2**attempt))
     assert last_exc is not None  # pragma: no cover - Schleife garantiert gesetzt
     raise last_exc

@@ -3,6 +3,59 @@
 Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
+## [Unreleased]
+
+### Behoben
+
+- **Die vendored copy `sparql_client.py` war auseinandergelaufen (`ARCH-014`,
+  `DRIFT-006`).** Die Datei sagt in ihrem eigenen Kopf, sie werde
+  **byte-identisch** in `swiss-environment-mcp` und `fedlex-mcp` vorgehalten.
+  Sie wurde es nicht: In `fedlex-mcp` war die Retry-Politik längst repariert
+  (250 Zeilen, mit Jitter, `Retry-After` und Wanduhr-Budget), hier stand
+  weiterhin die alte Fassung (140 Zeilen).
+
+  **Und der Versionsmarker stand auf beiden Seiten unverändert auf `v1.1.0`.**
+  Das ist die eigentliche Ursache: Es gab nichts, was den Unterschied hätte
+  melden können. Eine Kopie, die ihre Gleichheit behauptet und ihre Version
+  nicht mitführt, driftet beim ersten Anlass — und niemand merkt es, weil in
+  jedem Repo nur die eigene Hälfte sichtbar ist.
+
+  Die Datei ist jetzt wieder byte-identisch von `fedlex-mcp` übernommen.
+
+### Geändert
+
+- **Retry-Politik des LINDAS-Pfads: begrenzt, gestreut, gehorsam
+  (`ARCH-014`).** `lindas/client.py` hat eine eigene Schleife und war von der
+  Reparatur der vendored copy nicht berührt.
+
+  | Eigenschaft | Vorher | Jetzt |
+  |---|---|---|
+  | Wiederholbare Status | `{429, 502, 503, 504}` — **500 fehlte** | `{429, 500, 502, 503, 504}` |
+  | Netzfehler | `ConnectError`, `ReadError` | zusätzlich die Oberklasse `RequestError` |
+  | Jitter | keiner — feste Leiter 2/4/8 s | gestreut in `[0.5x, 1.5x]` |
+  | `Retry-After` | nicht gelesen | gelesen, schlägt die eigene Kurve |
+  | Deckel | keiner | `MAX_DELAY_S`, **nach** dem Jitter |
+  | Zeitbudget | keines | `TOTAL_BUDGET_S = 45.0` an `asyncio.timeout` |
+
+  Die Helfer kommen aus dem vendorierten `sparql_client` statt aus einer
+  zweiten Kopie — sonst hätte dieser Server jetzt zwei Retry-Kurven, die
+  wieder auseinanderlaufen können.
+
+  **500 fehlte, und das ist kein Detail.** Ein überlastetes Gateway antwortet
+  nicht immer mit 502; `ARCH-014` nennt die wiederholbare Menge als 5xx, 429,
+  Timeout und Verbindungsfehler.
+
+  **`QUERY_TIMEOUT_SECONDS` war nie ein Budget.** httpx begrenzt pro Operation,
+  und sein Read-Timeout beginnt mit jedem Chunk von vorn. Vier Versuche gegen
+  einen Endpunkt, der die vollen 45 s braucht, sind drei Minuten in einem
+  Tool-Aufruf, und `DEFAULT_MAX_ATTEMPTS` sagt das nirgends.
+
+### Hinzugefügt
+
+- **`tests/test_retry_policy.py`** — deckt beide Pfade ab, jede Eigenschaft mit
+  Gegenprobe. Dazu ein Test, der die Eigenschaften der vendored copy als Menge
+  festhält: Wer eine davon verliert, hat die Kopien wieder getrennt.
+
 ## [0.6.0] – 2026-08-03
 
 Dieses Release beginnt mit einem geröteten Nacht-Job und endet bei fünf stillen
