@@ -1,0 +1,3019 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47717,
+      "id": 47717,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.2010",
+        "noisepollutionregister_registername": "LBK Reichenbach",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/OLxMdSV3xPJy/reichenbach.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47718,
+      "id": 47718,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.09.2009",
+        "noisepollutionregister_registername": "CDB Lausanne-La Blécherette",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/vJ9zEGo9031B/lausanne-la_blecherette.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47720,
+      "id": 47720,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47724,
+      "id": 47724,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.11.2019",
+        "noisepollutionregister_registername": "LBK Luzern-Beromünster",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ZDptm-w6Mjtt/luzern-beromuenster.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47725,
+      "id": 47725,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47730,
+      "id": 47730,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.2010",
+        "noisepollutionregister_registername": "LBK Reichenbach",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/OLxMdSV3xPJy/reichenbach.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47731,
+      "id": 47731,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "18.08.2016",
+        "noisepollutionregister_registername": "LBK Zweisimmen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/CRB3XnuZeXa5/lbk_zweisimmen.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47732,
+      "id": 47732,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.09.2009",
+        "noisepollutionregister_registername": "CDB Lausanne-La Blécherette",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/vJ9zEGo9031B/lausanne-la_blecherette.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47733,
+      "id": 47733,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.1993",
+        "noisepollutionregister_registername": "LBK Hasenstrick",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RYUY4R2Qc9Nt/hasenstrick.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47734,
+      "id": 47734,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47740,
+      "id": 47740,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.09.2018",
+        "noisepollutionregister_registername": "LBK Birrfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nqYBD9wHWmpb/birrfeld.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47741,
+      "id": 47741,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2011",
+        "noisepollutionregister_registername": "LBK Hausen am Albis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/i6FZ4Fet8MQ2/hausen_am_albis.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47742,
+      "id": 47742,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.09.2018",
+        "noisepollutionregister_registername": "LBK Birrfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nqYBD9wHWmpb/birrfeld.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47743,
+      "id": 47743,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.07.2020",
+        "noisepollutionregister_registername": "LBK Winterthur",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/qphB3ofYnhiP/winterthur.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47744,
+      "id": 47744,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47747,
+      "id": 47747,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.2010",
+        "noisepollutionregister_registername": "LBK Reichenbach",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/OLxMdSV3xPJy/reichenbach.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47748,
+      "id": 47748,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2010",
+        "noisepollutionregister_registername": "LBK Langenthal",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/hoZ7DPJjfTVI/langenthal.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47749,
+      "id": 47749,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47750,
+      "id": 47750,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47751,
+      "id": 47751,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47752,
+      "id": 47752,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47753,
+      "id": 47753,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47756,
+      "id": 47756,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.09.2018",
+        "noisepollutionregister_registername": "LBK Birrfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nqYBD9wHWmpb/birrfeld.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47762,
+      "id": 47762,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47764,
+      "id": 47764,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.1992",
+        "noisepollutionregister_registername": "LBK Thun",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/XJm3sNcU9S4-/thun.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47765,
+      "id": 47765,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47766,
+      "id": 47766,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.01.2020",
+        "noisepollutionregister_registername": "CDB Yverdon-les-Bains",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/jfnS5hcjaeKb/yverdon-les-bains.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47767,
+      "id": 47767,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47768,
+      "id": 47768,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47770,
+      "id": 47770,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47771,
+      "id": 47771,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47772,
+      "id": 47772,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47773,
+      "id": 47773,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47774,
+      "id": 47774,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47778,
+      "id": 47778,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47782,
+      "id": 47782,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47792,
+      "id": 47792,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47793,
+      "id": 47793,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.2010",
+        "noisepollutionregister_registername": "LBK Reichenbach",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/OLxMdSV3xPJy/reichenbach.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47794,
+      "id": 47794,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47795,
+      "id": 47795,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47796,
+      "id": 47796,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47797,
+      "id": 47797,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47798,
+      "id": 47798,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47799,
+      "id": 47799,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47800,
+      "id": 47800,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47801,
+      "id": 47801,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2011",
+        "noisepollutionregister_registername": "LBK Hausen am Albis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/i6FZ4Fet8MQ2/hausen_am_albis.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47804,
+      "id": 47804,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.09.2018",
+        "noisepollutionregister_registername": "LBK Birrfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nqYBD9wHWmpb/birrfeld.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47808,
+      "id": 47808,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47809,
+      "id": 47809,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2010",
+        "noisepollutionregister_registername": "LBK Langenthal",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/hoZ7DPJjfTVI/langenthal.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47810,
+      "id": 47810,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47812,
+      "id": 47812,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47815,
+      "id": 47815,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47816,
+      "id": 47816,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47819,
+      "id": 47819,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47821,
+      "id": 47821,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.1997",
+        "noisepollutionregister_registername": "LBK Haltikon",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/MOBMFbEyMDlK/haltikon.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47828,
+      "id": 47828,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47832,
+      "id": 47832,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47836,
+      "id": 47836,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.07.1994",
+        "noisepollutionregister_registername": "CDB La Côte",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/K6yzm9ui-u7X/la_cote.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47837,
+      "id": 47837,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47839,
+      "id": 47839,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2010",
+        "noisepollutionregister_registername": "LBK Langenthal",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/hoZ7DPJjfTVI/langenthal.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47844,
+      "id": 47844,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.02.1993",
+        "noisepollutionregister_registername": "CDB Bex",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/c7W-rFM9FnzR/bex.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47845,
+      "id": 47845,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47847,
+      "id": 47847,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47848,
+      "id": 47848,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47849,
+      "id": 47849,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47850,
+      "id": 47850,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47851,
+      "id": 47851,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47852,
+      "id": 47852,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.1993",
+        "noisepollutionregister_registername": "CDB Montricher",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/E5nZj-cObb9u/montricher.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47853,
+      "id": 47853,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47856,
+      "id": 47856,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "18.08.2016",
+        "noisepollutionregister_registername": "LBK Zweisimmen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/CRB3XnuZeXa5/lbk_zweisimmen.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47857,
+      "id": 47857,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47858,
+      "id": 47858,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47861,
+      "id": 47861,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2012",
+        "noisepollutionregister_registername": "CDB Bressaucourt",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/1AqCRi0Ix3I5/bressaucourt.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47862,
+      "id": 47862,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.07.2020",
+        "noisepollutionregister_registername": "LBK Winterthur",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/qphB3ofYnhiP/winterthur.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47865,
+      "id": 47865,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47866,
+      "id": 47866,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47867,
+      "id": 47867,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47868,
+      "id": 47868,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.1995",
+        "noisepollutionregister_registername": "LBK Wangen-Lachen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/8CuyexakH44U/wangen-lachen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47869,
+      "id": 47869,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.01.2020",
+        "noisepollutionregister_registername": "CDB Yverdon-les-Bains",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/jfnS5hcjaeKb/yverdon-les-bains.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47871,
+      "id": 47871,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47874,
+      "id": 47874,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47875,
+      "id": 47875,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "08.06.2020",
+        "noisepollutionregister_registername": "LBK Biel-Kappelen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/w2NgSuWQVqS4/biel-kappelen.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47876,
+      "id": 47876,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47879,
+      "id": 47879,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2011",
+        "noisepollutionregister_registername": "LBK Hausen am Albis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/i6FZ4Fet8MQ2/hausen_am_albis.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47880,
+      "id": 47880,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2012",
+        "noisepollutionregister_registername": "CDB Bressaucourt",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/1AqCRi0Ix3I5/bressaucourt.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47882,
+      "id": 47882,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "18.08.2016",
+        "noisepollutionregister_registername": "LBK Zweisimmen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/CRB3XnuZeXa5/lbk_zweisimmen.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47883,
+      "id": 47883,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47884,
+      "id": 47884,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47885,
+      "id": 47885,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47886,
+      "id": 47886,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47887,
+      "id": 47887,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47894,
+      "id": 47894,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "08.06.2020",
+        "noisepollutionregister_registername": "LBK Biel-Kappelen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/w2NgSuWQVqS4/biel-kappelen.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47897,
+      "id": 47897,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.11.2019",
+        "noisepollutionregister_registername": "LBK Luzern-Beromünster",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ZDptm-w6Mjtt/luzern-beromuenster.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47899,
+      "id": 47899,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47903,
+      "id": 47903,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47908,
+      "id": 47908,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.09.2009",
+        "noisepollutionregister_registername": "CDB Lausanne-La Blécherette",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/vJ9zEGo9031B/lausanne-la_blecherette.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47913,
+      "id": 47913,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47914,
+      "id": 47914,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2010",
+        "noisepollutionregister_registername": "LBK Langenthal",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/hoZ7DPJjfTVI/langenthal.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47915,
+      "id": 47915,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47916,
+      "id": 47916,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.07.1993",
+        "noisepollutionregister_registername": "CDB Neuchâtel",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/4iYUL8ZchlbD/neuchatel.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47918,
+      "id": 47918,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2010",
+        "noisepollutionregister_registername": "LBK Langenthal",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/hoZ7DPJjfTVI/langenthal.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47919,
+      "id": 47919,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47920,
+      "id": 47920,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47923,
+      "id": 47923,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2011",
+        "noisepollutionregister_registername": "LBK Hausen am Albis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/i6FZ4Fet8MQ2/hausen_am_albis.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47925,
+      "id": 47925,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47927,
+      "id": 47927,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.07.1994",
+        "noisepollutionregister_registername": "CDB La Côte",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/K6yzm9ui-u7X/la_cote.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47928,
+      "id": 47928,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2011",
+        "noisepollutionregister_registername": "LBK Hausen am Albis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/i6FZ4Fet8MQ2/hausen_am_albis.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47929,
+      "id": 47929,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1993",
+        "noisepollutionregister_registername": "LBK Speck-Fehraltorf",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/5VJALUs7NsJv/speck-fehraltorf.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47933,
+      "id": 47933,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "24.09.2018",
+        "noisepollutionregister_registername": "CDB La Chaux-de-Fonds-Les Eplatures",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/pH36poqMr9dN/la_chaux-de-fonds-leseplatures.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47935,
+      "id": 47935,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.05.1994",
+        "noisepollutionregister_registername": "CDB Courtelary",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/Kkwz0b5dOBlQ/courtelary.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47936,
+      "id": 47936,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47941,
+      "id": 47941,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2011",
+        "noisepollutionregister_registername": "LBK Hausen am Albis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/i6FZ4Fet8MQ2/hausen_am_albis.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47945,
+      "id": 47945,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.07.2020",
+        "noisepollutionregister_registername": "LBK Winterthur",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/qphB3ofYnhiP/winterthur.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47947,
+      "id": 47947,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47948,
+      "id": 47948,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.09.2018",
+        "noisepollutionregister_registername": "LBK Birrfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nqYBD9wHWmpb/birrfeld.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47949,
+      "id": 47949,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.07.1993",
+        "noisepollutionregister_registername": "CDB Neuchâtel",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/4iYUL8ZchlbD/neuchatel.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47951,
+      "id": 47951,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "18.08.2016",
+        "noisepollutionregister_registername": "LBK Zweisimmen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/CRB3XnuZeXa5/lbk_zweisimmen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47952,
+      "id": 47952,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "18.08.2016",
+        "noisepollutionregister_registername": "LBK Zweisimmen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/CRB3XnuZeXa5/lbk_zweisimmen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47953,
+      "id": 47953,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "18.08.2016",
+        "noisepollutionregister_registername": "LBK Zweisimmen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/CRB3XnuZeXa5/lbk_zweisimmen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47954,
+      "id": 47954,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47955,
+      "id": 47955,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47956,
+      "id": 47956,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47957,
+      "id": 47957,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47959,
+      "id": 47959,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47960,
+      "id": 47960,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47961,
+      "id": 47961,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47962,
+      "id": 47962,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47963,
+      "id": 47963,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47964,
+      "id": 47964,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47965,
+      "id": 47965,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47966,
+      "id": 47966,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47967,
+      "id": 47967,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.11.2019",
+        "noisepollutionregister_registername": "LBK Luzern-Beromünster",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ZDptm-w6Mjtt/luzern-beromuenster.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47968,
+      "id": 47968,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47969,
+      "id": 47969,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47970,
+      "id": 47970,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.2010",
+        "noisepollutionregister_registername": "LBK Reichenbach",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/OLxMdSV3xPJy/reichenbach.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47973,
+      "id": 47973,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2012",
+        "noisepollutionregister_registername": "CDB Bressaucourt",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/1AqCRi0Ix3I5/bressaucourt.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47974,
+      "id": 47974,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "04.04.2025",
+        "noisepollutionregister_registername": "CDR Lodrino",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/it/sd-web/h9HPHaH5JfD6/lodrino.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47975,
+      "id": 47975,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "04.04.2025",
+        "noisepollutionregister_registername": "CDR Lodrino",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/it/sd-web/h9HPHaH5JfD6/lodrino.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47976,
+      "id": 47976,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "04.04.2025",
+        "noisepollutionregister_registername": "CDR Lodrino",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/it/sd-web/h9HPHaH5JfD6/lodrino.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47979,
+      "id": 47979,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47981,
+      "id": 47981,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2011",
+        "noisepollutionregister_registername": "LBK Hausen am Albis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/i6FZ4Fet8MQ2/hausen_am_albis.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47982,
+      "id": 47982,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.09.2018",
+        "noisepollutionregister_registername": "CDB Ecuvillens",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/xdAQTg7z8f9V/ecuvillens.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47988,
+      "id": 47988,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.09.2018",
+        "noisepollutionregister_registername": "LBK Birrfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nqYBD9wHWmpb/birrfeld.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47989,
+      "id": 47989,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47990,
+      "id": 47990,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47992,
+      "id": 47992,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.02.1993",
+        "noisepollutionregister_registername": "LBK Lommis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/QLvaxBt5KkQP/lommis.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47994,
+      "id": 47994,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47996,
+      "id": 47996,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47997,
+      "id": 47997,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.1993",
+        "noisepollutionregister_registername": "LBK Fricktal-Schupfart",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/XU9JCtcUVQj8/fricktal-schupfart.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47998,
+      "id": 47998,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 47999,
+      "id": 47999,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48000,
+      "id": 48000,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48001,
+      "id": 48001,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48002,
+      "id": 48002,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48003,
+      "id": 48003,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48004,
+      "id": 48004,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48006,
+      "id": 48006,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48007,
+      "id": 48007,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48012,
+      "id": 48012,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.09.2009",
+        "noisepollutionregister_registername": "CDB Lausanne-La Blécherette",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/vJ9zEGo9031B/lausanne-la_blecherette.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48014,
+      "id": 48014,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48015,
+      "id": 48015,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48016,
+      "id": 48016,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.11.2019",
+        "noisepollutionregister_registername": "LBK Luzern-Beromünster",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ZDptm-w6Mjtt/luzern-beromuenster.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48019,
+      "id": 48019,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48020,
+      "id": 48020,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48023,
+      "id": 48023,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.09.2009",
+        "noisepollutionregister_registername": "CDB Lausanne-La Blécherette",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/vJ9zEGo9031B/lausanne-la_blecherette.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48024,
+      "id": 48024,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.09.2009",
+        "noisepollutionregister_registername": "CDB Lausanne-La Blécherette",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/vJ9zEGo9031B/lausanne-la_blecherette.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48026,
+      "id": 48026,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48027,
+      "id": 48027,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.1993",
+        "noisepollutionregister_registername": "LBK Sitterdorf",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/8ZaimWk3VNDM/sitterdorf.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48028,
+      "id": 48028,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48031,
+      "id": 48031,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48032,
+      "id": 48032,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.01.2020",
+        "noisepollutionregister_registername": "CDB Yverdon-les-Bains",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/jfnS5hcjaeKb/yverdon-les-bains.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48033,
+      "id": 48033,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48034,
+      "id": 48034,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48035,
+      "id": 48035,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48036,
+      "id": 48036,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48037,
+      "id": 48037,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48038,
+      "id": 48038,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48040,
+      "id": 48040,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1996",
+        "noisepollutionregister_registername": "LBK Kägiswil",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/mjsI-YmV5lUf/kaegiswil.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48041,
+      "id": 48041,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.09.2009",
+        "noisepollutionregister_registername": "CDB Lausanne-La Blécherette",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/vJ9zEGo9031B/lausanne-la_blecherette.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48045,
+      "id": 48045,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48046,
+      "id": 48046,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48047,
+      "id": 48047,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48052,
+      "id": 48052,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48055,
+      "id": 48055,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.11.2019",
+        "noisepollutionregister_registername": "LBK Luzern-Beromünster",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ZDptm-w6Mjtt/luzern-beromuenster.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48056,
+      "id": 48056,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.11.2019",
+        "noisepollutionregister_registername": "LBK Luzern-Beromünster",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ZDptm-w6Mjtt/luzern-beromuenster.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48057,
+      "id": 48057,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.1997",
+        "noisepollutionregister_registername": "LBK Haltikon",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/MOBMFbEyMDlK/haltikon.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48059,
+      "id": 48059,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.2010",
+        "noisepollutionregister_registername": "LBK Reichenbach",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/OLxMdSV3xPJy/reichenbach.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48060,
+      "id": 48060,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48061,
+      "id": 48061,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48062,
+      "id": 48062,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.01.2020",
+        "noisepollutionregister_registername": "CDB Yverdon-les-Bains",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/jfnS5hcjaeKb/yverdon-les-bains.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48063,
+      "id": 48063,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "18.08.2016",
+        "noisepollutionregister_registername": "LBK Zweisimmen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/CRB3XnuZeXa5/lbk_zweisimmen.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48067,
+      "id": 48067,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.12.2024",
+        "noisepollutionregister_registername": "LBK Grenchen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/e2pVuiL5-E83/grenchen.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48068,
+      "id": 48068,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.01.2020",
+        "noisepollutionregister_registername": "CDB Yverdon-les-Bains",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/jfnS5hcjaeKb/yverdon-les-bains.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48069,
+      "id": 48069,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "06.01.2020",
+        "noisepollutionregister_registername": "CDB Yverdon-les-Bains",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/jfnS5hcjaeKb/yverdon-les-bains.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48071,
+      "id": 48071,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48072,
+      "id": 48072,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48073,
+      "id": 48073,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48079,
+      "id": 48079,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.08.2011",
+        "noisepollutionregister_registername": "LBK Triengen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/dSVPA1saYytn/triengen.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48082,
+      "id": 48082,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1993",
+        "noisepollutionregister_registername": "LBK Speck-Fehraltorf",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/5VJALUs7NsJv/speck-fehraltorf.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48083,
+      "id": 48083,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_kleinluftfahrzeuge",
+      "layerName": "Lärmbelastung Kleinluftfahrzeuge",
+      "featureId": 48084,
+      "id": 48084,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.01.1993",
+        "noisepollutionregister_registername": "LBK Schänis",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "LightAircraft_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/EmteNk2AmgCq/schaenis.pdf",
+        "label": "50"
+      }
+    }
+  ]
+}

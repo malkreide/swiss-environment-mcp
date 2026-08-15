@@ -1,0 +1,103 @@
+{
+  "head": {
+    "vars": [
+      "id",
+      "name",
+      "water"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "2043"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Berlingen"
+        },
+        "water": {
+          "type": "literal",
+          "value": "Bodensee%2C%20Untersee"
+        },
+        "danger": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "1"
+        },
+        "level": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "394.341"
+        },
+        "time": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "2026-08-13T23:20:00+01:00"
+        }
+      },
+      {
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "2208"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Ligerz, Klein Twann"
+        },
+        "water": {
+          "type": "literal",
+          "value": "Bielersee"
+        },
+        "danger": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "1"
+        },
+        "level": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "429.433"
+        },
+        "time": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "2026-08-15T17:50:00+01:00"
+        }
+      },
+      {
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "2022"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Locarno"
+        },
+        "water": {
+          "type": "literal",
+          "value": "Lago%20Maggiore"
+        },
+        "danger": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "1"
+        },
+        "level": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "192.159"
+        },
+        "time": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "2026-08-15T17:50:00+01:00"
+        }
+      }
+    ]
+  }
+}

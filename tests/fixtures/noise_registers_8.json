@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_militaer-gesamt",
+      "layerName": "Lärmbelast. Militärflugpl. (gesamt)",
+      "featureId": 48039,
+      "id": 48039,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1994",
+        "noisepollutionregister_registername": "CDR Locarno-Magadino",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficMilitary_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/it/sd-web/AELBWpMVQtLI/locarno.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_militaer-gesamt",
+      "layerName": "Lärmbelast. Militärflugpl. (gesamt)",
+      "featureId": 48264,
+      "id": 48264,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1994",
+        "noisepollutionregister_registername": "CDR Locarno-Magadino",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficMilitary_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/it/sd-web/AELBWpMVQtLI/locarno.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_militaer-gesamt",
+      "layerName": "Lärmbelast. Militärflugpl. (gesamt)",
+      "featureId": 48559,
+      "id": 48559,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1994",
+        "noisepollutionregister_registername": "CDR Locarno-Magadino",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficMilitary_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/it/sd-web/AELBWpMVQtLI/locarno.pdf",
+        "label": "55"
+      }
+    }
+  ]
+}

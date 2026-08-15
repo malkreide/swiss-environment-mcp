@@ -1,0 +1,289 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48090,
+      "id": 48090,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48109,
+      "id": 48109,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48220,
+      "id": 48220,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48223,
+      "id": 48223,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48225,
+      "id": 48225,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48278,
+      "id": 48278,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48293,
+      "id": 48293,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48297,
+      "id": 48297,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48356,
+      "id": 48356,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48359,
+      "id": 48359,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48534,
+      "id": 48534,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48556,
+      "id": 48556,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48568,
+      "id": 48568,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48600,
+      "id": 48600,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48674,
+      "id": 48674,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48710,
+      "id": 48710,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48736,
+      "id": 48736,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48780,
+      "id": 48780,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter",
+      "layerName": "Lärmbelastung Helikopter Lr",
+      "featureId": 48894,
+      "id": 48894,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "56"
+      }
+    }
+  ]
+}

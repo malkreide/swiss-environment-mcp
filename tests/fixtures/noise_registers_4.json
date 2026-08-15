@@ -1,0 +1,109 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_letzte-nachtstunde",
+      "layerName": "Lärmbelastung letzte Nachtstunde",
+      "featureId": 47781,
+      "id": 47781,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LastNightHour_Lr",
+        "exposurecurve_level_db": "49",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "49"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_letzte-nachtstunde",
+      "layerName": "Lärmbelastung letzte Nachtstunde",
+      "featureId": 47870,
+      "id": 47870,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LastNightHour_Lr",
+        "exposurecurve_level_db": "46",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "46"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_letzte-nachtstunde",
+      "layerName": "Lärmbelastung letzte Nachtstunde",
+      "featureId": 48141,
+      "id": 48141,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LastNightHour_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_letzte-nachtstunde",
+      "layerName": "Lärmbelastung letzte Nachtstunde",
+      "featureId": 48207,
+      "id": 48207,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LastNightHour_Lr",
+        "exposurecurve_level_db": "47",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "47"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_letzte-nachtstunde",
+      "layerName": "Lärmbelastung letzte Nachtstunde",
+      "featureId": 48404,
+      "id": 48404,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LastNightHour_Lr",
+        "exposurecurve_level_db": "48",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "48"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_letzte-nachtstunde",
+      "layerName": "Lärmbelastung letzte Nachtstunde",
+      "featureId": 48699,
+      "id": 48699,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LastNightHour_Lr",
+        "exposurecurve_level_db": "45",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "45"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_letzte-nachtstunde",
+      "layerName": "Lärmbelastung letzte Nachtstunde",
+      "featureId": 48700,
+      "id": 48700,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "LastNightHour_Lr",
+        "exposurecurve_level_db": "45",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "45"
+      }
+    }
+  ]
+}

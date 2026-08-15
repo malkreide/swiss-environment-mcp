@@ -1,0 +1,1999 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47714,
+      "id": 47714,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "83",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "83"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47715,
+      "id": 47715,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "83",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "83"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47716,
+      "id": 47716,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "83",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "83"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47721,
+      "id": 47721,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "89",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "89"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47737,
+      "id": 47737,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47738,
+      "id": 47738,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47739,
+      "id": 47739,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47745,
+      "id": 47745,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2012",
+        "noisepollutionregister_registername": "LBK Schattenhalb",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/C94j2TwOQfjZ/schattenhalb.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47746,
+      "id": 47746,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2013",
+        "noisepollutionregister_registername": "LBK Interlaken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/sZofSlk1e1Qq/interlaken.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47754,
+      "id": 47754,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.2012",
+        "noisepollutionregister_registername": "CDB Leysin",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/njyZu6Ice2dB/leysin.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47757,
+      "id": 47757,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47758,
+      "id": 47758,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47759,
+      "id": 47759,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47760,
+      "id": 47760,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47761,
+      "id": 47761,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47775,
+      "id": 47775,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "82",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "82"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47776,
+      "id": 47776,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "82",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "82"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47777,
+      "id": 47777,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "82",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "82"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47783,
+      "id": 47783,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "81",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "81"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47784,
+      "id": 47784,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "81",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "81"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47785,
+      "id": 47785,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "81",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "81"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47788,
+      "id": 47788,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1994",
+        "noisepollutionregister_registername": "LBK Gsteigwiler",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/pobDZ6d2MZnx/gsteigwiler.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47790,
+      "id": 47790,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.02.1995",
+        "noisepollutionregister_registername": "LBK Gossau",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/4xvK5pOT3QUQ/gossau.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47811,
+      "id": 47811,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "86",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "86"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47817,
+      "id": 47817,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "84",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "84"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47833,
+      "id": 47833,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2013",
+        "noisepollutionregister_registername": "LBK Interlaken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/sZofSlk1e1Qq/interlaken.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47843,
+      "id": 47843,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.2012",
+        "noisepollutionregister_registername": "CDB Leysin",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/njyZu6Ice2dB/leysin.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47898,
+      "id": 47898,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.02.2013",
+        "noisepollutionregister_registername": "LBK Tavanasa",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/rrzrn2eLxIps/tavanasa.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47904,
+      "id": 47904,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.1995",
+        "noisepollutionregister_registername": "LBK Untervaz",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/XmZGtgUnHlDq/untervaz.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47924,
+      "id": 47924,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1994",
+        "noisepollutionregister_registername": "LBK Gsteigwiler",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/pobDZ6d2MZnx/gsteigwiler.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47926,
+      "id": 47926,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "87",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "87"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47931,
+      "id": 47931,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2013",
+        "noisepollutionregister_registername": "LBK Interlaken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/sZofSlk1e1Qq/interlaken.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47944,
+      "id": 47944,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "88",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "88"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47946,
+      "id": 47946,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.05.1994",
+        "noisepollutionregister_registername": "LBK Lauterbrunnen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/f89LjZAl4gyt/lauterbrunnen.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 47993,
+      "id": 47993,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.1995",
+        "noisepollutionregister_registername": "LBK Untervaz",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/XmZGtgUnHlDq/untervaz.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48048,
+      "id": 48048,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "77",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "77"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48049,
+      "id": 48049,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "77",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "77"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48050,
+      "id": 48050,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "77",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "77"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48066,
+      "id": 48066,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.02.1995",
+        "noisepollutionregister_registername": "LBK Gossau",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/4xvK5pOT3QUQ/gossau.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48099,
+      "id": 48099,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "82",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "82"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48103,
+      "id": 48103,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48143,
+      "id": 48143,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2013",
+        "noisepollutionregister_registername": "LBK Interlaken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/sZofSlk1e1Qq/interlaken.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48144,
+      "id": 48144,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2013",
+        "noisepollutionregister_registername": "LBK Interlaken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/sZofSlk1e1Qq/interlaken.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48145,
+      "id": 48145,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2013",
+        "noisepollutionregister_registername": "LBK Interlaken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/sZofSlk1e1Qq/interlaken.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48150,
+      "id": 48150,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48153,
+      "id": 48153,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48154,
+      "id": 48154,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48198,
+      "id": 48198,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48202,
+      "id": 48202,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.02.1995",
+        "noisepollutionregister_registername": "LBK Gossau",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/4xvK5pOT3QUQ/gossau.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48208,
+      "id": 48208,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48209,
+      "id": 48209,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48210,
+      "id": 48210,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48215,
+      "id": 48215,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48216,
+      "id": 48216,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48217,
+      "id": 48217,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48218,
+      "id": 48218,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48219,
+      "id": 48219,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48232,
+      "id": 48232,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48233,
+      "id": 48233,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48236,
+      "id": 48236,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2012",
+        "noisepollutionregister_registername": "LBK Schattenhalb",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/C94j2TwOQfjZ/schattenhalb.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48237,
+      "id": 48237,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2012",
+        "noisepollutionregister_registername": "LBK Schattenhalb",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/C94j2TwOQfjZ/schattenhalb.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48243,
+      "id": 48243,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.05.1994",
+        "noisepollutionregister_registername": "LBK Lauterbrunnen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/f89LjZAl4gyt/lauterbrunnen.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48246,
+      "id": 48246,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.05.1994",
+        "noisepollutionregister_registername": "LBK Lauterbrunnen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/f89LjZAl4gyt/lauterbrunnen.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48268,
+      "id": 48268,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.07.1995",
+        "noisepollutionregister_registername": "LBK Schindellegi",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/Nh784EvZ-vkk/schindellegi.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48350,
+      "id": 48350,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "87",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "87"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48358,
+      "id": 48358,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.2012",
+        "noisepollutionregister_registername": "CDB Leysin",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/njyZu6Ice2dB/leysin.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48372,
+      "id": 48372,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48373,
+      "id": 48373,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48393,
+      "id": 48393,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48394,
+      "id": 48394,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48395,
+      "id": 48395,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48396,
+      "id": 48396,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48397,
+      "id": 48397,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48421,
+      "id": 48421,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48422,
+      "id": 48422,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48423,
+      "id": 48423,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48472,
+      "id": 48472,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48473,
+      "id": 48473,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48486,
+      "id": 48486,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48487,
+      "id": 48487,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48488,
+      "id": 48488,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48491,
+      "id": 48491,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.1994",
+        "noisepollutionregister_registername": "CDB Collombey-Muraz",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/jXB4i4xf1qyj/collombey-muraz.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48494,
+      "id": 48494,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "78",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "78"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48495,
+      "id": 48495,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "78",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "78"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48496,
+      "id": 48496,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "78",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "78"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48497,
+      "id": 48497,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "78",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "78"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48498,
+      "id": 48498,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.1994",
+        "noisepollutionregister_registername": "CDB Collombey-Muraz",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/jXB4i4xf1qyj/collombey-muraz.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48509,
+      "id": 48509,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "78",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "78"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48510,
+      "id": 48510,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "78",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "78"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48511,
+      "id": 48511,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "78",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "78"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48551,
+      "id": 48551,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "79",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "79"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48552,
+      "id": 48552,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "79",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "79"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48553,
+      "id": 48553,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "79",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "79"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48554,
+      "id": 48554,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.12.2012",
+        "noisepollutionregister_registername": "LBK Schattenhalb",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/C94j2TwOQfjZ/schattenhalb.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48577,
+      "id": 48577,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48584,
+      "id": 48584,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.05.1994",
+        "noisepollutionregister_registername": "LBK Lauterbrunnen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/f89LjZAl4gyt/lauterbrunnen.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48585,
+      "id": 48585,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.1994",
+        "noisepollutionregister_registername": "CDB Collombey-Muraz",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/jXB4i4xf1qyj/collombey-muraz.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48604,
+      "id": 48604,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1994",
+        "noisepollutionregister_registername": "LBK Gsteigwiler",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/pobDZ6d2MZnx/gsteigwiler.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48634,
+      "id": 48634,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "81",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "81"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48635,
+      "id": 48635,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "81",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "81"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48641,
+      "id": 48641,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "84",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "84"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48642,
+      "id": 48642,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "84",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "84"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48643,
+      "id": 48643,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "84",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "84"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48644,
+      "id": 48644,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.06.1994",
+        "noisepollutionregister_registername": "LBK Gsteigwiler",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/pobDZ6d2MZnx/gsteigwiler.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48659,
+      "id": 48659,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "77",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "77"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48660,
+      "id": 48660,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "77",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "77"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48661,
+      "id": 48661,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "77",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "77"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48713,
+      "id": 48713,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48714,
+      "id": 48714,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48733,
+      "id": 48733,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48734,
+      "id": 48734,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48730,
+      "id": 48730,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48731,
+      "id": 48731,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48732,
+      "id": 48732,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48742,
+      "id": 48742,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "79",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "79"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48743,
+      "id": 48743,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "79",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "79"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48740,
+      "id": 48740,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.1994",
+        "noisepollutionregister_registername": "CDB Collombey-Muraz",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/jXB4i4xf1qyj/collombey-muraz.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48741,
+      "id": 48741,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "79",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "79"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48745,
+      "id": 48745,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "89",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "89"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48758,
+      "id": 48758,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.1995",
+        "noisepollutionregister_registername": "LBK Untervaz",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "90",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/XmZGtgUnHlDq/untervaz.pdf",
+        "label": "90"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48778,
+      "id": 48778,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "83",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "83"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48790,
+      "id": 48790,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48791,
+      "id": 48791,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48795,
+      "id": 48795,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.07.1995",
+        "noisepollutionregister_registername": "LBK Schindellegi",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/Nh784EvZ-vkk/schindellegi.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48833,
+      "id": 48833,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "86",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "86"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48834,
+      "id": 48834,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.07.1995",
+        "noisepollutionregister_registername": "LBK Schindellegi",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "80",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/Nh784EvZ-vkk/schindellegi.pdf",
+        "label": "80"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48854,
+      "id": 48854,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.1995",
+        "noisepollutionregister_registername": "LBK Untervaz",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/XmZGtgUnHlDq/untervaz.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48891,
+      "id": 48891,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48892,
+      "id": 48892,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48893,
+      "id": 48893,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "30.06.2022",
+        "noisepollutionregister_registername": "LBK Erstfeld",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "76",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/I7sQ7l9yxsPP/erstfeld.pdf",
+        "label": "76"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48902,
+      "id": 48902,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.04.2012",
+        "noisepollutionregister_registername": "CDB Leysin",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/njyZu6Ice2dB/leysin.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48903,
+      "id": 48903,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.02.1995",
+        "noisepollutionregister_registername": "LBK Gossau",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "85",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/4xvK5pOT3QUQ/gossau.pdf",
+        "label": "85"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_helikopter-maximalpegel",
+      "layerName": "Lärmbelastung Helikopter Lmax",
+      "featureId": 48924,
+      "id": 48924,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.04.2025",
+        "noisepollutionregister_registername": "LBK Holziken",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "Helicopter_Lmax",
+        "exposurecurve_level_db": "88",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/IlYIQfLfAnMX/holziken.pdf",
+        "label": "88"
+      }
+    }
+  ]
+}

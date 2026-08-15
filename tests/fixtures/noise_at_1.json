@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48151,
+      "id": 48151,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48652,
+      "id": 48652,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48746,
+      "id": 48746,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "69"
+      }
+    }
+  ]
+}

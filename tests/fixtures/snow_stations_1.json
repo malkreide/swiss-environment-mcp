@@ -1,0 +1,2072 @@
+[
+  {
+    "code": "DAV2",
+    "label": "Bärentälli",
+    "lon": 9.8194108372,
+    "lat": 46.6988884749,
+    "elevation": 2558.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "VSC1",
+    "label": "Piz San Jon Dadaint",
+    "lon": 10.3391321077,
+    "lat": 46.7532597113,
+    "elevation": 3092.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "MUT2",
+    "label": "Mutten",
+    "lon": 9.0174835389,
+    "lat": 46.8587579889,
+    "elevation": 2481.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TUM2",
+    "label": "Val Miez",
+    "lon": 9.0214677369,
+    "lat": 46.7810661513,
+    "elevation": 2191.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GLA2",
+    "label": "Guppen",
+    "lon": 9.0375823269,
+    "lat": 46.9966288477,
+    "elevation": 1632.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GAN2",
+    "label": "Gandegg",
+    "lon": 7.7606058532,
+    "lat": 46.4292605185,
+    "elevation": 2710.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GOR2",
+    "label": "Gornergratsee",
+    "lon": 7.7835986582,
+    "lat": 45.987191604,
+    "elevation": 2953.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GOM1",
+    "label": "Chummehorn",
+    "lon": 8.242043709,
+    "lat": 46.4214595345,
+    "elevation": 2728.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "ILI1",
+    "label": "Pointe des Mossettes",
+    "lon": 6.8162127612,
+    "lat": 46.1905725965,
+    "elevation": 2276.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "VAL2",
+    "label": "Vallascia",
+    "lon": 8.6137900109,
+    "lat": 46.5490383567,
+    "elevation": 2268.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BEL2",
+    "label": "Belalp",
+    "lon": 7.9741748172,
+    "lat": 46.3948462315,
+    "elevation": 2554.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TAM3",
+    "label": "Schaftäli",
+    "lon": 9.4581666399,
+    "lat": 46.8909840671,
+    "elevation": 2166.0,
+    "country_code": "CH",
+    "canton_code": "SG",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ILI2",
+    "label": "Les Collines",
+    "lon": 6.8277969399,
+    "lat": 46.1913556421,
+    "elevation": 2022.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "MAN1",
+    "label": "Männlichen",
+    "lon": 7.9380665942,
+    "lat": 46.6181151828,
+    "elevation": 2341.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "GOS2",
+    "label": "Rientallücke",
+    "lon": 8.6317718837,
+    "lat": 46.6732650302,
+    "elevation": 2325.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ROT3",
+    "label": "Plang Bi",
+    "lon": 9.6043854696,
+    "lat": 46.73311604,
+    "elevation": 2495.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FUL2",
+    "label": "Grand Cor",
+    "lon": 7.089660915,
+    "lat": 46.1946840247,
+    "elevation": 2602.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ADE3",
+    "label": "Lavey-Sattligrat",
+    "lon": 7.4901379524,
+    "lat": 46.4755274076,
+    "elevation": 2355.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "FLOWCAPT"
+  },
+  {
+    "code": "FRA2",
+    "label": "Efra",
+    "lon": 8.8531771044,
+    "lat": 46.3382366776,
+    "elevation": 2100.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "SMN2",
+    "label": "Ravaischer Salaas",
+    "lon": 10.3383398808,
+    "lat": 46.9563799569,
+    "elevation": 2512.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BER1",
+    "label": "Lagalb",
+    "lon": 10.0236433016,
+    "lat": 46.4314809644,
+    "elevation": 2956.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "VLS2",
+    "label": "Alp Calasa",
+    "lon": 9.2052412263,
+    "lat": 46.674410774,
+    "elevation": 2064.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "HIN1",
+    "label": "Hinterrugg",
+    "lon": 9.3048184085,
+    "lat": 47.1533304738,
+    "elevation": 2306.0,
+    "country_code": "CH",
+    "canton_code": "SG",
+    "type": "WIND"
+  },
+  {
+    "code": "KLO1",
+    "label": "Sant Jaggem",
+    "lon": 9.8684912152,
+    "lat": 46.9208110854,
+    "elevation": 2542.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "NEN3",
+    "label": "Combatzeline",
+    "lon": 7.3352965551,
+    "lat": 46.1431837197,
+    "elevation": 2203.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ARO1",
+    "label": "La Cassorte",
+    "lon": 7.4352901353,
+    "lat": 46.0353666322,
+    "elevation": 3300.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "ADE2",
+    "label": "Engstligenalp",
+    "lon": 7.5826331479,
+    "lat": 46.4343654484,
+    "elevation": 2304.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GRA2",
+    "label": "Loz",
+    "lon": 6.7835498034,
+    "lat": 46.3460619908,
+    "elevation": 1984.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CAM2",
+    "label": "Fontane",
+    "lon": 8.7174724568,
+    "lat": 46.4657248139,
+    "elevation": 2216.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "PLD2",
+    "label": "Primelod",
+    "lon": 7.2506226655,
+    "lat": 46.4263551027,
+    "elevation": 2050.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "FLOWCAPT"
+  },
+  {
+    "code": "PLD3",
+    "label": "Primelod Hang",
+    "lon": 7.251164,
+    "lat": 46.426301,
+    "elevation": 2042.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_SLOPE"
+  },
+  {
+    "code": "SCH2",
+    "label": "Türliboden",
+    "lon": 7.8347322559,
+    "lat": 46.5769159849,
+    "elevation": 2332.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "KES1",
+    "label": "Piz Val Müra",
+    "lon": 9.9006646574,
+    "lat": 46.6282585244,
+    "elevation": 3152.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "LUM2",
+    "label": "Lumpegna Süd",
+    "lon": 8.86169,
+    "lat": 46.73118,
+    "elevation": 2365.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_SLOPE"
+  },
+  {
+    "code": "LAU1",
+    "label": "Lauenehore",
+    "lon": 7.3545037887,
+    "lat": 46.4402079652,
+    "elevation": 2476.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "FRA3",
+    "label": "Costa",
+    "lon": 8.8181148693,
+    "lat": 46.3519577648,
+    "elevation": 2170.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_SLOPE"
+  },
+  {
+    "code": "KLT4",
+    "label": "Schiiterböden",
+    "lon": 8.985869,
+    "lat": 47.047001,
+    "elevation": 1745.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "JUL2",
+    "label": "Vairana",
+    "lon": 9.6923110222,
+    "lat": 46.4784967542,
+    "elevation": 2426.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "JUL1",
+    "label": "Piz Bardella",
+    "lon": 9.7028930374,
+    "lat": 46.4823359001,
+    "elevation": 2838.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "OFE1",
+    "label": "Piz Dora",
+    "lon": 10.3061266469,
+    "lat": 46.6050556165,
+    "elevation": 2949.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "ROA2",
+    "label": "Rotschalp",
+    "lon": 7.9939410504,
+    "lat": 46.7743190257,
+    "elevation": 1875.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TIT2",
+    "label": "Titlisboden",
+    "lon": 8.4094821255,
+    "lat": 46.7860094143,
+    "elevation": 2149.0,
+    "country_code": "CH",
+    "canton_code": "NW",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CON2",
+    "label": "Etang de Trente Pas",
+    "lon": 7.2742084386,
+    "lat": 46.2897391354,
+    "elevation": 2229.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GOM2",
+    "label": "Bodmerchumma",
+    "lon": 8.2324938175,
+    "lat": 46.4204561981,
+    "elevation": 2439.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "STN2",
+    "label": "Oberer Stelligletscher",
+    "lon": 7.7505585279,
+    "lat": 46.1678110194,
+    "elevation": 2914.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CMA2",
+    "label": "La Fuorcla",
+    "lon": 9.1834549366,
+    "lat": 46.8468715389,
+    "elevation": 2325.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "LAU2",
+    "label": "Trüttlisbergpass",
+    "lon": 7.3798673829,
+    "lat": 46.4260290609,
+    "elevation": 1970.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FOU1",
+    "label": "Le Portalet",
+    "lon": 7.0560007066,
+    "lat": 45.9915074932,
+    "elevation": 3344.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "ROA1",
+    "label": "Brienzer Rothorn",
+    "lon": 8.0469171504,
+    "lat": 46.7871200871,
+    "elevation": 2348.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "AMD2",
+    "label": "Bärenfall",
+    "lon": 9.1468825807,
+    "lat": 47.1708370848,
+    "elevation": 1610.0,
+    "country_code": "CH",
+    "canton_code": "SG",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "KLO3",
+    "label": "Gatschiefer",
+    "lon": 9.9316718171,
+    "lat": 46.8412707968,
+    "elevation": 2299.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BOR2",
+    "label": "Bortelsee",
+    "lon": 8.1093018432,
+    "lat": 46.2905306886,
+    "elevation": 2517.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "OBW2",
+    "label": "Jostsee",
+    "lon": 8.3159555287,
+    "lat": 46.5452213932,
+    "elevation": 2432.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "LAG1",
+    "label": "Lagrev",
+    "lon": 9.7330822954,
+    "lat": 46.4488905891,
+    "elevation": 3085.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "JAU1",
+    "label": "Chörblispitz",
+    "lon": 7.2689498572,
+    "lat": 46.6296849558,
+    "elevation": 2103.0,
+    "country_code": "CH",
+    "canton_code": "FR",
+    "type": "WIND"
+  },
+  {
+    "code": "CHA3",
+    "label": "Col de Bretaye",
+    "lon": 7.073748,
+    "lat": 46.325197,
+    "elevation": 1780.0,
+    "country_code": "CH",
+    "canton_code": "VD",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "DTR2",
+    "label": "Preda",
+    "lon": 8.8690602761,
+    "lat": 46.5428657406,
+    "elevation": 2057.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GUT1",
+    "label": "Bänzlauistock",
+    "lon": 8.2779761225,
+    "lat": 46.6925215843,
+    "elevation": 2528.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "SHE2",
+    "label": "Schibe",
+    "lon": 7.8124493033,
+    "lat": 46.7488254166,
+    "elevation": 1852.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "VIN2",
+    "label": "Alpetta",
+    "lon": 10.4428462856,
+    "lat": 46.9317665432,
+    "elevation": 2729.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FLU2",
+    "label": "Flüelapass",
+    "lon": 9.9464445628,
+    "lat": 46.7527116321,
+    "elevation": 2394.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "MAE2",
+    "label": "Itramen",
+    "lon": 7.9435417948,
+    "lat": 46.6186487992,
+    "elevation": 2162.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "VSC2",
+    "label": "Trigl",
+    "lon": 10.3529058304,
+    "lat": 46.7488219219,
+    "elevation": 2914.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "DAV3",
+    "label": "Hanengretji",
+    "lon": 9.7739900127,
+    "lat": 46.7888326157,
+    "elevation": 2455.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BRU2",
+    "label": "Ganda Plana",
+    "lon": 10.16702,
+    "lat": 46.26169,
+    "elevation": 2355.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "OBW1",
+    "label": "Sidelhorn",
+    "lon": 8.3084154499,
+    "lat": 46.5498493386,
+    "elevation": 2733.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "NAR1",
+    "label": "Motto Crostel",
+    "lon": 8.8669171273,
+    "lat": 46.4651037066,
+    "elevation": 2299.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "KES2",
+    "label": "Porta d'Es-cha",
+    "lon": 9.8981393038,
+    "lat": 46.6212841261,
+    "elevation": 2727.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "SCB2",
+    "label": "Schönbüel",
+    "lon": 8.1034380926,
+    "lat": 46.7793748858,
+    "elevation": 1777.0,
+    "country_code": "CH",
+    "canton_code": "OW",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ZER1",
+    "label": "Platthorn",
+    "lon": 7.7363289398,
+    "lat": 46.0536592487,
+    "elevation": 3345.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "SPN2",
+    "label": "Ze Seewe",
+    "lon": 8.1176235529,
+    "lat": 46.2294435858,
+    "elevation": 2620.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TUJ3",
+    "label": "Nual",
+    "lon": 8.7402231419,
+    "lat": 46.6470311966,
+    "elevation": 2211.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FAE1",
+    "label": "Albristhorn",
+    "lon": 7.4893374776,
+    "lat": 46.497117227,
+    "elevation": 2761.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "BED3",
+    "label": "Cassinello",
+    "lon": 8.5219136101,
+    "lat": 46.4911587325,
+    "elevation": 2101.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "KLT1",
+    "label": "Wiggis",
+    "lon": 9.0253846148,
+    "lat": 47.065309518,
+    "elevation": 2282.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "WIND"
+  },
+  {
+    "code": "ZER2",
+    "label": "Triftchumme",
+    "lon": 7.7274051006,
+    "lat": 46.0421771157,
+    "elevation": 2752.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BER2",
+    "label": "Motta Bianca",
+    "lon": 10.0292011292,
+    "lat": 46.4205714525,
+    "elevation": 2447.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "MUN1",
+    "label": "Gürsthorn",
+    "lon": 7.9167006162,
+    "lat": 46.3438267916,
+    "elevation": 2926.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "NAS2",
+    "label": "Schlivèra",
+    "lon": 10.2553208865,
+    "lat": 46.8150378313,
+    "elevation": 2350.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TAM1",
+    "label": "Wildseehorn",
+    "lon": 9.3997496729,
+    "lat": 46.967421721,
+    "elevation": 2689.0,
+    "country_code": "CH",
+    "canton_code": "SG",
+    "type": "WIND"
+  },
+  {
+    "code": "ELS2",
+    "label": "Elsige",
+    "lon": 7.6416414505,
+    "lat": 46.5296024413,
+    "elevation": 2143.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BEV1",
+    "label": "Cho d'Valetta",
+    "lon": 9.853533826,
+    "lat": 46.548854462,
+    "elevation": 2490.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "VAL1",
+    "label": "Löita",
+    "lon": 8.6108477303,
+    "lat": 46.5492576511,
+    "elevation": 2450.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "ELM2",
+    "label": "Chüebodensee",
+    "lon": 9.1365005833,
+    "lat": 46.9356087844,
+    "elevation": 2058.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BED1",
+    "label": "Lucendro",
+    "lon": 8.5194658263,
+    "lat": 46.5388902709,
+    "elevation": 2963.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "FNH2",
+    "label": "L'Ecreuleuse",
+    "lon": 6.9641039266,
+    "lat": 46.1007594713,
+    "elevation": 2252.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ELA1",
+    "label": "Piz Salteras",
+    "lon": 9.7082343997,
+    "lat": 46.5815284657,
+    "elevation": 3110.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "GOM3",
+    "label": "Treichbode",
+    "lon": 8.2285501986,
+    "lat": 46.4891417719,
+    "elevation": 2427.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CHA2",
+    "label": "Pierres Fendues",
+    "lon": 7.1639864128,
+    "lat": 46.3769622463,
+    "elevation": 2218.0,
+    "country_code": "CH",
+    "canton_code": "VD",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TAM2",
+    "label": "Wildsee",
+    "lon": 9.3909247472,
+    "lat": 46.9683642525,
+    "elevation": 2468.0,
+    "country_code": "CH",
+    "canton_code": "SG",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "VIN1",
+    "label": "Piz Alpetta",
+    "lon": 10.4493155571,
+    "lat": 46.9287879872,
+    "elevation": 2975.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "NEN1",
+    "label": "Creppon Blanc",
+    "lon": 7.3540228301,
+    "lat": 46.1431275142,
+    "elevation": 2713.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "GAN1",
+    "label": "Sackhorn",
+    "lon": 7.7662498371,
+    "lat": 46.4396794099,
+    "elevation": 3193.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "LAG3",
+    "label": "Materdell",
+    "lon": 9.6977723914,
+    "lat": 46.4245268915,
+    "elevation": 2300.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FAE2",
+    "label": "Färmel",
+    "lon": 7.4952491757,
+    "lat": 46.520413095,
+    "elevation": 1971.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BOV2",
+    "label": "Pointe de Toules",
+    "lon": 7.2372065768,
+    "lat": 45.9847921513,
+    "elevation": 2687.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "VDS2",
+    "label": "Donin du Jour",
+    "lon": 7.3675047729,
+    "lat": 46.3215106638,
+    "elevation": 2385.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "SAA1",
+    "label": "Platthorn",
+    "lon": 7.8612731182,
+    "lat": 46.1663450812,
+    "elevation": 3245.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "MUO1",
+    "label": "Wasserbergfirst",
+    "lon": 8.7868534714,
+    "lat": 46.9393497859,
+    "elevation": 2325.0,
+    "country_code": "CH",
+    "canton_code": "SZ",
+    "type": "WIND"
+  },
+  {
+    "code": "ELA3",
+    "label": "Muot",
+    "lon": 9.7697879551,
+    "lat": 46.6030343655,
+    "elevation": 2306.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "FLOWCAPT"
+  },
+  {
+    "code": "OBW3",
+    "label": "Mällige",
+    "lon": 8.3544780372,
+    "lat": 46.5078623461,
+    "elevation": 2194.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "HTR1",
+    "label": "Chilchalphorn",
+    "lon": 9.1541443427,
+    "lat": 46.5333514423,
+    "elevation": 3040.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "KLO2",
+    "label": "Madrisa",
+    "lon": 9.8738587175,
+    "lat": 46.909114564,
+    "elevation": 2147.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ZNZ1",
+    "label": "Sarsura Pitschen",
+    "lon": 9.9976221513,
+    "lat": 46.7042518299,
+    "elevation": 3133.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "SPN3",
+    "label": "Wenghorn",
+    "lon": 8.0451749053,
+    "lat": 46.1780120907,
+    "elevation": 2424.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TRU1",
+    "label": "Schwarzhorn",
+    "lon": 7.570579072,
+    "lat": 46.3834467189,
+    "elevation": 3088.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "YBR2",
+    "label": "Wanne",
+    "lon": 8.8254164392,
+    "lat": 47.0354580174,
+    "elevation": 1701.0,
+    "country_code": "CH",
+    "canton_code": "SZ",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "OFE2",
+    "label": "Murtaröl",
+    "lon": 10.2890514554,
+    "lat": 46.6317061515,
+    "elevation": 2359.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TUJ2",
+    "label": "Culmatsch",
+    "lon": 8.7237506951,
+    "lat": 46.6838798567,
+    "elevation": 2262.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "URS2",
+    "label": "Giltnasen",
+    "lon": 8.5138591825,
+    "lat": 46.5867864305,
+    "elevation": 2169.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "PAR2",
+    "label": "Kreuzweg",
+    "lon": 9.804844476,
+    "lat": 46.8517245212,
+    "elevation": 2290.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BOG1",
+    "label": "Martschenspitz",
+    "lon": 8.4600455064,
+    "lat": 46.3282673586,
+    "elevation": 2688.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "FUS2",
+    "label": "Alpe di Röd",
+    "lon": 8.6204462634,
+    "lat": 46.4364214753,
+    "elevation": 2390.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "SWM1",
+    "label": "Schwarzmönch",
+    "lon": 7.9275415603,
+    "lat": 46.5513674314,
+    "elevation": 2673.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "SAA2",
+    "label": "Seetal",
+    "lon": 7.8793527279,
+    "lat": 46.1718354106,
+    "elevation": 2480.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BOG3",
+    "label": "Bombögn Wind",
+    "lon": 8.4909814117,
+    "lat": 46.3062217779,
+    "elevation": 2179.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "BOG4",
+    "label": "Bombögn Schnee",
+    "lon": 8.490197,
+    "lat": 46.307255,
+    "elevation": 2031.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_SLOPE"
+  },
+  {
+    "code": "AMD1",
+    "label": "Mattstock",
+    "lon": 9.1355924024,
+    "lat": 47.1696906605,
+    "elevation": 1932.0,
+    "country_code": "CH",
+    "canton_code": "SG",
+    "type": "WIND"
+  },
+  {
+    "code": "SIM2",
+    "label": "Piano del Simano",
+    "lon": 8.9808234641,
+    "lat": 46.4674553164,
+    "elevation": 2450.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "WFJ2",
+    "label": "Weissfluhjoch",
+    "lon": 9.8092889157,
+    "lat": 46.8296377828,
+    "elevation": 2536.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GUT2",
+    "label": "Homad",
+    "lon": 8.2896913397,
+    "lat": 46.679309577,
+    "elevation": 2115.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "SCA2",
+    "label": "Seewli",
+    "lon": 8.7173428174,
+    "lat": 46.8129546327,
+    "elevation": 2032.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ELS1",
+    "label": "Elsighorn",
+    "lon": 7.6396400099,
+    "lat": 46.5346885101,
+    "elevation": 2340.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "HTR3",
+    "label": "Unter Surettasee",
+    "lon": 9.3485265731,
+    "lat": 46.5365498146,
+    "elevation": 2200.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "PUZ2",
+    "label": "Ils Plauns",
+    "lon": 8.8624548373,
+    "lat": 46.6263513736,
+    "elevation": 2196.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FUL1",
+    "label": "Grand Chavalard",
+    "lon": 7.1130347864,
+    "lat": 46.1786788154,
+    "elevation": 2899.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "ANV3",
+    "label": "Tracuit",
+    "lon": 7.6564012963,
+    "lat": 46.121164226,
+    "elevation": 2589.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ARO2",
+    "label": "Les Fontanesses",
+    "lon": 7.4458545197,
+    "lat": 46.0287818566,
+    "elevation": 2847.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ELM4",
+    "label": "Chli Mittaghorn",
+    "lon": 9.164479,
+    "lat": 46.893052,
+    "elevation": 2378.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "FLOWCAPT"
+  },
+  {
+    "code": "VLS1",
+    "label": "Piz Aul",
+    "lon": 9.1250666847,
+    "lat": 46.6228004828,
+    "elevation": 3121.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "SCH1",
+    "label": "Schilthorn",
+    "lon": 7.8352019342,
+    "lat": 46.5573127411,
+    "elevation": 2996.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "WIND"
+  },
+  {
+    "code": "SAA4",
+    "label": "Gibidum",
+    "lon": 7.9055305441,
+    "lat": 46.1244668489,
+    "elevation": 2680.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CAM1",
+    "label": "Tremorgio",
+    "lon": 8.7003813654,
+    "lat": 46.4826950381,
+    "elevation": 2668.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "MLB2",
+    "label": "Bärgtälli",
+    "lon": 9.6117701433,
+    "lat": 47.088468281,
+    "elevation": 1974.0,
+    "country_code": "LI",
+    "canton_code": "FL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "DIA2",
+    "label": "Tsanfleuron",
+    "lon": 7.241038066,
+    "lat": 46.3154043248,
+    "elevation": 2569.0,
+    "country_code": "CH",
+    "canton_code": "VD",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TUM1",
+    "label": "Piz Tumpiv",
+    "lon": 8.9922687513,
+    "lat": 46.7849760464,
+    "elevation": 3041.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "ANV2",
+    "label": "Orzival",
+    "lon": 7.5353719326,
+    "lat": 46.1882770501,
+    "elevation": 2640.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ENG2",
+    "label": "Fitteren",
+    "lon": 9.1894476808,
+    "lat": 46.992781719,
+    "elevation": 2162.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "JAU2",
+    "label": "Fochsen",
+    "lon": 7.274541453,
+    "lat": 46.6330485439,
+    "elevation": 1707.0,
+    "country_code": "CH",
+    "canton_code": "FR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "VDS1",
+    "label": "Crêta Besse",
+    "lon": 7.3522749518,
+    "lat": 46.3051908681,
+    "elevation": 2696.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "STH2",
+    "label": "Vorderstocken",
+    "lon": 7.5196488888,
+    "lat": 46.6820486806,
+    "elevation": 1791.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CSL2",
+    "label": "Col du Chasseral",
+    "lon": 7.0313366437,
+    "lat": 47.1163154815,
+    "elevation": 1455.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ALI2",
+    "label": "Chenau",
+    "lon": 6.9932975733,
+    "lat": 46.4886315485,
+    "elevation": 1708.0,
+    "country_code": "CH",
+    "canton_code": "FR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CAM3",
+    "label": "Solco",
+    "lon": 8.7088833554,
+    "lat": 46.4875754979,
+    "elevation": 2257.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_SLOPE"
+  },
+  {
+    "code": "PUZ1",
+    "label": "La Muota",
+    "lon": 8.8568107945,
+    "lat": 46.6232728496,
+    "elevation": 2425.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "KLT3",
+    "label": "Ruoggis, Unter Stafel",
+    "lon": 8.96921,
+    "lat": 47.03062,
+    "elevation": 1258.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BER3",
+    "label": "Puoz Bass",
+    "lon": 9.9158896865,
+    "lat": 46.4409149517,
+    "elevation": 2625.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "LHO2",
+    "label": "Russisprung",
+    "lon": 7.9437424189,
+    "lat": 46.5827908771,
+    "elevation": 2150.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "VRG3",
+    "label": "Porcaresc",
+    "lon": 8.4749541898,
+    "lat": 46.2403989608,
+    "elevation": 2038.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "MUN2",
+    "label": "Chiematte",
+    "lon": 7.9252033983,
+    "lat": 46.3330676419,
+    "elevation": 2205.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "LAG2",
+    "label": "Tscheppa",
+    "lon": 9.7445797657,
+    "lat": 46.4513573465,
+    "elevation": 2730.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ALI1",
+    "label": "Vanil des Artses",
+    "lon": 6.9872816394,
+    "lat": 46.4822477344,
+    "elevation": 1989.0,
+    "country_code": "CH",
+    "canton_code": "FR",
+    "type": "WIND"
+  },
+  {
+    "code": "BOV1",
+    "label": "Pointe de Boveire",
+    "lon": 7.2398808481,
+    "lat": 45.9945210176,
+    "elevation": 3211.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "BEV2",
+    "label": "Valetta",
+    "lon": 9.8370901184,
+    "lat": 46.5395638312,
+    "elevation": 2512.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "LUM3",
+    "label": "Lumpegna Nord",
+    "lon": 8.86257,
+    "lat": 46.73228,
+    "elevation": 2355.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_SLOPE"
+  },
+  {
+    "code": "ARO3",
+    "label": "Bréona",
+    "lon": 7.5620595173,
+    "lat": 46.0874200118,
+    "elevation": 2602.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ELM1",
+    "label": "Mittler Blistock",
+    "lon": 9.1205691901,
+    "lat": 46.9314712074,
+    "elevation": 2447.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "WIND"
+  },
+  {
+    "code": "DAV4",
+    "label": "Frauentobel",
+    "lon": 9.7847022813,
+    "lat": 46.7841942807,
+    "elevation": 2330.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "FLOWCAPT"
+  },
+  {
+    "code": "MES2",
+    "label": "Pian Grand",
+    "lon": 9.1602965296,
+    "lat": 46.4140106135,
+    "elevation": 2384.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GRA1",
+    "label": "Jumelles",
+    "lon": 6.8136286498,
+    "lat": 46.3522505663,
+    "elevation": 2210.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "GOS3",
+    "label": "Gütsch",
+    "lon": 8.6069666032,
+    "lat": 46.656419602,
+    "elevation": 2209.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "GAD2",
+    "label": "Gschletteregg",
+    "lon": 8.3974880425,
+    "lat": 46.7441889175,
+    "elevation": 2063.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "DAV1",
+    "label": "Chrachenhorn",
+    "lon": 9.8143102025,
+    "lat": 46.688510327,
+    "elevation": 2890.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "DTR1",
+    "label": "Costa",
+    "lon": 8.8660941256,
+    "lat": 46.5480673487,
+    "elevation": 2388.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "SPN1",
+    "label": "Chesselhorn",
+    "lon": 8.0813786697,
+    "lat": 46.2182755158,
+    "elevation": 2980.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "LUK2",
+    "label": "Lai Verd",
+    "lon": 8.783521203,
+    "lat": 46.6041530083,
+    "elevation": 2555.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "SCA3",
+    "label": "Alpler Tor",
+    "lon": 8.7795393745,
+    "lat": 46.8915380517,
+    "elevation": 2338.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "MEI2",
+    "label": "Laucheren",
+    "lon": 8.5510141702,
+    "lat": 46.7437676834,
+    "elevation": 2220.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "BOG2",
+    "label": "Hendar Furggu",
+    "lon": 8.4716178803,
+    "lat": 46.3338031644,
+    "elevation": 2299.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "MUO2",
+    "label": "Rupperslaui",
+    "lon": 8.7456210131,
+    "lat": 46.9382173093,
+    "elevation": 2083.0,
+    "country_code": "CH",
+    "canton_code": "SZ",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "RNZ3",
+    "label": "Rienzenstock",
+    "lon": 8.625968,
+    "lat": 46.684788,
+    "elevation": 2390.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FOU2",
+    "label": "Glacier de l'Evole",
+    "lon": 7.067234126,
+    "lat": 45.9717551031,
+    "elevation": 2800.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FIS2",
+    "label": "Fisi",
+    "lon": 7.6738830911,
+    "lat": 46.4714646325,
+    "elevation": 2155.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "SIM1",
+    "label": "Cima del Simano",
+    "lon": 8.971946227,
+    "lat": 46.4625100549,
+    "elevation": 2579.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "WIND"
+  },
+  {
+    "code": "FIR2",
+    "label": "Schmidigen-Bidmeren",
+    "lon": 8.0644030712,
+    "lat": 46.668776692,
+    "elevation": 2111.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ENG1",
+    "label": "Gulderstock",
+    "lon": 9.2015829672,
+    "lat": 46.993126583,
+    "elevation": 2510.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "WIND"
+  },
+  {
+    "code": "ALB2",
+    "label": "Teststation Albula",
+    "lon": 9.8362238704,
+    "lat": 46.5809452447,
+    "elevation": 2322.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "LAV1",
+    "label": "Gonda Cotschna",
+    "lon": 10.1123281211,
+    "lat": 46.7843261822,
+    "elevation": 2405.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "FLOWCAPT"
+  },
+  {
+    "code": "BED4",
+    "label": "Sabbioni",
+    "lon": 8.496417664,
+    "lat": 46.5256303769,
+    "elevation": 2305.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "LUK1",
+    "label": "Piz Gannaretsch",
+    "lon": 8.7865471942,
+    "lat": 46.6119085207,
+    "elevation": 3040.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "OTT2",
+    "label": "Ottere",
+    "lon": 7.5616365285,
+    "lat": 46.5397016993,
+    "elevation": 2017.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "NAR2",
+    "label": "Bassa di Nara",
+    "lon": 8.8686355598,
+    "lat": 46.4729905441,
+    "elevation": 2077.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ANV1",
+    "label": "Corne de Sorebois",
+    "lon": 7.5866645685,
+    "lat": 46.1507642468,
+    "elevation": 2895.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "MUT1",
+    "label": "Ruchi",
+    "lon": 9.0450796939,
+    "lat": 46.863574033,
+    "elevation": 3103.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "WIND"
+  },
+  {
+    "code": "ELM3",
+    "label": "Maadgrat",
+    "lon": 9.173698,
+    "lat": 46.894659,
+    "elevation": 2433.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "FLOWCAPT"
+  },
+  {
+    "code": "BIN4",
+    "label": "Schapleralpa",
+    "lon": 8.2089905908,
+    "lat": 46.3482268322,
+    "elevation": 2354.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ELA2",
+    "label": "Tschitta",
+    "lon": 9.714693958,
+    "lat": 46.5914246875,
+    "elevation": 2726.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "URS1",
+    "label": "Gross Schijen",
+    "lon": 8.6383104894,
+    "lat": 46.6681313349,
+    "elevation": 2784.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "WIND"
+  },
+  {
+    "code": "SAA5",
+    "label": "Mälliga",
+    "lon": 7.9813854913,
+    "lat": 46.1274832422,
+    "elevation": 2952.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TUJ1",
+    "label": "Crispalt",
+    "lon": 8.694490284,
+    "lat": 46.6837291216,
+    "elevation": 3028.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "MES1",
+    "label": "Piz Pian Grand",
+    "lon": 9.1556970675,
+    "lat": 46.4174815167,
+    "elevation": 2688.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "WIND"
+  },
+  {
+    "code": "SCA1",
+    "label": "Gross Windgällen",
+    "lon": 8.7321316095,
+    "lat": 46.8072552914,
+    "elevation": 3187.0,
+    "country_code": "CH",
+    "canton_code": "UR",
+    "type": "WIND"
+  },
+  {
+    "code": "SLF2",
+    "label": "Davos Stilli (SLF)",
+    "lon": 9.8482647161,
+    "lat": 46.8127671605,
+    "elevation": 1563.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "CHA1",
+    "label": "La Para",
+    "lon": 7.1524524668,
+    "lat": 46.3828977375,
+    "elevation": 2540.0,
+    "country_code": "CH",
+    "canton_code": "VD",
+    "type": "WIND"
+  },
+  {
+    "code": "MTR2",
+    "label": "Predanass",
+    "lon": 8.917591252,
+    "lat": 46.4087259824,
+    "elevation": 1884.0,
+    "country_code": "CH",
+    "canton_code": "TI",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "FNH1",
+    "label": "Le Luisin",
+    "lon": 6.9699710885,
+    "lat": 46.120718532,
+    "elevation": 2785.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "WIND"
+  },
+  {
+    "code": "EGH2",
+    "label": "Flesch",
+    "lon": 8.0917150997,
+    "lat": 46.4168105095,
+    "elevation": 2500.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ORT2",
+    "label": "Ortstock Matt",
+    "lon": 8.9585495408,
+    "lat": 46.9180816426,
+    "elevation": 1824.0,
+    "country_code": "CH",
+    "canton_code": "GL",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "TRU2",
+    "label": "Trubelboden",
+    "lon": 7.5855719555,
+    "lat": 46.3709514336,
+    "elevation": 2459.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ATT2",
+    "label": "Lac des Vaux",
+    "lon": 7.2699181277,
+    "lat": 46.1052869814,
+    "elevation": 2550.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "ZNZ2",
+    "label": "Pülschezza",
+    "lon": 10.018844256,
+    "lat": 46.6977161659,
+    "elevation": 2677.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "OBM2",
+    "label": "Obere Meiel",
+    "lon": 7.2143855539,
+    "lat": 46.4217730982,
+    "elevation": 2097.0,
+    "country_code": "CH",
+    "canton_code": "BE",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "MLB1",
+    "label": "Spitz",
+    "lon": 9.6239926506,
+    "lat": 47.0867605724,
+    "elevation": 2186.0,
+    "country_code": "LI",
+    "canton_code": "FL",
+    "type": "WIND"
+  },
+  {
+    "code": "ZER4",
+    "label": "Stafelalp",
+    "lon": 7.7023907351,
+    "lat": 45.9979893991,
+    "elevation": 2408.0,
+    "country_code": "CH",
+    "canton_code": "VS",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "HTR2",
+    "label": "Alp Piänetsch",
+    "lon": 9.2043350473,
+    "lat": 46.5443790013,
+    "elevation": 2147.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "PMA2",
+    "label": "Colms da Parsonz",
+    "lon": 9.5373872088,
+    "lat": 46.5800758554,
+    "elevation": 2429.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  },
+  {
+    "code": "DAV6",
+    "label": "Luksch Alp",
+    "lon": 9.8912630265,
+    "lat": 46.7825936431,
+    "elevation": 2290.0,
+    "country_code": "CH",
+    "canton_code": "GR",
+    "type": "SNOW_FLAT"
+  }
+]

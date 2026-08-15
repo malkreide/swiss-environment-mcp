@@ -1,0 +1,1864 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47722,
+      "id": 47722,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "47",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "47"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47723,
+      "id": 47723,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "47",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "47"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47728,
+      "id": 47728,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47729,
+      "id": 47729,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47787,
+      "id": 47787,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "45",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "45"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47789,
+      "id": 47789,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47791,
+      "id": 47791,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47805,
+      "id": 47805,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47806,
+      "id": 47806,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47826,
+      "id": 47826,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47831,
+      "id": 47831,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "48",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "48"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47841,
+      "id": 47841,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47842,
+      "id": 47842,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47846,
+      "id": 47846,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47864,
+      "id": 47864,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "48",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "48"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47873,
+      "id": 47873,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2009",
+        "noisepollutionregister_registername": "LBK Basel-Mulhouse",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/SEfReEXkLtdP/basel-mulhouse.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47877,
+      "id": 47877,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "45",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "45"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47878,
+      "id": 47878,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "45",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "45"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47939,
+      "id": 47939,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47977,
+      "id": 47977,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47978,
+      "id": 47978,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47985,
+      "id": 47985,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "47",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "47"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 47986,
+      "id": 47986,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "47",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "47"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48008,
+      "id": 48008,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48009,
+      "id": 48009,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48010,
+      "id": 48010,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48011,
+      "id": 48011,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48017,
+      "id": 48017,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48025,
+      "id": 48025,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "48",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "48"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48029,
+      "id": 48029,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48030,
+      "id": 48030,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48042,
+      "id": 48042,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48051,
+      "id": 48051,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "49",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "49"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48053,
+      "id": 48053,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48054,
+      "id": 48054,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48058,
+      "id": 48058,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48070,
+      "id": 48070,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "49",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "49"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48081,
+      "id": 48081,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "48",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "48"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48087,
+      "id": 48087,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48088,
+      "id": 48088,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48089,
+      "id": 48089,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48132,
+      "id": 48132,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48140,
+      "id": 48140,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48158,
+      "id": 48158,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48161,
+      "id": 48161,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "43",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "43"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48162,
+      "id": 48162,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "43",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "43"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48163,
+      "id": 48163,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "43",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "43"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48164,
+      "id": 48164,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "43",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "43"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48165,
+      "id": 48165,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48166,
+      "id": 48166,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48170,
+      "id": 48170,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48172,
+      "id": 48172,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48173,
+      "id": 48173,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48174,
+      "id": 48174,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48175,
+      "id": 48175,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48176,
+      "id": 48176,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48177,
+      "id": 48177,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48203,
+      "id": 48203,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48214,
+      "id": 48214,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48222,
+      "id": 48222,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "45",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "45"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48242,
+      "id": 48242,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48252,
+      "id": 48252,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48259,
+      "id": 48259,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48261,
+      "id": 48261,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48262,
+      "id": 48262,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48281,
+      "id": 48281,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "46",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "46"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48283,
+      "id": 48283,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48284,
+      "id": 48284,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48325,
+      "id": 48325,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "46",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "46"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48326,
+      "id": 48326,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "46",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "46"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48327,
+      "id": 48327,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "46",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "46"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48352,
+      "id": 48352,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48353,
+      "id": 48353,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48360,
+      "id": 48360,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48376,
+      "id": 48376,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48381,
+      "id": 48381,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48382,
+      "id": 48382,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48391,
+      "id": 48391,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48392,
+      "id": 48392,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48451,
+      "id": 48451,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48456,
+      "id": 48456,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48457,
+      "id": 48457,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48470,
+      "id": 48470,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48475,
+      "id": 48475,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48478,
+      "id": 48478,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "47",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "47"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48480,
+      "id": 48480,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48508,
+      "id": 48508,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2009",
+        "noisepollutionregister_registername": "LBK Basel-Mulhouse",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/SEfReEXkLtdP/basel-mulhouse.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48512,
+      "id": 48512,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "43",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "43"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48517,
+      "id": 48517,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "49",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "49"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48543,
+      "id": 48543,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48544,
+      "id": 48544,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48545,
+      "id": 48545,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48612,
+      "id": 48612,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "45",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "45"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48616,
+      "id": 48616,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48617,
+      "id": 48617,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48618,
+      "id": 48618,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48619,
+      "id": 48619,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48624,
+      "id": 48624,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "49",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "49"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48626,
+      "id": 48626,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "43",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "43"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48672,
+      "id": 48672,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "44",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "44"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48702,
+      "id": 48702,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48703,
+      "id": 48703,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48705,
+      "id": 48705,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48716,
+      "id": 48716,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48717,
+      "id": 48717,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48783,
+      "id": 48783,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48784,
+      "id": 48784,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48785,
+      "id": 48785,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48786,
+      "id": 48786,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48753,
+      "id": 48753,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "46",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "46"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48764,
+      "id": 48764,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "47",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "47"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48773,
+      "id": 48773,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48782,
+      "id": 48782,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48809,
+      "id": 48809,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2009",
+        "noisepollutionregister_registername": "LBK Basel-Mulhouse",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/SEfReEXkLtdP/basel-mulhouse.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48828,
+      "id": 48828,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48829,
+      "id": 48829,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48842,
+      "id": 48842,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48844,
+      "id": 48844,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48846,
+      "id": 48846,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "46",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "46"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48866,
+      "id": 48866,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48884,
+      "id": 48884,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48916,
+      "id": 48916,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48919,
+      "id": 48919,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_erste-nachtstunde",
+      "layerName": "Lärmbelastung 1. Nachtstunde",
+      "featureId": 48920,
+      "id": 48920,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "FirstNightHour_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "64"
+      }
+    }
+  ]
+}
