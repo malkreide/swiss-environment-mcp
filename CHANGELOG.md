@@ -5,7 +5,59 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Hinzugefügt
+
+- **Aufgezeichnete Fixtures statt handgeschriebener Erfolgs-Antworten
+  (`DRIFT-004`).** `tests/fixtures/` hält jetzt 20 echte Antworten, aufgezeichnet
+  mit `scripts/record_fixtures.py` an demselben Ort, an dem der Server sie
+  entgegennimmt (httpx-Response-Hook auf dem geteilten Client aus
+  `api_client.get_client()`) — gleicher User-Agent, gleiches Timeout, gleiche
+  DNS-Pinning-Schicht wie im Betrieb. Herkunft, Schlüssel, Auswahlregel, Grösse
+  und SHA-256 stehen je Datei in `tests/fixtures/PROVENANCE.md`; geladen wird
+  über `tests/fixture_data.py`, gefahren in `tests/test_recorded_fixtures.py`
+  (49 neue Tests).
+
+  Eine Aufzeichnung **je Abfrage**, nicht je Endpunkt: acht der zwanzig Dateien
+  liegen unter derselben Adresse und unterscheiden sich allein im
+  `layers`-Parameter. Zugeordnet wird beim Abspielen nach der Anfrage und nicht
+  nach der Reihenfolge — `env_noise_aircraft_registers` schickt in einem Aufruf
+  acht Abfragen.
+
+  Fünf Werkzeuge (`env_nabel_stations`, `env_hydro_stations`,
+  `env_hazard_overview`, `env_hazard_regions`, `env_hunting_species`) liefern
+  im Quellcode gepflegte Kataloge und schicken keine Anfrage. Sie haben deshalb
+  keine Aufzeichnung — und das ist kein Versehen, sondern eine Zusicherung:
+  `test_die_katalog_werkzeuge_fragen_nichts` fällt, sobald eines von ihnen doch
+  eine Quelle fragt.
+
+  Die Fehlerpfade — Timeout, 5xx, leere Trefferliste — bleiben handgeschrieben.
+  Sie lassen sich nicht auf Zuruf aufzeichnen und sind als Erfindung in Ordnung.
+
 ### Behoben
+
+- **Der Nachweis wies jede gekürzte Datei als vollständig aus.** `_kuerze` gab
+  seine Zähler als `return vorher, nachher, geh(daten)` zurück. Python wertet
+  von links nach rechts aus und liest die beiden Zahlen, **bevor** `geh` sie
+  hochzählt — also immer `(0, 0)`. Über jeder gekürzten Aufzeichnung stand
+  «ungekürzt». `test_der_nachweis_meldet_was_gekuerzt_wurde` fällt, wenn die
+  Zähler wieder blind werden.
+
+- **Der Schlüssel einer Aufzeichnung stand auf einer IP statt auf einem
+  Hostnamen.** `_PinnedTransport` schreibt die URL vor dem Connect auf die
+  aufgelöste Adresse um (`SEC-005`). Die stand damit im Schlüssel — und ist
+  beim nächsten Lauf eine andere: derselbe Aufruf traf innerhalb **eines**
+  Aufnahmelaufs auf `13.226.251.100` und `13.226.251.119`. Grün war die
+  Zuordnung nur, solange der Resolver zufällig dasselbe sagte. Der Schlüssel
+  liest jetzt den `Host`-Header, den der Transport bewusst stehen lässt;
+  `test_kein_schluessel_traegt_eine_ip_statt_eines_hostnamens` hält das fest.
+
+- **Das Kürzen erfand einen Negativbefund.** `env_bathing_water` filtert die
+  Badestellen nach Kanton **in** der Antwortliste. Gekürzt blieben drei
+  Waadtländer Stellen stehen, und die Aufzeichnung behauptete damit «keine
+  Badestelle im Kanton BE» — eine grüne Suite über einem erfundenen Ergebnis.
+  Wo der Server *in* einer Liste filtert oder rechnet, wird jetzt ungekürzt
+  aufgezeichnet: `bathing_water`, `wildfire_danger`, `snow_stations`,
+  `hunting_stats`, `noise_registers`. Der Grund steht je Datei im Nachweis.
 
 - **Die vendored copy `sparql_client.py` war auseinandergelaufen (`ARCH-014`,
   `DRIFT-006`).** Die Datei sagt in ihrem eigenen Kopf, sie werde

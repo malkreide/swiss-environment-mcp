@@ -1,0 +1,1432 @@
+[
+  {
+    "region_id": 135,
+    "region_name_de": "Aaretal (BE)",
+    "region_name_fr": "Aaretal (BE)",
+    "region_name_it": "Aaretal (BE)",
+    "region_name_en": "Aaretal (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 48,
+    "region_name_de": "Ajoie (JU)",
+    "region_name_fr": "Ajoie (JU)",
+    "region_name_it": "Ajoie (JU)",
+    "region_name_en": "Ajoie (JU)",
+    "canton_id": 11,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 97,
+    "region_name_de": "Aletsch (VS)",
+    "region_name_fr": "Aletsch (VS)",
+    "region_name_it": "Aletsch (VS)",
+    "region_name_en": "Aletsch (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-16T12:01:21.785+02:00"
+  },
+  {
+    "region_id": 15,
+    "region_name_de": "Alttoggenburg (SG)",
+    "region_name_fr": "Alttoggenburg (SG)",
+    "region_name_it": "Alttoggenburg (SG)",
+    "region_name_en": "Alttoggenburg (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 26,
+    "region_name_de": "Anniviers (VS)",
+    "region_name_fr": "Anniviers (VS)",
+    "region_name_it": "Anniviers (VS)",
+    "region_name_en": "Anniviers (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 65,
+    "region_name_de": "Arpille (VS)",
+    "region_name_fr": "Arpille (VS)",
+    "region_name_it": "Arpille (VS)",
+    "region_name_en": "Arpille (VS)",
+    "canton_id": 24,
+    "level": 4,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 79,
+    "region_name_de": "Bagnes (VS)",
+    "region_name_fr": "Bagnes (VS)",
+    "region_name_it": "Bagnes (VS)",
+    "region_name_en": "Bagnes (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-09T12:02:28.028+02:00"
+  },
+  {
+    "region_id": 5,
+    "region_name_de": "Basse Gruyère (FR)",
+    "region_name_fr": "Basse Gruyère (FR)",
+    "region_name_it": "Basse Gruyère (FR)",
+    "region_name_en": "Basse Gruyère (FR)",
+    "canton_id": 7,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 82,
+    "region_name_de": "Beatenberg / Unterseen (BE)",
+    "region_name_fr": "Beatenberg / Unterseen (BE)",
+    "region_name_it": "Beatenberg / Unterseen (BE)",
+    "region_name_en": "Beatenberg / Unterseen (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 69,
+    "region_name_de": "Bergell (GR)",
+    "region_name_fr": "Bregaglia (GR)",
+    "region_name_it": "Bregaglia (GR)",
+    "region_name_en": "Bergell / Bregaglia (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-29T12:02:18.908+02:00"
+  },
+  {
+    "region_id": 119,
+    "region_name_de": "Bergün Filisur (GR)",
+    "region_name_fr": "Bergün Filisur (GR)",
+    "region_name_it": "Bergün Filisur (GR)",
+    "region_name_en": "Bergün Filisur (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-27T12:01:22.343+02:00"
+  },
+  {
+    "region_id": 120,
+    "region_name_de": "Berner Jura Ost (BE)",
+    "region_name_fr": "Jura Bernois est (BE)",
+    "region_name_it": "Giura bernese est (BE)",
+    "region_name_en": "Berner Jura Ost (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 30,
+    "region_name_de": "Berner Jura West (BE)",
+    "region_name_fr": "Jura Bernois ouest (BE)",
+    "region_name_it": "Giura bernese ovest (BE)",
+    "region_name_en": "Berner Jura West (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 131,
+    "region_name_de": "Binn (VS)",
+    "region_name_fr": "Binn (VS)",
+    "region_name_it": "Binn (VS)",
+    "region_name_en": "Binn (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 52,
+    "region_name_de": "Broye (FR)",
+    "region_name_fr": "Broye (FR)",
+    "region_name_it": "Broye (FR)",
+    "region_name_en": "Broye (FR)",
+    "canton_id": 7,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 98,
+    "region_name_de": "Chablais (VS)",
+    "region_name_fr": "Chablais (VS)",
+    "region_name_it": "Chablais (VS)",
+    "region_name_en": "Chablais (VS)",
+    "canton_id": 24,
+    "level": 4,
+    "valid_from": "2026-07-10T12:05:41.255+02:00"
+  },
+  {
+    "region_id": 73,
+    "region_name_de": "Davos - Klosters (GR)",
+    "region_name_fr": "Davos - Klosters (GR)",
+    "region_name_it": "Davos - Klosters (GR)",
+    "region_name_en": "Tavau - Klosters (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-28T12:06:48.936+02:00"
+  },
+  {
+    "region_id": 68,
+    "region_name_de": "Delsberg (JU)",
+    "region_name_fr": "Delémont (JU)",
+    "region_name_it": "Delémont (JU)",
+    "region_name_en": "Delémont (JU)",
+    "canton_id": 11,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 55,
+    "region_name_de": "Diemtigtal (BE)",
+    "region_name_fr": "Diemtigtal (BE)",
+    "region_name_it": "Diemtigtal (BE)",
+    "region_name_en": "Diemtigtal (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 105,
+    "region_name_de": "Domleschg (GR)",
+    "region_name_fr": "Domleschg (GR)",
+    "region_name_it": "Domleschg (GR)",
+    "region_name_en": "Domleschg (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-06-25T12:09:56.840+02:00"
+  },
+  {
+    "region_id": 8,
+    "region_name_de": "Dorneck / Thierstein (SO)",
+    "region_name_fr": "Dorneck / Thierstein (SO)",
+    "region_name_it": "Dorneck / Thierstein (SO)",
+    "region_name_en": "Dorneck / Thierstein (SO)",
+    "canton_id": 18,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 40,
+    "region_name_de": "Emmental Süd (BE)",
+    "region_name_fr": "Emmental sud (BE)",
+    "region_name_it": "Emmental sud (BE)",
+    "region_name_en": "Emmental Süd (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-22T12:01:37.966+02:00"
+  },
+  {
+    "region_id": 25,
+    "region_name_de": "Entschligental (BE)",
+    "region_name_fr": "Entschligental (BE)",
+    "region_name_it": "Entschligental (BE)",
+    "region_name_en": "Entschligental (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 14,
+    "region_name_de": "Evolène (VS)",
+    "region_name_fr": "Evolène (VS)",
+    "region_name_it": "Evolène (VS)",
+    "region_name_en": "Evolène (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 95,
+    "region_name_de": "Freibergen (JU)",
+    "region_name_fr": "Franches-Montagnes (JU)",
+    "region_name_it": "Franches-Montagnes (JU)",
+    "region_name_en": "Franches-Montagnes (JU)",
+    "canton_id": 11,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 20,
+    "region_name_de": "Frutig- / Kiental (BE)",
+    "region_name_fr": "Frutig- / Kiental (BE)",
+    "region_name_it": "Frutig- / Kiental (BE)",
+    "region_name_en": "Frutig- / Kiental (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 116,
+    "region_name_de": "Fully (VS)",
+    "region_name_fr": "Fully (VS)",
+    "region_name_it": "Fully (VS)",
+    "region_name_en": "Fully (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 21,
+    "region_name_de": "Fürstentum Liechtenstein",
+    "region_name_fr": "Principauté du Liechtenstein",
+    "region_name_it": "Principato del Liechtenstein",
+    "region_name_en": "Principality of Liechtenstein",
+    "canton_id": 27,
+    "level": 5,
+    "valid_from": "2026-08-06T12:00:52.925+02:00"
+  },
+  {
+    "region_id": 136,
+    "region_name_de": "Gaster (SG)",
+    "region_name_fr": "Gaster (SG)",
+    "region_name_it": "Gaster (SG)",
+    "region_name_en": "Gaster (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 28,
+    "region_name_de": "Gd St. Bernard (VS)",
+    "region_name_fr": "Gd St. Bernard (VS)",
+    "region_name_it": "Gd St. Bernard (VS)",
+    "region_name_en": "Gd St. Bernard (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-09T12:02:28.028+02:00"
+  },
+  {
+    "region_id": 90,
+    "region_name_de": "Glarus (GL)",
+    "region_name_fr": "Glaris (GL)",
+    "region_name_it": "Glarona (GL)",
+    "region_name_en": "Glarus (GL)",
+    "canton_id": 9,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 22,
+    "region_name_de": "Goms (VS)",
+    "region_name_fr": "Vallée de Conches (VS)",
+    "region_name_it": "Goms (VS)",
+    "region_name_en": "Goms (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 114,
+    "region_name_de": "Grimselregion (BE)",
+    "region_name_fr": "Grimselregion (BE)",
+    "region_name_it": "Grimselregion (BE)",
+    "region_name_en": "Grimselregion (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 3,
+    "region_name_de": "Grindelwald (BE)",
+    "region_name_fr": "Grindelwald (BE)",
+    "region_name_it": "Grindelwald (BE)",
+    "region_name_en": "Grindelwald (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 17,
+    "region_name_de": "Grosses Moos (BE)",
+    "region_name_fr": "Grosses Moos (BE)",
+    "region_name_it": "Grosses Moos (BE)",
+    "region_name_en": "Grosses Moos (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 129,
+    "region_name_de": "Gürbetal (BE)",
+    "region_name_fr": "Gürbetal (BE)",
+    "region_name_it": "Gürbetal (BE)",
+    "region_name_en": "Gürbetal (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 132,
+    "region_name_de": "Habkern (BE)",
+    "region_name_fr": "Habkern (BE)",
+    "region_name_it": "Habkern (BE)",
+    "region_name_en": "Habkern (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 89,
+    "region_name_de": "Haute Gruyère - Jogne (FR)",
+    "region_name_fr": "Haute Gruyère - Jogne (FR)",
+    "region_name_it": "Haute Gruyère - Jogne (FR)",
+    "region_name_en": "Haute Gruyère - Jogne (FR)",
+    "canton_id": 7,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 36,
+    "region_name_de": "Innertkirchen/ Gadmen (BE)",
+    "region_name_fr": "Innertkirchen/ Gadmen (BE)",
+    "region_name_it": "Innertkirchen/ Gadmen (BE)",
+    "region_name_en": "Innertkirchen/ Gadmen (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 70,
+    "region_name_de": "Innertkirchen/ Urbachtal (BE)",
+    "region_name_fr": "Innertkirchen/ Urbachtal (BE)",
+    "region_name_it": "Innertkirchen/ Urbachtal (BE)",
+    "region_name_en": "Innertkirchen/ Urbachtal (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 138,
+    "region_name_de": "Jura - Côte (VD)",
+    "region_name_fr": "Jura - Côte (VD)",
+    "region_name_it": "Jura - Côte (VD)",
+    "region_name_en": "Jura - Côte (VD)",
+    "canton_id": 23,
+    "level": 4,
+    "valid_from": "2026-08-06T12:00:52.925+02:00"
+  },
+  {
+    "region_id": 59,
+    "region_name_de": "Jurasüdfuss Biel/Bienne (BE)",
+    "region_name_fr": "Pied du Jura Biel/Bienne (BE)",
+    "region_name_it": "Piedi del Giura Biel/Bienne (BE)",
+    "region_name_en": "Jurasüdfuss Biel/Bienne (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 2,
+    "region_name_de": "Jurasüdfuss Oberaargau",
+    "region_name_fr": "Pied du Jura Oberargau (BE)",
+    "region_name_it": "Piedi del Giura Oberargau (BE)",
+    "region_name_en": "Jurasüdfuss Oberaargau",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 85,
+    "region_name_de": "Jura Südfuss - Olten (SO)",
+    "region_name_fr": "Pied du Jura - Olten (SO)",
+    "region_name_it": "Piedi del Giura - Olten (SO)",
+    "region_name_en": "Jura Südfuss - Olten (SO)",
+    "canton_id": 18,
+    "level": 5,
+    "valid_from": "2026-08-07T12:00:35.968+02:00"
+  },
+  {
+    "region_id": 49,
+    "region_name_de": "Jura Südfuss - Solothurn (SO)",
+    "region_name_fr": "Pied du Jura - Soleure (SO)",
+    "region_name_it": "Piedi del Giura - Soletta (SO)",
+    "region_name_en": "Jura Südfuss - Solothurn (SO)",
+    "canton_id": 18,
+    "level": 5,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 107,
+    "region_name_de": "Kandersteg (BE)",
+    "region_name_fr": "Kandersteg (BE)",
+    "region_name_it": "Kandersteg (BE)",
+    "region_name_en": "Kandersteg (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 127,
+    "region_name_de": "Kanton Aargau",
+    "region_name_fr": "Canton d'Argovie",
+    "region_name_it": "Canton Argovia",
+    "region_name_en": "Canton of Aargau",
+    "canton_id": 1,
+    "level": 5,
+    "valid_from": "2026-08-07T12:00:35.968+02:00"
+  },
+  {
+    "region_id": 42,
+    "region_name_de": "Kanton Appenzell Ausserrhoden",
+    "region_name_fr": "Canton d'Appenzell Rhodes-Extérieures",
+    "region_name_it": "Canton Appenzello Esterno",
+    "region_name_en": "Appenzell Ausserrhoden",
+    "canton_id": 3,
+    "level": 4,
+    "valid_from": "2026-08-06T12:00:52.925+02:00"
+  },
+  {
+    "region_id": 41,
+    "region_name_de": "Kanton Appenzell Innerrhoden",
+    "region_name_fr": "Canton d'Appenzell Rhodes-Intérieures",
+    "region_name_it": "Canton Appenzello Interno",
+    "region_name_en": "Appenzell Innerrhoden",
+    "canton_id": 2,
+    "level": 4,
+    "valid_from": "2026-08-06T12:00:52.925+02:00"
+  },
+  {
+    "region_id": 47,
+    "region_name_de": "Kanton Basel-Landschaft",
+    "region_name_fr": "Canton de Bâle-Campagne",
+    "region_name_it": "Cantone di Basilea Campagna",
+    "region_name_en": "Canton of Basel-Land",
+    "canton_id": 5,
+    "level": 5,
+    "valid_from": "2026-07-24T12:00:46.231+02:00"
+  },
+  {
+    "region_id": 78,
+    "region_name_de": "Kanton Basel-Stadt",
+    "region_name_fr": "Canton de Bâle-Ville",
+    "region_name_it": "Cantone di Basilea Città ",
+    "region_name_en": "Canton of Basel-Stadt",
+    "canton_id": 6,
+    "level": 5,
+    "valid_from": "2026-07-24T12:00:46.231+02:00"
+  },
+  {
+    "region_id": 31,
+    "region_name_de": "Kanton Genf",
+    "region_name_fr": "Canton de Genève",
+    "region_name_it": "Canton Ginevra",
+    "region_name_en": "Canton of Geneva",
+    "canton_id": 8,
+    "level": 5,
+    "valid_from": "2026-08-12T12:02:09.264+02:00"
+  },
+  {
+    "region_id": 9,
+    "region_name_de": "Kanton Luzern",
+    "region_name_fr": "Canton de Lucerne",
+    "region_name_it": "Canton Lucerna",
+    "region_name_en": "Canton of Lucerne",
+    "canton_id": 12,
+    "level": 5,
+    "valid_from": "2026-08-11T12:05:25.310+02:00"
+  },
+  {
+    "region_id": 96,
+    "region_name_de": "Kanton Nidwalden",
+    "region_name_fr": "Canton de Nidwald",
+    "region_name_it": "Canton Nidvaldo",
+    "region_name_en": "Nidwalden",
+    "canton_id": 14,
+    "level": 4,
+    "valid_from": "2026-08-07T12:00:35.968+02:00"
+  },
+  {
+    "region_id": 124,
+    "region_name_de": "Kanton Obwalden",
+    "region_name_fr": "Canton de Obwald",
+    "region_name_it": "Canton Obvaldo",
+    "region_name_en": "Obwalden",
+    "canton_id": 15,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 118,
+    "region_name_de": "Kanton Schaffhausen",
+    "region_name_fr": "Canton de Schaffhouse",
+    "region_name_it": "Canton Sciaffusa",
+    "region_name_en": "Canton of Schaffhausen",
+    "canton_id": 17,
+    "level": 5,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 29,
+    "region_name_de": "Kanton Schwyz",
+    "region_name_fr": "Canton de Schwytz",
+    "region_name_it": "Canton Svitto",
+    "region_name_en": "Canton of Schwyz",
+    "canton_id": 19,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 62,
+    "region_name_de": "Kanton Thurgau",
+    "region_name_fr": "Canton de Thurgovie",
+    "region_name_it": "Canton Turgovia",
+    "region_name_en": "Canton of Thurgau",
+    "canton_id": 20,
+    "level": 5,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 10,
+    "region_name_de": "Kanton Uri",
+    "region_name_fr": "Canton d'Uri",
+    "region_name_it": "Canton Uri",
+    "region_name_en": "Canton of Uri",
+    "canton_id": 22,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 115,
+    "region_name_de": "Kanton Zug",
+    "region_name_fr": "Canton de Zoug",
+    "region_name_it": "Canton Zugo",
+    "region_name_en": "Canton of Zug",
+    "canton_id": 25,
+    "level": 5,
+    "valid_from": "2026-08-11T12:05:25.310+02:00"
+  },
+  {
+    "region_id": 87,
+    "region_name_de": "Kanton Zürich",
+    "region_name_fr": "Canton de Zurich",
+    "region_name_it": "Canton Zurigo",
+    "region_name_en": "Canton of Zurich",
+    "canton_id": 26,
+    "level": 5,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 123,
+    "region_name_de": "Kiesental (BE)",
+    "region_name_fr": "Kiesental (BE)",
+    "region_name_it": "Kiesental (BE)",
+    "region_name_en": "Kiesental (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 32,
+    "region_name_de": "Lauterbrunnen (BE)",
+    "region_name_fr": "Lauterbrunnen (BE)",
+    "region_name_it": "Lauterbrunnen (BE)",
+    "region_name_en": "Lauterbrunnen (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 139,
+    "region_name_de": "Lötschental (VS)",
+    "region_name_fr": "Lötschental (VS)",
+    "region_name_it": "Lötschental (VS)",
+    "region_name_en": "Lötschental (VS)",
+    "canton_id": 24,
+    "level": 4,
+    "valid_from": "2026-07-16T12:01:21.785+02:00"
+  },
+  {
+    "region_id": 23,
+    "region_name_de": "Meiringen Schattseite  (BE)",
+    "region_name_fr": "Meiringen versant nord (BE)",
+    "region_name_it": "Meiringen versante nord (BE)",
+    "region_name_en": "Meiringen Schattseite  (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 44,
+    "region_name_de": "Meiringen Sonnseite  (BE)",
+    "region_name_fr": "Meiringen versant sud (BE)",
+    "region_name_it": "Meiringen versante sud (BE)",
+    "region_name_en": "Meiringen Sonnseite  (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 102,
+    "region_name_de": "Moesano (GR)",
+    "region_name_fr": "Moesano (GR)",
+    "region_name_it": "Moesano (GR)",
+    "region_name_en": "Moesano (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-07T12:01:54.823+02:00"
+  },
+  {
+    "region_id": 112,
+    "region_name_de": "Montana (VS)",
+    "region_name_fr": "Montana (VS)",
+    "region_name_it": "Montana (VS)",
+    "region_name_en": "Montana (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 110,
+    "region_name_de": "Neuenburger Berge (NE)",
+    "region_name_fr": "Montagnes neuchâteloises (NE)",
+    "region_name_it": "Montagne neocastellane (NE)",
+    "region_name_en": "Neuchâtel mountains (NE)",
+    "canton_id": 13,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 72,
+    "region_name_de": "Neuenburger Küste (NE)",
+    "region_name_fr": "Littoral neuchâtelois (NE)",
+    "region_name_it": "Littorale neocastellano (NE)",
+    "region_name_en": "Neuchâtel coastline (NE)",
+    "canton_id": 13,
+    "level": 4,
+    "valid_from": "2026-08-03T12:00:54.095+02:00"
+  },
+  {
+    "region_id": 75,
+    "region_name_de": "Niedersimmental (BE)",
+    "region_name_fr": "Niedersimmental (BE)",
+    "region_name_it": "Niedersimmental (BE)",
+    "region_name_en": "Niedersimmental (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 43,
+    "region_name_de": "Nikolai (VS)",
+    "region_name_fr": "Nikolai (VS)",
+    "region_name_it": "Nikolai (VS)",
+    "region_name_en": "Nikolai (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-09T12:02:28.028+02:00"
+  },
+  {
+    "region_id": 34,
+    "region_name_de": "Nördlich Brienzersee (BE)",
+    "region_name_fr": "Brienzersee nord (BE)",
+    "region_name_it": "Brienzersee nord (BE)",
+    "region_name_en": "Nördlich Brienzersee (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 93,
+    "region_name_de": "Nördlich Thunersee (BE)",
+    "region_name_fr": "Thunersee nord (BE)",
+    "region_name_it": "Thunersee nord (BE)",
+    "region_name_en": "Nördlich Thunersee (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-28T12:06:48.936+02:00"
+  },
+  {
+    "region_id": 67,
+    "region_name_de": "Nordtessin (TI)",
+    "region_name_fr": "Haut Tessin (TI)",
+    "region_name_it": "Alto Ticino (TI)",
+    "region_name_en": "Northern Ticino (TI)",
+    "canton_id": 21,
+    "level": 4,
+    "valid_from": "2026-08-04T12:01:01.243+02:00"
+  },
+  {
+    "region_id": 33,
+    "region_name_de": "Oberaargau Nord (BE)",
+    "region_name_fr": "Oberaargau nord (BE)",
+    "region_name_it": "Oberaargau nord (BE)",
+    "region_name_en": "Oberaargau Nord (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 64,
+    "region_name_de": "Oberaargau Süd (BE)",
+    "region_name_fr": "Oberaargau sud (BE)",
+    "region_name_it": "Oberaargau sud (BE)",
+    "region_name_en": "Oberaargau Süd (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 113,
+    "region_name_de": "Oberengadin (GR)",
+    "region_name_fr": "Haute Engadine (GR)",
+    "region_name_it": "Alta Engadina (GR)",
+    "region_name_en": "Engiadina Ota / Oberengadin (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-08-13T12:09:54.105+02:00"
+  },
+  {
+    "region_id": 88,
+    "region_name_de": "Obere Sense (FR)",
+    "region_name_fr": "Haute Singine (FR)",
+    "region_name_it": "Haute Singine (FR)",
+    "region_name_en": "Haute Singine (FR)",
+    "canton_id": 7,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 103,
+    "region_name_de": "Obere Surselva (GR)",
+    "region_name_fr": "Haute Surselva (GR)",
+    "region_name_it": "Alta Surselva (GR)",
+    "region_name_en": "Surselva ota (GR)",
+    "canton_id": 10,
+    "level": 5,
+    "valid_from": "2026-08-13T12:09:54.105+02:00"
+  },
+  {
+    "region_id": 1,
+    "region_name_de": "Obertoggenburg (SG)",
+    "region_name_fr": "Obertoggenburg (SG)",
+    "region_name_it": "Obertoggenburg (SG)",
+    "region_name_en": "Obertoggenburg (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 46,
+    "region_name_de": "Olten - Mittelland (SO)",
+    "region_name_fr": "Plateau Olten (SO)",
+    "region_name_it": "Olten - Mittelland (SO)",
+    "region_name_en": "Olten - Mittelland (SO)",
+    "canton_id": 18,
+    "level": 5,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 61,
+    "region_name_de": "Plateau de Diesse (BE)",
+    "region_name_fr": "Plateau de Diesse (BE)",
+    "region_name_it": "Plateau de Diesse (BE)",
+    "region_name_en": "Plateau de Diesse (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 109,
+    "region_name_de": "Prättigau (GR)",
+    "region_name_fr": "Prättigau (GR)",
+    "region_name_it": "Prättigau (GR)",
+    "region_name_en": "Prättigau (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-08T12:01:34.711+02:00"
+  },
+  {
+    "region_id": 12,
+    "region_name_de": "Puschlav (GR)",
+    "region_name_fr": "Val de Poschiavo (GR)",
+    "region_name_it": "Val Poschiavo (GR)",
+    "region_name_en": "Val Poschiavo / Puschlav (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-27T12:01:22.343+02:00"
+  },
+  {
+    "region_id": 94,
+    "region_name_de": "Region Bern (BE)",
+    "region_name_fr": "Région Bern (BE)",
+    "region_name_it": "Regione Bern (BE)",
+    "region_name_en": "Region Bern (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 4,
+    "region_name_de": "Region Biel/Bienne (BE)",
+    "region_name_fr": "Région Biel/Bienne (BE)",
+    "region_name_it": "Regione Biel/Bienne (BE)",
+    "region_name_en": "Region Biel/Bienne (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 77,
+    "region_name_de": "Region Burgdorf (BE)",
+    "region_name_fr": "Région Burgdorf (BE)",
+    "region_name_it": "Regione Burgdorf (BE)",
+    "region_name_en": "Region Burgdorf (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 58,
+    "region_name_de": "Region Gantrisch (BE)",
+    "region_name_fr": "Région Gantrisch (BE)",
+    "region_name_it": "Regione Gantrisch (BE)",
+    "region_name_en": "Region Gantrisch (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 108,
+    "region_name_de": "Region Lenk (BE)",
+    "region_name_fr": "Région Lenk (BE)",
+    "region_name_it": "Regione Lenk (BE)",
+    "region_name_en": "Region Lenk (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 99,
+    "region_name_de": "Region Napf (BE)",
+    "region_name_fr": "Région Napf (BE)",
+    "region_name_it": "Regione Napf (BE)",
+    "region_name_en": "Region Napf (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-22T12:01:37.966+02:00"
+  },
+  {
+    "region_id": 86,
+    "region_name_de": "Region Zweisimmen (BE)",
+    "region_name_fr": "Région Zweisimmen (BE)",
+    "region_name_it": "Regione Zweisimmen (BE)",
+    "region_name_en": "Region Zweisimmen (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 19,
+    "region_name_de": "Rheintal (GR)",
+    "region_name_fr": "Vallée du Rhin (GR)",
+    "region_name_it": "Valle del Reno (GR)",
+    "region_name_en": "Rheintal (GR)",
+    "canton_id": 10,
+    "level": 5,
+    "valid_from": "2026-07-07T12:01:54.823+02:00"
+  },
+  {
+    "region_id": 35,
+    "region_name_de": "Rheintal (SG)",
+    "region_name_fr": "Vallée du Rhin (SG",
+    "region_name_it": "Valle del Reno (SG",
+    "region_name_en": "Rheintal (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 134,
+    "region_name_de": "Rheinwald (GR)",
+    "region_name_fr": "Rheinwald (GR)",
+    "region_name_it": "Rheinwald (GR)",
+    "region_name_en": "Rheinwald (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-27T12:01:22.343+02:00"
+  },
+  {
+    "region_id": 111,
+    "region_name_de": "Riddes (VS)",
+    "region_name_fr": "Riddes (VS)",
+    "region_name_it": "Riddes (VS)",
+    "region_name_en": "Riddes (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 125,
+    "region_name_de": "Rüti/ Büren (BE)",
+    "region_name_fr": "Rüti/ Büren (BE)",
+    "region_name_it": "Rüti/ Büren (BE)",
+    "region_name_en": "Rüti/ Büren (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 128,
+    "region_name_de": "Saanenland (BE)",
+    "region_name_fr": "Saanenland (BE)",
+    "region_name_it": "Saanenland (BE)",
+    "region_name_en": "Saanenland (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 100,
+    "region_name_de": "Saane - Untere Sense (FR)",
+    "region_name_fr": "Sarine - Basse Singine (FR)",
+    "region_name_it": "Sarine - Basse Singine (FR)",
+    "region_name_en": "Sarine - Basse Singine (FR)",
+    "canton_id": 7,
+    "level": 4,
+    "valid_from": "2026-08-03T12:00:54.095+02:00"
+  },
+  {
+    "region_id": 38,
+    "region_name_de": "Saas (VS)",
+    "region_name_fr": "Saas (VS)",
+    "region_name_it": "Saas (VS)",
+    "region_name_en": "Saas (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 53,
+    "region_name_de": "Samnaun (GR)",
+    "region_name_fr": "Samnaun (GR)",
+    "region_name_it": "Samnaun (GR)",
+    "region_name_en": "Samnaun (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-08-13T12:09:54.105+02:00"
+  },
+  {
+    "region_id": 56,
+    "region_name_de": "San Bernadino (GR)",
+    "region_name_fr": "San Bernadino (GR)",
+    "region_name_it": "San Bernadino (GR)",
+    "region_name_en": "San Bernadino (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-07T12:01:54.823+02:00"
+  },
+  {
+    "region_id": 50,
+    "region_name_de": "Sargans (SG)",
+    "region_name_fr": "Sargans (SG)",
+    "region_name_it": "Sargans (SG)",
+    "region_name_en": "Sargans (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 80,
+    "region_name_de": "Saxeten / Bödeli (BE)",
+    "region_name_fr": "Saxeten / Bödeli (BE)",
+    "region_name_it": "Saxeten / Bödeli (BE)",
+    "region_name_en": "Saxeten / Bödeli (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 121,
+    "region_name_de": "Schams - Albula (GR)",
+    "region_name_fr": "Schams - Albula (GR)",
+    "region_name_it": "Schams - Albula (GR)",
+    "region_name_en": "Schams - Albula (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-09T12:02:28.028+02:00"
+  },
+  {
+    "region_id": 137,
+    "region_name_de": "Schanfigg (GR)",
+    "region_name_fr": "Schanfigg (GR)",
+    "region_name_it": "Schanfigg (GR)",
+    "region_name_en": "Schanfigg (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-03T12:07:10.300+02:00"
+  },
+  {
+    "region_id": 84,
+    "region_name_de": "Schwarzenburg/ Längenberg (BE)",
+    "region_name_fr": "Schwarzenburg/ Längenberg (BE)",
+    "region_name_it": "Schwarzenburg/ Längenberg (BE)",
+    "region_name_en": "Schwarzenburg/ Längenberg (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-03T12:00:54.095+02:00"
+  },
+  {
+    "region_id": 27,
+    "region_name_de": "Scuol-Valsot (GR)",
+    "region_name_fr": "Scuol-Valsot (GR)",
+    "region_name_it": "Scuol-Valsot (GR)",
+    "region_name_en": "Scuol-Valsot (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-10T12:05:41.255+02:00"
+  },
+  {
+    "region_id": 76,
+    "region_name_de": "See (FR)",
+    "region_name_fr": "Lac (FR)",
+    "region_name_it": "Lac (FR)",
+    "region_name_en": "Lac (FR)",
+    "canton_id": 7,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 117,
+    "region_name_de": "Seeland Ost (BE)",
+    "region_name_fr": "Seeloand est (BE)",
+    "region_name_it": "Seeland est (BE)",
+    "region_name_en": "Seeland Ost (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 142,
+    "region_name_de": "Sensenlauf (BE)",
+    "region_name_fr": "Sensenlauf (BE)",
+    "region_name_it": "Sensenlauf (BE)",
+    "region_name_en": "Sensenlauf (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 143,
+    "region_name_de": "Simplon Nord (VS)",
+    "region_name_fr": "Simplon Nord (VS)",
+    "region_name_it": "Sempione Nord (VS)",
+    "region_name_en": "Simplon north (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 101,
+    "region_name_de": "Simplon (VS)",
+    "region_name_fr": "Simplon (VS)",
+    "region_name_it": "Sempione (VS)",
+    "region_name_en": "Simplon (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 130,
+    "region_name_de": "Sitten-Siders (VS)",
+    "region_name_fr": "Sion-Sierre (VS)",
+    "region_name_it": "Sion-Sierre (VS)",
+    "region_name_en": "Sion-Sierre (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 126,
+    "region_name_de": "Solothurn - Mittelland (SO)",
+    "region_name_fr": "Plateau Soleure (SO)",
+    "region_name_it": "Soletta - Mittelland (SO)",
+    "region_name_en": "Solothurn - Mittelland (SO)",
+    "canton_id": 18,
+    "level": 5,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 74,
+    "region_name_de": "Sottoceneri (TI)",
+    "region_name_fr": "Sottoceneri (TI)",
+    "region_name_it": "Sottoceneri (TI)",
+    "region_name_en": "Sottoceneri (TI)",
+    "canton_id": 21,
+    "level": 4,
+    "valid_from": "2026-08-04T12:01:01.243+02:00"
+  },
+  {
+    "region_id": 18,
+    "region_name_de": "St.Gallen (SG)",
+    "region_name_fr": "Saint-Gall (SG)",
+    "region_name_it": "San Gallo (SG)",
+    "region_name_en": "St.Gallen (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 39,
+    "region_name_de": "St. Maurice (VS)",
+    "region_name_fr": "St. Maurice (VS)",
+    "region_name_it": "St. Maurice (VS)",
+    "region_name_en": "St. Maurice (VS)",
+    "canton_id": 24,
+    "level": 4,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 122,
+    "region_name_de": "Südlich Breinzersee (BE)",
+    "region_name_fr": "Breinzersee sud (BE)",
+    "region_name_it": "Breinzersee sud (BE)",
+    "region_name_en": "Südlich Breinzersee (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-10T12:00:39.246+02:00"
+  },
+  {
+    "region_id": 71,
+    "region_name_de": "Südlich Thunersee (BE)",
+    "region_name_fr": "Thunersee sud (BE)",
+    "region_name_it": "Thunersee sud (BE)",
+    "region_name_en": "Südlich Thunersee (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-05T12:00:51.628+02:00"
+  },
+  {
+    "region_id": 6,
+    "region_name_de": "Südrampe (VS)",
+    "region_name_fr": "Südrampe (VS)",
+    "region_name_it": "Südrampe (VS)",
+    "region_name_en": "Südrampe (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 54,
+    "region_name_de": "Surses (GR)",
+    "region_name_fr": "Surses (GR)",
+    "region_name_it": "Surses (GR)",
+    "region_name_en": "Surses (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-07-27T12:01:22.343+02:00"
+  },
+  {
+    "region_id": 66,
+    "region_name_de": "Thal (SO)",
+    "region_name_fr": "Thal (SO)",
+    "region_name_it": "Thal (SO)",
+    "region_name_en": "Thal (SO)",
+    "canton_id": 18,
+    "level": 5,
+    "valid_from": "2026-08-07T12:00:35.968+02:00"
+  },
+  {
+    "region_id": 45,
+    "region_name_de": "Thun (BE)",
+    "region_name_fr": "Thun (BE)",
+    "region_name_it": "Thun (BE)",
+    "region_name_en": "Thun (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-23T12:04:44.226+02:00"
+  },
+  {
+    "region_id": 81,
+    "region_name_de": "Turtmanntal (VS)",
+    "region_name_fr": "Vallée de Tourtemagne (VS)",
+    "region_name_it": "Valle di Turtmann (VS)",
+    "region_name_en": "Turtmann Valley (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-07-30T12:01:34.446+02:00"
+  },
+  {
+    "region_id": 16,
+    "region_name_de": "Untere Emme (BE)",
+    "region_name_fr": "Untere Emme (BE)",
+    "region_name_it": "Untere Emme (BE)",
+    "region_name_en": "Untere Emme (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 104,
+    "region_name_de": "Untere Surselva (GR)",
+    "region_name_fr": "Basse Surselva (GR)",
+    "region_name_it": "Bassa Surselva (GR)",
+    "region_name_en": "Surselva bassa (GR)",
+    "canton_id": 10,
+    "level": 5,
+    "valid_from": "2026-07-09T12:02:28.028+02:00"
+  },
+  {
+    "region_id": 91,
+    "region_name_de": "Urtenental (BE)",
+    "region_name_fr": "Urtenental (BE)",
+    "region_name_it": "Urtenental (BE)",
+    "region_name_en": "Urtenental (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 140,
+    "region_name_de": "Val-de-Ruz (NE)",
+    "region_name_fr": "Val-de-Ruz (NE)",
+    "region_name_it": "Val-de-Ruz (NE)",
+    "region_name_en": "Val-de-Ruz (NE)",
+    "canton_id": 13,
+    "level": 4,
+    "valid_from": "2026-08-03T12:00:54.095+02:00"
+  },
+  {
+    "region_id": 106,
+    "region_name_de": "Val-de-Travers (NE)",
+    "region_name_fr": "Val-de-Travers (NE)",
+    "region_name_it": "Val-de-Travers (NE)",
+    "region_name_en": "Val-de-Travers (NE)",
+    "canton_id": 13,
+    "level": 4,
+    "valid_from": "2026-08-06T12:00:52.925+02:00"
+  },
+  {
+    "region_id": 83,
+    "region_name_de": "Val d'Illiez (VS)",
+    "region_name_fr": "Val d'Illiez (VS)",
+    "region_name_it": "Val d'Illiez (VS)",
+    "region_name_en": "Val d'Illiez (VS)",
+    "canton_id": 24,
+    "level": 4,
+    "valid_from": "2026-07-16T12:01:21.785+02:00"
+  },
+  {
+    "region_id": 92,
+    "region_name_de": "Val Müstair (GR)",
+    "region_name_fr": "Val Müstair (GR)",
+    "region_name_it": "Val Monastero (GR)",
+    "region_name_en": "Val Müstair (GR)",
+    "canton_id": 10,
+    "level": 5,
+    "valid_from": "2026-07-27T12:01:22.343+02:00"
+  },
+  {
+    "region_id": 57,
+    "region_name_de": "Veveyse - Glâne (FR)",
+    "region_name_fr": "Veveyse - Glâne (FR)",
+    "region_name_it": "Veveyse - Glâne (FR)",
+    "region_name_en": "Veveyse - Glâne (FR)",
+    "canton_id": 7,
+    "level": 4,
+    "valid_from": "2026-07-20T12:10:34.634+02:00"
+  },
+  {
+    "region_id": 7,
+    "region_name_de": "Vispertal (VS)",
+    "region_name_fr": "Vispertal (VS)",
+    "region_name_it": "Vispertal (VS)",
+    "region_name_en": "Vispertal (VS)",
+    "canton_id": 24,
+    "level": 5,
+    "valid_from": "2026-06-23T12:06:26.946+02:00"
+  },
+  {
+    "region_id": 51,
+    "region_name_de": "Waadtländische Alpen (VD)",
+    "region_name_fr": "Alpes vaudoises (VD)",
+    "region_name_it": "Alpi vodesi (VD)",
+    "region_name_en": "Vaudoises Alps (VD)",
+    "canton_id": 23,
+    "level": 4,
+    "valid_from": "2026-08-06T12:00:52.925+02:00"
+  },
+  {
+    "region_id": 11,
+    "region_name_de": "Waadtländisches Mittelland (VD)",
+    "region_name_fr": "Plateau vaudois (VD)",
+    "region_name_it": "Pianura vodese (VD)",
+    "region_name_en": "Plateau vaudois (VD)",
+    "canton_id": 23,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 133,
+    "region_name_de": "Walensee (SG)",
+    "region_name_fr": "Lac de Walenstadt (SG)",
+    "region_name_it": "Lago di Walsenstadt (SG)",
+    "region_name_en": "Lake Walsenstadt (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 141,
+    "region_name_de": "Werdenberg (SG)",
+    "region_name_fr": "Werdenberg (SG)",
+    "region_name_it": "Werdenberg (SG)",
+    "region_name_en": "Werdenberg (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 60,
+    "region_name_de": "Wil (SG)",
+    "region_name_fr": "Wil (SG)",
+    "region_name_it": "Wil (SG)",
+    "region_name_en": "Wil (SG)",
+    "canton_id": 16,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 13,
+    "region_name_de": "Worblental (BE)",
+    "region_name_fr": "Worblental (BE)",
+    "region_name_it": "Worblental (BE)",
+    "region_name_en": "Worblental (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 37,
+    "region_name_de": "Zentraltessin (TI)",
+    "region_name_fr": "Tessin central (TI)",
+    "region_name_it": "Ticino centrale (TI)",
+    "region_name_en": "Central Ticino (TI)",
+    "canton_id": 21,
+    "level": 5,
+    "valid_from": "2026-08-14T12:00:44.279+02:00"
+  },
+  {
+    "region_id": 63,
+    "region_name_de": "Zernez (GR)",
+    "region_name_fr": "Zernez (GR)",
+    "region_name_it": "Zernez (GR)",
+    "region_name_en": "Zernez (GR)",
+    "canton_id": 10,
+    "level": 4,
+    "valid_from": "2026-08-06T12:00:52.925+02:00"
+  },
+  {
+    "region_id": 24,
+    "region_name_de": "Zulgtal (BE)",
+    "region_name_fr": "Zulgtal (BE)",
+    "region_name_it": "Zulgtal (BE)",
+    "region_name_en": "Zulgtal (BE)",
+    "canton_id": 4,
+    "level": 4,
+    "valid_from": "2026-07-23T12:04:44.226+02:00"
+  }
+]

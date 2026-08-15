@@ -1,0 +1,17 @@
+{
+  "head": {
+    "vars": [
+      "license"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "license": {
+          "type": "uri",
+          "value": "https://fedlex.data.admin.ch/eli/cc/1984/1122_1122_1122#art_10_e"
+        }
+      }
+    ]
+  }
+}

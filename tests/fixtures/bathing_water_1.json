@@ -1,0 +1,34 @@
+{
+  "head": {
+    "vars": [
+      "cube",
+      "name",
+      "version",
+      "status"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "cube": {
+          "type": "uri",
+          "value": "https://environment.ld.admin.ch/foen/ubd01041prod/13"
+        },
+        "name": {
+          "xml:lang": "de",
+          "type": "literal",
+          "value": "Qualität der Badegewässer"
+        },
+        "version": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "13"
+        },
+        "status": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/vocabulary/CreativeWorkStatus/Published"
+        }
+      }
+    ]
+  }
+}

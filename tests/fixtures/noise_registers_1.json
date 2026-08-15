@@ -1,0 +1,2704 @@
+{
+  "results": [
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47719,
+      "id": 47719,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47726,
+      "id": 47726,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47727,
+      "id": 47727,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47755,
+      "id": 47755,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47763,
+      "id": 47763,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47786,
+      "id": 47786,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47802,
+      "id": 47802,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47803,
+      "id": 47803,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47807,
+      "id": 47807,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47813,
+      "id": 47813,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47814,
+      "id": 47814,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47818,
+      "id": 47818,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47835,
+      "id": 47835,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47838,
+      "id": 47838,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47840,
+      "id": 47840,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47854,
+      "id": 47854,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47855,
+      "id": 47855,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47859,
+      "id": 47859,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47863,
+      "id": 47863,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47872,
+      "id": 47872,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47881,
+      "id": 47881,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47888,
+      "id": 47888,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47889,
+      "id": 47889,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47890,
+      "id": 47890,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47891,
+      "id": 47891,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47895,
+      "id": 47895,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2009",
+        "noisepollutionregister_registername": "LBK Basel-Mulhouse",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/SEfReEXkLtdP/basel-mulhouse.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47896,
+      "id": 47896,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47900,
+      "id": 47900,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47901,
+      "id": 47901,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47902,
+      "id": 47902,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47909,
+      "id": 47909,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47912,
+      "id": 47912,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47917,
+      "id": 47917,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47932,
+      "id": 47932,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47937,
+      "id": 47937,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47938,
+      "id": 47938,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47940,
+      "id": 47940,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47950,
+      "id": 47950,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47958,
+      "id": 47958,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47971,
+      "id": 47971,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47972,
+      "id": 47972,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47980,
+      "id": 47980,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47987,
+      "id": 47987,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 47991,
+      "id": 47991,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48005,
+      "id": 48005,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48013,
+      "id": 48013,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48018,
+      "id": 48018,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48064,
+      "id": 48064,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48065,
+      "id": 48065,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48074,
+      "id": 48074,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48075,
+      "id": 48075,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48076,
+      "id": 48076,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48077,
+      "id": 48077,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48078,
+      "id": 48078,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48080,
+      "id": 48080,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48105,
+      "id": 48105,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48111,
+      "id": 48111,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48112,
+      "id": 48112,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48120,
+      "id": 48120,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48129,
+      "id": 48129,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48147,
+      "id": 48147,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48148,
+      "id": 48148,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48149,
+      "id": 48149,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48151,
+      "id": 48151,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48152,
+      "id": 48152,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48157,
+      "id": 48157,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48160,
+      "id": 48160,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48168,
+      "id": 48168,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48179,
+      "id": 48179,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48211,
+      "id": 48211,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48212,
+      "id": 48212,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48226,
+      "id": 48226,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48227,
+      "id": 48227,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48228,
+      "id": 48228,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48229,
+      "id": 48229,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48230,
+      "id": 48230,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48235,
+      "id": 48235,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48238,
+      "id": 48238,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48239,
+      "id": 48239,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48250,
+      "id": 48250,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48251,
+      "id": 48251,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48258,
+      "id": 48258,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48263,
+      "id": 48263,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48275,
+      "id": 48275,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48277,
+      "id": 48277,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48279,
+      "id": 48279,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48288,
+      "id": 48288,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48299,
+      "id": 48299,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48303,
+      "id": 48303,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48319,
+      "id": 48319,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48328,
+      "id": 48328,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48345,
+      "id": 48345,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48349,
+      "id": 48349,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48351,
+      "id": 48351,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48361,
+      "id": 48361,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48362,
+      "id": 48362,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48363,
+      "id": 48363,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48364,
+      "id": 48364,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48365,
+      "id": 48365,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48366,
+      "id": 48366,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48367,
+      "id": 48367,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48371,
+      "id": 48371,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48380,
+      "id": 48380,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48383,
+      "id": 48383,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48388,
+      "id": 48388,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48402,
+      "id": 48402,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48403,
+      "id": 48403,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48411,
+      "id": 48411,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48419,
+      "id": 48419,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48424,
+      "id": 48424,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48430,
+      "id": 48430,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48433,
+      "id": 48433,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48434,
+      "id": 48434,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48458,
+      "id": 48458,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48462,
+      "id": 48462,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "68",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "68"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48485,
+      "id": 48485,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48490,
+      "id": 48490,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48493,
+      "id": 48493,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "52",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "52"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48503,
+      "id": 48503,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48524,
+      "id": 48524,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48527,
+      "id": 48527,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48528,
+      "id": 48528,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48533,
+      "id": 48533,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "55"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48539,
+      "id": 48539,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48565,
+      "id": 48565,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48570,
+      "id": 48570,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48571,
+      "id": 48571,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48572,
+      "id": 48572,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48573,
+      "id": 48573,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48579,
+      "id": 48579,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48594,
+      "id": 48594,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "50",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "50"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48622,
+      "id": 48622,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48628,
+      "id": 48628,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48629,
+      "id": 48629,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48652,
+      "id": 48652,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48653,
+      "id": 48653,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48668,
+      "id": 48668,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48669,
+      "id": 48669,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48678,
+      "id": 48678,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48679,
+      "id": 48679,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48680,
+      "id": 48680,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48689,
+      "id": 48689,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48690,
+      "id": 48690,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48694,
+      "id": 48694,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "54",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "54"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48696,
+      "id": 48696,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48708,
+      "id": 48708,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48711,
+      "id": 48711,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.11.2009",
+        "noisepollutionregister_registername": "LBK Basel-Mulhouse",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/SEfReEXkLtdP/basel-mulhouse.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48712,
+      "id": 48712,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "73",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "73"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48718,
+      "id": 48718,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48725,
+      "id": 48725,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "70",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "70"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48727,
+      "id": 48727,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "61",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "61"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48729,
+      "id": 48729,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "64",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "64"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48868,
+      "id": 48868,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "57",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "57"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48746,
+      "id": 48746,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48747,
+      "id": 48747,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48750,
+      "id": 48750,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48751,
+      "id": 48751,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "63",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "63"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48754,
+      "id": 48754,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "59",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "59"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48765,
+      "id": 48765,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "71",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "71"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48769,
+      "id": 48769,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "53",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "53"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48779,
+      "id": 48779,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48794,
+      "id": 48794,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "58",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "58"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48818,
+      "id": 48818,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "69",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "69"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48822,
+      "id": 48822,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "28.09.2018",
+        "noisepollutionregister_registername": "LBK Bern",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/ngfcYO-W5Y1V/bern-belp.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48832,
+      "id": 48832,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "51",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "51"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48840,
+      "id": 48840,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "72",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "72"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48841,
+      "id": 48841,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "74",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "74"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48848,
+      "id": 48848,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48849,
+      "id": 48849,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48850,
+      "id": 48850,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "56",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "56"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48852,
+      "id": 48852,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "25.05.2020",
+        "noisepollutionregister_registername": "LBK Samedan",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "65",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/zKqaH9Htib5P/samedan.pdf",
+        "label": "65"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48855,
+      "id": 48855,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "09.10.2020",
+        "noisepollutionregister_registername": "CDR Lugano-Agno",
+        "noisepollutionregister_editor": "Ufficio federale dell'aviazione civile UFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "60",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/nAox01r7pz9A/lugano.pdf",
+        "label": "60"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48872,
+      "id": 48872,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48873,
+      "id": 48873,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48874,
+      "id": 48874,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "03.07.2015",
+        "noisepollutionregister_registername": "LBK Zürich",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "75",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/lxjT5Vru736V/zuerich.pdf",
+        "label": "75"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48885,
+      "id": 48885,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "16.04.2024",
+        "noisepollutionregister_registername": "LBK St. Gallen-Altenrhein",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "67",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/RTYdNwOUewhX/st_gallen-altenrhein.pdf",
+        "label": "67"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48900,
+      "id": 48900,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48901,
+      "id": 48901,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "62",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "62"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48917,
+      "id": 48917,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "01.03.2009",
+        "noisepollutionregister_registername": "CDB Genève",
+        "noisepollutionregister_editor": "Office fédéral de l'aviation civile OFAC",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "66",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/fr/sd-web/kU8int-EJP8A/geneve.pdf",
+        "label": "66"
+      }
+    },
+    {
+      "layerBodId": "ch.bazl.laermbelastungskataster-zivilflugplaetze_klein-grossflugzeuge",
+      "layerName": "Lärmbelast. Klein- / Grossflugzeuge",
+      "featureId": 48921,
+      "id": 48921,
+      "properties": {
+        "noisepollutionregister_validity_validfrom": "17.02.2020",
+        "noisepollutionregister_registername": "LBK Saanen",
+        "noisepollutionregister_editor": "Bundesamt für Zivilluftfahrt BAZL",
+        "exposuregroup_exposuretype": "OverallTrafficDay_Lr",
+        "exposurecurve_level_db": "55",
+        "noisepollutionregister_documentlink": "https://www.bazl.admin.ch/dam/de/sd-web/llpigJfC3-YE/saanen.pdf",
+        "label": "55"
+      }
+    }
+  ]
+}

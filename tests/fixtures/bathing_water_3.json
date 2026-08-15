@@ -1,0 +1,4723 @@
+{
+  "head": {
+    "vars": [
+      "value",
+      "name",
+      "nameLang",
+      "identifier",
+      "place"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22088"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Clendy"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22088"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22054"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Coulet"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22054"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH19006"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Badi Tennwil"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH19006"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/19"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH19007"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Seerose"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH19007"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/19"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22080"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Cudrefin"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22080"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22038"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Camping"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22038"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH19004"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Vor Badi"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH19004"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/19"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22051"
+        },
+        "name": {
+          "type": "literal",
+          "value": "A.B.C."
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22051"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25011"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de la Pointe-à-la-Bise"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25011"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25010"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bellerive débarcadère"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25010"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25019"
+        },
+        "name": {
+          "type": "literal",
+          "value": "ONU plage"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25019"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22023"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bellerive"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22023"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH11005"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Solothurn"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH11005"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/11"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH14013"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Schaffhausen Rheinbad Rhybadi"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH14013"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/14"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22076"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Chevroux"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22076"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH20009"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Schwimmbad Hörnli"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH20009"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/20"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22045"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Centre"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22045"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22058"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Dorigny"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22058"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25026"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage du Creux-de-Genthod"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25026"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21051"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Castello del Sole"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21051"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25020"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage du Reposoir"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25020"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25003"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage des Courbes"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25003"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25008"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de la Nymphe"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25008"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22092"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Le Port"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22092"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22029"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Curtinaux"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22029"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22025"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Le Parc Bourget"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22025"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25012"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Belotte"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25012"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25021"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de Chambésy"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25021"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH10009"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Nouvelle plage"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH10009"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/10"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22093"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Avenches"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22093"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21006"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno pubblico Agno"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21006"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22056"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Le Laviau"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22056"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21009"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Zappa"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21009"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25022"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage du Vengeron - aval"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25022"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21026"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Stiftung Zuercher Ferienkolonien"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21026"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25018"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bains des Pâquis"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25018"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21086"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido comunale Bissone"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21086"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21088"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Spiaggetta di Arbedo"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21088"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25023"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage du Vengeron - centre"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25023"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22082"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Corcelettes - les Pins"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22082"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH24001"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Aare Marzili"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH24001"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/2"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25024"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage Gitana"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25024"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25017"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Baby-plage"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25017"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25031"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Débarcadère du Pont-de-Sous-Terre"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25031"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22026"
+        },
+        "name": {
+          "type": "literal",
+          "value": "La Vaudaire"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22026"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22035"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Le Basset"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22035"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22024"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Le Flon"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22024"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25009"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Port-Bleu"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25009"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25007"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de la Savonnière"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25007"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25030"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de Céligny"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25030"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25035"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de la Plaine"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25035"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH10007"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de Portalban"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH10007"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/10"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH17028"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Stampf, Zürichsee"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH17028"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/17"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25027"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bécassine"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25027"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH20025"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Rodenbrunen"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH20025"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/20"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH20041"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Steckborn"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH20041"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/20"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21001"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Laghetto di Astano"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21001"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21002"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido comunale Agno"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21002"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21003"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio La Palma"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21003"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21031"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Comunale Melano"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21031"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21054"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno pubblico Ascona"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21054"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22011"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bain des Dames"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22011"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21093"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Pozzo Tegna"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21093"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21102"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Pozzo Osogna"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21102"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22016"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Gland/La Falaise"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22016"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21018"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hotel Lido Seegarten"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21018"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21023"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno spiaggia Magliaso"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21023"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21101"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Zona cascata Piumogna"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21101"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21095"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Spiaggia libera-Foce Cassarate"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21095"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH20004"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Schwimmbad Arbon"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH20004"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/20"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21047"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Tresa Bay"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21047"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21097"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Spiaggia libera-Ristorante Giardino Lago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21097"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22067"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Le Pont"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22067"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22075"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Camping VD 8"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22075"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22040"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Les Trois Jetées"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22040"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH24002"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Aare Lorraine"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH24002"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/2"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25004"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Anière aval débarcadère"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25004"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22061"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Centre nautique et balnéaire"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22061"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25015"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Port-Tunnel"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25015"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22062"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Parc de l'Arabie"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22062"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22071"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bellevue"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22071"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25016"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Genève-plage"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25016"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25005"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Corsier port"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25005"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25034"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Ponton de Sous-Terre"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25034"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25001"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage d'Hermance côté embouchure"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25001"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH10004"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Gemeinde Strandbad"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH10004"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/10"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH7005"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Buochs Strandbad"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH7005"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/7"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22022"
+        },
+        "name": {
+          "type": "literal",
+          "value": "La Maladaire"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22022"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25036"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage des Eaux-Vives"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25036"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25002"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage d'Hermance"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25002"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH10001"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de Gumefens"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH10001"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/10"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21011"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Ristorante Lido Capolago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21011"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21019"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Bagno Spiaggia Lugano"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21019"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25029"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de Port-Choiseul"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25029"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH20006"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Güttingen"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH20006"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/20"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH20013"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Schwimmbad Romanshorn"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH20013"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/20"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH20035"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Seebad"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH20035"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/20"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21004"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Molinazzo"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21004"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21007"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido C��soro"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21007"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21013"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Foce Magliasina"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21013"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21014"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Elvezia al Lago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21014"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25025"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bains de Saugy"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25025"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21015"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Villa Castagnola"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21015"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21043"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Touring Club"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21043"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21049"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Swiss Diamond Hotel"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21049"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21061"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno Pubblico Caviano"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21061"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21035"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Riviera"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21035"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21066"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido comunale Locarno"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21066"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21067"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno pubblico Magadino"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21067"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21070"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno Spiaggia Crodolo"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21070"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21083"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Viralago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21083"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21087"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Villa Patria"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21087"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21090"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Sotto il ponte"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21090"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21092"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Zona dighetta"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21092"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21094"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Meriggio"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21094"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21012"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno Spiaggia Caslano"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21012"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21099"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Zona Coop"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21099"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21100"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Zona Loderio Grotti"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21100"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21042"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Ristorante al Porto"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21042"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21016"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno Pubblico Riva Caccia"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21016"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21021"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Spiaggia delle Cantine"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21021"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21022"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Ostello della Gioventù"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21022"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21025"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Evangelisches Zentrum"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21025"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21028"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Paradiso"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21028"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21029"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Monte Generoso"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21029"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25014"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Pontons de Cologny"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25014"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21056"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Patriziale Ascona"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21056"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21040"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hotel Ristorante Arbostora"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21040"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21046"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Comunale Conca d'Oro"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21046"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22008"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Corseaux"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22008"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21048"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Comunale Riva S. Vitale"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21048"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH14015"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Stein am Rhein Strandbad Niderfeld"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH14015"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/14"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21050"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Ascolago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21050"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21052"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Collinetta"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21052"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21053"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Eden Roc"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21053"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22009"
+        },
+        "name": {
+          "type": "literal",
+          "value": "La Crottaz"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22009"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21060"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Villa Caesar"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21060"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25033"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Perle du lac"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25033"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21063"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno Pubblico Scimiana"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21063"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH17003"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Rorschach, Bodensee"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH17003"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/17"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21064"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno Pubblico Locarno"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21064"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21065"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Delta"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21065"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21072"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno pubblico San Nazzaro"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21072"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21073"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Spiaggia pubblica Ranzo"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21073"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22034"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Le Pierrier"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22034"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21074"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Campofelice"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21074"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21079"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Tamaro"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21079"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21080"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno pubblico Tenero"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21080"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21085"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Casa Vignascia"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21085"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21084"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno pubblico Vira Gambarogno"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21084"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21062"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Bagno Pubblico Riale di Gerra"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21062"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21069"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo La Rocca"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21069"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21096"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Spiaggia libera-Osteria la Riva"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21096"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22006"
+        },
+        "name": {
+          "type": "literal",
+          "value": "La Pichette"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22006"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22064"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Les Marines"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22064"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22063"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Chillon"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22063"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH17041"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Badestrand Lago Mio"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH17041"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/17"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH22065"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Chaufour"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH22065"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/22"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21098"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Zona Visletto"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21098"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21027"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Comunale Maroggia"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21027"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21059"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido comunale Brissago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21059"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21077"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Miralago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21077"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21082"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido comunale Tenero"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21082"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21036"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Comunale Melide"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21036"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21020"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido San Domenico"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21020"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21076"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Lido Mappo"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21076"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21033"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Battello"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21033"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21078"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Rivabella"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21078"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21034"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Del Lago"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21034"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21081"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Centro Sportivo Tenero"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21081"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21055"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Casa Moscia"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21055"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21075"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Campeggio Lago Maggiore"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21075"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21058"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hotel Yachtsport Resort"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21058"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21008"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Lago di Lugano"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21008"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21010"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Ristorante Chalet San Giorgio"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21010"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21017"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Fischer's Seehotel"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21017"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21030"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Garni Biodola"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21030"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21037"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Zona Giardino Pubblico"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21037"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21045"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Eden"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21045"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH17042"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Schwimmbad Lido, Zürichsee"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH17042"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/17"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25038"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de la Gravière"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25038"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25041"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Cédille"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25041"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25037"
+        },
+        "name": {
+          "type": "literal",
+          "value": "William-Rappard"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25037"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21044"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Ex Albergo Du Lac"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21044"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25040"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Anciens Bains de Versoix"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25040"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25039"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage du Quai-WILSON"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25039"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21024"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Casa di cura Rivabella"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21024"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21071"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Albergo Consolina"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21071"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21089"
+        },
+        "name": {
+          "type": "literal",
+          "value": "A valle Ponte dei Salti"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21089"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH21091"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Sopra la dighetta"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH21091"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/21"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH05002"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Lido Brunnen, SZ/02"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH05002"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/5"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH06001"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Badeplatz Alpnachstad"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH06001"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/6"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH04010"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Badeplatz Mississippi (Ufer 1)"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH04010"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/4"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH01058"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Seebad Lattenberg"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH01058"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/1"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH01065"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Reitliau"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH01065"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/1"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH01029"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Baumen"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH01029"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/1"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH09001"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Seeliken"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH09001"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/9"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH09002"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Brüggli"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH09002"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/9"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH09004"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Lido"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH09004"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/9"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH01050"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Küsnacht"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH01050"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/1"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH01013"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Maur"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH01013"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/1"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH03001"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad-Lido, Weggis"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH03001"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/3"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH03004"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Ufschötti, Luzern"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH03004"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/3"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH01016"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Uster"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH01016"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/1"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH09003"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Camping Unterägeri"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH09003"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/9"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH01061"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Strandbad Bürger"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH01061"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/1"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH02031"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage des Jeunes-Rives"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH02031"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/24"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH02035"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de Saint-Blaise Ouest"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH02035"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/24"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH02036"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de la Tène"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH02036"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/24"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH02033"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Camping Paradis-Plage"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH02033"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/24"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH02034"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage de Saint-Aubin"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH02034"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/24"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH02032"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Plage des Enfants"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH02032"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/24"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH07003"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Buochs Neuseeland"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH07003"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/7"
+        }
+      },
+      {
+        "value": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/dimension/bgdi/inlandwaters/bathingwater/CH25042"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Dalles de Tour-Carrée"
+        },
+        "nameLang": {
+          "type": "literal",
+          "value": ""
+        },
+        "identifier": {
+          "type": "literal",
+          "value": "CH25042"
+        },
+        "place": {
+          "type": "uri",
+          "value": "https://ld.admin.ch/canton/25"
+        }
+      }
+    ]
+  }
+}

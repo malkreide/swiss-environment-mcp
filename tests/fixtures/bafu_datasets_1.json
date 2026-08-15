@@ -1,0 +1,1050 @@
+{
+  "help": "https://ckan.opendata.swiss/api/3/action/help_show?name=package_search",
+  "success": true,
+  "result": {
+    "count": 49,
+    "facets": {},
+    "results": [
+      {
+        "accrual_periodicity": "http://publications.europa.eu/resource/authority/frequency/IRREG",
+        "author": null,
+        "author_email": null,
+        "conforms_to": [],
+        "contact_points": [
+          {
+            "email": "wasser@bafu.admin.ch",
+            "name": "Bundesamt für Umwelt / Abteilung Wasser"
+          }
+        ],
+        "coverage": "",
+        "creator_user_id": "af084126-f711-4016-a585-70354e997796",
+        "description": {
+          "de": "Das Bundesgesetz vom 24. Januar 1991 über den Schutz der Gewässer (GSchG) mit seinen Bestimmungen betreffend Restwassermengen ist am 1. November 1992 in Kraft getreten. Gemäss Artikel 80 ff GSchG müssen bestehende Restwasserstrecken auf Anordnung der Behörden – wenn immer möglich – saniert werden. Eine erste Etappe im Hinblick auf diese Sanierung bestand für die Kantone darin, ein Inventar der bestehenden Wasserentnahmen anzulegen und dem Bund einzureichen. Auf dieser Grundlage beurteilen die Kantone die aufgeführten Wasserentnahmen und entscheiden, ob und in welchem Ausmass eine Sanierung notwendig ist. Sie halten die Ergebnisse ihrer Untersuchung in einem Bericht fest und unterbreiten diesen Bericht ebenfalls dem Bund. Damit der Vollzug des GSchG im Bereich Restwasser / Sanierungen überblickt werden kann und zur Information der Öffentlichkeit und anderer interessierter Stellen, werden die von den Kantonen eingereichten Daten zu den Wasserentnahmen in einer nationalen Restwasserkarte dargestellt (Massstab 1 : 200’000).",
+          "fr": "La loi fédérale du 24 janvier 1991 sur la protection des eaux (LEaux) est entrée en vigueur le 1er novembre 1992 et, avec elle, ses dispositions concernant les débits résiduels. Conformément aux art. 80 ss. LEaux, les débits résiduels doivent, sur ordre des autorités et dans la mesure du possible, être assainis. Dans cette perspective, une première étape consiste pour les cantons à dresser un inventaire des prélèvements d’eau existants et de transmettre celui-ci à la Confédération. Les cantons évaluent sur cette base les prélèvements d’eau effectués et décident si et dans quelle mesure un assainissement est nécessaire. Ils rassemblent les résultats de leurs investigations dans un rapport qu’ils remettent également à la Confédération. Pour garantir une vue d’ensemble de l’application de la LEaux dans le domaine des débits résiduels et de leur assainissement et afin d’informer la population et les autres organes concernés, les données portant sur les prélèvements d’eau transmises par les cantons sont présentées sur une carte nationale des débits résiduels (échelle 1 : 200’000).",
+          "it": "La legge federale del 24 gennaio 1991 sulla protezione delle acque (LPAc), che contempla le disposizioni relative ai deflussi residuali è entrata in vigore il 1° novembre 1992. Secondo l'articolo 80 e segg. LPAc conformemente alle prescrizioni delle autorità, i tratti dei corsi d’acqua con deflussi residuali devono essere, ove possibile, risanati. Ai fini del risanamento, i Cantoni hanno innanzitutto compilato e inoltrato alla Confederazione un inventario dei prelievi d’acqua esistenti. In base a questo inventario, i Cantoni valutano detti prelievi e decidono se e in che misura è necessario risanarli. Essi raccolgono i risultati della loro indagine in un rapporto che inoltrano alle autorità federali. Per poter vigilare sull’esecuzione della LPAc nel campo dei deflussi residuali e dei risanamenti e per informare l’opinione pubblica e altri enti interessati, i dati relativi ai prelievi d’acqua inoltrati dai Cantoni vengono rappresentati in forma di carta nazionale dei deflussi residuali (scala 1: 200 000).",
+          "en": "The Federal Act of 24 January 1991 on the Protection of Water against Pollution (LPEP) and its provisions on residual flows came into force on November 1, 1992 in Kraft getreten. Under Article 80 ff LPEP, remedial measures must be taken, where possible, on existing residual flows by order of the authorities. The first step in the remedial process for cantons is to build an inventory of existing water catchments and submit it to the federal government. Cantons evaluate the indexed water catchments and decide whether and how necessary it is to take remedial actions. They record the results of their analysis and submit the report to the federal government. In order to review enforcement of the LPEP as concerns residual flows / remedial measures and provide information to the public and other interested bodies, the data on the water catchments submitted by the cantons is presented in a national residual flow map (Scale 1 : 200,000)."
+        },
+        "display_name": {
+          "de": "Restwasserkarte Schweiz: Zuleitung",
+          "fr": "Carte des débits résiduels en Suisse: dérivation",
+          "it": "Carte dei deflussi residuali della Svizzera: derivazione",
+          "en": "Swiss residual flow maps Supply"
+        },
+        "id": "9b682ecd-3269-4518-a34e-3404cdc140d5",
+        "identifier": "ae65e4e3-f47b-4544-a3a2-81dbf79d5a73@bundesamt-fur-umwelt-bafu",
+        "isopen": false,
+        "issued": "",
+        "keywords": {
+          "en": [
+            "environment",
+            "environmental-monitoring-facilities",
+            "fsdi-federal-spatial-data-infrastructure"
+          ],
+          "de": [
+            "umwelt",
+            "umweltuberwachung",
+            "bgdi-bundesgeodaten-infrastruktur"
+          ],
+          "fr": [
+            "environnement",
+            "installations-de-suivi-environnemental",
+            "ifdg-linfrastructure-federale-de-donnees-geographiques"
+          ],
+          "it": [
+            "ambiente-in-generale",
+            "impianti-di-monitoraggio-ambientale",
+            "ifdg-infrastruttura-federale-dei-dati-geografici"
+          ]
+        },
+        "language": [
+          "en",
+          "de",
+          "fr"
+        ],
+        "license_id": null,
+        "license_title": null,
+        "maintainer": null,
+        "maintainer_email": null,
+        "metadata_created": "2024-04-03T00:20:20.642028",
+        "metadata_modified": "2026-07-29T00:46:22.876046",
+        "modified": "2004-01-01T00:00:00",
+        "name": "restwasserkarte-schweiz-zuleitung",
+        "num_resources": 6,
+        "num_tags": 0,
+        "organization": {
+          "approval_status": "approved",
+          "created": "2016-01-21T17:17:21.824126",
+          "description": {
+            "de": "Die Fachbehörde für die Umwelt. Es ist zuständig für die nachhaltige Nutzung der natürlichen Ressourcen sowie für den Schutz des Menschen vor Naturgefahren und den Schutz der Umwelt vor übermässigen Belastungen.",
+            "en": "The federal environmental authority. It is responsible for ensuring that natural resources are used sustainably, that the public is protected against natural hazards, and that the environment is protected from unacceptable adverse impacts.",
+            "fr": "L’autorité compétente pour les questions environnementales. Il est à ce titre chargé de gérer les ressources naturelles selon les principes du développement durable et de protéger l’homme contre les dangers naturels et l’environnement contre les pollutions.",
+            "it": "Il servizio specializzato in materia ambientale, è competente per quanto riguarda l'utilizzazione sostenibile delle risorse naturali, la protezione delle persone dai pericoli naturali e dell'ambiente da un inquinamento eccessivo."
+          },
+          "display_name": {
+            "en": "Federal Office for the Environment FOEN",
+            "de": "Bundesamt für Umwelt BAFU",
+            "fr": "Office fédéral de l'environnement OFEV",
+            "it": "Ufficio federale dell'ambiente UFAM"
+          },
+          "id": "1b7caf78-d2a8-4e5c-ab20-954de72e9493",
+          "image_display_url": "https://prod-bafuadminch-hcms-sdweb.imgix.net/dam/de/sd-web/cu0FNXPQbxQ1/M2.jpg?w=1024&auto=format",
+          "image_url": "https://prod-bafuadminch-hcms-sdweb.imgix.net/dam/de/sd-web/cu0FNXPQbxQ1/M2.jpg?w=1024&auto=format",
+          "is_organization": true,
+          "name": "bundesamt-fur-umwelt-bafu",
+          "num_followers": 0,
+          "package_count": 361,
+          "political_level": "confederation",
+          "state": "active",
+          "title": {
+            "en": "Federal Office for the Environment FOEN",
+            "de": "Bundesamt für Umwelt BAFU",
+            "fr": "Office fédéral de l'environnement OFEV",
+            "it": "Ufficio federale dell'ambiente UFAM"
+          },
+          "type": "organization",
+          "url": "",
+          "tags": [],
+          "groups": []
+        },
+        "owner_org": "1b7caf78-d2a8-4e5c-ab20-954de72e9493",
+        "private": false,
+        "publisher": {
+          "name": {
+            "de": "Bundesamt für Umwelt / Abteilung Wasser",
+            "fr": "Office fédéral de l'environnement",
+            "it": "Ufficio federale dell'ambiente",
+            "en": "Federal Office for the Environment"
+          },
+          "url": "https://www.bafu.admin.ch/de/abteilung-wasser"
+        },
+        "qualified_relations": [],
+        "relations": [
+          {
+            "label": {
+              "de": "geocat.ch Permalink",
+              "fr": "geocat.ch permalien",
+              "it": "geocat.ch link permanente",
+              "en": "geocat.ch permalink"
+            },
+            "url": "https://www.geocat.ch/datahub/dataset/ae65e4e3-f47b-4544-a3a2-81dbf79d5a73"
+          }
+        ],
+        "see_alsos": [],
+        "spatial": "Schweiz",
+        "state": "active",
+        "temporals": [],
+        "title": {
+          "de": "Restwasserkarte Schweiz: Zuleitung",
+          "fr": "Carte des débits résiduels en Suisse: dérivation",
+          "it": "Carte dei deflussi residuali della Svizzera: derivazione",
+          "en": "Swiss residual flow maps Supply"
+        },
+        "title_for_slug": "restwasserkarte-schweiz-zuleitung",
+        "type": "dataset",
+        "url": "http://www.bafu.admin.ch/restwasser",
+        "version": null,
+        "groups": [
+          {
+            "description": {
+              "fr": "",
+              "de": "",
+              "en": "",
+              "it": ""
+            },
+            "display_name": {
+              "de": "Umwelt",
+              "en": "Environment",
+              "fr": "Environnement",
+              "it": "Ambiente"
+            },
+            "id": "ab2cc387-d129-4d76-b78d-517326d2a772",
+            "image_display_url": "",
+            "name": "envi",
+            "title": "{\"de\": \"Umwelt\", \"en\": \"Environment\", \"fr\": \"Environnement\", \"it\": \"Ambiente\"}"
+          }
+        ],
+        "resources": [
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-04-03T00:20:20.729886",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "Vorschau map.geo.admin.ch",
+              "fr": "Aperçu map.geo.admin.ch",
+              "it": "Previsione map.geo.admin.ch",
+              "en": "Preview map.geo.admin.ch"
+            },
+            "display_name": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "format": "SERVICE",
+            "hash": "",
+            "id": "bca46e12-3d89-4430-a63c-91bb951800c7",
+            "issued": "2004-01-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_open",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:46:22.883703",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "2004-01-01T00:00:00",
+            "name": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "package_id": "9b682ecd-3269-4518-a34e-3404cdc140d5",
+            "position": 0,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_open",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "url": "https://map.geo.admin.ch/?layers=ch.bafu.wasser-leitungen",
+            "url_type": null
+          },
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-04-03T00:20:20.729897",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "WMS-BGDI Dienst, Layer \"Zuleitung\"",
+              "fr": "Service WMS-IFDG, couche \"Dérivation\"",
+              "it": "Servizio WMS-IFDG, strato \"Derivazione\"",
+              "en": "WMS-FSDI service, layer \"Supply\""
+            },
+            "display_name": {
+              "de": "ch.bafu.wasser-leitungen",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "format": "WMS",
+            "hash": "",
+            "id": "d7df58ef-65ef-4063-83d3-a7182d4ccf4e",
+            "issued": "2004-01-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_open",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:46:22.883822",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "2004-01-01T00:00:00",
+            "name": {
+              "de": "ch.bafu.wasser-leitungen",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "package_id": "9b682ecd-3269-4518-a34e-3404cdc140d5",
+            "position": 1,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_open",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "ch.bafu.wasser-leitungen",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "url": "https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&lang=de",
+            "url_type": null
+          },
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-04-03T00:20:20.729901",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "WMTS-BGDI Dienst, Layer \"Zuleitung\"",
+              "fr": "Service WMTS-IFDG, couche , Layer \"Dérivation\"",
+              "it": "Servizio WMTS-IFDG, strato \"Derivazione\"",
+              "en": "WMTS-FSDI service, layer \"Supply\""
+            },
+            "display_name": {
+              "de": "ch.bafu.wasser-leitungen",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "format": "WMTS",
+            "hash": "",
+            "id": "fd1e6604-58e6-4a5c-8450-ae9025259ff4",
+            "issued": "2004-01-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_open",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:46:22.883896",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "2004-01-01T00:00:00",
+            "name": {
+              "de": "ch.bafu.wasser-leitungen",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "package_id": "9b682ecd-3269-4518-a34e-3404cdc140d5",
+            "position": 2,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_open",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "ch.bafu.wasser-leitungen",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "url": "https://wmts.geo.admin.ch/EPSG/3857/1.0.0/WMTSCapabilities.xml?lang=de",
+            "url_type": null
+          }
+        ],
+        "tags": [],
+        "relationships_as_subject": [],
+        "relationships_as_object": [],
+        "extras": [
+          {
+            "key": "harvest_object_id",
+            "value": "7f07089c-daa4-481d-a970-4106e8d192e2"
+          },
+          {
+            "key": "harvest_source_id",
+            "value": "14923e31-c8f7-4b87-bdce-38fb784b7b0c"
+          },
+          {
+            "key": "harvest_source_title",
+            "value": "BAFU - Geocat Harvester"
+          }
+        ]
+      },
+      {
+        "accrual_periodicity": "http://publications.europa.eu/resource/authority/frequency/IRREG",
+        "author": null,
+        "author_email": null,
+        "conforms_to": [],
+        "contact_points": [
+          {
+            "email": "wasser@bafu.admin.ch",
+            "name": "Bundesamt für Umwelt / Abteilung Wasser"
+          }
+        ],
+        "coverage": "",
+        "creator_user_id": "af084126-f711-4016-a585-70354e997796",
+        "description": {
+          "de": "Das Bundesgesetz vom 24. Januar 1991 über den Schutz der Gewässer (GSchG) mit seinen Bestimmungen betreffend Restwassermengen ist am 1. November 1992 in Kraft getreten. Gemäss Artikel 80 ff GSchG müssen bestehende Restwasserstrecken auf Anordnung der Behörden – wenn immer möglich – saniert werden. Eine erste Etappe im Hinblick auf diese Sanierung bestand für die Kantone darin, ein Inventar der bestehenden Wasserentnahmen anzulegen und dem Bund einzureichen. Auf dieser Grundlage beurteilen die Kantone die aufgeführten Wasserentnahmen und entscheiden, ob und in welchem Ausmass eine Sanierung notwendig ist. Sie halten die Ergebnisse ihrer Untersuchung in einem Bericht fest und unterbreiten diesen Bericht ebenfalls dem Bund. Damit der Vollzug des GSchG im Bereich Restwasser / Sanierungen überblickt werden kann und zur Information der Öffentlichkeit und anderer interessierter Stellen, werden die von den Kantonen eingereichten Daten zu den Wasserentnahmen in einer nationalen Restwasserkarte dargestellt (Massstab 1 : 200’000).",
+          "fr": "La loi fédérale du 24 janvier 1991 sur la protection des eaux (LEaux) est entrée en vigueur le 1er novembre 1992 et, avec elle, ses dispositions concernant les débits résiduels. Conformément aux art. 80 ss. LEaux, les débits résiduels doivent, sur ordre des autorités et dans la mesure du possible, être assainis. Dans cette perspective, une première étape consiste pour les cantons à dresser un inventaire des prélèvements d’eau existants et de transmettre celui-ci à la Confédération. Les cantons évaluent sur cette base les prélèvements d’eau effectués et décident si et dans quelle mesure un assainissement est nécessaire. Ils rassemblent les résultats de leurs investigations dans un rapport qu’ils remettent également à la Confédération. Pour garantir une vue d’ensemble de l’application de la LEaux dans le domaine des débits résiduels et de leur assainissement et afin d’informer la population et les autres organes concernés, les données portant sur les prélèvements d’eau transmises par les cantons sont présentées sur une carte nationale des débits résiduels (échelle 1 : 200’000).",
+          "it": "La legge federale del 24 gennaio 1991 sulla protezione delle acque (LPAc), che contempla le disposizioni relative ai deflussi residuali è entrata in vigore il 1° novembre 1992. Secondo l'articolo 80 e segg. LPAc conformemente alle prescrizioni delle autorità, i tratti dei corsi d’acqua con deflussi residuali devono essere, ove possibile, risanati. Ai fini del risanamento, i Cantoni hanno innanzitutto compilato e inol-trato alla Confederazione un inventario dei prelievi d’acqua esistenti. In base a questo inventario, i Cantoni valutano detti prelievi e decidono se e in che misura è necessario risanarli. Essi raccolgono i risultati della loro indagine in un rapporto che inoltrano alle autorità federali. Per poter vigilare sull’esecuzione della LPAc nel campo dei deflussi residuali e dei risanamenti e per informare l’opinione pubblica e altri enti interessati, i dati relativi ai prelievi d’acqua inoltrati dai Cantoni vengono rappresentati in forma di carta nazionale dei deflussi residuali (scala 1: 200 000).",
+          "en": "The Federal Act of 24 January 1991 on the Protection of Water against Pollution (LPEP) and its provisions on residual flows came into force on November 1, 1992 in Kraft getreten. Under Article 80 ff LPEP, remedial measures must be taken, where possible, on existing residual flows by order of the authorities. The first step in the remedial process for cantons is to build an inventory of existing water catchments and submit it to the federal government. Cantons evaluate the indexed water catchments and decide whether and how necessary it is to take remedial actions. They record the results of their analysis and submit the report to the federal government. In order to review enforcement of the LPEP as concerns residual flows / remedial measures and provide information to the public and other interested bodies, the data on the water catchments submitted by the cantons is presented in a national residual flow map (Scale 1 : 200,000)."
+        },
+        "display_name": {
+          "de": "Restwasserkarte Schweiz: Wasserentnahme",
+          "fr": "Carte des débits résiduels en Suisse: prélèvements",
+          "it": "Carta dei deflussi residuali della Svizzera: prelievi d'acqua",
+          "en": "Residual flow map of Switzerland: catchment"
+        },
+        "id": "c2a4ded6-8ea2-402b-b575-68bb68de8f43",
+        "identifier": "a4ecf3a4-9943-4826-a997-9d7523e4d8ad@bundesamt-fur-umwelt-bafu",
+        "isopen": false,
+        "issued": "",
+        "keywords": {
+          "en": [
+            "environment",
+            "environmental-monitoring-facilities",
+            "fsdi-federal-spatial-data-infrastructure"
+          ],
+          "de": [
+            "umwelt",
+            "umweltuberwachung",
+            "bgdi-bundesgeodaten-infrastruktur"
+          ],
+          "fr": [
+            "environnement",
+            "installations-de-suivi-environnemental",
+            "ifdg-linfrastructure-federale-de-donnees-geographiques"
+          ],
+          "it": [
+            "ambiente-in-generale",
+            "impianti-di-monitoraggio-ambientale",
+            "ifdg-infrastruttura-federale-dei-dati-geografici"
+          ]
+        },
+        "language": [
+          "en",
+          "de",
+          "fr"
+        ],
+        "license_id": null,
+        "license_title": null,
+        "maintainer": null,
+        "maintainer_email": null,
+        "metadata_created": "2024-04-03T00:23:04.644035",
+        "metadata_modified": "2026-07-29T00:21:18.385795",
+        "modified": "2004-01-01T00:00:00",
+        "name": "restwasserkarte-schweiz-wasserentnahme",
+        "num_resources": 6,
+        "num_tags": 0,
+        "organization": {
+          "approval_status": "approved",
+          "created": "2016-01-21T17:17:21.824126",
+          "description": {
+            "de": "Die Fachbehörde für die Umwelt. Es ist zuständig für die nachhaltige Nutzung der natürlichen Ressourcen sowie für den Schutz des Menschen vor Naturgefahren und den Schutz der Umwelt vor übermässigen Belastungen.",
+            "en": "The federal environmental authority. It is responsible for ensuring that natural resources are used sustainably, that the public is protected against natural hazards, and that the environment is protected from unacceptable adverse impacts.",
+            "fr": "L’autorité compétente pour les questions environnementales. Il est à ce titre chargé de gérer les ressources naturelles selon les principes du développement durable et de protéger l’homme contre les dangers naturels et l’environnement contre les pollutions.",
+            "it": "Il servizio specializzato in materia ambientale, è competente per quanto riguarda l'utilizzazione sostenibile delle risorse naturali, la protezione delle persone dai pericoli naturali e dell'ambiente da un inquinamento eccessivo."
+          },
+          "display_name": {
+            "en": "Federal Office for the Environment FOEN",
+            "de": "Bundesamt für Umwelt BAFU",
+            "fr": "Office fédéral de l'environnement OFEV",
+            "it": "Ufficio federale dell'ambiente UFAM"
+          },
+          "id": "1b7caf78-d2a8-4e5c-ab20-954de72e9493",
+          "image_display_url": "https://prod-bafuadminch-hcms-sdweb.imgix.net/dam/de/sd-web/cu0FNXPQbxQ1/M2.jpg?w=1024&auto=format",
+          "image_url": "https://prod-bafuadminch-hcms-sdweb.imgix.net/dam/de/sd-web/cu0FNXPQbxQ1/M2.jpg?w=1024&auto=format",
+          "is_organization": true,
+          "name": "bundesamt-fur-umwelt-bafu",
+          "num_followers": 0,
+          "package_count": 361,
+          "political_level": "confederation",
+          "state": "active",
+          "title": {
+            "en": "Federal Office for the Environment FOEN",
+            "de": "Bundesamt für Umwelt BAFU",
+            "fr": "Office fédéral de l'environnement OFEV",
+            "it": "Ufficio federale dell'ambiente UFAM"
+          },
+          "type": "organization",
+          "url": "",
+          "tags": [],
+          "groups": []
+        },
+        "owner_org": "1b7caf78-d2a8-4e5c-ab20-954de72e9493",
+        "private": false,
+        "publisher": {
+          "name": {
+            "de": "Bundesamt für Umwelt / Abteilung Wasser",
+            "fr": "Office fédéral de l'environnement",
+            "it": "Ufficio federale dell'ambiente",
+            "en": "Federal Office for the Environment"
+          },
+          "url": "https://www.bafu.admin.ch/de/abteilung-wasser"
+        },
+        "qualified_relations": [],
+        "relations": [
+          {
+            "label": {
+              "de": "geocat.ch Permalink",
+              "fr": "geocat.ch permalien",
+              "it": "geocat.ch link permanente",
+              "en": "geocat.ch permalink"
+            },
+            "url": "https://www.geocat.ch/datahub/dataset/a4ecf3a4-9943-4826-a997-9d7523e4d8ad"
+          }
+        ],
+        "see_alsos": [],
+        "spatial": "Schweiz",
+        "state": "active",
+        "temporals": [],
+        "title": {
+          "de": "Restwasserkarte Schweiz: Wasserentnahme",
+          "fr": "Carte des débits résiduels en Suisse: prélèvements",
+          "it": "Carta dei deflussi residuali della Svizzera: prelievi d'acqua",
+          "en": "Residual flow map of Switzerland: catchment"
+        },
+        "title_for_slug": "restwasserkarte-schweiz-wasserentnahme",
+        "type": "dataset",
+        "url": "http://www.bafu.admin.ch/restwasser",
+        "version": null,
+        "groups": [
+          {
+            "description": {
+              "fr": "",
+              "de": "",
+              "en": "",
+              "it": ""
+            },
+            "display_name": {
+              "de": "Umwelt",
+              "en": "Environment",
+              "fr": "Environnement",
+              "it": "Ambiente"
+            },
+            "id": "ab2cc387-d129-4d76-b78d-517326d2a772",
+            "image_display_url": "",
+            "name": "envi",
+            "title": "{\"de\": \"Umwelt\", \"en\": \"Environment\", \"fr\": \"Environnement\", \"it\": \"Ambiente\"}"
+          }
+        ],
+        "resources": [
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-04-03T00:23:04.729881",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "Vorschau map.geo.admin.ch",
+              "fr": "Aperçu map.geo.admin.ch",
+              "it": "Previsione map.geo.admin.ch",
+              "en": "Preview map.geo.admin.ch"
+            },
+            "display_name": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "format": "SERVICE",
+            "hash": "",
+            "id": "6ad9a9a7-0e30-4fa2-84c7-38122e43a0ba",
+            "issued": "2004-01-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_by",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:21:18.394064",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "2004-01-01T00:00:00",
+            "name": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "package_id": "c2a4ded6-8ea2-402b-b575-68bb68de8f43",
+            "position": 0,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_by",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "url": "https://map.geo.admin.ch/?layers=ch.bafu.wasser-entnahme",
+            "url_type": null
+          },
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-04-03T00:23:04.729894",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "WMS-BGDI Dienst, Layer \"Wasserentnahme\"",
+              "fr": "Service WMS-IFDG, couche \"Prélèvements\"",
+              "it": "Servizio WMS-IFDG, strato \"Prelievi d`acqua\"",
+              "en": "WMS-FSDI service, layer \"Catchment\""
+            },
+            "display_name": {
+              "de": "ch.bafu.wasser-entnahme",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "format": "WMS",
+            "hash": "",
+            "id": "c8ac563f-4368-4108-8aed-4217f02bb044",
+            "issued": "2004-01-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_by",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:21:18.394187",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "2004-01-01T00:00:00",
+            "name": {
+              "de": "ch.bafu.wasser-entnahme",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "package_id": "c2a4ded6-8ea2-402b-b575-68bb68de8f43",
+            "position": 1,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_by",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "ch.bafu.wasser-entnahme",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "url": "https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&lang=de",
+            "url_type": null
+          },
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-04-03T00:23:04.729898",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "WMTS-BGDI Dienst, Layer \"Wasserentnahme\"",
+              "fr": "Service WMTS-IFDG, couche , Layer \"Prélèvements\"",
+              "it": "Servizio WMTS-IFDG, strato \"Prelievi d'acqua\"",
+              "en": "WMTS-FSDI service, layer \"Catchment\""
+            },
+            "display_name": {
+              "de": "ch.bafu.wasser-entnahme",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "format": "WMTS",
+            "hash": "",
+            "id": "4253736c-9445-4303-9aca-452ab58f6310",
+            "issued": "2004-01-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_by",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:21:18.394260",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "2004-01-01T00:00:00",
+            "name": {
+              "de": "ch.bafu.wasser-entnahme",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "package_id": "c2a4ded6-8ea2-402b-b575-68bb68de8f43",
+            "position": 2,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_by",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "ch.bafu.wasser-entnahme",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "url": "https://wmts.geo.admin.ch/EPSG/3857/1.0.0/WMTSCapabilities.xml?lang=de",
+            "url_type": null
+          }
+        ],
+        "tags": [],
+        "relationships_as_subject": [],
+        "relationships_as_object": [],
+        "extras": [
+          {
+            "key": "harvest_object_id",
+            "value": "b010d23b-e164-4aab-b4e0-bc3bbea6fee8"
+          },
+          {
+            "key": "harvest_source_id",
+            "value": "14923e31-c8f7-4b87-bdce-38fb784b7b0c"
+          },
+          {
+            "key": "harvest_source_title",
+            "value": "BAFU - Geocat Harvester"
+          }
+        ]
+      },
+      {
+        "accrual_periodicity": "http://publications.europa.eu/resource/authority/frequency/IRREG",
+        "author": null,
+        "author_email": null,
+        "conforms_to": [],
+        "contact_points": [
+          {
+            "email": "hydrologie@bafu.admin.ch",
+            "name": "Bundesamt für Umwelt / Abteilung Hydrologie"
+          }
+        ],
+        "coverage": "",
+        "creator_user_id": "af084126-f711-4016-a585-70354e997796",
+        "description": {
+          "de": "Der Datensatz ‹Gebietsauslässe› ist Teil des Geobasisdatensatzes ‹Topographische Einzugsgebiete Schweizer Gewässer›. Er besteht aus Punktobjekten, die die Gebietsauslässe der rund 22'000 möglichen Gesamteinzugsgebiete darstellen.",
+          "fr": "La série de données \"Exutoires des bassins versants\" fait partie de la série de géodonnées \"Bassins versants topographiques des eaux suisses\". Elle est constituée des objets ponctuels qui constituent les exutoires des quelque 22 000 bassins versants complets possibles.",
+          "it": "Il record di dati «Sbocchi dei bacini imbriferi» è un elemento del record di geodati di base «Bacini imbriferi topografici dei corsi d’acqua svizzeri». Consiste in punti che rappresentano gli sbocchi dei bacini imbriferi dei circa 22 000 bacini imbriferi completi possibili.",
+          "en": "The \"Area outlets\" data set is part of the \"Topographical catchment areas of Swiss waterbodies\" geodata set. It consists of point objects that represent the area outlets for a possible total of some 22,000 combined catchment areas."
+        },
+        "display_name": {
+          "de": "Topographische Einzugsgebiete Schweizer Gewässer: Gebietsauslässe",
+          "fr": "Bassins versants topographiques des eaux suisses: Exutoires",
+          "it": "Bacini imbriferi topografici dei corsi d’acqua svizzeri: Sbocchi",
+          "en": "Topographical catchment areas of Swiss waterbodies: Area outlets"
+        },
+        "id": "f7c5b1aa-d096-4e65-aae8-8c102e3fb3ba",
+        "identifier": "1a4d7eee-5135-4895-a255-e1dfd1fd6ff9@bundesamt-fur-umwelt-bafu",
+        "isopen": false,
+        "issued": "2010-07-01T00:00:00",
+        "keywords": {
+          "en": [
+            "hydrography",
+            "official-geodata",
+            "fsdi-federal-spatial-data-infrastructure"
+          ],
+          "de": [
+            "gewassernetz",
+            "geobasisdaten",
+            "bgdi-bundesgeodaten-infrastruktur"
+          ],
+          "fr": [
+            "hydrographie",
+            "geodonnees-de-base",
+            "ifdg-linfrastructure-federale-de-donnees-geographiques"
+          ],
+          "it": [
+            "idrografia",
+            "geodati-di-base",
+            "ifdg-infrastruttura-federale-dei-dati-geografici"
+          ]
+        },
+        "language": [
+          "en",
+          "de",
+          "fr"
+        ],
+        "license_id": null,
+        "license_title": null,
+        "maintainer": null,
+        "maintainer_email": null,
+        "metadata_created": "2024-09-15T00:16:25.458136",
+        "metadata_modified": "2026-07-29T00:45:09.574817",
+        "modified": "",
+        "name": "topographische-einzugsgebiete-schweizer-gewasser-gebietsauslasse",
+        "num_resources": 6,
+        "num_tags": 0,
+        "organization": {
+          "approval_status": "approved",
+          "created": "2016-01-21T17:17:21.824126",
+          "description": {
+            "de": "Die Fachbehörde für die Umwelt. Es ist zuständig für die nachhaltige Nutzung der natürlichen Ressourcen sowie für den Schutz des Menschen vor Naturgefahren und den Schutz der Umwelt vor übermässigen Belastungen.",
+            "en": "The federal environmental authority. It is responsible for ensuring that natural resources are used sustainably, that the public is protected against natural hazards, and that the environment is protected from unacceptable adverse impacts.",
+            "fr": "L’autorité compétente pour les questions environnementales. Il est à ce titre chargé de gérer les ressources naturelles selon les principes du développement durable et de protéger l’homme contre les dangers naturels et l’environnement contre les pollutions.",
+            "it": "Il servizio specializzato in materia ambientale, è competente per quanto riguarda l'utilizzazione sostenibile delle risorse naturali, la protezione delle persone dai pericoli naturali e dell'ambiente da un inquinamento eccessivo."
+          },
+          "display_name": {
+            "en": "Federal Office for the Environment FOEN",
+            "de": "Bundesamt für Umwelt BAFU",
+            "fr": "Office fédéral de l'environnement OFEV",
+            "it": "Ufficio federale dell'ambiente UFAM"
+          },
+          "id": "1b7caf78-d2a8-4e5c-ab20-954de72e9493",
+          "image_display_url": "https://prod-bafuadminch-hcms-sdweb.imgix.net/dam/de/sd-web/cu0FNXPQbxQ1/M2.jpg?w=1024&auto=format",
+          "image_url": "https://prod-bafuadminch-hcms-sdweb.imgix.net/dam/de/sd-web/cu0FNXPQbxQ1/M2.jpg?w=1024&auto=format",
+          "is_organization": true,
+          "name": "bundesamt-fur-umwelt-bafu",
+          "num_followers": 0,
+          "package_count": 361,
+          "political_level": "confederation",
+          "state": "active",
+          "title": {
+            "en": "Federal Office for the Environment FOEN",
+            "de": "Bundesamt für Umwelt BAFU",
+            "fr": "Office fédéral de l'environnement OFEV",
+            "it": "Ufficio federale dell'ambiente UFAM"
+          },
+          "type": "organization",
+          "url": "",
+          "tags": [],
+          "groups": []
+        },
+        "owner_org": "1b7caf78-d2a8-4e5c-ab20-954de72e9493",
+        "private": false,
+        "publisher": {
+          "name": {
+            "de": "Bundesamt für Umwelt / Abteilung Hydrologie",
+            "fr": "Office fédéral de l'environnement /Division Hydrologie",
+            "it": "Ufficio federale dell'ambiente / Divisione Idrologia",
+            "en": "Federal Office for the Environment / Hydrology Division"
+          },
+          "url": "https://www.bafu.admin.ch/de/abteilung-hydrologie"
+        },
+        "qualified_relations": [],
+        "relations": [
+          {
+            "label": {
+              "de": "geocat.ch Permalink",
+              "fr": "geocat.ch permalien",
+              "it": "geocat.ch link permanente",
+              "en": "geocat.ch permalink"
+            },
+            "url": "https://www.geocat.ch/datahub/dataset/1a4d7eee-5135-4895-a255-e1dfd1fd6ff9"
+          }
+        ],
+        "see_alsos": [],
+        "spatial": "Schweiz",
+        "state": "active",
+        "temporals": [],
+        "title": {
+          "de": "Topographische Einzugsgebiete Schweizer Gewässer: Gebietsauslässe",
+          "fr": "Bassins versants topographiques des eaux suisses: Exutoires",
+          "it": "Bacini imbriferi topografici dei corsi d’acqua svizzeri: Sbocchi",
+          "en": "Topographical catchment areas of Swiss waterbodies: Area outlets"
+        },
+        "title_for_slug": "topographische-einzugsgebiete-schweizer-gewasser-gebietsauslasse",
+        "type": "dataset",
+        "url": "https://www.bafu.admin.ch/de/einzugsgebiete-der-gewaesser",
+        "version": null,
+        "groups": [
+          {
+            "description": {
+              "fr": "",
+              "de": "",
+              "en": "",
+              "it": ""
+            },
+            "display_name": {
+              "de": "Umwelt",
+              "en": "Environment",
+              "fr": "Environnement",
+              "it": "Ambiente"
+            },
+            "id": "ab2cc387-d129-4d76-b78d-517326d2a772",
+            "image_display_url": "",
+            "name": "envi",
+            "title": "{\"de\": \"Umwelt\", \"en\": \"Environment\", \"fr\": \"Environnement\", \"it\": \"Ambiente\"}"
+          }
+        ],
+        "resources": [
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-09-15T00:16:25.490009",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "Vorschau map.geo.admin.ch",
+              "fr": "Aperçu map.geo.admin.ch",
+              "it": "Previsione map.geo.admin.ch",
+              "en": "Preview map.geo.admin.ch"
+            },
+            "display_name": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "format": "SERVICE",
+            "hash": "",
+            "id": "7e6847d0-f16f-42c2-9208-bbfc93973bec",
+            "issued": "2010-07-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_by",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:45:09.664694",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "",
+            "name": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "package_id": "f7c5b1aa-d096-4e65-aae8-8c102e3fb3ba",
+            "position": 0,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_by",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "Map (Preview) Vorschau map.geo.admin.ch",
+              "fr": "Map (Preview) Aperçu map.geo.admin.ch",
+              "it": "Map (Preview) Previsione map.geo.admin.ch",
+              "en": "Map (Preview) map.geo.admin.ch"
+            },
+            "url": "https://map.geo.admin.ch/?layers=ch.bafu.wasser-gebietsauslaesse",
+            "url_type": null
+          },
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-09-15T00:16:25.490018",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "WMS-BGDI Dienst, Layer \"Gebietsauslässe\"",
+              "fr": "Service WMS-IFDG, couche \"Exutoires des bassins versants\"",
+              "it": "Servizio WMS-IFDG, strato \"Sbocchi dei bacini imbriferi\"",
+              "en": "WMS-FSDI service, layer \"Area outlets\""
+            },
+            "display_name": {
+              "de": "ch.bafu.wasser-gebietsauslaesse",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "format": "WMS",
+            "hash": "",
+            "id": "3d5f90e5-ba71-43b1-b07a-a4323300d629",
+            "issued": "2010-07-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_by",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:45:09.665003",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "",
+            "name": {
+              "de": "ch.bafu.wasser-gebietsauslaesse",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "package_id": "f7c5b1aa-d096-4e65-aae8-8c102e3fb3ba",
+            "position": 1,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_by",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "ch.bafu.wasser-gebietsauslaesse",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "url": "https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&lang=de",
+            "url_type": null
+          },
+          {
+            "byte_size": 0,
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2024-09-15T00:16:25.490020",
+            "datastore_active": false,
+            "datastore_contains_all_records_of_source_file": false,
+            "description": {
+              "de": "WMTS-BGDI Dienst, Layer \"Gebietsauslässe\"",
+              "fr": "Service WMTS-IFDG, couche , Layer \"Exutoires des bassins versants\"",
+              "it": "Servizio WMTS-IFDG, strato \"Sbocchi dei bacini imbriferi\"",
+              "en": "WMTS-FSDI service, layer \"Area outlets\""
+            },
+            "display_name": {
+              "de": "ch.bafu.wasser-gebietsauslaesse",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "format": "WMTS",
+            "hash": "",
+            "id": "984b66ed-9733-4055-97ed-c36b215eaf2d",
+            "issued": "2010-07-01T00:00:00",
+            "language": [
+              "en",
+              "de",
+              "fr"
+            ],
+            "last_modified": null,
+            "license": "https://opendata.swiss/terms-of-use#terms_by",
+            "media_type": "",
+            "metadata_modified": "2026-07-29T00:45:09.665100",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "modified": "",
+            "name": {
+              "de": "ch.bafu.wasser-gebietsauslaesse",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "package_id": "f7c5b1aa-d096-4e65-aae8-8c102e3fb3ba",
+            "position": 2,
+            "resource_type": null,
+            "rights": "https://opendata.swiss/terms-of-use#terms_by",
+            "size": null,
+            "state": "active",
+            "title": {
+              "de": "ch.bafu.wasser-gebietsauslaesse",
+              "fr": "",
+              "it": "",
+              "en": ""
+            },
+            "url": "https://wmts.geo.admin.ch/EPSG/3857/1.0.0/WMTSCapabilities.xml?lang=de",
+            "url_type": null
+          }
+        ],
+        "tags": [],
+        "relationships_as_subject": [],
+        "relationships_as_object": [],
+        "extras": [
+          {
+            "key": "harvest_object_id",
+            "value": "ef7797ab-34cf-416b-a5fc-24c5083eca1c"
+          },
+          {
+            "key": "harvest_source_id",
+            "value": "14923e31-c8f7-4b87-bdce-38fb784b7b0c"
+          },
+          {
+            "key": "harvest_source_title",
+            "value": "BAFU - Geocat Harvester"
+          }
+        ]
+      }
+    ],
+    "sort": "score desc, metadata_modified desc",
+    "search_facets": {}
+  }
+}

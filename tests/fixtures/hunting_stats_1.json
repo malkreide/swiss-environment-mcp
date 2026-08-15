@@ -1,0 +1,696 @@
+{
+  "controls": {
+    "fi-messages": {
+      "ctrltype": "bs4messages",
+      "options": [
+        {
+          "id": 28,
+          "type": "warning",
+          "text_de": "Das Jagdjahr dauert in den meisten Kantonen vom 1. April bis zum 31. März des Folgejahres.",
+          "text_fr": "L'année de chasse dure dans la plupart des cantons du 1er avril au 31 mars de l'année suivante.",
+          "text_it": null,
+          "tt1": -1,
+          "dt1": -1,
+          "at1": -1,
+          "ar1": "-1",
+          "th1": -1,
+          "st1": -1,
+          "sp1": -1,
+          "dp1": -1,
+          "yrfrom1": -1,
+          "yrto1": -1,
+          "istop": 1,
+          "isglossar": 0,
+          "isdisabled": 0,
+          "text": "Das Jagdjahr dauert in den meisten Kantonen vom 1. April bis zum 31. März des Folgejahres."
+        }
+      ]
+    },
+    "fi-glossar": {
+      "ctrltype": "bs4messages",
+      "options": []
+    },
+    "fi-messages-classes": {
+      "ctrltype": "bs4messages",
+      "options": [
+        {
+          "type": "warning",
+          "text": "<b>Stier</b> - männliches Tier<br/><b>Kuh</b> - weibliches Tier<br/><b>Schmalspiesser</b> - männliches Jungtier im 2. Lebensjahr<br/><b>Schmaltier</b> - weibliches Jungtier im 2. Lebensjahr<br/><b>Schmalspiesser oder Schmaltier</b> - Jungtier im 2. Lebensjahr, unbekanntes Geschlecht<br/><b>Stierkalb</b> - männliches Jungtier im 1. Lebensjahr<br/><b>Kuhkalb</b> - weibliches Jungtier im 1. Lebensjahr<br/><b>Kalb</b> - Jungtier im 1. Lebensjahr",
+          "dismissible": false
+        }
+      ]
+    },
+    "fi-messages-tree": {
+      "ctrltype": "bs4messages",
+      "options": [
+        {
+          "type": "warning",
+          "dismissible": false,
+          "text": "<font color=\"black\">▲</font>&nbsp;Tiergruppe<br/><font color=\"red\">▲</font>&nbsp;Geschützt<br/><font color=\"gold\">▲</font>&nbsp;Jagdbar<br/><font color=\"lightblue\">▲</font>&nbsp;Neozoe"
+        }
+      ]
+    },
+    "fi-radio0": {
+      "ctrltype": "bs4radio",
+      "ctrlname": "tt",
+      "options": [
+        "Wildtiere",
+        "Jäger & Wildhüter",
+        "Wildschäden",
+        "Schonzeiten"
+      ],
+      "chosen": 0,
+      "disabled": false,
+      "visible": true,
+      "tooltip": "Thema"
+    },
+    "fi-radio1": {
+      "ctrltype": "bs4radio",
+      "ctrlname": "dt",
+      "options": [
+        "Zeitreihe",
+        "Vergleich"
+      ],
+      "chosen": 0,
+      "disabled": false,
+      "visible": true,
+      "tooltip": "Datentyp"
+    },
+    "fi-radio2": {
+      "ctrltype": "bs4radio",
+      "ctrlname": "at",
+      "options": [
+        "Kantone",
+        "Kolonien"
+      ],
+      "chosen": 0,
+      "disabled": true,
+      "visible": true,
+      "tooltip": "Bezugssystem"
+    },
+    "fi-radio3": {
+      "ctrltype": "bs4radio",
+      "ctrlname": "st",
+      "options": [
+        "",
+        ""
+      ],
+      "chosen": 0,
+      "disabled": false,
+      "visible": true,
+      "tooltip": "Speziesgruppe"
+    },
+    "fi-radio4": {
+      "ctrltype": "bs4radio",
+      "ctrlname": "dp",
+      "options": [
+        "",
+        ""
+      ],
+      "chosen": 0,
+      "disabled": false,
+      "visible": true,
+      "tooltip": "Anzeigeart"
+    },
+    "fi-dropdown1": {
+      "ctrltype": "bs4dropdown",
+      "ctrlname": "ar",
+      "options": {
+        "CH": "(Ganze Schweiz)",
+        "AG": "Aargau",
+        "AR": "Appenzell A.Rh.",
+        "AI": "Appenzell I.Rh.",
+        "BS": "Basel Stadt",
+        "BL": "Baselland",
+        "BE": "Bern",
+        "FR": "Freiburg",
+        "GE": "Genf",
+        "GL": "Glarus",
+        "GR": "Graubünden",
+        "JU": "Jura",
+        "LU": "Luzern",
+        "NE": "Neuenburg",
+        "NW": "Nidwalden",
+        "OW": "Obwalden",
+        "SH": "Schaffhausen",
+        "SZ": "Schwyz",
+        "SO": "Solothurn",
+        "SG": "St. Gallen",
+        "TI": "Tessin",
+        "TG": "Thurgau",
+        "UR": "Uri",
+        "VD": "Waadt",
+        "VS": "Wallis",
+        "ZG": "Zug",
+        "ZH": "Zürich"
+      },
+      "chosen": "CH",
+      "placeholder": null,
+      "disabled": false,
+      "visible": true,
+      "tooltip": "Gebiet"
+    },
+    "fi-dropdown3": {
+      "ctrltype": "bs4dropdown",
+      "ctrlname": "th",
+      "options": {
+        "1": "Abschuss",
+        "2": "Bestand",
+        "3": "Aussetzung",
+        "4": "Fallwild",
+        "5": "Spezialabschuss",
+        "9": "Fallwild Detail",
+        "12": "Präparation"
+      },
+      "chosen": 1,
+      "placeholder": null,
+      "disabled": false,
+      "visible": true,
+      "tooltip": "Datenthema",
+      "debug": false
+    },
+    "fi-rangeslider1": {
+      "ctrltype": "bs4rangeslider",
+      "ctrlname": "yr",
+      "visible": true,
+      "tooltip": "Please select a year",
+      "ctrldata": {
+        "disable": false,
+        "type": "double",
+        "min": 1933,
+        "max": 2024,
+        "to": 2024,
+        "from": 2015,
+        "prettify_enabled": false
+      }
+    },
+    "fi-tree1": {
+      "ctrltype": "bs4tree",
+      "ctrlname": "sp",
+      "chosen": 1,
+      "visible": true,
+      "collapsed": true,
+      "disableparents": true,
+      "animationspeed": 250,
+      "tooltip": null,
+      "ctrldata": {
+        " 100511": {
+          "name": "Huftiere",
+          "data": {
+            " 2": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Reh"
+            },
+            " 1": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Rothirsch"
+            },
+            " 3": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Gämse"
+            },
+            " 7": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Wildschwein"
+            },
+            " 4": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Steinbock"
+            },
+            " 8": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Mufflon"
+            },
+            " 5": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Sikahirsch"
+            },
+            " 6": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Damhirsch"
+            },
+            " 401": {
+              "name": "<font color=\"black\">▲</font>&nbsp;Jagdbare Huftiere"
+            }
+          }
+        },
+        " 100512": {
+          "name": "Raubtiere",
+          "data": {
+            " 15": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Rotfuchs"
+            },
+            " 16": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Dachs"
+            },
+            " 18": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Baummarder"
+            },
+            " 17": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Steinmarder"
+            },
+            " 28": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Bär"
+            },
+            " 21": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Fischotter"
+            },
+            " 29": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Goldschakal"
+            },
+            " 20": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Hermelin / Mauswiesel"
+            },
+            " 19": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Iltis"
+            },
+            " 26": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Mauswiesel"
+            },
+            " 22": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Luchs"
+            },
+            " 23": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Wildkatze"
+            },
+            " 27": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Wolf"
+            },
+            " 50": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Marderhund"
+            },
+            " 51": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Waschbär"
+            },
+            " 402": {
+              "name": "<font color=\"black\">▲</font>&nbsp;Raubtiere"
+            }
+          }
+        },
+        " 100513": {
+          "name": "Diverse",
+          "data": {
+            " 30": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Feldhase"
+            },
+            " 31": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Schneehase"
+            },
+            " 32": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Wildkaninchen"
+            },
+            " 33": {
+              "name": "<font color=\"gold\">▲</font>&nbsp;Murmeltier"
+            },
+            " 55": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Biber"
+            },
+            " 34": {
+              "name": "<font color=\"red\">▲</font>&nbsp;Eichhörnchen"
+            },
+            " 52": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Bisamratte"
+            },
+            " 53": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Nutria"
+            },
+            " 37": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Baumwollschwanzkaninchen"
+            },
+            " 35": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Grauhörnchen"
+            },
+            " 36": {
+              "name": "<font color=\"lightblue\">▲</font>&nbsp;Streifenhörnchen"
+            }
+          }
+        }
+      }
+    },
+    "fi-chart-or-table": {
+      "ctrltype": "bs4chart",
+      "visible": true,
+      "onprintheaderimage": "https://www.jagdstatistik.ch/images/bafu-header-de.png",
+      "tooltip": "Zeigt Statistikdaten an",
+      "ctrldata": {
+        "chart": {
+          "type": "column",
+          "height": 700,
+          "spacingTop": 5,
+          "spacingBottom": 50,
+          "marginTop": 100
+        },
+        "title": {
+          "text": "Rothirsch, 2015 bis 2024"
+        },
+        "subtitle": {
+          "text": "Abschuss, Ganze Schweiz"
+        },
+        "xAxis": {
+          "categories": [
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024"
+          ]
+        },
+        "yAxis": {
+          "min": 0,
+          "title": {
+            "text": "Anzahl"
+          },
+          "allowDecimals": false
+        },
+        "plotOptions": {
+          "column": {
+            "stacking": "count"
+          }
+        },
+        "colors": [
+          "#7cb5ec",
+          "#434348",
+          "#90ed7d",
+          "#f7a35c",
+          "#8085e9",
+          "#f15c80",
+          "#e4d354",
+          "#2b908f",
+          "#f45b5b",
+          "#91e8e1",
+          "#4982b9",
+          "#101015",
+          "#60ba4a",
+          "#c47029",
+          "#5052b6",
+          "#c02950",
+          "#b1a021",
+          "#08605c",
+          "#c12828",
+          "#60b5b0"
+        ],
+        "credits": {
+          "enabled": true,
+          "text": "Quelle: BAFU - Sektion Wildtiere und Artenförderung - 2026",
+          "href": "https://www.bafu.admin.ch/bafu/de/home/themen/biodiversitaet/fachinformationen/nachhaltige-nutzung-der-biodiversitaet/jagd.html",
+          "position": {
+            "align": "right",
+            "y": 0
+          },
+          "style": {
+            "fontSize": "11px"
+          }
+        },
+        "tooltip": {
+          "borderRadius": 0,
+          "borderWidth": 1,
+          "shared": true
+        },
+        "series": [
+          {
+            "name": "Kalb",
+            "data": [
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ]
+            ]
+          },
+          {
+            "name": "Kuhkalb",
+            "data": [
+              [
+                1274
+              ],
+              [
+                1240
+              ],
+              [
+                1623
+              ],
+              [
+                1510
+              ],
+              [
+                1714
+              ],
+              [
+                1707
+              ],
+              [
+                1709
+              ],
+              [
+                1605
+              ],
+              [
+                1636
+              ],
+              [
+                1566
+              ]
+            ]
+          },
+          {
+            "name": "Stierkalb",
+            "data": [
+              [
+                1265
+              ],
+              [
+                1597
+              ],
+              [
+                1457
+              ],
+              [
+                1315
+              ],
+              [
+                1521
+              ],
+              [
+                1484
+              ],
+              [
+                1512
+              ],
+              [
+                1548
+              ],
+              [
+                1492
+              ],
+              [
+                1594
+              ]
+            ]
+          },
+          {
+            "name": "Schmalspiesser oder Schmaltier",
+            "data": [
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                2
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ]
+            ]
+          },
+          {
+            "name": "Schmaltier",
+            "data": [
+              [
+                1813
+              ],
+              [
+                1504
+              ],
+              [
+                1697
+              ],
+              [
+                1736
+              ],
+              [
+                1760
+              ],
+              [
+                1855
+              ],
+              [
+                1757
+              ],
+              [
+                1782
+              ],
+              [
+                1811
+              ],
+              [
+                1821
+              ]
+            ]
+          },
+          {
+            "name": "Schmalspiesser",
+            "data": [
+              [
+                1006
+              ],
+              [
+                916
+              ],
+              [
+                1099
+              ],
+              [
+                1203
+              ],
+              [
+                1347
+              ],
+              [
+                1601
+              ],
+              [
+                1173
+              ],
+              [
+                1188
+              ],
+              [
+                1241
+              ],
+              [
+                1188
+              ]
+            ]
+          },
+          {
+            "name": "Kuh",
+            "data": [
+              [
+                2800
+              ],
+              [
+                3274
+              ],
+              [
+                3688
+              ],
+              [
+                3097
+              ],
+              [
+                3526
+              ],
+              [
+                3378
+              ],
+              [
+                3454
+              ],
+              [
+                3762
+              ],
+              [
+                3477
+              ],
+              [
+                3614
+              ]
+            ]
+          },
+          {
+            "name": "Stier",
+            "data": [
+              [
+                3499
+              ],
+              [
+                3373
+              ],
+              [
+                4511
+              ],
+              [
+                3220
+              ],
+              [
+                3175
+              ],
+              [
+                3975
+              ],
+              [
+                3246
+              ],
+              [
+                3658
+              ],
+              [
+                3551
+              ],
+              [
+                3844
+              ]
+            ]
+          }
+        ],
+        "customsettings": {
+          "decimals": 0,
+          "thousandSeparator": "'",
+          "decimalSeparator": "."
+        }
+      }
+    }
+  }
+}
