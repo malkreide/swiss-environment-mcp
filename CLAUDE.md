@@ -66,6 +66,25 @@ pytest -m "not live" -v                   # PYTHONPATH=src
 python scripts/check_version_sync.py
 ```
 
+**Zwei weitere Gates hängen an jedem PR, ausserhalb von `ci.yml`:**
+
+- `security.yml` — gitleaks über History *und* Working Tree, Konfig
+  `.gitleaks.toml`. Läuft immer.
+- `image-size.yml` — baut das Image und bricht über einem Ceiling von
+  **350 MB** ab (Audit SCALE-004). Läuft **nur**, wenn `Dockerfile`,
+  `pyproject.toml` oder `src/**` im Diff sind.
+
+Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
+der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
+wenn *gar kein* Check läuft, gilt dort der Merge-Konflikt-Verdacht. Beide
+brauchen Docker bzw. gitleaks und sind damit die zwei Gates, die sich nicht
+so nebenbei lokal nachfahren lassen.
+
+`draft-release.yml` ist kein Gate — nur `workflow_dispatch`.
+
+Die Matrix setzt kein `fail-fast: false`: Eine rote 3.11 bricht 3.12 und 3.13
+ab, bevor sie etwas sagen.
+
 Es gibt kein Coverage-Gate. Kein `include` unter `[tool.ruff]` setzen — der
 Umfang stimmt: `ruff check` sieht 26 Dateien über alle drei Verzeichnisse,
 `ruff format` 27, weil 0.16 auch Markdown formatiert und damit
