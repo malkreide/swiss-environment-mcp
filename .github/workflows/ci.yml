@@ -25,12 +25,12 @@ jobs:
         run: pip install uv
 
       - name: Abhängigkeiten installieren
+        # Installiert den ruff-Pin aus dem [dev]-Extra. Hier stand danach ein
+        # zweiter `pip install ruff==<version>`-Schritt, der gegen pyproject
+        # gewann: den Pin dort zu aendern haette in der CI nichts bewirkt. Die
+        # Version steht nur noch in pyproject, damit lokaler Lauf und CI sich
+        # nicht ueber sie uneinig sein koennen.
         run: uv pip install -e ".[dev,otel]" --system
-
-      # Pin ruff so an upstream release cannot change the default rule set or
-      # formatter and break CI on unrelated, untouched code.
-      - name: Install pinned ruff
-        run: pip install ruff==0.16.1
 
       - name: Linting mit ruff
         run: ruff check src/ tests/ scripts/
@@ -64,14 +64,17 @@ jobs:
         with:
           python-version: "3.11"
 
-      # Pin ruff so an upstream release cannot change the default rule set or
-      # formatter and break CI on unrelated, untouched code.
-      - run: pip install ruff==0.16.1
+      # Holt ruff aus dem [dev]-Extra, wo seine Version als einziges steht.
+      # Hier stand `pip install ruff==<version>`: eine zweite Fassung derselben
+      # Zahl, die still gegen pyproject gewann.
+      - name: ruff aus dem [dev]-Extra installieren
+        run: pip install -e ".[dev]"
 
       - run: ruff check src/ tests/ scripts/
 
       - run: ruff format --check src/ tests/ scripts/
 
-      # Nur Standardbibliothek (tomllib ab 3.11) — kein Projekt-Install nötig.
+      # Braucht nur die Standardbibliothek (tomllib ab 3.11); laeuft hier
+      # trotzdem nach dem Install, weil ruff ihn ohnehin verlangt.
       - name: Versions-Sync server.json ↔ pyproject.toml
         run: python scripts/check_version_sync.py
