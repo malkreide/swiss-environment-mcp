@@ -86,9 +86,11 @@ Die Matrix setzt kein `fail-fast: false`: Eine rote 3.11 bricht 3.12 und 3.13
 ab, bevor sie etwas sagen.
 
 Es gibt kein Coverage-Gate. Kein `include` unter `[tool.ruff]` setzen — der
-Umfang stimmt: `ruff check` sieht 26 Dateien über alle drei Verzeichnisse,
-`ruff format` 27, weil 0.16 auch Markdown formatiert und damit
-`tests/fixtures/PROVENANCE.md` mitnimmt. Zwei Zahlen, kein Fehler.
+Umfang sind die drei Pfade im Gate-Befehl selbst. Wer ihn prüfen will, zählt
+nach statt hier abzulesen: `ruff check src/ tests/ scripts/ --show-files | wc -l`.
+`ruff format` meldet dabei eine Datei mehr als `ruff check`, weil 0.16 auch
+Markdown formatiert und damit `tests/fixtures/PROVENANCE.md` mitnimmt — zwei
+Zahlen, kein Fehler.
 
 **Fixtures: vorhanden, 20 Stück plus `tests/fixtures/PROVENANCE.md`** mit
 Aufnahmedatum und dem Grund für den Schnitt — eine Antwort je *Abfrage*, nicht
