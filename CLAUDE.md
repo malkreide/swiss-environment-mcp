@@ -50,7 +50,8 @@ Ein Codex-Review auf einem PR wird beantwortet oder behoben, nie ignoriert.
 Keine zweite Version in die Workflows schreiben: ein solcher Schritt läuft
 nach dem Install und überstimmt den Pin still — er stand hier an zwei Stellen,
 in den Jobs `test` und `lint` (`test_dependencies.py` hält beides fest). Eine
-`.pre-commit-config.yaml` gibt es nicht.
+`.pre-commit-config.yaml` gibt es nicht. Vor dem Lauf `ruff --version` prüfen:
+ein älteres ruff früher im `PATH` schlägt den Pin, ohne etwas zu melden.
 
 **Gates, wörtlich aus der CI** (Job `test`, dazu `lint` mit denselben zwei
 ruff-Schritten plus dem Versions-Sync):
@@ -66,7 +67,9 @@ python scripts/check_version_sync.py
 ```
 
 Es gibt kein Coverage-Gate. Kein `include` unter `[tool.ruff]` setzen — der
-Umfang stimmt (25 Dateien über alle drei Verzeichnisse, nachgemessen).
+Umfang stimmt: `ruff check` sieht 26 Dateien über alle drei Verzeichnisse,
+`ruff format` 27, weil 0.16 auch Markdown formatiert und damit
+`tests/fixtures/PROVENANCE.md` mitnimmt. Zwei Zahlen, kein Fehler.
 
 **Fixtures: vorhanden, 20 Stück plus `tests/fixtures/PROVENANCE.md`** mit
 Aufnahmedatum und dem Grund für den Schnitt — eine Antwort je *Abfrage*, nicht
