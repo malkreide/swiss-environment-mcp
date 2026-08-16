@@ -33,7 +33,15 @@ dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
     "respx>=0.21.0",
-    "ruff>=0.4.0",
+    # Exakter Pin, und die einzige Stelle, an der die ruff-Version steht. Als
+    # hier eine Spanne stand, loeste `pip install -e ".[dev]"` auf die jeweils
+    # neueste Version auf (gemessen: 0.16.3), waehrend die CI ihre eigene
+    # darueber installierte — ein lokaler Gate-Lauf meldete also Abweichungen,
+    # die niemand verursacht hat. Diese Zeile hochzuziehen ist eine bewusste
+    # Entscheidung: ein neues ruff kann Regelsatz oder Formatierer aendern und
+    # unberuehrten Code rot machen. `test_dependencies.py` faellt, wenn hier
+    # wieder eine Spanne steht oder ein Workflow eine zweite Version setzt.
+    "ruff==0.16.1",
 ]
 # OpenTelemetry-Tracing (Audit OBS-006), opt-in: pip install '.[otel]'
 otel = [

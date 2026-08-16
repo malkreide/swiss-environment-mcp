@@ -45,11 +45,12 @@ Ein Codex-Review auf einem PR wird beantwortet oder behoben, nie ignoriert.
 
 ## Teil 2 — dieses Repo
 
-**ruff:** `.github/workflows/ci.yml` pinnt `ruff==0.16.1` — an **zwei**
-Stellen, je einmal in den Jobs `test` und `lint`. Das `[dev]`-Extra von
-`pyproject.toml` deklariert dagegen `ruff>=0.4.0`, eine offene Untergrenze;
-eine `.pre-commit-config.yaml` gibt es nicht. Gemessen: `pip install -e
-".[dev]"` liefert 0.16.3. Lokal darum die CI-Version nachinstallieren.
+**ruff:** genau eine Quelle — `ruff==0.16.1` im `[dev]`-Extra von
+`pyproject.toml`. Ein Install des Extras reicht also, lokal wie in der CI.
+Keine zweite Version in die Workflows schreiben: ein solcher Schritt läuft
+nach dem Install und überstimmt den Pin still — er stand hier an zwei Stellen,
+in den Jobs `test` und `lint` (`test_dependencies.py` hält beides fest). Eine
+`.pre-commit-config.yaml` gibt es nicht.
 
 **Gates, wörtlich aus der CI** (Job `test`, dazu `lint` mit denselben zwei
 ruff-Schritten plus dem Versions-Sync):
