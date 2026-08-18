@@ -94,6 +94,12 @@ wenn *gar kein* Check läuft, gilt dort der Merge-Konflikt-Verdacht. Beide
 brauchen Docker bzw. gitleaks und sind damit die zwei Gates, die sich nicht
 so nebenbei lokal nachfahren lassen.
 
+Vor dem Merge-Konflikt-Verdacht steht aber noch eine billigere Erklärung: Alle
+drei PR-Gates filtern auf `branches: [main]` (`ci.yml`, `security.yml`,
+`image-size.yml`). Ein PR gegen eine andere Basis läuft völlig ungeprüft — er
+ist nicht grün, weil nichts zu beanstanden war, sondern weil nichts gefragt
+wurde. Also erst die Basis prüfen, dann den Merge-Konflikt vermuten.
+
 `draft-release.yml` ist kein Gate — nur `workflow_dispatch`.
 
 Die Matrix setzt kein `fail-fast: false`: Eine rote 3.11 bricht 3.12 und 3.13
@@ -117,3 +123,6 @@ aufzeichnen mit `PYTHONPATH=src python scripts/record_fixtures.py`.
 sondern von `scripts/classify_live_run.py` in `clear` / `finding` / `unknown`
 eingeordnet — ein Lauf, in dem alles übersprungen wurde, gilt nicht als
 Erfolg, und nur ein `finding` öffnet ein Issue. `unknown` schliesst keines.
+`schedule` greift nur auf dem Default-Branch: Eine Änderung an Kadenz oder
+Workflow ist auf einem Branch wirkungslos und wird erst nach dem Merge scharf.
+Vorher von Hand per `workflow_dispatch` prüfen.
