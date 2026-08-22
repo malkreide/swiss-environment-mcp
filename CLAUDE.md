@@ -138,7 +138,7 @@ wie der Code: Nichts ist rot, weil nichts geprüft wird, worauf es ankommt.
 
 ## Teil 2 — dieses Repo
 
-**ruff:** genau eine Quelle — `ruff==0.16.1` im `[dev]`-Extra von
+**ruff:** genau eine Quelle — `ruff==0.16.3` im `[dev]`-Extra von
 `pyproject.toml`. Ein Install des Extras reicht also, lokal wie in der CI.
 Keine zweite Version in die Workflows schreiben: ein solcher Schritt läuft
 nach dem Install und überstimmt den Pin still — er stand hier an zwei Stellen,
