@@ -3355,6 +3355,32 @@ def build_transport_security(host: str, port: int):
     )
 
 
+# Die Header, nach denen Spec 2026-07-28 eine Anfrage routet — in der
+# Schreibweise des SDK (`mcp.shared.inbound`): JSON-RPC-Methode, benanntes
+# Werkzeug bzw. Prompt bzw. Ressource, und die Protokollrevision.
+CORS_ROUTING_HEADERS = ["Mcp-Method", "Mcp-Name", "Mcp-Protocol-Version"]
+
+# Hier stand `["*", "Mcp-Session-Id"]`, und die Wildcard gewann: Starlette
+# schaltet damit auf `allow_all_headers` und spiegelt im Preflight zurück, was
+# der Browser ankündigt — jeder erlaubte Origin durfte also jeden beliebigen
+# Header senden. Das ist keine Freigabeliste, sondern ihre Abwesenheit, und sie
+# verdeckt zugleich jede Drift: eine Wildcard kann nicht falsch werden.
+#
+# `Last-Event-ID` setzt einen abgerissenen SSE-Strom fort
+# (`LAST_EVENT_ID_HEADER` in `mcp.server.streamable_http`). Fehlt er, bricht
+# nur die Wiederaufnahme nach Paketverlust.
+#
+# `Mcp-Param-*` fehlt bewusst: CORS kennt kein Präfix-Wildcard, und kein
+# Werkzeug hier annotiert ein Eingabefeld mit `x-mcp-header`.
+# `test_kein_werkzeug_deklariert_einen_mcp_param_header` fällt, sobald eines es tut.
+CORS_ALLOW_HEADERS = [
+    "Content-Type",
+    *CORS_ROUTING_HEADERS,
+    "Mcp-Session-Id",
+    "Last-Event-ID",
+]
+
+
 def build_cors_app(
     origins: list[str] | None = None,
     host: str = "127.0.0.1",
@@ -3391,7 +3417,7 @@ def build_cors_app(
         mcp.streamable_http_app(transport_security=security, host=host),
         allow_origins=origins,
         allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
-        allow_headers=["*", "Mcp-Session-Id"],
+        allow_headers=CORS_ALLOW_HEADERS,
         expose_headers=["Mcp-Session-Id"],
         # Keine Auth/Credentials in diesem Server -> False (zulässig mit "*").
         allow_credentials=False,
