@@ -38,7 +38,11 @@ _HEADERS = {
 def _clean_settings(monkeypatch):
     """`settings` ist modulglobal; Felder pro Test zurücksetzen."""
     monkeypatch.setattr(settings, "mcp_allowed_hosts", "", raising=False)
-    monkeypatch.setattr(settings, "mcp_cors_allow_origins", "*", raising=False)
+    # Der echte Default, nicht ``*``: seit der Umstellung auf fail-closed ist
+    # er leer. Eine Fixture, die auf einen Wert «zuruecksetzt», den es nicht
+    # mehr gibt, faehrt in jedem Test dieser Datei eine Konfiguration, die
+    # niemand hat — und beschreibt sich dabei als Aufraeumen.
+    monkeypatch.setattr(settings, "mcp_cors_allow_origins", "", raising=False)
     yield
 
 
@@ -67,14 +71,23 @@ def test_wildcard_bind_with_allowlist_is_protected(monkeypatch):
     assert "127.0.0.1:8000" in sec.allowed_hosts
 
 
-def test_the_cors_wildcard_default_is_not_copied():
-    """Hier besonders wichtig: der CORS-Default dieses Servers ist ``*``.
+def test_a_wildcard_origin_is_not_copied(monkeypatch):
+    """``*`` gehört nicht in die Transportliste: Origins werden dort literal
+    verglichen, ein Eintrag namens ``*`` erlaubte also nichts und machte die
+    Liste bloss unlesbar.
 
-    Als Origin literal übernommen wäre das ein Eintrag namens ``*``, der nichts
-    erlaubt und die Liste unlesbar macht.
+    Der Vorgänger hiess ``test_the_cors_wildcard_default_is_not_copied`` und
+    berief sich auf einen Wildcard-Default, den es seit der Umstellung auf
+    fail-closed nicht mehr gibt. Die Zusicherung hielt nur, weil die
+    autouse-Fixture die Wildcard selbst setzte — sie hing damit an einer
+    Aufräum-Zeile statt an ihrem eigenen Prüffall. Jetzt setzt der Test sie.
     """
+    monkeypatch.setattr(settings, "mcp_cors_allow_origins", "https://claude.ai,*")
     sec = build_transport_security("127.0.0.1", 8000)
     assert "*" not in sec.allowed_origins
+    # Gegenkontrolle: die echte Origin daneben kommt sehr wohl durch — sonst
+    # wäre der Test auch gegen einen Filter grün, der alles wegwirft.
+    assert "https://claude.ai" in sec.allowed_origins
 
 
 def test_explicit_cors_origins_pass_the_transport_check(monkeypatch):

@@ -5,6 +5,21 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Behoben
+
+- **Die autouse-Fixture in `tests/test_transport_security.py` setzte einen
+  Default, den es nicht mehr gibt.** Sie «setzte zurück» auf
+  `mcp_cors_allow_origins = "*"` — seit der Umstellung auf fail-closed ist der
+  Default aber leer. Damit fuhr jeder Test dieser Datei eine Konfiguration, die
+  niemand hat, und beschrieb sich dabei als Aufräumen. Sie setzt jetzt `""`.
+
+  `test_the_cors_wildcard_default_is_not_copied` hing genau daran: seine
+  Zusicherung hielt nur, weil die Fixture die Wildcard mitlieferte, nicht weil
+  der Test sie prüfte. Er setzt sie jetzt selbst, heisst
+  `test_a_wildcard_origin_is_not_copied` und prüft zusätzlich, dass die echte
+  Origin daneben durchkommt — sonst wäre er auch gegen einen Filter grün, der
+  alles wegwirft.
+
 ### Geändert
 
 - **BRECHEND: `MCP_CORS_ALLOW_ORIGINS` stand auf `"*"`.** Jede Website im Netz
