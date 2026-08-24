@@ -5,6 +5,35 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Geändert
+
+- **BRECHEND: `MCP_CORS_ALLOW_ORIGINS` stand auf `"*"`.** Jede Website im Netz
+  durfte diesen Server aus dem Browser eines Besuchers aufrufen, und niemand
+  hatte das gewählt — der Default war es, und `.env.example` lieferte die
+  Wildcard zusätzlich ausgeschrieben aus. Wer die Datei kopierte, hatte den
+  Zustand doppelt.
+
+  Gemessen vorher am zusammengebauten ASGI-Stack: ein Preflight von
+  `https://evil.example` bekam dasselbe `Access-Control-Allow-Origin: *` wie
+  `https://client.example`. Danach ohne Konfiguration gar kein
+  `Access-Control-Allow-Origin` mehr.
+
+  Die Wildcard bleibt erreichbar, muss aber verlangt werden. **Wer den
+  bisherigen Zustand behalten will, setzt `MCP_CORS_ALLOW_ORIGINS=*`.** stdio-
+  und Nicht-Browser-Clients sind unberührt — CORS regelt ausschliesslich
+  Browser.
+
+- **Die Wildcard-Warnung prüfte `origins == ["*"]`** — exakte Gleichheit.
+  `MCP_CORS_ALLOW_ORIGINS="https://a.test,*"` erlaubt bei Starlette ebenso jede
+  Origin (`allow_all_origins`), rutschte aber still durch: die Liste war ja
+  nicht *gleich* `["*"]`. Genau diese Mischform schreibt man hin, wenn man eine
+  Origin ergänzt und die Wildcard stehen lässt. Die Prüfung fragt jetzt
+  `"*" in origins`.
+
+- **Der leere Fall war stumm.** Fail-closed ist richtig, aber nicht
+  selbsterklärend; wer einen Browser erwartet und keinen bekommt, findet den
+  Grund jetzt als `cors_no_origins` im Log statt im Quelltext.
+
 ### Behoben
 
 - **`allow_headers` stand auf `["*", "Mcp-Session-Id"]`,** und die Wildcard

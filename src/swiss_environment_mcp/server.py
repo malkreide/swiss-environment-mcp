@@ -69,8 +69,13 @@ class Settings(BaseSettings):
     mcp_host: str = "127.0.0.1"
     port: int = 8000
     # CORS-Origins für den HTTP-Transport (Audit SDK-004). Komma-separiert.
-    # Default "*" für Dev; in Produktion auf eine explizite Liste setzen.
-    mcp_cors_allow_origins: str = "*"
+    # Leer per Default: nicht gesetzt heisst kein Cross-Origin-Zugriff, nicht
+    # Zugriff von überall. Hier stand "*" — jede Website im Netz durfte diesen
+    # Server aus dem Browser eines Besuchers aufrufen, und niemand hatte das
+    # gewählt. Die Wildcard bleibt erreichbar, sie muss nur verlangt werden,
+    # und ``build_cors_app`` protokolliert sie dann. stdio- und
+    # Nicht-Browser-Clients sind davon unberührt; CORS regelt nur Browser.
+    mcp_cors_allow_origins: str = ""
     # SEC-005, eingehend: Hostnamen, unter denen dieser Server erreichbar ist.
     # Nötig für die Host/Origin-Prüfung des Transports, sobald nicht auf Loopback
     # gebunden wird — der Prozess kann den Service-/DNS-Namen nicht erraten.
@@ -3345,7 +3350,8 @@ def build_transport_security(host: str, port: int):
     # Konfigurierte CORS-Origins müssen auch die Transport-Prüfung passieren,
     # sonst weist der Server genau die Browser-Clients ab, die CORS erlaubt.
     # ``*`` ist als Origin nicht ausdrückbar (literal verglichen) und wird nicht
-    # kopiert — hier besonders relevant, weil der CORS-Default ``*`` ist.
+    # kopiert. Wer die Wildcard setzt, muss die Origins hier also trotzdem
+    # einzeln nennen, sobald die Transportprüfung aktiv ist.
     origins = {o for o in settings.cors_origins() if o != "*"}
     origins |= {f"http://{h}" for h in hosts}
     return TransportSecuritySettings(
@@ -3390,8 +3396,10 @@ def build_cors_app(
 
     Browser-/SSE-Clients müssen den `Mcp-Session-Id`-Header lesen können
     (`expose_headers`) und in Folge-Requests senden dürfen (`allow_headers`).
-    `allow_origins` ist konfigurierbar (MCP_CORS_ALLOW_ORIGINS); in Produktion
-    eine explizite Liste statt der `*`-Wildcard verwenden.
+    `allow_origins` kommt aus MCP_CORS_ALLOW_ORIGINS und ist leer, solange
+    niemand die Variable setzt — ein unkonfigurierter Server lässt dann gar
+    keinen Browser durch. Die `*`-Wildcard ist weiterhin möglich, wird aber
+    protokolliert.
 
     ``host`` muss die Adresse sein, an die uvicorn tatsächlich bindet — siehe
     :func:`build_transport_security`.
@@ -3399,10 +3407,20 @@ def build_cors_app(
     from starlette.middleware.cors import CORSMiddleware
 
     origins = origins if origins is not None else settings.cors_origins()
-    if origins == ["*"]:
+    if "*" in origins:
         logger.warning(
             "cors_wildcard_origin",
-            detail="MCP_CORS_ALLOW_ORIGINS='*' — in Produktion auf explizite Origins setzen",
+            detail="MCP_CORS_ALLOW_ORIGINS enthält '*' — jede Website kann diesen "
+            "Server aus dem Browser eines Besuchers aufrufen; in Produktion auf "
+            "explizite Origins setzen",
+        )
+    elif not origins:
+        logger.info(
+            "cors_no_origins",
+            detail="MCP_CORS_ALLOW_ORIGINS ist nicht gesetzt, browserbasierte "
+            "MCP-Clients werden daher nicht zugelassen; auf eine kommaseparierte "
+            "Origin-Liste setzen, um sie zu erlauben — stdio- und "
+            "Nicht-Browser-Clients sind davon unberührt",
         )
     security = build_transport_security(host, port)
     if security is None:
