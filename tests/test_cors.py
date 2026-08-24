@@ -136,3 +136,91 @@ def test_ein_fremder_origin_wird_weiterhin_abgewiesen(client: TestClient) -> Non
         },
     )
     assert "access-control-allow-origin" not in resp.headers
+
+
+# ── Origins ────────────────────────────────────────────────────────────────
+#
+# `mcp_cors_allow_origins` stand auf `"*"`. Gemessen am zusammengebauten
+# ASGI-Stack bekam ein Preflight von `https://evil.example` dasselbe
+# `Access-Control-Allow-Origin: *` wie `https://client.example` — jede Website
+# im Netz durfte diesen Server aus dem Browser eines Besuchers aufrufen, und
+# niemand hatte das gewählt.
+#
+# Die Fixture oben reicht `origins=[ORIGIN]` selbst herein und hätte den
+# Default deshalb nie widerlegen können. Die Tests hier fassen ihn direkt an.
+
+
+def test_der_default_laesst_keinen_browser_durch(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Fail-closed am Feld selbst, ohne Umweg über das Singleton.
+
+    Die gelöschte Umgebungsvariable gehört dazu: `Settings` liest sonst eine
+    zufällig gesetzte Variable der Testumgebung, und der Test misst etwas
+    anderes als den Default.
+    """
+    from swiss_environment_mcp.server import Settings
+
+    monkeypatch.delenv("MCP_CORS_ALLOW_ORIGINS", raising=False)
+    frisch = Settings()
+    assert frisch.mcp_cors_allow_origins == ""
+    assert frisch.cors_origins() == []
+
+
+def test_ohne_konfigurierte_origin_kommt_kein_browser_durch() -> None:
+    """Und dasselbe durch den ganzen Stack: kein `Access-Control-Allow-Origin`.
+
+    stdio- und Nicht-Browser-Clients sind davon unberührt — CORS regelt
+    ausschliesslich Browser.
+    """
+    c = TestClient(build_cors_app(origins=[]))
+    resp = preflight(c, "content-type")
+    assert "access-control-allow-origin" not in resp.headers
+
+
+def test_die_wildcard_bleibt_erreichbar_muss_aber_verlangt_werden() -> None:
+    """Einen Default verschärfen ist nicht dasselbe wie die Option streichen.
+    Wer Any-Origin will, bekommt es weiterhin — bewusst, und der Server
+    protokolliert es."""
+    c = TestClient(build_cors_app(origins=["*"]))
+    assert preflight(c, "content-type").headers["access-control-allow-origin"] == "*"
+
+
+def test_eine_wildcard_neben_echten_origins_wird_gemeldet() -> None:
+    """Die Warnung prüfte `origins == ["*"]` — exakte Gleichheit.
+
+    `MCP_CORS_ALLOW_ORIGINS="https://a.test,*"` erlaubt bei Starlette ebenso
+    jede Origin (`allow_all_origins`), rutschte aber still durch: die Liste war
+    ja nicht *gleich* `["*"]`. Genau die Mischform ist die, die man versehentlich
+    hinschreibt, wenn man eine Origin ergänzt und die Wildcard stehen lässt.
+
+    Abgegriffen mit `structlog.testing.capture_logs`, nicht mit `caplog` oder
+    `capfd`: dieser Server rendert über eine `PrintLoggerFactory` direkt auf
+    stderr, am `logging`-Handler vorbei, und `cache_logger_on_first_use` hält
+    den Stream von vor dem Test fest. Beide Fixtures blieben leer — der Test
+    wäre gefallen, obwohl die Meldung da war.
+    """
+    import structlog.testing
+
+    with structlog.testing.capture_logs() as logs:
+        c = TestClient(build_cors_app(origins=["https://a.test", "*"]))
+    assert "cors_wildcard_origin" in [eintrag.get("event") for eintrag in logs]
+    # Und die Wirkung, nicht nur die Meldung: die Wildcard gewinnt weiterhin.
+    assert preflight(c, "content-type").headers["access-control-allow-origin"] == "*"
+
+
+def test_der_leere_fall_wird_vermerkt() -> None:
+    """Fail-closed ist richtig, aber nicht selbsterklärend: wer einen Browser
+    erwartet und keinen bekommt, soll den Grund im Log finden und nicht im
+    Quelltext suchen müssen."""
+    import structlog.testing
+
+    with structlog.testing.capture_logs() as logs:
+        build_cors_app(origins=[])
+    assert "cors_no_origins" in [eintrag.get("event") for eintrag in logs]
+
+
+def test_cors_origins_liest_eine_liste(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Kommasepariert, Leerzeichen weg, leere Einträge raus."""
+    from swiss_environment_mcp.server import Settings
+
+    monkeypatch.setenv("MCP_CORS_ALLOW_ORIGINS", " https://a.test , ,https://b.test ")
+    assert Settings().cors_origins() == ["https://a.test", "https://b.test"]
