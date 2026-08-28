@@ -12,7 +12,12 @@ Sicherheit (siehe Audit SEC-004 / SEC-021):
   - Egress-Allow-List auf Code-Ebene (nur die fest definierten Gov-Hosts)
   - HTTPS wird vor jedem Request erzwungen
   - Aufgelöste IPs werden gegen private/link-local/loopback geprüft (SSRF)
-  - follow_redirects=False — kein Redirect auf interne Ziele
+  - follow_redirects=False — kein Redirect auf interne Ziele. Ein 3xx schlägt
+    über `raise_for_status()` als Fehler durch (gemessen für httpx 0.27.0 und
+    0.28.1, die Ränder unseres `httpx>=0.27.0`) und wird in
+    `handle_http_error` eigens benannt statt als «Anfrage fehlgeschlagen»
+  - `_json_body` statt nacktem `.json()`: eine 2xx-Antwort ohne JSON ist ein
+    gebrochener Vertrag der Quelle (`UpstreamContractError`), kein interner Fehler
 
 Der HTTP-Client ist ein einzelner, wiederverwendeter AsyncClient (siehe
 Audit SDK-001). Er wird über startup()/shutdown() im MCPServer-Lifespan
@@ -126,6 +131,41 @@ ALLOWED_HOSTS: frozenset[str] = frozenset(
 
 class SecurityError(Exception):
     """Ausgehender Request verletzt die Egress-/SSRF-Richtlinie."""
+
+
+class UpstreamContractError(Exception):
+    """Die Quelle hat geantwortet — aber nicht in der vereinbarten Form.
+
+    Abgegrenzt gegen die beiden Nachbarn, mit denen sie sonst verwechselt wird:
+    `httpx.HTTPStatusError` heisst «die Quelle hat den Abruf abgelehnt»,
+    `SecurityError` heisst «wir haben gar nicht erst gefragt». Diese hier heisst
+    «HTTP war in Ordnung, der Inhalt nicht» — ein gebrochener Vertrag, und damit
+    genau die Klasse, die die nächtliche Live-Suite sichtbar machen soll.
+
+    **Warum es diese Klasse gibt (Live-Lauf vom 23.8.2026).** `response.json()`
+    stand nackt an fünf Aufrufstellen. Als `opendata.swiss` um 04:33 UTC mit
+    einem 2xx und einem Body antwortete, der kein JSON war, fiel dort ein
+    `json.JSONDecodeError` heraus — ein Typ, den `handle_http_error` nicht kennt
+    und deshalb auf «Fehler: Unerwarteter interner Fehler» abbildet. Zwei
+    Live-Tests wurden rot und behaupteten einen internen Fehler, den es nicht
+    gab; die Ursache lag bei der Quelle. Genau diese Meldung verhindert die
+    Einordnung, die CLAUDE.md verlangt («erst die Quelle abfragen, dann
+    einordnen»): Sie zeigt auf uns, und sie nennt weder Status noch Content-Type,
+    an denen man den Unterschied sähe.
+
+    Die Attribute tragen deshalb die drei Tatsachen, die zur Einordnung nötig
+    sind — alle drei stammen von der Quelle, keine aus unserem Prozess (OBS-002).
+    """
+
+    def __init__(self, url: str, status_code: int, content_type: str, excerpt: str) -> None:
+        self.url = url
+        self.status_code = status_code
+        self.content_type = content_type
+        self.excerpt = excerpt
+        super().__init__(
+            f"{url}: HTTP {status_code}, Content-Type '{content_type}', "
+            f"kein JSON (Beginn: {excerpt!r})"
+        )
 
 
 # --- Egress-Guard (SSRF-Schutz, Audit SEC-004) --------------------------------
@@ -251,6 +291,12 @@ async def shutdown() -> None:
     _client = None
 
 
+# Wie viel des fremden Bodys in die Diagnose darf. Genug, um eine HTML-
+# Fehlerseite von einem leeren Body zu unterscheiden; zu wenig, um ein
+# Log oder eine Fehlermeldung mit fremdem Text zu fluten.
+_BODY_EXCERPT_CHARS = 120
+
+
 async def _get_json(url: str, params: dict[str, Any] | None = None) -> httpx.Response:
     """Gemeinsamer GET-Pfad: Egress-Guard + geteilter Client + raise_for_status."""
     assert_host_allowed(url)
@@ -259,6 +305,36 @@ async def _get_json(url: str, params: dict[str, Any] | None = None) -> httpx.Res
     response = await client.get(url, params=params)
     response.raise_for_status()
     return response
+
+
+def _json_body(response: httpx.Response) -> Any:
+    """Parst den Body als JSON — oder sagt, was stattdessen ankam.
+
+    Der nackte `response.json()`, der hier vorher an jeder Aufrufstelle stand,
+    warf bei einem 2xx ohne JSON einen `json.JSONDecodeError`. `handle_http_error`
+    kennt den Typ nicht und bildet ihn auf «Unerwarteter interner Fehler» ab —
+    eine Meldung, die auf uns zeigt, obwohl die Quelle den Vertrag gebrochen hat.
+    """
+    try:
+        return response.json()
+    except ValueError as e:
+        excerpt = response.text[:_BODY_EXCERPT_CHARS]
+        # Strukturiert und vollständig ins Log (dort ist Platz für fremden Text),
+        # während die LLM-sichtbare Meldung in `handle_http_error` knapp bleibt.
+        _logger.warning(
+            "upstream_not_json",
+            url=str(response.request.url),
+            status_code=response.status_code,
+            content_type=response.headers.get("content-type", ""),
+            excerpt=excerpt,
+            detail=str(e),
+        )
+        raise UpstreamContractError(
+            str(response.request.url),
+            response.status_code,
+            response.headers.get("content-type", ""),
+            excerpt,
+        ) from e
 
 
 def handle_http_error(e: Exception) -> str:
@@ -272,8 +348,29 @@ def handle_http_error(e: Exception) -> str:
         return f"Fehler: LINDAS hat die Abfrage abgelehnt (HTTP {e.status_code}): {e}"
     if isinstance(e, lindas_client.QueryTimeoutError):
         return f"Fehler: {e}"
+    if isinstance(e, UpstreamContractError):
+        # Status und Content-Type stammen von der Quelle, nicht aus unserem
+        # Prozess — sie zu nennen leakt keine Interna (OBS-002) und ist genau
+        # der Unterschied, an dem «Quelle kaputt» von «wir kaputt» hängt.
+        return (
+            f"Fehler: Die Quelle hat mit HTTP {e.status_code} geantwortet, aber kein JSON "
+            f"geliefert (Content-Type: '{e.content_type or 'nicht gesetzt'}'). "
+            "Das ist ein Problem der Datenquelle, nicht der Anfrage. Bitte später erneut "
+            "versuchen."
+        )
     if isinstance(e, httpx.HTTPStatusError):
         code = e.response.status_code
+        if 300 <= code < 400:
+            # follow_redirects=False ist eine Sicherheitsentscheidung, kein
+            # Versehen: Ein Redirect darf nicht auf ein internes Ziel zeigen.
+            # Eine Quelle, die neuerdings weiterleitet, hat den Vertrag geaendert
+            # — das gehoert benannt und nicht als «Anfrage fehlgeschlagen»
+            # verbucht, sonst sucht der naechste Leser den Fehler bei sich.
+            return (
+                f"Fehler: Die Quelle leitet weiter (HTTP {code}). Weiterleitungen werden "
+                "aus Sicherheitsgruenden nicht gefolgt; die Ziel-Adresse gehoert in die "
+                "Egress-Allow-List und in die Basis-URL."
+            )
         if code == 404:
             return "Fehler: Ressource nicht gefunden. Bitte Eingabeparameter prüfen."
         if code == 429:
@@ -479,13 +576,13 @@ async def search_bafu_datasets(
         "sort": "score desc, metadata_modified desc",
     }
     response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
-    return response.json()
+    return _json_body(response)
 
 
 async def get_bafu_dataset(dataset_id: str) -> dict[str, Any]:
     """Ruft die vollständigen Metadaten eines BAFU-Datensatzes ab."""
     response = await _get_json(f"{OPENDATA_SWISS_API}/package_show", params={"id": dataset_id})
-    return response.json()
+    return _json_body(response)
 
 
 # --- Naturgefahren -------------------------------------------------------------
@@ -547,7 +644,7 @@ async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
     # 2) Blob-JSON mit den Gefahrenstufen laden (gleicher, erlaubter Host).
     blob_url = json_path if json_path.startswith("http") else f"{WALDBRAND_BASE}{json_path}"
     blob = await _get_json(blob_url)
-    rows = blob.json()
+    rows = _json_body(blob)
     if not isinstance(rows, list):
         return {"found": False}
 
@@ -577,7 +674,7 @@ async def fetch_nabel_stations() -> dict[str, Any]:
         f"{OPENDATA_SWISS_API}/package_show",
         params={"id": "nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"},
     )
-    return response.json()
+    return _json_body(response)
 
 
 async def fetch_nabel_data(
@@ -597,7 +694,7 @@ async def fetch_nabel_data(
         "rows": 5,
     }
     response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
-    return response.json()
+    return _json_body(response)
 
 
 # --- SLF-Client (Schnee & Lawinen) --------------------------------------------

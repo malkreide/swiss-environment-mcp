@@ -7,6 +7,35 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Behoben
 
+- **Eine 2xx-Antwort ohne JSON wurde als «Unerwarteter interner Fehler»
+  gemeldet.** In der nächtlichen Live-Suite vom 23.8.2026 (04:33 UTC) fielen
+  `test_nabel_current` und `test_bafu_datasets`; beide hingen an
+  `opendata.swiss/api/3/action/package_search`, das mit HTTP 2xx und einem Body
+  antwortete, der kein JSON war. `response.json()` stand nackt an fünf
+  Aufrufstellen, der `json.JSONDecodeError` fiel in den Sammelzweig von
+  `handle_http_error` — und der zeigt auf uns.
+
+  Die Meldung war damit nicht bloss unschön, sie verhinderte die Einordnung, die
+  CLAUDE.md bei rotem Live-Test verlangt: Sie nannte weder Status noch
+  Content-Type, an denen «Quelle kaputt» von «wir kaputt» hängt. `_json_body`
+  wirft jetzt `UpstreamContractError` mit Status, Content-Type und Body-Auszug;
+  `handle_http_error` benennt die Quelle. Der Body-Auszug geht vollständig ins
+  strukturierte Log, in die LLM-sichtbare Meldung nur Status und Content-Type —
+  beides Tatsachen der Quelle, kein Leak von Interna (OBS-002).
+
+- **Ein 3xx verschwand in «API-Anfrage fehlgeschlagen».** `follow_redirects=False`
+  ist eine Sicherheitsentscheidung (SEC-004), keine Panne — eine Quelle, die
+  neuerdings weiterleitet, hat den Vertrag geändert und verdient eine eigene
+  Meldung. Gemessen am 28.8.2026: `opendata.swiss/api/3/action/*` beantwortet
+  Browser-User-Agents mit 302 auf `ckan.opendata.swiss`, unseren User-Agent mit
+  200; der Weiterleitungspfad ist aktiv, nicht hypothetisch.
+
+  Eine explizite `is_redirect`-Prüfung in `_get_json` war zwischenzeitlich
+  eingebaut und wurde von der eigenen Gegenprobe wieder entfernt: Sie blieb
+  grün, wenn man sie herausnahm. `raise_for_status()` wirft auf 3xx bereits —
+  gemessen an httpx 0.27.0 und 0.28.1, den beiden Rändern unseres
+  `httpx>=0.27.0`.
+
 - **Die autouse-Fixture in `tests/test_transport_security.py` setzte einen
   Default, den es nicht mehr gibt.** Sie «setzte zurück» auf
   `mcp_cors_allow_origins = "*"` — seit der Umstellung auf fail-closed ist der
