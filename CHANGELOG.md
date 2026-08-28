@@ -7,6 +7,29 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Behoben
 
+- **Der Retry-Pfad hatte den Fix vom letzten Mal nicht.** `_get_json_retry`
+  (SLF-Schnee, Lawinenbulletin, Jagdstatistik) läuft nicht über `_json_body`,
+  sondern über die vendored copy `sparql_client.get_json` — und die rief
+  `response.json()` weiterhin nackt auf. Der halbe Server hätte bei einer
+  2xx-Antwort ohne JSON weiter «Unerwarteter interner Fehler» gemeldet, während
+  der andere halbe schon die Quelle benannte. Schlimmer als durchgehend
+  schlecht: Man sieht der Meldung nicht an, welcher Pfad gerade dran ist.
+
+  `get_bindings` und `get_json` werfen jetzt `NotJsonError`;
+  `UpstreamContractError` erbt davon, und `handle_http_error` prüft auf den
+  Basistyp — eine Prüfung für beide Pfade. Dazu ein Guard gegen gültiges JSON in
+  der falschen Form (`AttributeError: 'list' object has no attribute 'get'`).
+
+### Geändert
+
+- **Vendored copy `sparql_client.py` auf v1.2.0, und der `_sleep`-Alias
+  nachgezogen.** Die Kopien waren schon wieder auseinandergelaufen: `fedlex-mcp`
+  hatte den Alias, der `asyncio.sleep` nicht prozessweit entschärft, dieses Repo
+  nicht — bei unverändertem Marker `v1.1.0` auf beiden Seiten. Genau das Muster,
+  das `test_retry_policy.py` schon einmal festhielt. Beide Kopien sind wieder
+  byte-identisch (md5 `b877c137`), und der Kopf der Datei sagt jetzt, dass eine
+  Änderung den Marker mithebt.
+
 - **Eine 2xx-Antwort ohne JSON wurde als «Unerwarteter interner Fehler»
   gemeldet.** In der nächtlichen Live-Suite vom 23.8.2026 (04:33 UTC) fielen
   `test_nabel_current` und `test_bafu_datasets`; beide hingen an

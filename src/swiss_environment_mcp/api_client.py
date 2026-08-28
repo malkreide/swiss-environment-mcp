@@ -133,8 +133,16 @@ class SecurityError(Exception):
     """Ausgehender Request verletzt die Egress-/SSRF-Richtlinie."""
 
 
-class UpstreamContractError(Exception):
+class UpstreamContractError(sparql_client.NotJsonError):
     """Die Quelle hat geantwortet — aber nicht in der vereinbarten Form.
+
+    Erbt seit v1.2.0 der vendored copy von `sparql_client.NotJsonError`. Das ist
+    kein Schmuck: Der Retry-Pfad (`_get_json_retry` → SLF, Jagdstatistik) läuft
+    durch das vendorierte Modul und wirft dessen Typ, der direkte Pfad
+    (`_get_json` → opendata.swiss, waldbrandgefahr.ch) wirft diesen hier.
+    Über die Vererbung fängt `handle_http_error` beide mit einer Prüfung —
+    sonst hätte der eine Pfad die gute Meldung und der andere weiter
+    «Unerwarteter interner Fehler», und niemand sähe, welcher gerade dran ist.
 
     Abgegrenzt gegen die beiden Nachbarn, mit denen sie sonst verwechselt wird:
     `httpx.HTTPStatusError` heisst «die Quelle hat den Abruf abgelehnt»,
@@ -156,16 +164,6 @@ class UpstreamContractError(Exception):
     Die Attribute tragen deshalb die drei Tatsachen, die zur Einordnung nötig
     sind — alle drei stammen von der Quelle, keine aus unserem Prozess (OBS-002).
     """
-
-    def __init__(self, url: str, status_code: int, content_type: str, excerpt: str) -> None:
-        self.url = url
-        self.status_code = status_code
-        self.content_type = content_type
-        self.excerpt = excerpt
-        super().__init__(
-            f"{url}: HTTP {status_code}, Content-Type '{content_type}', "
-            f"kein JSON (Beginn: {excerpt!r})"
-        )
 
 
 # --- Egress-Guard (SSRF-Schutz, Audit SEC-004) --------------------------------
@@ -291,10 +289,10 @@ async def shutdown() -> None:
     _client = None
 
 
-# Wie viel des fremden Bodys in die Diagnose darf. Genug, um eine HTML-
-# Fehlerseite von einem leeren Body zu unterscheiden; zu wenig, um ein
-# Log oder eine Fehlermeldung mit fremdem Text zu fluten.
-_BODY_EXCERPT_CHARS = 120
+# Aus der vendored copy, nicht noch einmal hingeschrieben: zwei Zahlen fuer
+# dieselbe Groesse laufen auseinander, und dann schneidet der eine Pfad anders
+# ab als der andere.
+_BODY_EXCERPT_CHARS = sparql_client.BODY_EXCERPT_CHARS
 
 
 async def _get_json(url: str, params: dict[str, Any] | None = None) -> httpx.Response:
@@ -348,7 +346,13 @@ def handle_http_error(e: Exception) -> str:
         return f"Fehler: LINDAS hat die Abfrage abgelehnt (HTTP {e.status_code}): {e}"
     if isinstance(e, lindas_client.QueryTimeoutError):
         return f"Fehler: {e}"
-    if isinstance(e, UpstreamContractError):
+    if isinstance(e, sparql_client.NotJsonError):
+        # `NotJsonError` und nicht `UpstreamContractError`: Der Retry-Pfad
+        # (`_get_json_retry` → SLF, Jagdstatistik) wirft den Basistyp aus der
+        # vendored copy, der direkte Pfad die Unterklasse. Eine Prüfung auf die
+        # Unterklasse liesse den halben Server bei «Unerwarteter interner
+        # Fehler» stehen.
+        #
         # Status und Content-Type stammen von der Quelle, nicht aus unserem
         # Prozess — sie zu nennen leakt keine Interna (OBS-002) und ist genau
         # der Unterschied, an dem «Quelle kaputt» von «wir kaputt» hängt.

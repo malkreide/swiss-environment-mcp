@@ -239,3 +239,46 @@ async def test_tool_meldet_quelle_statt_interner_fehler():
     assert "HTTP 200" in text and "text/html" in text
     # Die Direktlinks bleiben erhalten — der Aufrufer soll weiterkommen.
     assert "opendata.swiss" in text
+
+
+# --- 5. Der zweite Pfad: durch die vendored copy ------------------------------
+#
+# `_get_json_retry` (SLF-Schnee, Lawinenbulletin, Jagdstatistik) läuft nicht
+# über `_json_body`, sondern über `sparql_client.get_json`. Der wirft seit
+# v1.2.0 der vendored copy `NotJsonError` — den Basistyp, nicht
+# `UpstreamContractError`. Prüfte `handle_http_error` auf die Unterklasse,
+# stünde dieser halbe Server weiter bei «Unerwarteter interner Fehler».
+
+
+def test_upstream_contract_error_ist_ein_notjsonerror():
+    """Die Vererbung ist der Grund, warum eine Prüfung für beide Pfade reicht."""
+    from swiss_environment_mcp import sparql_client
+
+    assert issubclass(api.UpstreamContractError, sparql_client.NotJsonError)
+
+
+def test_handle_http_error_faengt_auch_den_retry_pfad():
+    """Der Basistyp aus der vendored copy bekommt dieselbe Meldung."""
+    from swiss_environment_mcp import sparql_client
+
+    msg = api.handle_http_error(sparql_client.NotJsonError(_CKAN, 200, "text/html", "<html>"))
+
+    assert "HTTP 200" in msg and "text/html" in msg
+    assert "Unerwarteter interner Fehler" not in msg
+
+
+@respx.mock
+async def test_slf_pfad_meldet_quelle_statt_interner_fehler(monkeypatch):
+    """End-to-End über den Retry-Pfad, mit einer echten SLF-URL.
+
+    Ohne Backoff, sonst wartet der Test die Retry-Staffel ab. Genullt wird die
+    Modul-Konstante, nicht `asyncio.sleep` — Letzteres entschärfte die Mechanik
+    im ganzen Prozess.
+    """
+    monkeypatch.setattr(api, "RETRY_BASE_DELAY", 0)
+    url = f"{api.SLF_MEASUREMENT_API}/imis/stations"
+    respx.get(url).mock(
+        return_value=httpx.Response(200, text=_HTML_BODY, headers={"content-type": "text/html"})
+    )
+    with pytest.raises(api.sparql_client.NotJsonError):
+        await api.fetch_slf_snow_stations()
