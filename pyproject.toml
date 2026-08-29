@@ -41,7 +41,7 @@ dev = [
     # Entscheidung: ein neues ruff kann Regelsatz oder Formatierer aendern und
     # unberuehrten Code rot machen. `test_dependencies.py` faellt, wenn hier
     # wieder eine Spanne steht oder ein Workflow eine zweite Version setzt.
-    "ruff==0.16.3",
+    "ruff==0.16.4",
 ]
 # OpenTelemetry-Tracing (Audit OBS-006), opt-in: pip install '.[otel]'
 otel = [
