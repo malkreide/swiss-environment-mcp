@@ -504,12 +504,22 @@ Tätigkeit (`codex-gate: Status setzen`), nicht nach fremdem Urteil.
 Die zweite Richtung derselben Verwechslung: `cancel-in-progress` räumt einen
 laufenden Poll ab, sobald ein neues Signal eintrifft — bei einem Poll-Fenster
 von 900 s trifft fast jeder Codex-Kommentar einen laufenden Job. Der
-abgebrochene Lauf bleibt als `cancelled` in der Liste stehen und zählt bei
-GitHub im Rollup mit, `mergeable_state` steht dann auf `unstable`. Das ist kein
-Fehlschlag, und wegkonfigurieren lässt es sich nicht: Mit
+abgebrochene Lauf bleibt als `cancelled` in der Liste stehen und sieht aus wie
+eine gescheiterte Prüfung. Das ist kein Fehlschlag, und wegkonfigurieren lässt
+es sich nicht: Mit
 `cancel-in-progress: false` räumt GitHub den **wartenden** Lauf ab statt den
 laufenden, ein abgebrochener Run steht genauso da. Benannt ist besser als
 wegkonfiguriert geglaubt.
+
+**Was hier kurz als Tatsache stand und falsch war:** dass ein abgebrochener Run
+`mergeable_state` auf `unstable` setzt. Geschlossen aus #116, wo beides
+gleichzeitig vorlag. Die Gegenprobe widerlegt es — PR #117 stand am 18.9.2026
+auf `unstable` mit sechs grünen Runs und **keinem** abgebrochenen, während
+`codex-gate` als Draft auf `pending` stand. Ein pendender Commit-Status genügt
+allein; über den Beitrag eines abgebrochenen Runs sagt keine der beiden
+Beobachtungen etwas. Merke: Zwei Ursachen, die immer zusammen auftreten, sind
+kein Beleg für eine von beiden — dafür braucht es den Fall, in dem nur eine
+vorliegt.
 
 Bewusst kein Timer. Ein Gate, das nach N Minuten von selbst grün wird,
 behauptet eine Prüfung, die es nicht gesehen hat — am 21./22.8. war das

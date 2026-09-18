@@ -45,8 +45,15 @@
 #   * ABGEBROCHEN, obwohl alles in Ordnung ist. `cancel-in-progress` raeumt
 #     einen laufenden Poll ab, sobald ein neues Signal eintrifft (unten
 #     ausfuehrlicher). Unter dem alten Namen las sich das als gescheiterte
-#     Pruefung; GitHub zaehlt einen abgebrochenen Run ausserdem im Rollup mit,
-#     `mergeable_state` steht dann auf `unstable`.
+#     Pruefung.
+#
+# Hier stand, ein abgebrochener Run setze ausserdem `mergeable_state` auf
+# `unstable`. Das war geschlossen, nicht gemessen, und die Messung hat es
+# widerlegt: PR #117 stand am 18.9.2026 auf `unstable` mit sechs gruenen Runs
+# und KEINEM abgebrochenen — waehrend `codex-gate` als Draft auf `pending`
+# stand. Ein pendender Commit-Status genuegt also allein. Auf #116 lag beides
+# gleichzeitig vor; der Fall taugt deshalb als Beleg fuer keine der beiden
+# Richtungen. Was ein abgebrochener Run mit dem Rollup macht, ist offen.
 #
 # Der Job heisst deshalb nach dem, was er TUT — einen Status setzen —, nicht
 # nach dem, was Codex getan haben soll. Das Urteil steht im Commit-Status

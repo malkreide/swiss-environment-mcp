@@ -99,8 +99,16 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   statt nach fremdem Urteil. Damit liest sich auch die zweite Richtung richtig:
   `cancel-in-progress` räumt bei einem Poll-Fenster von 900 s fast jeden
   laufenden Job ab, sobald Codex kommentiert; unter dem alten Namen sah dieser
-  `cancelled`-Run wie eine gescheiterte Prüfung aus (und färbt
-  `mergeable_state` auf `unstable`).
+  `cancelled`-Run wie eine gescheiterte Prüfung aus.
+
+  **Eine Behauptung dazu ist unterwegs falsifiziert worden.** Hier stand, ein
+  abgebrochener Run setze zusätzlich `mergeable_state` auf `unstable` —
+  geschlossen aus #116, wo ein abgebrochener Run und ein pendender Status
+  gleichzeitig vorlagen. Die Gegenprobe auf #117 widerlegt es: `unstable` mit
+  sechs grünen Runs und **keinem** abgebrochenen, während `codex-gate` als
+  Draft auf `pending` stand. Ein pendender Commit-Status genügt allein; über
+  den Beitrag eines abgebrochenen Runs sagt keine der beiden Beobachtungen
+  etwas. Zwei Ursachen, die immer zusammen auftreten, belegen keine von beiden.
 
   **Die Abbrüche selbst bleiben, und das ist keine Nachlässigkeit:** Mit
   `cancel-in-progress: false` räumt GitHub den *wartenden* Lauf ab statt den
