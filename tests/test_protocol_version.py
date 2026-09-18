@@ -28,10 +28,19 @@ Nachgemessen statt aus Konstantennamen geschlossen: die Aushandlung steht in
 
 — sie haengt an keinem Transport, gilt also fuer stdio ebenso wie fuer HTTP.
 
-Ohne gemessenen Teil: dieses Repo baut keine ASGI-App, durch die sich ein
-`initialize` schicken liesse. Die Zusicherungen unten haengen deshalb an den
-SDK-Konstanten. Das ist die schwaechere Form, und sie steht hier benannt statt
-unausgesprochen.
+Was hier steht, haengt an den SDK-Konstanten — und das ist die schwaechere
+Form: Sie misst, was das SDK *kann*, nicht, was dieser Server *tut*. Beide
+Zusicherungen unten blieben gruen, wenn der Server die moderne Aera gar nicht
+beantwortete.
+
+Hier stand frueher, das lasse sich nicht beheben, «dieses Repo baut keine
+ASGI-App, durch die sich ein `initialize` schicken liesse». Das war falsch:
+`build_cors_app()` ist genau diese App, uvicorn startet sie im Betrieb, und
+der ASGI-Lifespan laesst sich ohne uvicorn fahren. Der gemessene Teil steht
+seither in `tests/test_modern_protocol.py` — echte Anfragen beider Aeren durch
+die Produktions-App. Diese Datei bleibt daneben bestehen: Sie faengt einen
+SDK-Bump ab, der die Revisionen verschiebt, auch dort, wo kein Draht-Test
+hinreicht.
 """
 
 from __future__ import annotations

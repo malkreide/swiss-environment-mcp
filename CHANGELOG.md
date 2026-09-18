@@ -5,6 +5,84 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Hinzugefügt
+
+- **Der Server stellt sich unter Spec 2026-07-28 überhaupt vor.** Gemessen,
+  bevor etwas geändert wurde: Jede Antwort der modernen Ära trug
+  `serverInfo = {"name": "swiss_environment_mcp", "version": ""}` — der
+  Konstruktor-Default von `MCPServer`. In der Handshake-Ära war das lässlich,
+  weil ein Client die Nummer aus dem Registry-Manifest lesen kann. In dieser
+  Ära gibt es keine Sitzung und kein `initialize`-Resultat: Der
+  `_meta`-Stempel `io.modelcontextprotocol/serverInfo` und `server/discover`
+  **sind** der Kanal. Ein zustandsloser Client konnte v0.6.0 nicht von v0.4.0
+  unterscheiden — und damit nicht sagen, ob ein Werkzeug, das er kennt, hier
+  noch dasselbe bedeutet.
+
+  Neu gesetzt: `version` (aus den Paket-Metadaten, kein Literal — dieselbe
+  Quelle wie der User-Agent, `check_version_sync.py` erzwingt das), `title`,
+  `description` und `website_url`. `icons` bleibt leer: `assets/demo.svg` ist
+  ein Demo-Bild, kein Logo, und eine Icon-URL zu erfinden wäre genau die
+  Drift, gegen die der Rest dieses Eintrags geschrieben ist. Die Identität
+  speist beide Ären aus derselben Quelle; beide Wege sind gemessen.
+
+- **`tests/test_modern_protocol.py` — die Ära am echten Draht, statt am
+  Konstantennamen.** `test_protocol_version.py` pinnt die beiden Revisionen
+  gegen die SDK-Konstanten und sagte dort selbst, das sei die schwächere Form:
+  «dieses Repo baut keine ASGI-App, durch die sich ein `initialize` schicken
+  liesse». Das stimmte nicht. `build_cors_app()` **ist** diese App — uvicorn
+  startet sie im Betrieb —, und das ASGI-Lifespan-Protokoll lässt sich ohne
+  uvicorn fahren. Genau daran war der erste Versuch gescheitert: Ohne
+  Lifespan wirft der Session-Manager «Task group is not initialized», was wie
+  eine Sackgasse aussieht und keine ist.
+
+  16 Tests durch die Produktions-App, je einzeln gegengeprobt: `server/discover`,
+  die vier auflistenden Methoden, ein Werkzeugaufruf, die Identität in beiden
+  Ären — und drei Negativkontrollen, ohne die das Ganze auch dann grün bliebe,
+  wenn der Server jede Anfrage durchwinkte: fehlender `_meta`-Umschlag → `-32602`,
+  falscher `Mcp-Method`-Header → `-32020`, `initialize` auf der modernen
+  Verbindung → `-32601`. Dazu der Fall, der diese Umstellung am teuersten
+  scheitern liesse: dass ein Handshake auf demselben Endpunkt weiterhin
+  `2025-11-25` aushandelt.
+
+  Ein Test faellt bewusst aus dem HTTP-Rahmen: `MCP_TRANSPORT` defaultet auf
+  **stdio**, und waere die moderne Ära nur über HTTP belegt, stünde die
+  Standard-Auslieferung ungemessen da. Der In-Memory-Client nimmt denselben
+  Dispatch-Pfad wie stdio und zeigt, dass dort ebenfalls `2026-07-28`
+  ausgehandelt wird und die Identität ankommt. Was er nicht abdeckt — das
+  Rahmenformat über echte Pipes — steht im Docstring benannt statt
+  verschwiegen.
+
+  Die Fixture fährt den Lifespan mit nacktem `asyncio`, nicht mit
+  `anyio.create_task_group()`: Eine Task-Gruppe darf das `yield` einer
+  pytest-asyncio-Fixture nicht überspannen (Auf- und Abbau laufen in
+  verschiedenen Tasks), sonst bricht anyio mit «Attempted to exit cancel scope
+  in a different task» ab — eine Meldung, die nach einem Testfehler aussieht
+  und keiner ist.
+
+### Geändert
+
+- **Logging ist unter 2026-07-28 ein Opt-in pro Anfrage (SEP-2577) — der
+  Aufruf bleibt trotzdem stehen.** `_handle_tool_error`, die zentrale
+  Fehlerbehandlung aller 21 Werkzeuge, ruft `ctx.warning`. Das SDK markiert
+  den Helfer als `@deprecated`, und daraus liesse sich bequem schliessen, der
+  Kanal sei tot und die Zeile zu streichen. Gemessen ist das Gegenteil:
+
+  - ohne den reservierten `_meta`-Schlüssel `io.modelcontextprotocol/logLevel`
+    bleibt die Antwort `application/json` und trägt kein
+    `notifications/message` — die MUST-NOT-Seite der Spec;
+  - mit `logLevel: "warning"` wechselt dieselbe Anfrage auf
+    `text/event-stream`, und die Meldung kommt an.
+
+  Die Deprecation gilt der Capability-Ära-API, nicht dem Mechanismus. Beide
+  Richtungen stehen als Tests, und sie sind einander Gegenprobe: Fände nur die
+  MUST-NOT-Seite statt, wäre sie auch dann grün, wenn es den Kanal gar nicht
+  gäbe. Der Docstring von `_handle_tool_error` sagt jetzt, was der Aufruf
+  wirklich tut — die alte Fassung versprach «meldet den Fehler zusätzlich über
+  den MCP-Context» ohne Bedingung, was seit dieser Revision falsch ist.
+
+  Verschwindet der Helfer mit `mcp` 3.x, ist hier ein Ersatz einzusetzen und
+  nicht die Zeile zu entfernen; der Test benennt diese Entscheidung.
+
 ### Behoben
 
 - **Codex hat sein Meldeformat gewechselt — das Gate ordnete es als Ausfall

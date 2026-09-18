@@ -411,9 +411,37 @@ aus der jeweils anderen Aera wird abgewiesen.
 Beide Revisionen sind in
 [`tests/test_protocol_version.py`](tests/test_protocol_version.py) gepinnt und
 werden gegen das installierte SDK geprueft; ein Dependabot-Bump von `mcp` kann
-also keine der beiden still verschieben. Dieser Server baut keine ASGI-App, durch die sich ein `initialize`
-schicken liesse; das Gate sichert deshalb die SDK-Konstanten statt einer
-gemessenen Antwort — die schwaechere Form, benannt statt verschwiegen.
+also keine der beiden still verschieben.
+
+Dieser Pin allein misst allerdings das SDK, nicht diesen Server: Er bliebe auch
+dann gruen, wenn der Server die moderne Aera gar nicht beantwortete. Den
+gemessenen Teil liefert
+[`tests/test_modern_protocol.py`](tests/test_modern_protocol.py) — echte
+Anfragen beider Aeren durch die Produktions-App (`build_cors_app()`, dieselbe,
+die uvicorn im Betrieb startet), samt Negativkontrollen: fehlender
+`_meta`-Umschlag, falscher Routing-Header, `initialize` auf der modernen
+Verbindung.
+
+### Was 2026-07-28 fuer diesen Server konkret bedeutet
+
+- **Keine Sitzung, kein `initialize`** — also auch kein `serverInfo` im
+  Handshake-Resultat. Der Server stellt sich stattdessen ueber
+  `server/discover` und den `_meta`-Stempel
+  `io.modelcontextprotocol/serverInfo` vor, den jede Antwort traegt. Name,
+  Titel, Beschreibung, Website und **Version** kommen aus dem
+  `MCPServer`-Konstruktor; die Version aus den Paket-Metadaten, nicht aus einem
+  Literal. Ohne das meldet der Server `version: ""`, und ein zustandsloser
+  Client kann zwei Releases nicht auseinanderhalten.
+- **Routing-Header.** `Mcp-Method`, `Mcp-Name` und `MCP-Protocol-Version`
+  muessen zum Anfragekoerper passen, sonst `-32020`. Sie stehen deshalb in
+  `CORS_ALLOW_HEADERS` — ein Browser, der sie nicht senden darf, bekommt keine
+  Antwort, sondern eine Abweisung.
+- **Logging ist ein Opt-in pro Anfrage** (SEP-2577). Die Capability ist weg;
+  ohne den reservierten `_meta`-Schluessel `io.modelcontextprotocol/logLevel`
+  sendet der Server nichts. Mit `logLevel: "warning"` wechselt die Antwort auf
+  `text/event-stream` und traegt die Meldung. Beide Richtungen sind gemessen.
+- **Frischehinweise** (SEP-2549): die auflistenden Methoden tragen `ttlMs` und
+  `cacheScope` — siehe `CACHE_HINTS`.
 
 Zu beachten: `LATEST_PROTOCOL_VERSION` im SDK ist ein Alias auf die **moderne**
 Aera, nicht auf die Handshake-Aera — wer nur dagegen pinnt, laesst genau die

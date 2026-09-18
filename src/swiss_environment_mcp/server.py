@@ -47,8 +47,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from . import __version__, geoadmin
 from . import api_client as api
-from . import geoadmin
 from .lindas import cube as lindas_cube
 from .logging_setup import configure_logging, get_logger
 from .tracing import configure_tracing, trace_tool
@@ -105,7 +105,32 @@ async def _handle_tool_error(
 
     - Liefert eine maskierte, user-freundliche Meldung (keine Internals ans LLM).
     - Loggt die echten Fehlerdetails strukturiert nach stderr (Server-Log).
-    - Meldet den Fehler zusätzlich über den MCP-Context (ctx.warning), falls vorhanden.
+    - Meldet den Fehler über den MCP-Context (ctx.warning) an den Client — aber
+      nur noch, wenn der Client das für diese Anfrage verlangt hat. Siehe unten.
+
+    Zur dritten Zeile, unter Spec 2026-07-28 (SEP-2577): Die *Logging-Capability*
+    ist weg. An ihre Stelle tritt ein Opt-in **pro Anfrage** — der Client setzt
+    den reservierten `_meta`-Schlüssel `io.modelcontextprotocol/logLevel`, und
+    ohne ihn DARF der Server nichts senden. Das SDK setzt das durch
+    (`mcp.server.connection.allowed_log_levels`); der Aufruf unten ist dann ein
+    stiller No-op.
+
+    Gemessen, statt aus der Deprecation geschlossen (beides in
+    `tests/test_modern_protocol.py`):
+
+    * ohne den Schlüssel bleibt die Antwort `application/json` und enthält kein
+      `notifications/message`;
+    * mit `logLevel: "warning"` wird daraus `text/event-stream`, und die Meldung
+      kommt an.
+
+    Der Kanal ist also **nicht** tot, und genau deshalb bleibt der Aufruf
+    stehen. `ctx.warning` selbst trägt im SDK ein `@deprecated` — das gilt der
+    Capability-Ära-API, nicht dem Mechanismus. Verschwindet der Helfer mit
+    `mcp` 3.x, ist hier der Ersatz einzusetzen, nicht die Zeile zu streichen.
+
+    Was ohnehin nicht an diesem Kanal hängt: die maskierte Meldung geht als
+    `isError`-Inhalt ins Werkzeug-Resultat, die echten Details ins stderr-Log.
+    Ein Client ohne Opt-in verliert nichts, was er nicht anderswo bekäme.
     """
     msg = api.handle_http_error(exc)
     logger.warning(
@@ -394,8 +419,45 @@ CACHE_HINTS: dict[CacheableMethod, CacheHint] = {
     "server/discover": CacheHint(ttl_ms=LIST_CACHE_TTL_MS, scope="public"),
 }
 
+# Spec 2026-07-28 kennt keinen `initialize`-Handshake: eine Anfrage traegt ihren
+# Umschlag selbst, und der Server antwortet, ohne dass je eine Sitzung eroeffnet
+# wurde. Damit faellt das Feld weg, in dem sich ein Server bisher vorgestellt
+# hat — das `serverInfo` des `initialize`-Resultats. An seine Stelle treten zwei
+# Stellen, die beide aus denselben Konstruktor-Argumenten gespeist werden:
+# `server/discover` (die native Entdeckungsmethode) und der `_meta`-Stempel
+# `io.modelcontextprotocol/serverInfo`, den das SDK an JEDES Resultat der
+# modernen Aera haengt.
+#
+# Gemessen, bevor hier etwas stand: Der Server meldete
+# `name='swiss_environment_mcp' title=None version='' description=None
+# website_url=None icons=None`. `version=""` ist der Default von
+# `MCPServer.__init__`, und er ist nicht harmlos — ein zustandsloser Client hat
+# keinen zweiten Kanal, aus dem er die Release-Nummer lesen koennte. Er kann
+# v0.6.0 nicht von v0.4.0 unterscheiden und damit auch nicht sagen, ob ein
+# Werkzeug, das er kennt, in dieser Fassung noch dasselbe bedeutet.
+#
+# `version` kommt aus den Paket-Metadaten, nicht aus einem Literal — dieselbe
+# Quelle wie der User-Agent, aus demselben Grund (`check_version_sync.py`
+# erzwingt das). In einem Quell-Checkout ohne Install steht hier "0+unknown";
+# das ist als «unbekannt» lesbar und damit besser als eine erfundene Nummer.
+#
+# `icons` bleibt bewusst leer: `assets/demo.svg` ist ein Demo-Bild, kein Logo,
+# und eine Icon-URL zu erfinden waere genau die Drift, gegen die der Rest dieses
+# Abschnitts geschrieben ist.
+SERVER_TITLE = "Swiss Environment (BAFU)"
+SERVER_DESCRIPTION = (
+    "Schweizer Umweltdaten des BAFU: Luftqualität (NABEL), Hydrologie, "
+    "Hochwasser, Naturgefahren, Schnee/Lawinen (SLF), Jagdstatistik und "
+    "Fluglärm (BAZL)."
+)
+SERVER_WEBSITE_URL = "https://github.com/malkreide/swiss-environment-mcp"
+
 mcp = MCPServer(
     "swiss_environment_mcp",
+    title=SERVER_TITLE,
+    description=SERVER_DESCRIPTION,
+    website_url=SERVER_WEBSITE_URL,
+    version=__version__,
     cache_hints=CACHE_HINTS,
     instructions="""
     MCP-Server für Schweizer Umweltdaten des BAFU.

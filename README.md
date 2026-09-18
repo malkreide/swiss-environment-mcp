@@ -405,9 +405,34 @@ other era is refused.
 Both revisions are pinned in
 [`tests/test_protocol_version.py`](tests/test_protocol_version.py) and asserted
 against the installed SDK, so a Dependabot bump of `mcp` cannot move either one
-silently. This server builds no ASGI app to send an `initialize` through, so
-the gate asserts the SDK constants rather than a measured response — the
-weaker form, named rather than left unsaid.
+silently.
+
+That pin measures the SDK, though, not this server: it would stay green even if
+the server did not answer the modern era at all. The measured half lives in
+[`tests/test_modern_protocol.py`](tests/test_modern_protocol.py) — real requests
+in both eras through the production app (`build_cors_app()`, the same one uvicorn
+starts in operation), with negative controls: a missing `_meta` envelope, a
+mismatched routing header, an `initialize` on a modern connection.
+
+### What 2026-07-28 actually means for this server
+
+- **No session, no `initialize`** — and so no `serverInfo` in a handshake
+  result. The server introduces itself through `server/discover` and the
+  `io.modelcontextprotocol/serverInfo` `_meta` stamp carried by every response.
+  Name, title, description, website and **version** come from the `MCPServer`
+  constructor; the version from package metadata, never a literal. Without it
+  the server reports `version: ""`, and a stateless client cannot tell two
+  releases apart.
+- **Routing headers.** `Mcp-Method`, `Mcp-Name` and `MCP-Protocol-Version` must
+  match the request body, or the request is rejected with `-32020`. That is why
+  they appear in `CORS_ALLOW_HEADERS` — a browser that may not send them gets a
+  rejection, not an answer.
+- **Logging is a per-request opt-in** (SEP-2577). The capability is gone;
+  without the reserved `io.modelcontextprotocol/logLevel` `_meta` key the server
+  sends nothing. With `logLevel: "warning"` the response switches to
+  `text/event-stream` and carries the entry. Both directions are measured.
+- **Freshness hints** (SEP-2549): the listing methods carry `ttlMs` and
+  `cacheScope` — see `CACHE_HINTS`.
 
 Note that the SDK's `LATEST_PROTOCOL_VERSION` is an alias for the **modern**
 era, not for the handshake era — pinning against it alone would leave the era
