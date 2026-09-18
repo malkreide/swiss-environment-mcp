@@ -85,6 +85,60 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Behoben
 
+- **Der Check-Run des Gate-Jobs behauptete etwas, das er nie prüft.**
+  `codex-gate.yml` trägt sein Urteil im Commit-Status, und der Job endet
+  ausdrücklich immer mit 0 — sein Check-Run sagt also über Codex gar nichts.
+  Er hiess trotzdem «Codex hat diesen Head geprueft». Auf PR #116 stand er
+  damit am 18.9.2026 um 10:23:49 auf **grün**, während `codex-gate` in
+  derselben Minute meldete: «PR ist ein Draft — Codex laeuft darauf nicht an».
+  Die Checkliste behauptete eine Prüfung, die der Status ausdrücklich
+  verneinte — genau die Lüge, gegen die dieser Workflow gebaut ist, eine Zeile
+  tiefer.
+
+  Der Job heisst jetzt `codex-gate: Status setzen`, also nach seiner Tätigkeit
+  statt nach fremdem Urteil. Damit liest sich auch die zweite Richtung richtig:
+  `cancel-in-progress` räumt bei einem Poll-Fenster von 900 s fast jeden
+  laufenden Job ab, sobald Codex kommentiert; unter dem alten Namen sah dieser
+  `cancelled`-Run wie eine gescheiterte Prüfung aus.
+
+  **Eine Behauptung dazu ist unterwegs falsifiziert worden.** Hier stand, ein
+  abgebrochener Run setze zusätzlich `mergeable_state` auf `unstable` —
+  geschlossen aus #116, wo ein abgebrochener Run und ein pendender Status
+  gleichzeitig vorlagen. Die Gegenprobe auf #117 widerlegt es: `unstable` mit
+  sechs grünen Runs und **keinem** abgebrochenen, während `codex-gate` als
+  Draft auf `pending` stand. Ein pendender Commit-Status genügt allein; über
+  den Beitrag eines abgebrochenen Runs sagt keine der beiden Beobachtungen
+  etwas. Zwei Ursachen, die immer zusammen auftreten, belegen keine von beiden.
+
+  **Die Abbrüche selbst bleiben, und das ist keine Nachlässigkeit:** Mit
+  `cancel-in-progress: false` räumt GitHub den *wartenden* Lauf ab statt den
+  laufenden — ein abgebrochener Run steht genauso in der Liste. In diesem
+  Zuschnitt gibt es keine Einstellung ohne ihn. Benannt ist besser als
+  wegkonfiguriert geglaubt. Begründung im Workflow-Kopf und in `CLAUDE.md`.
+
+  Der Name steht in Anführungszeichen: Ein unquotierter YAML-Skalar mit «: »
+  darin ist ein Syntaxfehler — und ein Workflow, der nicht parst, wird nicht
+  rot, sondern *fällt aus*. Beim Schreiben genau einmal passiert.
+
+- **`CLAUDE.md` nannte eine ruff-Version, die es seit zwei Bumps nicht mehr
+  gab.** Der Abschnitt versprach «genau eine Quelle — `ruff==0.16.3` im
+  `[dev]`-Extra» und war durch das Nennen der Zahl selbst die zweite; am
+  18.9.2026 stand `pyproject.toml` auf `0.16.5`. Ausgerechnet der Absatz, der
+  vor ruff-Versionsdrift warnt, war abgedriftet.
+
+  Die Zahl wurde nicht nachgezogen, sondern **entfernt** — ein Nachziehen
+  hätte nur die Uhr zurückgestellt. Stattdessen steht dort jetzt, wo man sie
+  liest (`grep 'ruff==' pyproject.toml`).
+
+  Zweiter Teil, in derselben Sitzung gemessen: Der Rat «vor dem Lauf
+  `ruff --version` prüfen» reicht nicht. Er sagt, welches ruff gewinnt, aber
+  nicht, dass das falsche gewinnt — hier lag `0.15.8` im `PATH` vor dem
+  gepinnten Binary, und `ruff format --check` meldete prompt eine Abweichung,
+  die niemand verursacht hatte. Neu empfohlen ist `python -m ruff`. Und auch
+  der Installationsausgabe nicht glauben: `pip install -e ".[dev]"` lud
+  sichtbar `ruff-0.16.5` herunter und schrieb in dieselbe Zusammenfassung
+  `ruff-0.16.4`.
+
 - **Codex hat sein Meldeformat gewechselt — das Gate ordnete es als Ausfall
   ein.** Seit dem 29.8.2026 führt Codex **einen** Kommentar je PR und schreibt
   ihn fort: eine Tabellenzeile je Review, mit Status und Commit. Beobachtet an

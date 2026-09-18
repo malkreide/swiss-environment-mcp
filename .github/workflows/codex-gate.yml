@@ -28,6 +28,44 @@
 # sich dagegen ausdruecklich auf den PR-Head richten. Deshalb traegt der Status
 # das Urteil, und der Job endet immer mit 0.
 #
+# DER CHECK-RUN DIESES JOBS IST NICHT DAS GATE
+# --------------------------------------------
+# Folgt aus dem Absatz darueber, wird aber in der Checkliste des PR nicht
+# sichtbar — deshalb hier ausgeschrieben. Weil der Job das Urteil NICHT traegt
+# und immer mit 0 endet, sagt sein Check-Run nichts ueber Codex aus. Er hiess
+# trotzdem «Codex hat diesen Head geprueft», und damit log er in beide
+# Richtungen:
+#
+#   * GRUEN, obwohl nichts geprueft wurde. Gemessen an PR #116 (18.9.2026):
+#     Um 10:23:49 stand der Job auf `success`, waehrend `codex-gate` in
+#     derselben Minute `pending` meldete — «PR ist ein Draft, Codex laeuft
+#     darauf nicht an». Die Checkliste behauptete eine Pruefung, die der Status
+#     ausdruecklich verneinte. Genau die Luege, gegen die dieser Workflow
+#     gebaut ist, nur eine Zeile tiefer.
+#   * ABGEBROCHEN, obwohl alles in Ordnung ist. `cancel-in-progress` raeumt
+#     einen laufenden Poll ab, sobald ein neues Signal eintrifft (unten
+#     ausfuehrlicher). Unter dem alten Namen las sich das als gescheiterte
+#     Pruefung.
+#
+# Hier stand, ein abgebrochener Run setze ausserdem `mergeable_state` auf
+# `unstable`. Das war geschlossen, nicht gemessen, und die Messung hat es
+# widerlegt: PR #117 stand am 18.9.2026 auf `unstable` mit sechs gruenen Runs
+# und KEINEM abgebrochenen — waehrend `codex-gate` als Draft auf `pending`
+# stand. Ein pendender Commit-Status genuegt also allein. Auf #116 lag beides
+# gleichzeitig vor; der Fall taugt deshalb als Beleg fuer keine der beiden
+# Richtungen. Was ein abgebrochener Run mit dem Rollup macht, ist offen.
+#
+# Der Job heisst deshalb nach dem, was er TUT — einen Status setzen —, nicht
+# nach dem, was Codex getan haben soll. Das Urteil steht im Commit-Status
+# `codex-gate` und nirgends sonst.
+#
+# Die Abbrueche selbst bleiben: Ein PR haelt genau einen Lauf, und bei einem
+# Poll-Fenster von `POLL_MAX_SECONDS` trifft fast jeder Codex-Kommentar einen
+# laufenden Job. `cancel-in-progress: false` verschiebt das nur — dann raeumt
+# GitHub den WARTENDEN Lauf ab statt den laufenden, und ein abgebrochener Run
+# steht genauso in der Liste. Es gibt in diesem Zuschnitt keine Einstellung
+# ohne ihn; benannt ist besser als wegkonfiguriert geglaubt.
+#
 # WAS NOCH FEHLT, DAMIT ES WIRKT
 # -------------------------------
 # Dieser Workflow allein haelt nichts auf. Der Kontext `codex-gate` muss in den
@@ -79,7 +117,17 @@ concurrency:
 
 jobs:
   gate:
-    name: Codex hat diesen Head geprueft
+    # Nach der Taetigkeit benannt, nicht nach dem Urteil: Dieser Job endet
+    # immer mit 0, sein Check-Run sagt also nichts ueber Codex. Begruendung
+    # oben unter «DER CHECK-RUN DIESES JOBS IST NICHT DAS GATE».
+    #
+    # Aendert jemand diesen Namen, aendert sich der Name des Check-Runs. Der
+    # Required Check ist der Commit-Status `codex-gate` und bleibt davon
+    # unberuehrt — steht in der Branch Protection dagegen der Check-Run-Name,
+    # ist er dort mitzuziehen.
+    # In Anfuehrungszeichen: Ein unquotierter YAML-Skalar mit «: » darin
+    # ist ein Syntaxfehler, und GitHub meldete ihn erst beim Lauf.
+    name: "codex-gate: Status setzen"
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # `issue_comment` feuert auch auf echte Issues — dort gibt es keinen Head,
