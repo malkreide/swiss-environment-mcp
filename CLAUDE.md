@@ -573,10 +573,23 @@ geleerte Datei parst (`yaml.safe_load("")` ist `None`) und käme sonst durch.
 
 Dafür steht `pyyaml` im `[dev]`-Extra, als Spanne und nicht exakt gepinnt: Es
 entscheidet, ob gültiges YAML parst, und daran ändert ein Minor-Update nichts.
-Beim Lesen aufpassen — PyYAML ist YAML **1.1**, dort ist das blanke `on:` der
-Boolean `True` und nicht der String `"on"`. Die Schlüssel von `ci.yml` sind
-`['name', True, 'jobs']`. Wer auf `"on"` prüft, baut sich einen Fehlalarm auf
-jeden Workflow.
+
+**Den `on:`-Block nicht über `safe_load` suchen — in keiner der beiden
+Richtungen.** PyYAML ist YAML **1.1**, dort wird das blanke `on:` zum Boolean
+`True`; die Schlüssel von `ci.yml` sind `['name', True, 'jobs']`. Wer auf
+`"on"` prüft, baut sich also einen Fehlalarm auf jeden Workflow. Die
+naheliegende Gegenrichtung ist aber die gefährliche: `on:`, `true:` und `yes:`
+landen alle auf demselben Schlüssel `True`, `1:` landet auf `1`, und
+`1 == True` ist in Python wahr. Ein Workflow mit `true:` statt `on:` hat für
+GitHub **gar keinen Auslöser** und läuft nie — eine Prüfung auf `True` bliebe
+grün, also blind für genau das lautlose Verschwinden, um das es hier geht.
+Aufgedeckt von einem Codex-Review auf PR #118 (P2), nachdem die
+Fehlalarm-Richtung schon dokumentiert war.
+
+Gelesen wird deshalb die **geschriebene Form** statt des aufgelösten Werts:
+`yaml.compose` hält beim Knotenbaum an, wo ein Schlüssel-Skalar seinen Text
+noch trägt (`'on'`, `'true'`, `'1'`). `oberste_schluessel()` in
+`tests/test_workflows.py` macht genau das.
 
 Die Matrix setzt kein `fail-fast: false`: Eine rote 3.11 bricht 3.12 und 3.13
 ab, bevor sie etwas sagen.
