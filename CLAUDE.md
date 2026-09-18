@@ -367,6 +367,58 @@ bis fünf Sekunden. Codex wird beim Umschalten von Draft auf ready ausgelöst un
 braucht danach Zeit; wer sofort mergt, hat das Häkchen gesetzt und den Review
 nicht abgewartet.
 
+### Dritter Weg: der Push, der keinen Review auslöst
+
+Der Absatz oben nennt einen Auslöser. Es sind drei, und der Infokasten unter
+jedem Codex-Kommentar zählt sie vollständig auf:
+
+```
+Reviews are triggered when you
+- Open a pull request for review
+- Mark a draft as ready
+- Comment "@codex review" or "@codex security review".
+```
+
+**Ein Push ist nicht dabei.** Ein `synchronize` löst *keinen* Review aus — nach
+einem Fix-Push bleibt das Gate also auf gelb, bis jemand von Hand nachfragt, und
+zwar unbegrenzt. Wer darauf wartet, dass es von selbst grün wird, wartet für
+immer; wer das Warten aufgibt und mergt, mergt ungeprüft. Das ist das
+Spiegelbild des «zu schnell mergen» von oben — dieselbe Lücke, von der anderen
+Seite betreten.
+
+Gemessen am 18.9.2026 auf `swiss-environment-mcp#118`: Head `f2f0c0c` bekam
+einen Review (Trigger-Spalte: «Draft marked ready»), danach zwei Fix-Pushes auf
+`6c96b1f` und `958f31e` — und für beide **gar nichts**: keine Summary-Zeile,
+keine Reaktion, keine Ausfallmeldung. Jeder beobachtete Review der PRs #116,
+#117 und #118 trägt in der Trigger-Spalte «Draft marked ready»; kein einziger
+stammt von einem Push.
+
+**Stille und Kontingent lassen sich dabei trennen.** Ein erschöpftes Kontingent
+*schreibt* seine Meldung, sobald ein Review angefordert wird, und zwar sofort:
+Anfrage 13:55:15, Meldung 13:55:26 — elf Sekunden. Auf die beiden Pushes kam
+dagegen nichts. Kein Kommentar heisst hier also nicht «Kontingent weg», sondern
+«es wurde nie etwas angestossen». Wer beides verwechselt, wartet auf ein
+Kontingent, das nie das Problem war.
+
+**Die Anforderung in Prosa zu erwähnen, IST eine Anforderung.** Am 18.9. stand
+in einem erklärenden Kommentar der Satz «sobald Kontingent da ist, die
+Review-Anforderung posten» — mit der Auslöser-Zeichenkette wörtlich darin, in
+Backticks und mitten im Fliesstext. Neun Sekunden später (Kommentar 13:57:27,
+Meldung 13:57:36) schrieb Codex eine zweite Kontingent-Meldung. Der Bot
+unterscheidet nicht zwischen Anfordern und Erklären, und Backticks schützen
+nicht. In Kommentaren also nur schreiben, wenn man es meint; sonst umschreiben.
+Hier war es folgenlos, weil das Kontingent ohnehin leer war — bei vorhandenem
+hätte es einen ungewollten Review zu einem beliebigen Zeitpunkt gestartet und
+aus demselben Topf bezahlt.
+
+**Und ein frisches Gelb ist noch kein Urteil.** `codex-gate` setzt den Status
+sofort beim Laufstart auf `pending`, bevor der Poll etwas gesehen hat. Ein
+gelber Status wenige Sekunden nach einem Auslöser ist deshalb der Startwert und
+kein Befund; das Urteil kommt bis zu `POLL_MAX_SECONDS` später. Am 18.9. sah
+dieses Startgelb nach einem Gate-Defekt aus («Kontingent-Meldung müsste rot
+setzen») — 44 Sekunden später stand es korrekt auf rot. Erst den Lauf abwarten,
+dann den Defekt behaupten.
+
 Das Kontingent hängt am Konto, nicht am Repo, und Code-Reviews haben einen
 eigenen Topf — nur GitHub-getriggerte Reviews zählen hinein. ChatGPT-Pläne
 fahren ein rollendes Fünf-Stunden-Fenster plus Wochenlimits; welches greift,

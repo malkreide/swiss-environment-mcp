@@ -7,6 +7,40 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Hinzugefügt
 
+- **`CLAUDE.md`: die Codex-Auslöserliste — und der Push, der keiner ist**
+  (Teil 1, «Dritter Weg, den Prüfer zu verlieren»). Der Abschnitt nannte
+  bisher nur einen Auslöser («beim Umschalten von Draft auf ready»). Es sind
+  drei, der Infokasten unter jedem Codex-Kommentar zählt sie vollständig auf —
+  und ein Push ist **nicht** dabei.
+
+  Die Folge ist die unangenehme Spiegelung des «zu schnell mergen»: Nach einem
+  Fix-Push bleibt `codex-gate` unbegrenzt auf gelb, bis jemand von Hand
+  nachfragt. Wer auf ein Grün wartet, wartet für immer; wer aufgibt und mergt,
+  mergt ungeprüft.
+
+  Gemessen am 18.9.2026 auf #118: Head `f2f0c0c` bekam einen Review
+  (Trigger-Spalte «Draft marked ready»), die zwei Fix-Pushes danach bekamen
+  **gar nichts** — keine Summary-Zeile, keine Reaktion, keine Ausfallmeldung.
+  Jeder Review der PRs #116–#118 trägt denselben Trigger; keiner stammt von
+  einem Push.
+
+  Drei weitere Beobachtungen stehen dabei, weil jede für sich zu einem
+  Fehlbefund geführt hat oder geführt hätte:
+
+  - **Stille ≠ Kontingent.** Ein erschöpftes Kontingent *schreibt* seine
+    Meldung, und zwar in elf Sekunden (Anfrage 13:55:15, Meldung 13:55:26).
+    Auf die Pushes kam nichts. Kein Kommentar heisst also nicht «Kontingent
+    weg», sondern «nichts angestossen» — zwei Zustände, die derselbe leere
+    Bildschirm anzeigt.
+  - **Die Anforderung in Prosa zu erwähnen, IST eine Anforderung.** Ein
+    erklärender Kommentar mit der Auslöser-Zeichenkette im Fliesstext (in
+    Backticks!) löste neun Sekunden später eine zweite Kontingent-Meldung aus.
+    Der Bot unterscheidet nicht zwischen Anfordern und Erklären.
+  - **Ein frisches Gelb ist kein Urteil.** Das Gate setzt beim Laufstart
+    sofort `pending`, bevor der Poll etwas gesehen hat. Am 18.9. sah dieses
+    Startgelb nach einem Gate-Defekt aus — 44 Sekunden später stand es
+    korrekt auf rot.
+
 - **Der Server stellt sich unter Spec 2026-07-28 überhaupt vor.** Gemessen,
   bevor etwas geändert wurde: Jede Antwort der modernen Ära trug
   `serverInfo = {"name": "swiss_environment_mcp", "version": ""}` — der
