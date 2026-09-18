@@ -599,6 +599,16 @@ above settings». Ohne das bleibt der Merge-Button klickbar. Am 28.8.2026 war
 sechs grünen Häkchen waren informativ. Wer die Protection wegnimmt, nimmt
 das Gate weg, ohne dass eine Datei sich ändert.
 
+**Seit dem 18.9.2026 ist sie da:** `main` meldet `protected: true`, und PR #118
+stand mit pendendem `codex-gate` auf `mergeable_state: blocked` statt wie zuvor
+auf `unstable` — der Merge-Button ist also tatsächlich gesperrt. Was die
+Messung **nicht** hergibt: welche Checks required sind. `protected: true` sagt
+nur, dass eine Protection existiert; die Liste liest man über den
+Branch-Protection-Endpunkt, nicht über `list_branches`. Dass `codex-gate`
+darunter ist, ist aus dem `blocked` geschlossen und nicht belegt — für den
+Beleg fehlt die Positivkontrolle, nämlich ein PR, der nur an diesem einen
+Check hängt.
+
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
 wenn *gar kein* Check läuft, gilt dort der Merge-Konflikt-Verdacht. Beide

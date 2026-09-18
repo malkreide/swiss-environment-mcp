@@ -7,6 +7,19 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Hinzugefügt
 
+- **`main` ist geschützt — das Gate wirkt erstmals wirklich** (`CLAUDE.md`,
+  Teil 2). Der Abschnitt hielt fest, dass `main` am 28.8.2026 `protected:
+  false` war und die grünen Häkchen damit informativ blieben. Gemessen am
+  18.9.: `protected: true`, und PR #118 stand mit pendendem `codex-gate` auf
+  `mergeable_state: blocked` statt wie zuvor auf `unstable` — der Merge-Button
+  ist gesperrt.
+
+  Was die Messung **nicht** hergibt, und darum steht es dabei: welche Checks
+  required sind. `protected: true` sagt nur, dass eine Protection existiert;
+  die Liste liest man über den Branch-Protection-Endpunkt, nicht über
+  `list_branches`. Dass `codex-gate` darunter ist, ist aus dem `blocked`
+  geschlossen — plausibel, aber ohne Positivkontrolle nicht belegt.
+
 - **`CLAUDE.md`: die Codex-Auslöserliste — und der Push, der keiner ist**
   (Teil 1, «Dritter Weg, den Prüfer zu verlieren»). Der Abschnitt nannte
   bisher nur einen Auslöser («beim Umschalten von Draft auf ready»). Es sind
