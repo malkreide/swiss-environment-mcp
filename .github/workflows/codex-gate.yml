@@ -59,12 +59,28 @@
 # nach dem, was Codex getan haben soll. Das Urteil steht im Commit-Status
 # `codex-gate` und nirgends sonst.
 #
-# Die Abbrueche selbst bleiben: Ein PR haelt genau einen Lauf, und bei einem
-# Poll-Fenster von `POLL_MAX_SECONDS` trifft fast jeder Codex-Kommentar einen
-# laufenden Job. `cancel-in-progress: false` verschiebt das nur — dann raeumt
-# GitHub den WARTENDEN Lauf ab statt den laufenden, und ein abgebrochener Run
-# steht genauso in der Liste. Es gibt in diesem Zuschnitt keine Einstellung
-# ohne ihn; benannt ist besser als wegkonfiguriert geglaubt.
+# Zu den Abbruechen selbst stand hier, sie seien unvermeidbar: `false`
+# verschiebe das nur vom laufenden auf den wartenden Lauf. Das war falsch, und
+# ein Codex-Review auf PR #117 hat es aufgedeckt (P2, 18.9.2026). GitHub raeumt
+# einen WARTENDEN Lauf erst ab, wenn ein weiterer derselben Gruppe dazukommt —
+# bei `false` braucht ein Abbruch also DREI ueberlappende Laeufe, bei `true`
+# genuegen zwei. Der beobachtete Fall auf #116 waren genau zwei
+# (`ready_for_review` plus der «Running»-Kommentar); mit `false` waere dort
+# nichts abgebrochen worden.
+#
+# Zwei Messungen haben den Rest der Begruendung ebenfalls gekippt:
+#
+#   * Die Schleife unten liest `pr.head.sha` in JEDER Iteration neu. Ein
+#     laufender Poll folgt einem neuen Push also von selbst; er haengt nicht am
+#     Head, mit dem er gestartet ist. Der Grund, einen Lauf beim Push zu
+#     toeten, faellt damit weg.
+#   * Sie bricht ab, sobald ein Urteil feststeht (`state !== 'pending'`). Ein
+#     Lauf sitzt das Fenster also nur ab, wenn wirklich kein Signal kommt — ein
+#     wartender Lauf wird in der Regel binnen Sekunden frei.
+#
+# `false` erreicht «je PR nur ein Lauf» damit durch Anstehen statt durch
+# Toeten, und verhindert die widerspruechliche Ueberschreibung genauso: Zwei
+# Laeufe derselben Gruppe laufen nie gleichzeitig.
 #
 # WAS NOCH FEHLT, DAMIT ES WIRKT
 # -------------------------------
@@ -113,7 +129,11 @@ concurrency:
   # Je PR nur ein Lauf: Ein zweiter wuerde denselben Status widerspruechlich
   # ueberschreiben, je nachdem welcher zuerst fertig wird.
   group: codex-gate-${{ github.event.pull_request.number || github.event.issue.number }}
-  cancel-in-progress: true
+  # Anstehen statt toeten. Das schliesst die Gleichzeitigkeit genauso aus, laesst
+  # aber einen Poll zu Ende laufen, der das Signal ohnehin gleich sieht — und
+  # hinterlaesst im Zwei-Lauf-Fall keinen abgebrochenen Check-Run. Begruendung
+  # samt Messungen im Kopf unter «Zu den Abbruechen selbst».
+  cancel-in-progress: false
 
 jobs:
   gate:

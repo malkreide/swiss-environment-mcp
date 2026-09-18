@@ -501,14 +501,25 @@ Häkchen, das lügt, ist schlimmer als ein rotes Kreuz, das man übersehen soll:
 Beim Kreuz schaut wenigstens noch jemand hin. Der Job heisst jetzt nach seiner
 Tätigkeit (`codex-gate: Status setzen`), nicht nach fremdem Urteil.
 
-Die zweite Richtung derselben Verwechslung: `cancel-in-progress` räumt einen
-laufenden Poll ab, sobald ein neues Signal eintrifft — bei einem Poll-Fenster
-von 900 s trifft fast jeder Codex-Kommentar einen laufenden Job. Der
-abgebrochene Lauf bleibt als `cancelled` in der Liste stehen und sieht aus wie
-eine gescheiterte Prüfung. Das ist kein Fehlschlag, und wegkonfigurieren lässt
-es sich nicht: Mit `cancel-in-progress: false` räumt GitHub den **wartenden**
-Lauf ab statt den laufenden, ein abgebrochener Run steht genauso da. Benannt ist
-besser als wegkonfiguriert geglaubt.
+Die zweite Richtung derselben Verwechslung: `cancel-in-progress: true` räumte
+einen laufenden Poll ab, sobald ein neues Signal eintraf — bei einem
+Poll-Fenster von 900 s traf das fast jeder Codex-Kommentar. Der abgebrochene
+Lauf blieb als `cancelled` in der Liste stehen und sah aus wie eine
+gescheiterte Prüfung.
+
+Hier stand, das sei unvermeidbar: `false` verschiebe den Abbruch nur vom
+laufenden auf den wartenden Lauf. **Auch das war falsch**, aufgedeckt von einem
+Codex-Review auf PR #117 (P2). GitHub räumt einen *wartenden* Lauf erst ab, wenn
+ein weiterer derselben Gruppe dazukommt — bei `false` braucht ein Abbruch also
+**drei** überlappende Läufe, bei `true` genügen **zwei**. Der beobachtete Fall
+auf #116 waren genau zwei (`ready_for_review` plus «Running»-Kommentar); mit
+`false` wäre dort nichts abgebrochen worden.
+
+Zwei Messungen kippten den Rest der Begründung: Die Poll-Schleife liest
+`pr.head.sha` in **jeder** Iteration neu — ein laufender Lauf folgt einem Push
+von selbst, der Grund ihn zu töten fällt weg — und sie bricht ab, sobald ein
+Urteil feststeht. Das Gate steht deshalb auf `cancel-in-progress: false`:
+Anstehen statt töten schliesst die Gleichzeitigkeit genauso aus.
 
 **Was hier kurz als Tatsache stand und falsch war:** dass ein abgebrochener Run
 `mergeable_state` auf `unstable` setzt. Geschlossen aus #116, wo beides

@@ -101,7 +101,19 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   laufenden Job ab, sobald Codex kommentiert; unter dem alten Namen sah dieser
   `cancelled`-Run wie eine gescheiterte Prüfung aus.
 
-  **Eine Behauptung dazu ist unterwegs falsifiziert worden.** Hier stand, ein
+  **Und die Abbrüche waren doch vermeidbar.** Hier stand, `cancel-in-progress:
+  false` verschiebe den Abbruch bloss vom laufenden auf den wartenden Lauf.
+  Ein Codex-Review auf diesem PR (P2) hat das widerlegt: GitHub räumt einen
+  wartenden Lauf erst ab, wenn ein *weiterer* derselben Gruppe dazukommt — bei
+  `false` braucht ein Abbruch also drei überlappende Läufe, bei `true` genügen
+  zwei. Der Fall auf #116 waren genau zwei. Zwei Messungen im Skript kippten
+  den Rest der Begründung: Die Poll-Schleife liest `pr.head.sha` in jeder
+  Iteration neu (ein laufender Lauf folgt einem Push von selbst) und bricht ab,
+  sobald ein Urteil feststeht. Das Gate steht jetzt auf
+  `cancel-in-progress: false` — Anstehen statt töten, was die
+  Gleichzeitigkeit genauso ausschliesst.
+
+  **Eine weitere Behauptung ist unterwegs falsifiziert worden.** Hier stand, ein
   abgebrochener Run setze zusätzlich `mergeable_state` auf `unstable` —
   geschlossen aus #116, wo ein abgebrochener Run und ein pendender Status
   gleichzeitig vorlagen. Die Gegenprobe auf #117 widerlegt es: `unstable` mit
