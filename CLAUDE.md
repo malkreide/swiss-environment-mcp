@@ -550,6 +550,23 @@ wurde. Also erst die Basis prüfen, dann den Merge-Konflikt vermuten.
 
 `draft-release.yml` ist kein Gate — nur `workflow_dispatch`.
 
+**Ein Workflow, der nicht parst, wird nicht rot — er faellt aus.** GitHub
+startet ihn gar nicht, es entsteht kein Check-Run, und in der Liste des PR
+fehlt er einfach; nach Teil 1 sucht man dann zuerst den Merge-Konflikt. Am
+18.9.2026 ist genau das um Haaresbreite passiert: `name: codex-gate: Status
+setzen` ist ungueltiges YAML (unquotierter Skalar mit «: »), und geprueft hat
+es im Repo nichts — `test_dependencies.py` liest die Workflows als *Text*.
+Seither hält `tests/test_workflows.py` beide Halften fest: dass jede Datei
+parst, und dass sie `on:` und `jobs` trägt. Das zweite ist nicht Zierde — eine
+geleerte Datei parst (`yaml.safe_load("")` ist `None`) und käme sonst durch.
+
+Dafür steht `pyyaml` im `[dev]`-Extra, als Spanne und nicht exakt gepinnt: Es
+entscheidet, ob gültiges YAML parst, und daran ändert ein Minor-Update nichts.
+Beim Lesen aufpassen — PyYAML ist YAML **1.1**, dort ist das blanke `on:` der
+Boolean `True` und nicht der String `"on"`. Die Schlüssel von `ci.yml` sind
+`['name', True, 'jobs']`. Wer auf `"on"` prüft, baut sich einen Fehlalarm auf
+jeden Workflow.
+
 Die Matrix setzt kein `fail-fast: false`: Eine rote 3.11 bricht 3.12 und 3.13
 ab, bevor sie etwas sagen.
 

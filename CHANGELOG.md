@@ -120,6 +120,37 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   darin ist ein Syntaxfehler — und ein Workflow, der nicht parst, wird nicht
   rot, sondern *fällt aus*. Beim Schreiben genau einmal passiert.
 
+- **Nichts prüfte, ob die Workflows überhaupt parsen** (`tests/test_workflows.py`,
+  neu). Aufgefallen beim Schreiben des Eintrags darüber: `name: codex-gate:
+  Status setzen` ist ungültiges YAML, und gemerkt hat es nur ein manueller
+  Parser-Lauf. `test_dependencies.py` liest die Workflows als **Text**.
+
+  Der Ausfallmodus ist der unangenehme: **Ein Workflow, der nicht parst, wird
+  nicht rot — er fällt aus.** GitHub startet ihn nicht, es entsteht kein
+  Check-Run, das Gate fehlt einfach in der Liste. Nach Teil 1 von `CLAUDE.md`
+  sucht man dann zuerst den Merge-Konflikt, also an der falschen Stelle.
+
+  22 Tests, je Datei ein Fall statt einer Schleife — bei einem Fund will man
+  wissen, ob eine Datei kaputt ist oder alle. Gegengeprobt an den echten
+  Dateien: Der Fehler vom 18.9. wieder eingebaut lässt genau die zwei
+  `codex-gate.yml`-Fälle fallen und die übrigen fünf Workflows grün; eine
+  geleerte `ci.yml` lässt nur den Struktur-Test fallen — sie **parst** nämlich
+  (`yaml.safe_load("")` ist `None`), weshalb «parst» allein zu wenig ist und
+  `on:` und `jobs` mitgeprüft werden. Dazu eine Tabelle kaputter Schnipsel
+  samt Positivkontrolle, nach dem Vorbild von `test_dependencies.py`: ein
+  Prüfer, der alles ablehnt, bestünde eine Fehlertabelle ebenfalls.
+
+  `pyyaml>=6.0` im `[dev]`-Extra — Spanne, nicht exakter Pin: Es entscheidet,
+  ob gültiges YAML parst, und daran ändert ein Minor-Update nichts (bei ruff
+  ist der exakte Pin nötig, weil dort eine neue Version die *Ausgabe* ändert).
+
+  Eine Falle steckt im Prüfer selbst und ist als Konstante benannt: PyYAML ist
+  YAML **1.1**, dort ist das blanke `on:` der Boolean `True`, nicht der String
+  `"on"` — die Schlüssel von `ci.yml` sind `['name', True, 'jobs']`. Wer auf
+  `"on"` prüft, erzeugt einen Fehlalarm auf jedem Workflow, also genau den
+  Fehlbefund, gegen den die Datei geschrieben ist. Ein eigener Test sagt, wann
+  die Konstante auf `"on"` zu wechseln ist.
+
 - **`CLAUDE.md` nannte eine ruff-Version, die es seit zwei Bumps nicht mehr
   gab.** Der Abschnitt versprach «genau eine Quelle — `ruff==0.16.3` im
   `[dev]`-Extra» und war durch das Nennen der Zahl selbst die zweite; am
