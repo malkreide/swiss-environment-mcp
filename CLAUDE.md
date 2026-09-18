@@ -418,13 +418,40 @@ wie der Code: Nichts ist rot, weil nichts geprüft wird, worauf es ankommt.
 
 ## Teil 2 — dieses Repo
 
-**ruff:** genau eine Quelle — `ruff==0.16.3` im `[dev]`-Extra von
+**ruff:** genau eine Quelle — der exakte Pin im `[dev]`-Extra von
 `pyproject.toml`. Ein Install des Extras reicht also, lokal wie in der CI.
+Die Nummer steht hier bewusst **nicht**: Sie stand es, und der Abschnitt, der
+«genau eine Quelle» verspricht, war damit selbst die zweite. Am 18.9.2026 nannte
+er `0.16.3`, während `pyproject.toml` nach zwei Dependabot-Bumps auf `0.16.5`
+stand — ausgerechnet der Absatz, der vor ruff-Versionsdrift warnt, war
+abgedriftet. Wer die aktuelle Zahl braucht, liest sie dort:
+
+```bash
+grep 'ruff==' pyproject.toml
+```
+
 Keine zweite Version in die Workflows schreiben: ein solcher Schritt läuft
 nach dem Install und überstimmt den Pin still — er stand hier an zwei Stellen,
 in den Jobs `test` und `lint` (`test_dependencies.py` hält beides fest). Eine
-`.pre-commit-config.yaml` gibt es nicht. Vor dem Lauf `ruff --version` prüfen:
-ein älteres ruff früher im `PATH` schlägt den Pin, ohne etwas zu melden.
+`.pre-commit-config.yaml` gibt es nicht.
+
+**Und nicht das `ruff` aus dem `PATH` nehmen.** Ein älteres früher im `PATH`
+schlägt den Pin, ohne etwas zu melden. `ruff --version` zu prüfen reicht dafür
+nicht — es sagt, welches gewinnt, aber nicht, dass das falsche gewinnt. Den
+Interpreter entscheiden lassen; in der CI gibt es nur das eine ruff, lokal
+nicht, deshalb steht dort `ruff` und hier `python -m ruff`:
+
+```bash
+python -m ruff --version      # muss die Zahl aus pyproject.toml sein
+python -m ruff check src/ tests/ scripts/
+```
+
+Am 18.9.2026 lag in dieser Umgebung `ruff 0.15.8` vor dem damals gepinnten
+`0.16.4`; `ruff format --check` meldete prompt eine Abweichung, die mit dem
+richtigen Binary verschwand. Auch der Installationsausgabe nicht glauben:
+`pip install -e ".[dev]"` lud sichtbar `ruff-0.16.5` herunter und schrieb in
+dieselbe Zusammenfassung `ruff-0.16.4`. Gemessen wird mit
+`python -m ruff --version`, nicht mit dem, was pip behauptet.
 
 **Gates, wörtlich aus der CI** (Job `test`, dazu `lint` mit denselben zwei
 ruff-Schritten plus dem Versions-Sync):
@@ -462,6 +489,27 @@ auf **gelb** — er ist ohnehin nicht mergebar, und ein Repo, in dem jeder Draft
 ein rotes Kreuz trägt, bringt seinen Leuten bei, rote Kreuze zu übersehen. Das
 Gate hat sich diese Lektion selbst erteilt: Seine ersten beiden Läufe färbten
 zwei frische Draft-PRs rot.
+
+**Der Check-Run des Gate-Jobs ist nicht das Gate** — und am 18.9.2026 hat er
+das Spiegelbild derselben Lektion vorgeführt. Weil der Job das Urteil nicht
+trägt und immer mit 0 endet, sagt sein Check-Run über Codex gar nichts. Er hiess
+trotzdem «Codex hat diesen Head geprueft» und log damit in beide Richtungen: Auf
+PR #116 stand er um 10:23:49 auf **grün**, während `codex-gate` in derselben
+Minute «PR ist ein Draft — Codex laeuft darauf nicht an» meldete. Die Checkliste
+behauptete eine Prüfung, die der Status ausdrücklich verneinte. Ein grünes
+Häkchen, das lügt, ist schlimmer als ein rotes Kreuz, das man übersehen soll:
+Beim Kreuz schaut wenigstens noch jemand hin. Der Job heisst jetzt nach seiner
+Tätigkeit (`codex-gate: Status setzen`), nicht nach fremdem Urteil.
+
+Die zweite Richtung derselben Verwechslung: `cancel-in-progress` räumt einen
+laufenden Poll ab, sobald ein neues Signal eintrifft — bei einem Poll-Fenster
+von 900 s trifft fast jeder Codex-Kommentar einen laufenden Job. Der
+abgebrochene Lauf bleibt als `cancelled` in der Liste stehen und zählt bei
+GitHub im Rollup mit, `mergeable_state` steht dann auf `unstable`. Das ist kein
+Fehlschlag, und wegkonfigurieren lässt es sich nicht: Mit
+`cancel-in-progress: false` räumt GitHub den **wartenden** Lauf ab statt den
+laufenden, ein abgebrochener Run steht genauso da. Benannt ist besser als
+wegkonfiguriert geglaubt.
 
 Bewusst kein Timer. Ein Gate, das nach N Minuten von selbst grün wird,
 behauptet eine Prüfung, die es nicht gesehen hat — am 21./22.8. war das
