@@ -31,20 +31,43 @@ import yaml
 _ROOT = pathlib.Path(__file__).resolve().parents[1]
 _WORKFLOWS = _ROOT / ".github" / "workflows"
 
-# YAML 1.1 — und PyYAML implementiert 1.1 — liest das blanke `on:` als den
-# Boolean `True`, nicht als den String `"on"`. Gemessen an `ci.yml`: die
-# Schluessel der obersten Ebene sind `['name', True, 'jobs']`.
+# Der Ausloeser-Block heisst in GitHubs Augen woertlich `on`. Ihn ueber
+# `yaml.safe_load` zu suchen, geht schief, und zwar in beide Richtungen:
 #
-# Wer hier `"on"` schreibt, baut sich einen Fehlalarm auf JEDEN Workflow ein —
-# also genau die Sorte Fehlbefund, gegen die diese Datei geschrieben ist. In
-# YAML 1.2 waere es der String; verhaelt sich PyYAML eines Tages so, faellt
-# `test_der_ausloeser_schluessel_ist_der_boolean_nicht_der_string` und sagt es.
-AUSLOESER_SCHLUESSEL = True
+#   * YAML 1.1 — und PyYAML implementiert 1.1 — liest das blanke `on:` als den
+#     Boolean `True`. Auf `"on"` zu pruefen ergaebe einen Fehlalarm auf JEDEN
+#     Workflow. Gemessen an `ci.yml`: die Schluessel sind `['name', True,
+#     'jobs']`.
+#   * Auf `True` zu pruefen ist aber genauso falsch, und das ist die
+#     gefaehrliche Richtung. `true:`, `yes:` und `on:` landen alle auf
+#     demselben Schluessel `True`; `1:` landet auf `1`, und `1 == True` ist in
+#     Python wahr. Ein Workflow mit `true:` statt `on:` hat fuer GitHub GAR
+#     KEINEN Ausloeser und laeuft nie — die Zusicherung bliebe gruen. Der Test
+#     waere damit in genau dem Szenario blind, gegen das er geschrieben ist.
+#     Aufgedeckt von einem Codex-Review auf PR #118 (P2).
+#
+# Gelesen wird deshalb die *urspruengliche Schreibweise* statt des aufgeloesten
+# Werts: `yaml.compose` liefert den Knotenbaum, und dort traegt ein
+# Schluessel-Skalar noch seinen Text (`'on'`, `'true'`, `'1'`).
+AUSLOESER_SCHLUESSEL = "on"
 
 
 def workflow_dateien() -> list[pathlib.Path]:
     """Beide Endungen: GitHub laedt `*.yml` UND `*.yaml`."""
     return sorted([*_WORKFLOWS.glob("*.yml"), *_WORKFLOWS.glob("*.yaml")])
+
+
+def oberste_schluessel(text: str) -> list[str]:
+    """Die Schluessel der obersten Ebene in ihrer geschriebenen Form.
+
+    `yaml.safe_load` loest sie zu Python-Werten auf und macht damit `on:`,
+    `true:` und `yes:` ununterscheidbar. `yaml.compose` haelt beim Knotenbaum
+    an, wo jedes Schluessel-Skalar seinen Text noch traegt.
+    """
+    wurzel = yaml.compose(text)
+    if not isinstance(wurzel, yaml.MappingNode):
+        return []
+    return [schluessel.value for schluessel, _ in wurzel.value]
 
 
 def parse_fehler(text: str) -> str | None:
@@ -86,10 +109,16 @@ def test_jeder_workflow_hat_ausloeser_und_jobs(workflow: pathlib.Path) -> None:
     Ohne diese Zusicherung bliebe der Test oben gruen, wenn jemand eine Datei
     versehentlich leert: `yaml.safe_load("")` ist `None` und wirft nichts.
     """
-    daten = yaml.safe_load(workflow.read_text(encoding="utf-8"))
+    text = workflow.read_text(encoding="utf-8")
+    daten = yaml.safe_load(text)
 
     assert isinstance(daten, dict), f"{workflow.name} enthaelt keine YAML-Abbildung: {daten!r}"
-    assert AUSLOESER_SCHLUESSEL in daten, f"{workflow.name} hat keinen `on:`-Block"
+    schluessel = oberste_schluessel(text)
+    assert AUSLOESER_SCHLUESSEL in schluessel, (
+        f"{workflow.name} hat keinen woertlichen `on:`-Block (gefunden: {schluessel}). "
+        "Ohne Ausloeser laeuft der Workflow nie — und `true:` oder `yes:` sehen "
+        "nach `safe_load` genauso aus wie `on:`, deshalb die Schreibweise."
+    )
     assert daten.get("jobs"), f"{workflow.name} hat keine Jobs"
 
 
@@ -155,16 +184,43 @@ def test_der_scan_findet_die_workflows_ueberhaupt() -> None:
     )
 
 
-def test_der_ausloeser_schluessel_ist_der_boolean_nicht_der_string() -> None:
-    """Sagt, wann die Konstante oben wieder verschwinden darf.
+@pytest.mark.parametrize("schreibweise", ["true", "yes", "1", "On", "ON"])
+def test_ein_falsch_geschriebener_ausloeser_faellt_auf(schreibweise: str) -> None:
+    """Das Loch, das ein Codex-Review auf PR #118 aufgedeckt hat.
 
-    Wechselt PyYAML auf YAML 1.2, ist `on` wieder ein String; dann faellt dieser
-    Test, und `AUSLOESER_SCHLUESSEL` ist auf `"on"` zu setzen — statt dass die
-    Zusicherung daran still vorbeiliefe.
+    Ein Workflow mit `true:` statt `on:` ist gueltiges YAML, hat fuer GitHub
+    aber GAR KEINEN Ausloeser — er laeuft nie. Genau das lautlose Verschwinden,
+    gegen das diese Datei geschrieben ist. Ueber `safe_load` war es unsichtbar:
+    `on`, `true` und `yes` werden alle zu `True` aufgeloest, `1` zu `1`, und
+    `1 == True` ist in Python wahr.
+
+    `On` und `ON` sind der Vollstaendigkeit halber dabei: YAML 1.1 loest auch
+    sie zum Boolean auf, GitHub verlangt aber die Kleinschreibung.
     """
-    daten = yaml.safe_load("on:\n  push:\n")
+    kaputt = f"{schreibweise}:\n  push:\njobs:\n  a:\n    runs-on: ubuntu-latest\n"
 
-    assert AUSLOESER_SCHLUESSEL in daten
-    assert "on" not in daten, (
-        "PyYAML liest `on:` jetzt als String — AUSLOESER_SCHLUESSEL nachziehen"
+    assert AUSLOESER_SCHLUESSEL not in oberste_schluessel(kaputt), (
+        f"`{schreibweise}:` wird als gueltiger Ausloeser durchgewunken — "
+        "der Test ist blind fuer einen Workflow, der nie laeuft"
+    )
+
+
+def test_der_echte_ausloeser_wird_erkannt() -> None:
+    """Positivkontrolle zur Tabelle oben: Der Pruefer darf nicht alles ablehnen,
+    sonst faerbte er jeden heilen Workflow rot."""
+    heil = "on:\n  push:\njobs:\n  a:\n    runs-on: ubuntu-latest\n"
+
+    assert AUSLOESER_SCHLUESSEL in oberste_schluessel(heil)
+
+
+def test_safe_load_wuerde_die_falschschreibung_nicht_sehen() -> None:
+    """Warum `oberste_schluessel` ueberhaupt existiert — als Messung, nicht als
+    Behauptung. Faellt dieser Test, loest PyYAML `on:` nicht mehr zum Boolean
+    auf; dann ist die Umleitung ueber `yaml.compose` neu zu bewerten."""
+    per_on = yaml.safe_load("on:\n  push:\n")
+    per_true = yaml.safe_load("true:\n  push:\n")
+
+    assert list(per_on) == list(per_true) == [True], (
+        "PyYAML unterscheidet `on:` und `true:` jetzt — die Umleitung ueber "
+        "den Knotenbaum ist neu zu bewerten"
     )

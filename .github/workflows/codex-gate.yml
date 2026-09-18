@@ -42,10 +42,10 @@
 #     darauf nicht an». Die Checkliste behauptete eine Pruefung, die der Status
 #     ausdruecklich verneinte. Genau die Luege, gegen die dieser Workflow
 #     gebaut ist, nur eine Zeile tiefer.
-#   * ABGEBROCHEN, obwohl alles in Ordnung ist. `cancel-in-progress` raeumt
-#     einen laufenden Poll ab, sobald ein neues Signal eintrifft (unten
-#     ausfuehrlicher). Unter dem alten Namen las sich das als gescheiterte
-#     Pruefung.
+#   * ABGEBROCHEN, obwohl alles in Ordnung ist. Unter `cancel-in-progress:
+#     true` — so stand es bis 18.9.2026 — raeumte jedes neue Signal den
+#     laufenden Poll ab, und unter dem alten Namen las sich das als
+#     gescheiterte Pruefung. Zur Umstellung auf `false` unten mehr.
 #
 # Hier stand, ein abgebrochener Run setze ausserdem `mergeable_state` auf
 # `unstable`. Das war geschlossen, nicht gemessen, und die Messung hat es
@@ -200,11 +200,17 @@ jobs:
             // Die Laufzeit dieses Jobs taugt dafuer NICHT (zweiter
             // Codex-Review, 28.8.2026, P1). Ein `issue_comment`-Lauf startet
             // zwangslaeufig NACH dem Kommentar, der ihn ausgeloest hat. Ist er
-            // der erste, der hier ankommt — weil der `synchronize`-Lauf
-            // abgebrochen wurde, und `cancel-in-progress` oben macht genau das
-            // wahrscheinlich —, laege der Anker hinter dem einzigen gueltigen
-            // Signal, und das Gate haenge dauerhaft auf `pending`. Ein
-            // Dauerstall ist schlimmer als die Luecke, die der Anker schliesst.
+            // der erste, der hier ankommt — der `synchronize`-Lauf kann
+            // ausgefallen sein —, laege der Anker hinter dem einzigen
+            // gueltigen Signal, und das Gate haenge dauerhaft auf `pending`.
+            // Ein Dauerstall ist schlimmer als die Luecke, die der Anker
+            // schliesst.
+            //
+            // Als das geschrieben wurde, machte das eigene
+            // `cancel-in-progress: true` genau diesen Ausfall wahrscheinlich.
+            // Seit dem 18.9.2026 steht dort `false` (Begruendung im Kopf), der
+            // haeufigste Weg in die Luecke ist also zu. Der Anker bleibt
+            // trotzdem: Er haengt nicht an dieser Einstellung.
             //
             // Die Check-Suite-Zeit stimmt in beide Richtungen: Ein Kommentar
             // zum VORIGEN Head liegt vor diesem Push und damit vor der Suite;

@@ -97,9 +97,9 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
   Der Job heisst jetzt `codex-gate: Status setzen`, also nach seiner Tätigkeit
   statt nach fremdem Urteil. Damit liest sich auch die zweite Richtung richtig:
-  `cancel-in-progress` räumt bei einem Poll-Fenster von 900 s fast jeden
-  laufenden Job ab, sobald Codex kommentiert; unter dem alten Namen sah dieser
-  `cancelled`-Run wie eine gescheiterte Prüfung aus.
+  `cancel-in-progress: true` räumte bei einem Poll-Fenster von 900 s fast jeden
+  laufenden Job ab, sobald Codex kommentierte, und unter dem alten Namen sah
+  dieser `cancelled`-Run wie eine gescheiterte Prüfung aus.
 
   **Und die Abbrüche waren doch vermeidbar.** Hier stand, `cancel-in-progress:
   false` verschiebe den Abbruch bloss vom laufenden auf den wartenden Lauf.
@@ -121,12 +121,6 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Draft auf `pending` stand. Ein pendender Commit-Status genügt allein; über
   den Beitrag eines abgebrochenen Runs sagt keine der beiden Beobachtungen
   etwas. Zwei Ursachen, die immer zusammen auftreten, belegen keine von beiden.
-
-  **Die Abbrüche selbst bleiben, und das ist keine Nachlässigkeit:** Mit
-  `cancel-in-progress: false` räumt GitHub den *wartenden* Lauf ab statt den
-  laufenden — ein abgebrochener Run steht genauso in der Liste. In diesem
-  Zuschnitt gibt es keine Einstellung ohne ihn. Benannt ist besser als
-  wegkonfiguriert geglaubt. Begründung im Workflow-Kopf und in `CLAUDE.md`.
 
   Der Name steht in Anführungszeichen: Ein unquotierter YAML-Skalar mit «: »
   darin ist ein Syntaxfehler — und ein Workflow, der nicht parst, wird nicht
@@ -156,12 +150,24 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   ob gültiges YAML parst, und daran ändert ein Minor-Update nichts (bei ruff
   ist der exakte Pin nötig, weil dort eine neue Version die *Ausgabe* ändert).
 
-  Eine Falle steckt im Prüfer selbst und ist als Konstante benannt: PyYAML ist
-  YAML **1.1**, dort ist das blanke `on:` der Boolean `True`, nicht der String
-  `"on"` — die Schlüssel von `ci.yml` sind `['name', True, 'jobs']`. Wer auf
-  `"on"` prüft, erzeugt einen Fehlalarm auf jedem Workflow, also genau den
-  Fehlbefund, gegen den die Datei geschrieben ist. Ein eigener Test sagt, wann
-  die Konstante auf `"on"` zu wechseln ist.
+  **Der Prüfer hatte selbst ein Loch, und es sass genau im Szenario, gegen das
+  er gebaut ist** — aufgedeckt von einem Codex-Review auf #118 (P2). PyYAML ist
+  YAML **1.1**: Dort wird das blanke `on:` zum Boolean `True` (die Schlüssel von
+  `ci.yml` sind `['name', True, 'jobs']`), auf `"on"` zu prüfen wäre also ein
+  Fehlalarm auf jedem Workflow. Die naheliegende Gegenrichtung — auf `True`
+  prüfen — ist aber die gefährliche: `on:`, `true:` und `yes:` landen alle auf
+  demselben Schlüssel, `1:` landet auf `1`, und `1 == True` ist in Python wahr.
+  Ein Workflow mit `true:` statt `on:` hat für GitHub **gar keinen Auslöser**
+  und läuft nie — die Zusicherung wäre grün geblieben.
+
+  Gelesen wird deshalb die *geschriebene* Form statt des aufgelösten Werts:
+  `yaml.compose` hält beim Knotenbaum an, wo ein Schlüssel-Skalar seinen Text
+  noch trägt (`'on'`, `'true'`, `'1'`). Gegengeprobt an einer echten Datei:
+  `security.yml` mit `true:` statt `on:` **parst einwandfrei** — der Parse-Test
+  bleibt zu Recht grün — und fällt jetzt im Struktur-Test. Vorher hätte nichts
+  sie gefangen. Dazu fünf Schreibweisen (`true`, `yes`, `1`, `On`, `ON`) mit
+  Positivkontrolle und ein Test, der sagt, wann die Umleitung über den
+  Knotenbaum wieder entfallen darf.
 
 - **`CLAUDE.md` nannte eine ruff-Version, die es seit zwei Bumps nicht mehr
   gab.** Der Abschnitt versprach «genau eine Quelle — `ruff==0.16.3` im
@@ -247,8 +253,10 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Gate haengt **dauerhaft** auf `pending`, obwohl geprueft wurde. Ein Dauerstall
   ist schlimmer als die Luecke, die der Anker schliessen soll.
 
-  Dass der `synchronize`-Lauf ausfaellt, ist dabei kein Randfall: Das eigene
-  `cancel-in-progress: true` macht genau das wahrscheinlich.
+  Dass der `synchronize`-Lauf ausfaellt, war dabei kein Randfall: Das eigene
+  `cancel-in-progress: true` machte genau das wahrscheinlich. (Seit dem
+  18.9.2026 steht dort `false`, siehe oben — der Anker bleibt trotzdem, er
+  haengt nicht an dieser Einstellung.)
 
   `head_seen_at` kommt jetzt aus den **Check-Suites** auf dem SHA — GitHub legt
   sie beim Push an, unabhaengig von jedem Lauf von uns. Das stimmt in beide
