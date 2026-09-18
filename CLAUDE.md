@@ -506,10 +506,9 @@ laufenden Poll ab, sobald ein neues Signal eintrifft — bei einem Poll-Fenster
 von 900 s trifft fast jeder Codex-Kommentar einen laufenden Job. Der
 abgebrochene Lauf bleibt als `cancelled` in der Liste stehen und sieht aus wie
 eine gescheiterte Prüfung. Das ist kein Fehlschlag, und wegkonfigurieren lässt
-es sich nicht: Mit
-`cancel-in-progress: false` räumt GitHub den **wartenden** Lauf ab statt den
-laufenden, ein abgebrochener Run steht genauso da. Benannt ist besser als
-wegkonfiguriert geglaubt.
+es sich nicht: Mit `cancel-in-progress: false` räumt GitHub den **wartenden**
+Lauf ab statt den laufenden, ein abgebrochener Run steht genauso da. Benannt ist
+besser als wegkonfiguriert geglaubt.
 
 **Was hier kurz als Tatsache stand und falsch war:** dass ein abgebrochener Run
 `mergeable_state` auf `unstable` setzt. Geschlossen aus #116, wo beides
