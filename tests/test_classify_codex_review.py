@@ -219,7 +219,13 @@ def test_review_eines_aelteren_commits_zaehlt_nicht():
 
 
 def test_kommentar_von_vor_dem_head_zaehlt_nicht():
-    """Issue-Kommentare tragen keine Commit-Angabe — die Zeit muss es richten."""
+    """Fuer diesen Kommentar entscheidet die Zeit: Er nennt keinen Commit.
+
+    Seit dem 18.9.2026 traegt die echte Befundlos-Meldung zwar eine
+    «Reviewed commit»-Zeile, ausgewertet wird sie aber nicht — siehe
+    `test_befundlos_fuer_fremden_commit_faellt_heute_nicht_auf`. Hier steht
+    bewusst der Kurztext ohne Commit, damit der Fall nur die Datierung prueft.
+    """
     state, _ = classify(
         _payload(
             comments=[
@@ -630,10 +636,17 @@ def test_review_objekt_braucht_die_warnung_nicht():
 #
 # Der Infokasten sagt dazu neu: «Codex reacts with 👀 while any review is
 # running, comments if it has suggestions, and reacts with 👍 once all reviews
-# finish with no findings.» Ein befundloser Lauf hinterlaesst danach gar keinen
-# Text mehr, sondern eine Reaktion — die alte Befundlos-Meldung faellt als
-# Signal weg. Ohne die Tabelle bliebe jeder saubere PR ungruen; das Gate hat
-# den neuen Kommentar an #104 als unbekannten Text eingeordnet und rot gesetzt.
+# finish with no findings.» Ohne die Tabelle bliebe jeder saubere PR ungruen;
+# das Gate hat den neuen Kommentar an #104 als unbekannten Text eingeordnet und
+# rot gesetzt.
+#
+# HIER STAND, ein befundloser Lauf hinterlasse danach gar keinen Text mehr und
+# die Befundlos-Meldung falle als Signal weg. DAS IST FALSCH — es ist beides.
+# Gemessen am 19.9.2026 an #118 (18.9., 17:05:24) und #119 (19.9., 07:55:17):
+# Text UND Summary fuer denselben Commit. Die 👍-Reaktion kommt ebenfalls, aber
+# auf den PULL REQUEST, nicht auf einen Kommentar. `MARK_NO_FINDING` ist damit
+# kein Altlastpfad — wer ihn auf jene Prosa hin entfernt, nimmt dem Gate ein
+# funktionierendes Signal.
 #
 # Die Tabelle ist dafuer das bessere Signal als jeder Zeitstempel: Sie nennt den
 # geprueften Commit selbst. Deshalb haengt die Frische einer Summary an ihrer

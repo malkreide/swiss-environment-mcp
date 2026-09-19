@@ -45,6 +45,16 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   jemand die Commit-Zeile auswertet. Gegengeprobt: mit einem solchen Eingriff
   bleibt der Erkennungstest grün und der Lücken-Test fällt.
 
+  **Und ein dritter Codex-Befund auf #120 (P2) fand die Geschwister.** Der neue
+  Absatz stand korrekt da, während dieselben Dateien an anderer Stelle weiter
+  das Gegenteil sagten: der `FRISCHE`-Abschnitt des Skripts («Issue-Kommentare
+  tragen keine Commit-Angabe») und der Format-Kommentar der Testdatei («ein
+  befundloser Lauf hinterlässt gar keinen Text mehr»). Beides nachgezogen, dazu
+  eine vom Befund nicht genannte vierte Stelle, die eine Suche über alle
+  Dateien zutage förderte. Dass diese Fehlerklasse in dieser PR-Reihe zum
+  dritten Mal auftrat, ist der eigentliche Befund: Eine geänderte Tatsache
+  nachzuziehen heisst suchen, nicht erinnern.
+
 - **Die Concurrency-Einstellung wirkt nicht dort, wo sie steht**
   (`CLAUDE.md` Teil 2, `codex-gate.yml`-Kopf). Am 18.9. lag
   `cancel-in-progress: false` bereits im PR, und der Gate-Lauf von #118 wurde
