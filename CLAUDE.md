@@ -749,9 +749,9 @@ die Draft-Eigenschaft. Die historische Kontrolle — PR #117 stand am 18.9. in
 Lage A auf `unstable`, ein Draft ist also nicht von sich aus `blocked` — lief
 unter dem **alten** Ruleset und taugt deshalb nicht.
 
-**Die einzelne Variable liefert ein dritter Zustand, und er ist gemessen.**
-Herzustellen war er mit Geduld statt mit Rechten: ein **ready** PR nach einem
-Push. Ein Push löst keinen Review aus (Teil 1), der Poll lief also die vollen
+**Ein dritter Zustand sollte die einzelne Variable liefern — er tut es nicht,
+und warum, steht unter der Tabelle.** Herzustellen war er mit Geduld statt mit
+Rechten: ein **ready** PR nach einem Push. Ein Push löst keinen Review aus (Teil 1), der Poll lief also die vollen
 `POLL_MAX_SECONDS` = 900 s leer — zweimal, weil der wartende Lauf der
 Concurrency-Gruppe danach ebenfalls drankam. Erst als beide Gate-Läufe fertig
 waren, stand der Zustand sauber:
@@ -761,10 +761,37 @@ waren, stand der Zustand sauber:
 | B | nein | alle grün, gleiche Menge | success | `clean` |
 | C | nein | alle grün, gleiche Menge | **pending** | **blocked** |
 
-Gleicher PR, gleiches Ruleset, gleiche Basis, kein Draft-Wechsel: **verändert
-wurde genau eine Grösse.** Der Commit-Status `codex-gate` ist damit ein
-required check — belegt, nicht geschlossen. Die gewollte und die gemessene Lage
-decken sich seit dem 19.9.2026 also erstmals.
+Gleicher PR, gleiches Ruleset, gleiche Basis, kein Draft-Wechsel.
+
+**Hier stand «verändert wurde genau eine Grösse». Das war falsch**, aufgedeckt
+von einem Codex-Review auf PR #125 (P2). Zustand C entsteht durch einen
+**Push** — mit dem Status wechseln auch der Head-SHA und der Inhalt des
+Commits. Zwei Beobachtungen an zwei verschiedenen Heads trennen nichts, und
+«dieselbe Menge grüner Check-Runs» schliesst eine andere kopfgebundene Regel
+nicht aus. Das ist derselbe Fehler wie bei der historischen Kontrolle #117 zwei
+Absätze weiter oben, nur eine Runde später bemerkt: Beide Male war die
+Einzelvariable behauptet statt hergestellt.
+
+**Die Messung mit festgehaltenem Head liegt seit dem 19.9.2026 vor**, an PR
+#125, Head `7b548d9` in beiden Zeilen:
+
+| Uhrzeit (UTC) | Draft? | Check-Runs | `codex-gate` | `mergeable_state` |
+|---|---|---|---|---|
+| 14:47:19 | nein | 6, alle grün und fertig | **pending** | **blocked** |
+| 14:50:46 | nein | 7, alle grün | **success** | **clean** |
+
+Der Head steht still, der Inhalt auch. Vom Nicht-Grünen zum Grünen wechselt
+allein der Commit-Status. Was das mit ausschliesst: ein required Kontext, der
+auf einem Doku-PR **gar nicht** berichtet — `image-size` wäre der Kandidat —
+hielte beide Zeilen auf `blocked`; die zweite widerlegt ihn.
+
+**Der Rest, den auch diese Messung nicht ausräumt**, und er gehört genannt
+statt weggelassen: Zwischen den Zeilen kommt ein **siebter** Check-Run dazu,
+ein zweiter Lauf von `codex-gate: Status setzen` (der `ready_for_review`-Lauf
+neben dem `pull_request`-Lauf). Er kann keinen fehlenden Kontext nachliefern,
+weil derselbe Kontext in der ersten Zeile bereits grün und fertig dastand —
+aber eine Grösse ist er. Näher als so kommt man hier nicht heran, solange die
+Required-Liste nicht abzulesen ist.
 
 **In beiden Tabellen steht bewusst keine Zahl.** Hier standen erst welche —
 6/6 für B in der oberen, 7/7 für dasselbe B in der unteren. Beide Male
@@ -773,16 +800,30 @@ sich selbst widerspricht, ohne dass eine der beiden Zahlen falsch sein muss.
 Tragend ist ohnehin nicht der Absolutwert, sondern dass B und C **dieselbe**
 Menge zeigten.
 
-Denn die Zahl ist als Variable unbrauchbar, und die Messung dazu liegt vor:
-Von den Gate-Läufen zu #124 trugen die aus `issue_comment` als `head_sha` den
-Stand von `main` (`6a3cf1e`), die aus `pull_request` und `pull_request_review`
-dagegen den PR-Head (`cc57770`). **Der Check-Run eines Kommentar-Laufs landet
-also gar nicht am PR**, während der Commit-Status, den derselbe Lauf per API
-setzt, sehr wohl dort ankommt — dieselbe Trennung von Check-Run und Status wie
-oben, hier eine Ebene tiefer. Dazu kommt der wartend abgeräumte Lauf, der
-überhaupt keinen Check-Run hinterlässt. Wie viele Check-Runs ein Head trägt,
-hängt damit an der Auslöser-Mischung des Augenblicks und nicht am Zustand, den
-man messen will.
+Denn die Zahl ist als Variable unbrauchbar, und drei Mechaniken dahinter sind
+gemessen. **Erstens** trugen von den Gate-Läufen zu #124 die aus
+`issue_comment` als `head_sha` den Stand von `main` (`6a3cf1e`), die aus
+`pull_request` und `pull_request_review` dagegen den PR-Head (`cc57770`) — der
+Check-Run eines Kommentar-Laufs landet also gar nicht am PR, während der
+Commit-Status, den derselbe Lauf per API setzt, sehr wohl dort ankommt;
+dieselbe Trennung von Check-Run und Status wie oben, eine Ebene tiefer.
+**Zweitens** hinterlässt der wartend abgeräumte Lauf überhaupt keinen
+Check-Run. **Drittens** — und das ist die Quelle des 6 → 7 auf #125 — trägt
+derselbe Head zwei Check-Runs *gleichen Namens*, sobald zwei PR-Ereignisse den
+Workflow auslösen; `pull_request` und `ready_for_review` taten das um 14:46:05
+und 14:50:38.
+
+Wie viele Check-Runs ein Head trägt, hängt damit an der Auslöser-Mischung des
+Augenblicks und nicht an dem Zustand, den man messen will.
+
+**Und `mergeable_state` ist kein Messgerät mit Sofortanzeige.** GitHub
+berechnet den Wert nachlaufend. Am 19.9. lieferte eine Abfrage um 14:50:38
+`clean`, während der zugehörige Status erst um 14:50:46 auf `success` gesetzt
+wurde — welche der beiden API-Antworten zuerst entstand, geben ihre Laufzeiten
+nicht her. Als Datum zählt deshalb nur, was **stehen bleibt**: Zustand C hielt
+sich rund 30 Minuten auf `blocked`, die `clean`-Zeile wurde nach dem Umschlag
+erneut abgefragt. Ein Einzelwert unmittelbar nach einem Statuswechsel ist ein
+Rauschwert.
 
 Was weiterhin offen bleibt: ob der Check-Run des Jobs **zusätzlich** required
 ist. Er war in allen drei Zuständen grün, also nie die veränderte Grösse. Der

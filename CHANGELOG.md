@@ -160,21 +160,36 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   **Nachmittags desselben Tages hat der Maintainer ihn ergänzt — und auch das
   ist gemessen, nicht übernommen.** Die Aussage allein trug nicht: Die
   Required-Liste ist hier nicht abzulesen, `list_branches` meldet bloss
-  `protected: true`. Getrennt hat es ein dritter Zustand von PR #124, ein
-  **ready** PR nach einem Push. Ein Push löst keinen Review aus, der Status
-  fällt auf `pending` und bleibt dort; der Poll lief die vollen 900 s leer,
-  zweimal. Gegen den Zustand davor — gleicher PR, gleiches Ruleset, gleiche
-  Basis, kein Draft-Wechsel, dieselben grünen Check-Runs — war der Status damit
-  die **einzige** veränderte Grösse, und `mergeable_state` kippte von `clean`
-  auf `blocked`. Der Commit-Status `codex-gate` ist required.
+  `protected: true`.
 
-  Zwei Grenzen bleiben. Ob der Check-Run des Jobs **zusätzlich** noch required
-  ist, sagt keine dieser Messungen — er war in allen drei Zuständen grün, also
-  nie die veränderte Grösse. Und die naheliegende Abkürzung trug nicht: Der
-  erste Anlauf stützte sich auf den Draft-Zustand plus PR #117 als historische
-  Kontrolle; ein Codex-Befund auf #124 (P2) hat zu Recht gezeigt, dass #117
-  unter dem **alten** Ruleset lief und zwei Beobachtungen aus zwei Regelwerken
-  nichts trennen.
+  **Der Weg dahin ging über zwei untaugliche Anläufe, beide von einem
+  Codex-Review gestoppt.** Der erste stützte sich auf den Draft-Zustand plus
+  PR #117 als historische Kontrolle — #117 lief unter dem **alten** Ruleset
+  (P2 auf #124). Der zweite verglich einen `ready` PR vor und nach einem Push
+  und nannte den Status die einzige veränderte Grösse — mit dem Push wechselt
+  aber auch der Head-SHA, und «dieselbe Menge grüner Check-Runs» schliesst
+  keine andere kopfgebundene Regel aus (P2 auf #125). Zweimal war die
+  Einzelvariable behauptet statt hergestellt.
+
+  **Hergestellt ist sie an PR #125**, Head `7b548d9` in beiden Zeilen, also mit
+  festgehaltenem Commit: um 14:47:19 UTC sechs Check-Runs, alle grün und
+  fertig, Status `pending` → `blocked`; um 14:50:46 derselbe Head, Status
+  `success` → `clean`. Vom Nicht-Grünen zum Grünen wechselt allein der
+  Commit-Status, und die zweite Zeile widerlegt zugleich einen required
+  Kontext, der auf einem Doku-PR gar nicht berichtet (`image-size`) — der
+  hielte beide Zeilen auf `blocked`.
+
+  Zwei Grenzen bleiben, und die erste ist neu. Zwischen den Zeilen kommt ein
+  **siebter** Check-Run dazu, ein zweiter Lauf desselben Gate-Jobs aus dem
+  `ready_for_review`-Ereignis; einen fehlenden Kontext kann er nicht
+  nachliefern — derselbe stand in Zeile eins bereits grün und fertig da —,
+  eine Grösse ist er trotzdem. Und ob der Check-Run des Jobs **zusätzlich**
+  required ist, sagt keine dieser Messungen: Er war überall grün.
+
+  **Methodisch mitgenommen:** `mergeable_state` wird nachlaufend berechnet. Am
+  19.9. lieferte eine Abfrage um 14:50:38 `clean`, während der zugehörige
+  Status erst um 14:50:46 gesetzt wurde — welche API-Antwort zuerst entstand,
+  geben die Laufzeiten nicht her. Als Datum zählt nur, was stehen bleibt.
 
   **Nebenbefund, ungefragt — und noch am selben Tag gemessen:** Seit derselben
   Änderung melden *sämtliche* Branches `protected: true`, nicht nur `main`. Ein
