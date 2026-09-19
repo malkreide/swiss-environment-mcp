@@ -176,10 +176,14 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   unter dem **alten** Ruleset lief und zwei Beobachtungen aus zwei Regelwerken
   nichts trennen.
 
-  **Nebenbefund, ungefragt:** Seit derselben Änderung melden *sämtliche*
-  Branches `protected: true`, nicht nur `main`. Ein normaler Push auf einen
-  Arbeitsbranch läuft durch; was mit dem Force-Push nach einem Rebase
-  geschieht, ist ungemessen.
+  **Nebenbefund, ungefragt — und noch am selben Tag gemessen:** Seit derselben
+  Änderung melden *sämtliche* Branches `protected: true`, nicht nur `main`. Ein
+  normaler Push auf einen Arbeitsbranch läuft durch, der Force-Push **nicht**:
+  `remote: - Cannot force-push to this branch` (`GH013`). Aufgefallen ist es,
+  weil #124 gemergt wurde, während ein Korrektur-Commit noch entstand — der
+  brauchte eine neue Basis, und der übliche Rebase endete an der Sperre.
+  Verboten ist also das Umschreiben, nicht das Schreiben; Basis nachziehen
+  heisst auf diesen Branches `git merge origin/main`.
 
 - **`CLAUDE.md`: die Codex-Auslöserliste — und der Push, der keiner ist**
   (Teil 1, «Dritter Weg, den Prüfer zu verlieren»). Der Abschnitt nannte

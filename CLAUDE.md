@@ -792,9 +792,28 @@ dass er es damals war; ob die Liste ihn noch führt, sagt er nicht.
 **Und dabei ist noch etwas anderes passiert.** Seit derselben Änderung melden
 *sämtliche* Branches `protected: true`, nicht nur `main`; am Vormittag standen
 die `claude/*`-Branches noch auf `false`. Das Ruleset greift also breiter als
-`main`. Was es dort erzwingt, ist ungemessen — praktisch zu beachten ist, dass
-ein Force-Push auf einen Arbeitsbranch, wie ihn ein Rebase braucht, daran
-scheitern kann.
+`main`.
+
+**Was es dort erzwingt, stand hier als ungemessen — und ist es seit dem
+19.9.2026 nicht mehr.** Der Fall kam von selbst: #124 wurde gemergt, während
+ein Korrektur-Commit noch entstand, der damit eine neue Basis brauchte. Der
+übliche Rebase endete an der Sperre:
+
+```
+remote: - Cannot force-push to this branch
+```
+
+Ein *normaler* Push auf denselben Branch lief unmittelbar davor und danach
+durch. Verboten ist also nicht das Schreiben, sondern das Umschreiben. Zwei
+Handgriffe daraus:
+
+- **Auf einem Arbeitsbranch dieses Repos ist der Rebase keine Option mehr.**
+  Basis nachziehen heisst hier `git merge origin/main`, auch auf dem eigenen
+  Branch — der Merge-Commit hält den Branch vorwärts-kompatibel und kommt ohne
+  Force-Push aus.
+- **Wer die Sperre für ein Netzproblem hält, verliert den Commit.** Die
+  Meldung nennt eine Regelverletzung (`GH013`), keinen Übertragungsfehler; ein
+  Wiederholungsversuch mit Backoff scheitert beliebig oft gleich.
 
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
