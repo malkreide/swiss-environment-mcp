@@ -53,7 +53,11 @@
 # und KEINEM abgebrochenen — waehrend `codex-gate` als Draft auf `pending`
 # stand. Ein pendender Commit-Status genuegt also allein. Auf #116 lag beides
 # gleichzeitig vor; der Fall taugt deshalb als Beleg fuer keine der beiden
-# Richtungen. Was ein abgebrochener Run mit dem Rollup macht, ist offen.
+# Richtungen. Fuer den ANDEREN Zustand liegt die Messung seit dem 19.9.2026 vor:
+# Auf #118 ging genau eine Groesse von `cancelled` auf `success`, und
+# `mergeable_state` kippte von `blocked` auf `clean`. Ein abgebrochener
+# Check-Run blockiert also, SOFERN er selbst required ist — und genau dieser
+# Job ist es hier, siehe unten. Ueber `unstable` sagt auch das nichts.
 #
 # Der Job heisst deshalb nach dem, was er TUT — einen Status setzen —, nicht
 # nach dem, was Codex getan haben soll. Das Urteil steht im Commit-Status
@@ -67,6 +71,17 @@
 # genuegen zwei. Der beobachtete Fall auf #116 waren genau zwei
 # (`ready_for_review` plus der «Running»-Kommentar); mit `false` waere dort
 # nichts abgebrochen worden.
+#
+# ABER `false` WIRKT NICHT DORT, WO ES STEHT. Am 18.9.2026 lag `false` bereits
+# im PR, und der Lauf von #118 wurde trotzdem abgeraeumt (17:02:50 gestartet,
+# 17:04:06 `cancelled`). Grund ist eine Versionsschere: Bei `pull_request` nimmt
+# GitHub diese Datei aus dem PR, bei `issue_comment` und `pull_request_review`
+# aus dem DEFAULT-BRANCH. Dort stand noch `true`, und der Kommentar-Lauf mit der
+# alten Fassung toetete den PR-Lauf mit der neuen — die Concurrency-Gruppe
+# verbindet die Fassungen, sie trennt sie nicht. Eine Aenderung hier ist also
+# erst nach dem Merge ganz scharf; wer sie am PR prueft, prueft eine Haelfte.
+# Ein so getoeteter Lauf darf erneut gestartet werden: Er ist an einer Kollision
+# gestorben, nicht an einem Befund.
 #
 # Zwei Messungen haben den Rest der Begruendung ebenfalls gekippt:
 #
@@ -131,8 +146,10 @@ concurrency:
   group: codex-gate-${{ github.event.pull_request.number || github.event.issue.number }}
   # Anstehen statt toeten. Das schliesst die Gleichzeitigkeit genauso aus, laesst
   # aber einen Poll zu Ende laufen, der das Signal ohnehin gleich sieht — und
-  # hinterlaesst im Zwei-Lauf-Fall keinen abgebrochenen Check-Run. Begruendung
-  # samt Messungen im Kopf unter «Zu den Abbruechen selbst».
+  # hinterlaesst im Zwei-Lauf-Fall keinen abgebrochenen Check-Run, SOBALD diese
+  # Fassung auf dem Default-Branch liegt. Vorher gilt fuer Kommentar-Ereignisse
+  # noch die alte. Begruendung samt Messungen im Kopf unter «Zu den Abbruechen
+  # selbst».
   cancel-in-progress: false
 
 jobs:

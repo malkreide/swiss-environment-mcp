@@ -7,6 +7,25 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Hinzugefügt
 
+- **Die Concurrency-Einstellung wirkt nicht dort, wo sie steht**
+  (`CLAUDE.md` Teil 2, `codex-gate.yml`-Kopf). Am 18.9. lag
+  `cancel-in-progress: false` bereits im PR, und der Gate-Lauf von #118 wurde
+  trotzdem abgeräumt (17:02:50 gestartet, 17:04:06 `cancelled`). Das sah nach
+  einem gescheiterten Fix aus und war eine Versionsschere: Bei `pull_request`
+  nimmt GitHub die Workflow-Datei aus dem PR, bei `issue_comment` und
+  `pull_request_review` aus dem **Default-Branch** — dort stand noch `true`.
+  Der Kommentar-Lauf mit der alten Fassung tötete den PR-Lauf mit der neuen,
+  denn die Concurrency-Gruppe verbindet die Fassungen, sie trennt sie nicht.
+
+  Zwei Folgerungen stehen dabei: Eine Änderung an diesem Workflow ist erst nach
+  dem Merge ganz scharf — wer sie am PR prüft, prüft die `pull_request`-Hälfte;
+  das ist dieselbe Klasse wie `schedule` bei den Live-Tests, nur tückischer,
+  weil die andere Hälfte nicht ausbleibt, sondern mit der alten Fassung läuft.
+  Und ein so getöteter Lauf darf erneut gestartet werden: Er ist an einer
+  Kollision gestorben, nicht an einem Befund. Am 19.9. um 07:08 setzte Attempt 2
+  des Laufs 35372017233 den Check-Run auf `success`, ohne den Head zu ändern —
+  der Codex-Review auf `5c08df8` blieb dadurch gültig.
+
 - **`main` ist geschützt — das Gate wirkt erstmals wirklich** (`CLAUDE.md`,
   Teil 2). Der Abschnitt hielt fest, dass `main` am 28.8.2026 `protected:
   false` war und die grünen Häkchen damit informativ blieben. Gemessen am
@@ -14,11 +33,16 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   `mergeable_state: blocked` statt wie zuvor auf `unstable` — der Merge-Button
   ist gesperrt.
 
-  Was die Messung **nicht** hergibt, und darum steht es dabei: welche Checks
-  required sind. `protected: true` sagt nur, dass eine Protection existiert;
-  die Liste liest man über den Branch-Protection-Endpunkt, nicht über
-  `list_branches`. Dass `codex-gate` darunter ist, ist aus dem `blocked`
-  geschlossen — plausibel, aber ohne Positivkontrolle nicht belegt.
+  Hier stand, welcher Check required ist, gebe die Messung nicht her, und für
+  den Beleg fehle die Positivkontrolle. **Sie hat sich am 19.9. ergeben — und
+  das Ergebnis ist der falsche Check.** Beim Entsperren von #118 wurde genau
+  eine Grösse verändert: Der Check-Run `codex-gate: Status setzen` ging von
+  `cancelled` auf `success`, und `mergeable_state` kippte von `blocked` auf
+  `clean`. Required ist damit der Check-Run **des Jobs** — ausgerechnet das
+  Signal, das über Codex nichts aussagt, weil der Job immer mit 0 endet.
+  Erzwungen wird «der Job ist gelaufen», nicht «Codex hat geprüft»; in die
+  Required-Liste gehört der Kontext `codex-gate`. Die Grenze bleibt: belegt ist,
+  dass dieser eine Kontext required ist, nicht dass er der einzige ist.
 
 - **`CLAUDE.md`: die Codex-Auslöserliste — und der Push, der keiner ist**
   (Teil 1, «Dritter Weg, den Prüfer zu verlieren»). Der Abschnitt nannte
@@ -168,6 +192,9 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Draft auf `pending` stand. Ein pendender Commit-Status genügt allein; über
   den Beitrag eines abgebrochenen Runs sagt keine der beiden Beobachtungen
   etwas. Zwei Ursachen, die immer zusammen auftreten, belegen keine von beiden.
+  Für den *anderen* Zustand liegt der Fall seit dem 19.9. vor: Ein abgebrochener
+  Check-Run setzt `blocked`, sofern er selbst required ist (Einzelvariablen-
+  Messung, siehe oben). Über `unstable` sagt auch das nichts.
 
   Der Name steht in Anführungszeichen: Ein unquotierter YAML-Skalar mit «: »
   darin ist ein Syntaxfehler — und ein Workflow, der nicht parst, wird nicht

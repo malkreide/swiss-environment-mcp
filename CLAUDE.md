@@ -573,6 +573,27 @@ von selbst, der Grund ihn zu töten fällt weg — und sie bricht ab, sobald ein
 Urteil feststeht. Das Gate steht deshalb auf `cancel-in-progress: false`:
 Anstehen statt töten schliesst die Gleichzeitigkeit genauso aus.
 
+**Die Einstellung wirkt aber nicht dort, wo man sie hinschreibt.** Am 18.9.2026
+lag `false` im PR, und der Gate-Lauf von #118 wurde trotzdem abgeräumt: 17:02:50
+gestartet, 17:04:06 `cancelled`. Keine falsche Einstellung, sondern eine
+Versionsschere. Bei `pull_request` nimmt GitHub die Workflow-Datei aus dem PR,
+bei `issue_comment` und `pull_request_review` dagegen aus dem **Default-Branch**
+— und dort stand noch `true`. Der Kommentar-Lauf mit der alten Fassung tötete
+den PR-Lauf mit der neuen, denn die Concurrency-Gruppe verbindet die beiden
+Fassungen, sie trennt sie nicht.
+
+Zwei Handgriffe daraus:
+
+- **Eine Änderung an diesem Workflow ist erst nach dem Merge ganz scharf.** Wer
+  sie am PR prüft, prüft die `pull_request`-Hälfte. Das ist dieselbe Klasse wie
+  `schedule` bei den Live-Tests weiter unten, nur tückischer: Die andere Hälfte
+  bleibt nicht aus, sie läuft mit der alten Fassung.
+- **Ein so getöteter Lauf darf erneut gestartet werden.** Er ist an einer
+  Kollision gestorben, nicht an einem Befund — derselbe Fall wie ein verlorener
+  Runner, und keine Wiederholung gegen eine Absage. Am 19.9. um 07:08 setzte
+  Attempt 2 des Laufs 35372017233 den Check-Run auf `success`, ohne den Head zu
+  ändern; der Codex-Review auf `5c08df8` blieb damit gültig.
+
 **Was hier kurz als Tatsache stand und falsch war:** dass ein abgebrochener Run
 `mergeable_state` auf `unstable` setzt. Geschlossen aus #116, wo beides
 gleichzeitig vorlag. Die Gegenprobe widerlegt es — PR #117 stand am 18.9.2026
@@ -582,6 +603,12 @@ allein; über den Beitrag eines abgebrochenen Runs sagt keine der beiden
 Beobachtungen etwas. Merke: Zwei Ursachen, die immer zusammen auftreten, sind
 kein Beleg für eine von beiden — dafür braucht es den Fall, in dem nur eine
 vorliegt.
+
+**Nachgetragen am 19.9.2026:** Für den *anderen* Zustand liegt der Fall jetzt
+vor. Auf #118 wurde genau eine Grösse verändert — derselbe Check-Run ging von
+`cancelled` auf `success` —, und `mergeable_state` kippte von `blocked` auf
+`clean`. Ein abgebrochener Check-Run blockiert also, **sofern er selbst
+required ist**. Über `unstable` sagt auch das nichts; das bleibt offen.
 
 Bewusst kein Timer. Ein Gate, das nach N Minuten von selbst grün wird,
 behauptet eine Prüfung, die es nicht gesehen hat — am 21./22.8. war das
@@ -601,13 +628,25 @@ das Gate weg, ohne dass eine Datei sich ändert.
 
 **Seit dem 18.9.2026 ist sie da:** `main` meldet `protected: true`, und PR #118
 stand mit pendendem `codex-gate` auf `mergeable_state: blocked` statt wie zuvor
-auf `unstable` — der Merge-Button ist also tatsächlich gesperrt. Was die
-Messung **nicht** hergibt: welche Checks required sind. `protected: true` sagt
-nur, dass eine Protection existiert; die Liste liest man über den
-Branch-Protection-Endpunkt, nicht über `list_branches`. Dass `codex-gate`
-darunter ist, ist aus dem `blocked` geschlossen und nicht belegt — für den
-Beleg fehlt die Positivkontrolle, nämlich ein PR, der nur an diesem einen
-Check hängt.
+auf `unstable` — der Merge-Button ist also tatsächlich gesperrt.
+
+**Welcher Check required ist, ist seit dem 19.9.2026 gemessen — und es ist der
+falsche.** Die Positivkontrolle, die hier als fehlend notiert stand, ergab sich
+beim Entsperren von #118 von selbst: verändert wurde genau eine Grösse, der
+Check-Run `codex-gate: Status setzen` ging von `cancelled` auf `success`, und
+`mergeable_state` kippte von `blocked` auf `clean`. Required ist damit der
+**Check-Run des Jobs** — ausgerechnet das Signal, das über Codex nichts aussagt,
+weil der Job immer mit 0 endet. Erzwungen wird so «der Job ist gelaufen», nicht
+«Codex hat geprüft»; das ist die Verwechslung von oben, diesmal in der
+Repo-Einstellung statt im Jobnamen. In die Required-Liste gehört der Kontext
+`codex-gate`.
+
+Die Grenze bleibt: Die Messung zeigt, dass dieser eine Kontext required ist,
+nicht dass er der einzige ist. Ob `codex-gate` schon danebensteht, trennt erst
+ein PR, bei dem nur dieser Status rot ist — er war die ganze Zeit grün. Und
+`protected: true` aus `list_branches` sagt weiterhin nur, *dass* eine Protection
+existiert; die Liste selbst liegt hinter dem Branch-Protection-Endpunkt, den das
+hier verfügbare Werkzeug nicht anbietet.
 
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
