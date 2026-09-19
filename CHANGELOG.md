@@ -83,6 +83,14 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   heisst und ein zweiter Nachweisweg billig ist. Das ist eine Abwägung, keine
   Messung, und steht so da.
 
+  **Siebter Befund (P2), eine Umkehrung.** Dazu stand die Bedingung falsch
+  herum: «Wer ihn entfernen will, braucht einen sauberen Lauf ganz ohne
+  Tabelle.» Ein solcher Lauf zeigte das Gegenteil — dort wäre
+  `MARK_NO_FINDING` der einzige Nachweis, also **nötig**. Für eine Entfernung
+  bräuchte es Vertrauen darauf, dass jeder saubere Lauf ein anderes Signal
+  mitbringt; das ist eine Allaussage, nie belegbar, nur über lange Beobachtung
+  ohne Gegenbeispiel zu stützen.
+
   Wodurch sich die Fälle unterscheiden, bleibt offen: #118 und
   #119 hatten zuvor Befunde und wurden von Hand angefordert, #122 lief als
   erster Review des PR auf «Draft marked ready» — zwei Unterschiede, drei

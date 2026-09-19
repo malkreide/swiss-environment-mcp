@@ -88,8 +88,15 @@ unter dem neuen Format nicht beobachtet.
 Das heisst nicht, dass er weg kann: Nicht beobachtet ist nicht ausgeschlossen,
 und der Text kommt weiterhin vor. Er bleibt, weil ein zweiter Nachweisweg
 billig ist und sein Fehlen erst auffiele, wenn ein Merge daran haengt — das ist
-eine Abwaegung, keine Messung, und steht deshalb als solche da. Wer ihn
-entfernen will, braucht die Gegenprobe: einen sauberen Lauf ganz ohne Tabelle.
+eine Abwaegung, keine Messung, und steht deshalb als solche da.
+
+Die beiden Richtungen nicht verwechseln, hier stand es falsch herum: Ein
+sauberer Lauf OHNE Tabelle wuerde zeigen, dass `MARK_NO_FINDING` NOETIG ist —
+er waere dort der einzige Nachweis. Fuer eine Entfernung braucht es das
+Gegenteil, naemlich Vertrauen darauf, dass jeder saubere Lauf ein anderes
+Signal mitbringt. Das ist eine Allaussage; belegen laesst sie sich nie, nur
+ueber lange Beobachtung ohne Gegenbeispiel stuetzen. Solange das niemand
+gemacht hat, bleibt der Pfad.
 Wodurch sich die
 Faelle unterscheiden, ist OFFEN: #118 und #119 hatten auf demselben PR zuvor
 Befunde und wurden von Hand angefordert, #122 lief als erster Review des PR auf
