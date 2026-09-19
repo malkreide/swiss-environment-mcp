@@ -68,11 +68,21 @@ gesetzt, was fuer einen LAUFENDEN Review schlicht falsch ist. DAS ist der
 Grund, warum die Tabelle ausgewertet wird: Ein unbekannter Text faerbte das
 Gate rot, und die Tabelle nennt den geprueften Commit selbst.
 
-Nicht der Grund — und hier stand es trotzdem: dass ohne die Tabelle jeder
-saubere PR ungruen bliebe. Das folgte aus der Annahme, die Befundlos-Meldung
-sei weggefallen; sie ist es nicht (unten mehr), und `MARK_NO_FINDING` traegt
-denselben Nachweis. Ob ein sauberer Lauf je NUR die Tabelle hinterlaesst, ist
-ungemessen: Auf #118 und #119 lagen beide vor.
+Ein zweiter Grund kam am 19.9.2026 dazu, und er war bis dahin nur behauptet:
+dass ohne die Tabelle ein sauberer PR ungruen bliebe. Das stand hier als
+FOLGERUNG aus der widerlegten Annahme, die Befundlos-Meldung sei weggefallen,
+und wurde deshalb gestrichen. Inzwischen ist der Fall GEMESSEN — an #122:
+
+    Summary `Completed` fuer `ca9b3f2`, KEINE Befundlos-Meldung im Text, kein
+    Review-Objekt. Die Tabelle war der einzige Nachweis.
+
+Ein sauberer Lauf kann also beides hinterlassen (#118, #119: Text UND Tabelle)
+oder nur die Tabelle (#122). Beides kommt vor; `MARK_NO_FINDING` und die
+Tabelle sind zwei Wege, und keiner von beiden ist verzichtbar. Wodurch sich die
+Faelle unterscheiden, ist OFFEN: #118 und #119 hatten auf demselben PR zuvor
+Befunde und wurden von Hand angefordert, #122 lief als erster Review des PR auf
+«Draft marked ready». Drei Beobachtungen mit zwei verschiedenen Unterschieden
+belegen keinen davon.
 
 Hier stand aus diesem Kasten geschlossen, ein befundloser Lauf hinterlasse
 keinen Text mehr, und die Befundlos-Meldung falle als Signal weg. DAS IST
