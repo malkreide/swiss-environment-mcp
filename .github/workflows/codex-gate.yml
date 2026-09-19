@@ -75,13 +75,31 @@
 # ABER `false` WIRKT NICHT DORT, WO ES STEHT. Am 18.9.2026 lag `false` bereits
 # im PR, und der Lauf von #118 wurde trotzdem abgeraeumt (17:02:50 gestartet,
 # 17:04:06 `cancelled`). Grund ist eine Versionsschere: Bei `pull_request` nimmt
-# GitHub diese Datei aus dem PR, bei `issue_comment` und `pull_request_review`
-# aus dem DEFAULT-BRANCH. Dort stand noch `true`, und der Kommentar-Lauf mit der
-# alten Fassung toetete den PR-Lauf mit der neuen — die Concurrency-Gruppe
-# verbindet die Fassungen, sie trennt sie nicht. Eine Aenderung hier ist also
-# erst nach dem Merge ganz scharf; wer sie am PR prueft, prueft eine Haelfte.
+# GitHub diese Datei aus dem PR, bei `issue_comment` aus dem DEFAULT-BRANCH.
+# Dort stand noch `true`, und der Kommentar-Lauf mit der alten Fassung toetete
+# den PR-Lauf mit der neuen — die Concurrency-Gruppe verbindet die Fassungen,
+# sie trennt sie nicht. Fuer `issue_comment` ist eine Aenderung hier also erst
+# nach dem Merge scharf; wer sie am PR prueft, prueft die PR-Ereignisse.
 # Ein so getoeteter Lauf darf erneut gestartet werden: Er ist an einer Kollision
 # gestorben, nicht an einem Befund.
+#
+# Hier stand `pull_request_review` mit in dieser Aufzaehlung, und das war falsch
+# — aufgedeckt von einem Codex-Review auf PR #119 (P2). Gemessen war nur der
+# Kommentar-Lauf; das Review-Ereignis war dazugeschrieben. Gegenprobe vom
+# 19.9.2026, zwei Laeufe aus derselben Minute: Lauf 92 (`pull_request_review`)
+# lief auf `head_branch: claude/tender-edison-mc5jyr` mit `head_sha: bfa2cdd`,
+# Lauf 93 (`issue_comment`) auf `main` mit `a66698a`. Die Ereignistabelle von
+# GitHub fuehrt fuer `pull_request_review` ebenfalls `refs/pull/<N>/merge`, und
+# den Default-Branch-Vorbehalt nur bei `issue_comment`.
+#
+# UND `false` HEISST NICHT «KEINE ABGEBROCHENEN LAEUFE». Am 19.9. standen mit
+# `false` auf beiden Seiten vier Laeufe derselben Gruppe an (90
+# `pull_request`, 91/93/94 `issue_comment`, 92 `pull_request_review`).
+# Abgebrochen wurden 91, 92 und 93 — alle drei WAEHREND SIE WARTETEN; der
+# laufende 90 kam durch. Ein wartend abgeraeumter Lauf startet keinen Job und
+# hinterlaesst deshalb keinen Check-Run: Die Liste von #119 blieb 7/7 gruen.
+# Ein abgebrochener Lauf in der Actions-Liste ist also nicht dasselbe wie ein
+# abgebrochener Check-Run am PR; nur der zweite kostet etwas.
 #
 # Zwei Messungen haben den Rest der Begruendung ebenfalls gekippt:
 #

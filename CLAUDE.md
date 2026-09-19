@@ -577,22 +577,52 @@ Anstehen statt töten schliesst die Gleichzeitigkeit genauso aus.
 lag `false` im PR, und der Gate-Lauf von #118 wurde trotzdem abgeräumt: 17:02:50
 gestartet, 17:04:06 `cancelled`. Keine falsche Einstellung, sondern eine
 Versionsschere. Bei `pull_request` nimmt GitHub die Workflow-Datei aus dem PR,
-bei `issue_comment` und `pull_request_review` dagegen aus dem **Default-Branch**
-— und dort stand noch `true`. Der Kommentar-Lauf mit der alten Fassung tötete
-den PR-Lauf mit der neuen, denn die Concurrency-Gruppe verbindet die beiden
-Fassungen, sie trennt sie nicht.
+bei `issue_comment` dagegen aus dem **Default-Branch** — und dort stand noch
+`true`. Der Kommentar-Lauf mit der alten Fassung tötete den PR-Lauf mit der
+neuen, denn die Concurrency-Gruppe verbindet die beiden Fassungen, sie trennt
+sie nicht.
+
+**Hier stand zuerst `pull_request_review` in derselben Aufzählung. Das war
+falsch**, aufgedeckt von einem Codex-Review auf PR #119 (P2). Gemessen war nur
+der Kommentar-Lauf; das Review-Ereignis hatte ich dazugeschrieben, weil es in
+dieselbe Schublade zu passen schien — eine Verallgemeinerung über die Messung
+hinaus, und damit genau der Fehler, gegen den dieser Teil geschrieben ist. Die
+Gegenprobe liegt vor, zwei Läufe aus derselben Minute am 19.9.2026:
+
+| Lauf | Ereignis | `head_branch` | `head_sha` |
+|---|---|---|---|
+| 92 | `pull_request_review` | `claude/tender-edison-mc5jyr` | `bfa2cdd` (PR-Head) |
+| 93 | `issue_comment` | `main` | `a66698a` |
+
+Die Ereignistabelle von GitHub sagt dasselbe: `pull_request_review` trägt
+`GITHUB_REF: refs/pull/<N>/merge` wie `pull_request`, und der Satz «will only
+trigger a workflow run if the workflow file exists on the default branch» steht
+dort bei `issue_comment`, nicht bei den Review-Ereignissen. Am PR testbar sind
+also beide PR-Ereignisse; blind bleibt allein `issue_comment`.
 
 Zwei Handgriffe daraus:
 
-- **Eine Änderung an diesem Workflow ist erst nach dem Merge ganz scharf.** Wer
-  sie am PR prüft, prüft die `pull_request`-Hälfte. Das ist dieselbe Klasse wie
-  `schedule` bei den Live-Tests weiter unten, nur tückischer: Die andere Hälfte
-  bleibt nicht aus, sie läuft mit der alten Fassung.
+- **Für `issue_comment` ist eine Änderung an diesem Workflow erst nach dem Merge
+  scharf.** Wer sie am PR prüft, prüft die PR-Ereignisse; das Kommentar-Ereignis
+  läuft weiter mit der alten Fassung. Verwandt mit `schedule` bei den Live-Tests
+  weiter unten, nur tückischer: Dort bleibt die andere Hälfte aus, hier läuft
+  sie falsch.
 - **Ein so getöteter Lauf darf erneut gestartet werden.** Er ist an einer
   Kollision gestorben, nicht an einem Befund — derselbe Fall wie ein verlorener
   Runner, und keine Wiederholung gegen eine Absage. Am 19.9. um 07:08 setzte
   Attempt 2 des Laufs 35372017233 den Check-Run auf `success`, ohne den Head zu
   ändern; der Codex-Review auf `5c08df8` blieb damit gültig.
+
+**Und `false` heisst nicht «keine abgebrochenen Läufe in der Liste».** Am 19.9.
+standen mit `false` auf beiden Seiten vier Läufe derselben Gruppe gleichzeitig
+an: 90 (`pull_request`), 91/93/94 (`issue_comment`), 92
+(`pull_request_review`). Abgebrochen wurden 91, 92 und 93 — alle drei, während
+sie *warteten*; der laufende 90 kam durch, und 94 lief danach. Das ist die
+Mechanik aus dem #117-Befund in Reinform: Ein wartender Lauf fällt, sobald ein
+weiterer derselben Gruppe dazukommt. Ein so abgeräumter Lauf hat aber nie einen
+Job gestartet und hinterlässt deshalb **keinen** Check-Run am PR — die Liste von
+#119 blieb 7/7 grün. Ein abgebrochener Lauf in der Actions-Liste ist also nicht
+dasselbe wie ein abgebrochener Check-Run am PR; nur der zweite kostet etwas.
 
 **Was hier kurz als Tatsache stand und falsch war:** dass ein abgebrochener Run
 `mergeable_state` auf `unstable` setzt. Geschlossen aus #116, wo beides

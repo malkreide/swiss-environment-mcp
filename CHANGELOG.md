@@ -12,13 +12,29 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   `cancel-in-progress: false` bereits im PR, und der Gate-Lauf von #118 wurde
   trotzdem abgeräumt (17:02:50 gestartet, 17:04:06 `cancelled`). Das sah nach
   einem gescheiterten Fix aus und war eine Versionsschere: Bei `pull_request`
-  nimmt GitHub die Workflow-Datei aus dem PR, bei `issue_comment` und
-  `pull_request_review` aus dem **Default-Branch** — dort stand noch `true`.
+  nimmt GitHub die Workflow-Datei aus dem PR, bei `issue_comment` aus dem
+  **Default-Branch** — dort stand noch `true`.
   Der Kommentar-Lauf mit der alten Fassung tötete den PR-Lauf mit der neuen,
   denn die Concurrency-Gruppe verbindet die Fassungen, sie trennt sie nicht.
 
-  Zwei Folgerungen stehen dabei: Eine Änderung an diesem Workflow ist erst nach
-  dem Merge ganz scharf — wer sie am PR prüft, prüft die `pull_request`-Hälfte;
+  **Korrigiert nach einem Codex-Befund auf #119 (P2):** Hier stand
+  `pull_request_review` mit in der Aufzählung. Gemessen war nur der
+  Kommentar-Lauf; das Review-Ereignis war dazugeschrieben. Gegenprobe vom 19.9.,
+  zwei Läufe aus derselben Minute — Lauf 92 (`pull_request_review`) auf
+  `head_branch: claude/tender-edison-mc5jyr`, `head_sha: bfa2cdd`; Lauf 93
+  (`issue_comment`) auf `main`, `a66698a`. GitHubs Ereignistabelle führt für
+  `pull_request_review` ebenfalls `refs/pull/<N>/merge` und den
+  Default-Branch-Vorbehalt nur bei `issue_comment`.
+
+  Dieselbe Messung zeigt, dass `false` nicht «keine abgebrochenen Läufe»
+  bedeutet: Vier Läufe derselben Gruppe standen an, drei fielen — alle drei,
+  während sie *warteten*, der laufende kam durch. Ein wartend abgeräumter Lauf
+  startet keinen Job und hinterlässt keinen Check-Run; die Liste von #119 blieb
+  7/7 grün.
+
+  Zwei Folgerungen stehen dabei: Für `issue_comment` ist eine Änderung an diesem
+  Workflow erst nach dem Merge scharf — wer sie am PR prüft, prüft die
+  PR-Ereignisse;
   das ist dieselbe Klasse wie `schedule` bei den Live-Tests, nur tückischer,
   weil die andere Hälfte nicht ausbleibt, sondern mit der alten Fassung läuft.
   Und ein so getöteter Lauf darf erneut gestartet werden: Er ist an einer
