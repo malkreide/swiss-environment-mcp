@@ -7,6 +7,53 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Hinzugefügt
 
+- **`main` ist geschützt — das Gate wirkt erstmals wirklich** (`CLAUDE.md`,
+  Teil 2). Der Abschnitt hielt fest, dass `main` am 28.8.2026 `protected:
+  false` war und die grünen Häkchen damit informativ blieben. Gemessen am
+  18.9.: `protected: true`, und PR #118 stand mit pendendem `codex-gate` auf
+  `mergeable_state: blocked` statt wie zuvor auf `unstable` — der Merge-Button
+  ist gesperrt.
+
+  Was die Messung **nicht** hergibt, und darum steht es dabei: welche Checks
+  required sind. `protected: true` sagt nur, dass eine Protection existiert;
+  die Liste liest man über den Branch-Protection-Endpunkt, nicht über
+  `list_branches`. Dass `codex-gate` darunter ist, ist aus dem `blocked`
+  geschlossen — plausibel, aber ohne Positivkontrolle nicht belegt.
+
+- **`CLAUDE.md`: die Codex-Auslöserliste — und der Push, der keiner ist**
+  (Teil 1, «Dritter Weg, den Prüfer zu verlieren»). Der Abschnitt nannte
+  bisher nur einen Auslöser («beim Umschalten von Draft auf ready»). Es sind
+  drei, der Infokasten unter jedem Codex-Kommentar zählt sie vollständig auf —
+  und ein Push ist **nicht** dabei.
+
+  Die Folge ist die unangenehme Spiegelung des «zu schnell mergen»: Nach einem
+  Fix-Push bleibt `codex-gate` unbegrenzt auf gelb, bis jemand von Hand
+  nachfragt. Wer auf ein Grün wartet, wartet für immer; wer aufgibt und mergt,
+  mergt ungeprüft.
+
+  Gemessen am 18.9.2026 auf #118: Head `f2f0c0c` bekam einen Review
+  (Trigger-Spalte «Draft marked ready»), die zwei Fix-Pushes danach bekamen
+  **gar nichts** — keine Summary-Zeile, keine Reaktion, keine Ausfallmeldung.
+  Jeder Review der PRs #116–#118 trägt denselben Trigger; keiner stammt von
+  einem Push.
+
+  Drei weitere Beobachtungen stehen dabei, weil jede für sich zu einem
+  Fehlbefund geführt hat oder geführt hätte:
+
+  - **Stille ≠ Kontingent.** Ein erschöpftes Kontingent *schreibt* seine
+    Meldung, und zwar in elf Sekunden (Anfrage 13:55:15, Meldung 13:55:26).
+    Auf die Pushes kam nichts. Kein Kommentar heisst also nicht «Kontingent
+    weg», sondern «nichts angestossen» — zwei Zustände, die derselbe leere
+    Bildschirm anzeigt.
+  - **Die Anforderung in Prosa zu erwähnen, IST eine Anforderung.** Ein
+    erklärender Kommentar mit der Auslöser-Zeichenkette im Fliesstext (in
+    Backticks!) löste neun Sekunden später eine zweite Kontingent-Meldung aus.
+    Der Bot unterscheidet nicht zwischen Anfordern und Erklären.
+  - **Ein frisches Gelb ist kein Urteil.** Das Gate setzt beim Laufstart
+    sofort `pending`, bevor der Poll etwas gesehen hat. Am 18.9. sah dieses
+    Startgelb nach einem Gate-Defekt aus — 44 Sekunden später stand es
+    korrekt auf rot.
+
 - **Der Server stellt sich unter Spec 2026-07-28 überhaupt vor.** Gemessen,
   bevor etwas geändert wurde: Jede Antwort der modernen Ära trug
   `serverInfo = {"name": "swiss_environment_mcp", "version": ""}` — der
@@ -97,11 +144,23 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
   Der Job heisst jetzt `codex-gate: Status setzen`, also nach seiner Tätigkeit
   statt nach fremdem Urteil. Damit liest sich auch die zweite Richtung richtig:
-  `cancel-in-progress` räumt bei einem Poll-Fenster von 900 s fast jeden
-  laufenden Job ab, sobald Codex kommentiert; unter dem alten Namen sah dieser
-  `cancelled`-Run wie eine gescheiterte Prüfung aus.
+  `cancel-in-progress: true` räumte bei einem Poll-Fenster von 900 s fast jeden
+  laufenden Job ab, sobald Codex kommentierte, und unter dem alten Namen sah
+  dieser `cancelled`-Run wie eine gescheiterte Prüfung aus.
 
-  **Eine Behauptung dazu ist unterwegs falsifiziert worden.** Hier stand, ein
+  **Und die Abbrüche waren doch vermeidbar.** Hier stand, `cancel-in-progress:
+  false` verschiebe den Abbruch bloss vom laufenden auf den wartenden Lauf.
+  Ein Codex-Review auf diesem PR (P2) hat das widerlegt: GitHub räumt einen
+  wartenden Lauf erst ab, wenn ein *weiterer* derselben Gruppe dazukommt — bei
+  `false` braucht ein Abbruch also drei überlappende Läufe, bei `true` genügen
+  zwei. Der Fall auf #116 waren genau zwei. Zwei Messungen im Skript kippten
+  den Rest der Begründung: Die Poll-Schleife liest `pr.head.sha` in jeder
+  Iteration neu (ein laufender Lauf folgt einem Push von selbst) und bricht ab,
+  sobald ein Urteil feststeht. Das Gate steht jetzt auf
+  `cancel-in-progress: false` — Anstehen statt töten, was die
+  Gleichzeitigkeit genauso ausschliesst.
+
+  **Eine weitere Behauptung ist unterwegs falsifiziert worden.** Hier stand, ein
   abgebrochener Run setze zusätzlich `mergeable_state` auf `unstable` —
   geschlossen aus #116, wo ein abgebrochener Run und ein pendender Status
   gleichzeitig vorlagen. Die Gegenprobe auf #117 widerlegt es: `unstable` mit
@@ -110,15 +169,52 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   den Beitrag eines abgebrochenen Runs sagt keine der beiden Beobachtungen
   etwas. Zwei Ursachen, die immer zusammen auftreten, belegen keine von beiden.
 
-  **Die Abbrüche selbst bleiben, und das ist keine Nachlässigkeit:** Mit
-  `cancel-in-progress: false` räumt GitHub den *wartenden* Lauf ab statt den
-  laufenden — ein abgebrochener Run steht genauso in der Liste. In diesem
-  Zuschnitt gibt es keine Einstellung ohne ihn. Benannt ist besser als
-  wegkonfiguriert geglaubt. Begründung im Workflow-Kopf und in `CLAUDE.md`.
-
   Der Name steht in Anführungszeichen: Ein unquotierter YAML-Skalar mit «: »
   darin ist ein Syntaxfehler — und ein Workflow, der nicht parst, wird nicht
   rot, sondern *fällt aus*. Beim Schreiben genau einmal passiert.
+
+- **Nichts prüfte, ob die Workflows überhaupt parsen** (`tests/test_workflows.py`,
+  neu). Aufgefallen beim Schreiben des Eintrags darüber: `name: codex-gate:
+  Status setzen` ist ungültiges YAML, und gemerkt hat es nur ein manueller
+  Parser-Lauf. `test_dependencies.py` liest die Workflows als **Text**.
+
+  Der Ausfallmodus ist der unangenehme: **Ein Workflow, der nicht parst, wird
+  nicht rot — er fällt aus.** GitHub startet ihn nicht, es entsteht kein
+  Check-Run, das Gate fehlt einfach in der Liste. Nach Teil 1 von `CLAUDE.md`
+  sucht man dann zuerst den Merge-Konflikt, also an der falschen Stelle.
+
+  22 Tests, je Datei ein Fall statt einer Schleife — bei einem Fund will man
+  wissen, ob eine Datei kaputt ist oder alle. Gegengeprobt an den echten
+  Dateien: Der Fehler vom 18.9. wieder eingebaut lässt genau die zwei
+  `codex-gate.yml`-Fälle fallen und die übrigen fünf Workflows grün; eine
+  geleerte `ci.yml` lässt nur den Struktur-Test fallen — sie **parst** nämlich
+  (`yaml.safe_load("")` ist `None`), weshalb «parst» allein zu wenig ist und
+  `on:` und `jobs` mitgeprüft werden. Dazu eine Tabelle kaputter Schnipsel
+  samt Positivkontrolle, nach dem Vorbild von `test_dependencies.py`: ein
+  Prüfer, der alles ablehnt, bestünde eine Fehlertabelle ebenfalls.
+
+  `pyyaml>=6.0` im `[dev]`-Extra — Spanne, nicht exakter Pin: Es entscheidet,
+  ob gültiges YAML parst, und daran ändert ein Minor-Update nichts (bei ruff
+  ist der exakte Pin nötig, weil dort eine neue Version die *Ausgabe* ändert).
+
+  **Der Prüfer hatte selbst ein Loch, und es sass genau im Szenario, gegen das
+  er gebaut ist** — aufgedeckt von einem Codex-Review auf #118 (P2). PyYAML ist
+  YAML **1.1**: Dort wird das blanke `on:` zum Boolean `True` (die Schlüssel von
+  `ci.yml` sind `['name', True, 'jobs']`), auf `"on"` zu prüfen wäre also ein
+  Fehlalarm auf jedem Workflow. Die naheliegende Gegenrichtung — auf `True`
+  prüfen — ist aber die gefährliche: `on:`, `true:` und `yes:` landen alle auf
+  demselben Schlüssel, `1:` landet auf `1`, und `1 == True` ist in Python wahr.
+  Ein Workflow mit `true:` statt `on:` hat für GitHub **gar keinen Auslöser**
+  und läuft nie — die Zusicherung wäre grün geblieben.
+
+  Gelesen wird deshalb die *geschriebene* Form statt des aufgelösten Werts:
+  `yaml.compose` hält beim Knotenbaum an, wo ein Schlüssel-Skalar seinen Text
+  noch trägt (`'on'`, `'true'`, `'1'`). Gegengeprobt an einer echten Datei:
+  `security.yml` mit `true:` statt `on:` **parst einwandfrei** — der Parse-Test
+  bleibt zu Recht grün — und fällt jetzt im Struktur-Test. Vorher hätte nichts
+  sie gefangen. Dazu fünf Schreibweisen (`true`, `yes`, `1`, `On`, `ON`) mit
+  Positivkontrolle und ein Test, der sagt, wann die Umleitung über den
+  Knotenbaum wieder entfallen darf.
 
 - **`CLAUDE.md` nannte eine ruff-Version, die es seit zwei Bumps nicht mehr
   gab.** Der Abschnitt versprach «genau eine Quelle — `ruff==0.16.3` im
@@ -204,8 +300,10 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Gate haengt **dauerhaft** auf `pending`, obwohl geprueft wurde. Ein Dauerstall
   ist schlimmer als die Luecke, die der Anker schliessen soll.
 
-  Dass der `synchronize`-Lauf ausfaellt, ist dabei kein Randfall: Das eigene
-  `cancel-in-progress: true` macht genau das wahrscheinlich.
+  Dass der `synchronize`-Lauf ausfaellt, war dabei kein Randfall: Das eigene
+  `cancel-in-progress: true` machte genau das wahrscheinlich. (Seit dem
+  18.9.2026 steht dort `false`, siehe oben — der Anker bleibt trotzdem, er
+  haengt nicht an dieser Einstellung.)
 
   `head_seen_at` kommt jetzt aus den **Check-Suites** auf dem SHA — GitHub legt
   sie beim Push an, unabhaengig von jedem Lauf von uns. Das stimmt in beide

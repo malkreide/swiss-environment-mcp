@@ -42,10 +42,10 @@
 #     darauf nicht an». Die Checkliste behauptete eine Pruefung, die der Status
 #     ausdruecklich verneinte. Genau die Luege, gegen die dieser Workflow
 #     gebaut ist, nur eine Zeile tiefer.
-#   * ABGEBROCHEN, obwohl alles in Ordnung ist. `cancel-in-progress` raeumt
-#     einen laufenden Poll ab, sobald ein neues Signal eintrifft (unten
-#     ausfuehrlicher). Unter dem alten Namen las sich das als gescheiterte
-#     Pruefung.
+#   * ABGEBROCHEN, obwohl alles in Ordnung ist. Unter `cancel-in-progress:
+#     true` — so stand es bis 18.9.2026 — raeumte jedes neue Signal den
+#     laufenden Poll ab, und unter dem alten Namen las sich das als
+#     gescheiterte Pruefung. Zur Umstellung auf `false` unten mehr.
 #
 # Hier stand, ein abgebrochener Run setze ausserdem `mergeable_state` auf
 # `unstable`. Das war geschlossen, nicht gemessen, und die Messung hat es
@@ -59,12 +59,28 @@
 # nach dem, was Codex getan haben soll. Das Urteil steht im Commit-Status
 # `codex-gate` und nirgends sonst.
 #
-# Die Abbrueche selbst bleiben: Ein PR haelt genau einen Lauf, und bei einem
-# Poll-Fenster von `POLL_MAX_SECONDS` trifft fast jeder Codex-Kommentar einen
-# laufenden Job. `cancel-in-progress: false` verschiebt das nur — dann raeumt
-# GitHub den WARTENDEN Lauf ab statt den laufenden, und ein abgebrochener Run
-# steht genauso in der Liste. Es gibt in diesem Zuschnitt keine Einstellung
-# ohne ihn; benannt ist besser als wegkonfiguriert geglaubt.
+# Zu den Abbruechen selbst stand hier, sie seien unvermeidbar: `false`
+# verschiebe das nur vom laufenden auf den wartenden Lauf. Das war falsch, und
+# ein Codex-Review auf PR #117 hat es aufgedeckt (P2, 18.9.2026). GitHub raeumt
+# einen WARTENDEN Lauf erst ab, wenn ein weiterer derselben Gruppe dazukommt —
+# bei `false` braucht ein Abbruch also DREI ueberlappende Laeufe, bei `true`
+# genuegen zwei. Der beobachtete Fall auf #116 waren genau zwei
+# (`ready_for_review` plus der «Running»-Kommentar); mit `false` waere dort
+# nichts abgebrochen worden.
+#
+# Zwei Messungen haben den Rest der Begruendung ebenfalls gekippt:
+#
+#   * Die Schleife unten liest `pr.head.sha` in JEDER Iteration neu. Ein
+#     laufender Poll folgt einem neuen Push also von selbst; er haengt nicht am
+#     Head, mit dem er gestartet ist. Der Grund, einen Lauf beim Push zu
+#     toeten, faellt damit weg.
+#   * Sie bricht ab, sobald ein Urteil feststeht (`state !== 'pending'`). Ein
+#     Lauf sitzt das Fenster also nur ab, wenn wirklich kein Signal kommt — ein
+#     wartender Lauf wird in der Regel binnen Sekunden frei.
+#
+# `false` erreicht «je PR nur ein Lauf» damit durch Anstehen statt durch
+# Toeten, und verhindert die widerspruechliche Ueberschreibung genauso: Zwei
+# Laeufe derselben Gruppe laufen nie gleichzeitig.
 #
 # WAS NOCH FEHLT, DAMIT ES WIRKT
 # -------------------------------
@@ -113,7 +129,11 @@ concurrency:
   # Je PR nur ein Lauf: Ein zweiter wuerde denselben Status widerspruechlich
   # ueberschreiben, je nachdem welcher zuerst fertig wird.
   group: codex-gate-${{ github.event.pull_request.number || github.event.issue.number }}
-  cancel-in-progress: true
+  # Anstehen statt toeten. Das schliesst die Gleichzeitigkeit genauso aus, laesst
+  # aber einen Poll zu Ende laufen, der das Signal ohnehin gleich sieht — und
+  # hinterlaesst im Zwei-Lauf-Fall keinen abgebrochenen Check-Run. Begruendung
+  # samt Messungen im Kopf unter «Zu den Abbruechen selbst».
+  cancel-in-progress: false
 
 jobs:
   gate:
@@ -180,11 +200,17 @@ jobs:
             // Die Laufzeit dieses Jobs taugt dafuer NICHT (zweiter
             // Codex-Review, 28.8.2026, P1). Ein `issue_comment`-Lauf startet
             // zwangslaeufig NACH dem Kommentar, der ihn ausgeloest hat. Ist er
-            // der erste, der hier ankommt — weil der `synchronize`-Lauf
-            // abgebrochen wurde, und `cancel-in-progress` oben macht genau das
-            // wahrscheinlich —, laege der Anker hinter dem einzigen gueltigen
-            // Signal, und das Gate haenge dauerhaft auf `pending`. Ein
-            // Dauerstall ist schlimmer als die Luecke, die der Anker schliesst.
+            // der erste, der hier ankommt — der `synchronize`-Lauf kann
+            // ausgefallen sein —, laege der Anker hinter dem einzigen
+            // gueltigen Signal, und das Gate haenge dauerhaft auf `pending`.
+            // Ein Dauerstall ist schlimmer als die Luecke, die der Anker
+            // schliesst.
+            //
+            // Als das geschrieben wurde, machte das eigene
+            // `cancel-in-progress: true` genau diesen Ausfall wahrscheinlich.
+            // Seit dem 18.9.2026 steht dort `false` (Begruendung im Kopf), der
+            // haeufigste Weg in die Luecke ist also zu. Der Anker bleibt
+            // trotzdem: Er haengt nicht an dieser Einstellung.
             //
             // Die Check-Suite-Zeit stimmt in beide Richtungen: Ein Kommentar
             // zum VORIGEN Head liegt vor diesem Push und damit vor der Suite;

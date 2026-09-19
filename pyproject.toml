@@ -33,6 +33,12 @@ dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
     "respx>=0.21.0",
+    # Nur fuer `tests/test_workflows.py`: Ein Workflow, der nicht parst, wird
+    # nicht rot — er FAELLT AUS, und ein Gate verschwindet lautlos. Bewusst eine
+    # Spanne und kein exakter Pin: PyYAML entscheidet, ob gueltiges YAML parst,
+    # und daran aendert ein Minor-Update nichts. Der exakte Pin bei ruff hat
+    # einen anderen Grund — dort veraendert eine neue Version die Ausgabe.
+    "pyyaml>=6.0",
     # Exakter Pin, und die einzige Stelle, an der die ruff-Version steht. Als
     # hier eine Spanne stand, loeste `pip install -e ".[dev]"` auf die jeweils
     # neueste Version auf (gemessen: 0.16.3), waehrend die CI ihre eigene

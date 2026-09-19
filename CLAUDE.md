@@ -367,6 +367,58 @@ bis fünf Sekunden. Codex wird beim Umschalten von Draft auf ready ausgelöst un
 braucht danach Zeit; wer sofort mergt, hat das Häkchen gesetzt und den Review
 nicht abgewartet.
 
+### Dritter Weg: der Push, der keinen Review auslöst
+
+Der Absatz oben nennt einen Auslöser. Es sind drei, und der Infokasten unter
+jedem Codex-Kommentar zählt sie vollständig auf:
+
+```
+Reviews are triggered when you
+- Open a pull request for review
+- Mark a draft as ready
+- Comment "@codex review" or "@codex security review".
+```
+
+**Ein Push ist nicht dabei.** Ein `synchronize` löst *keinen* Review aus — nach
+einem Fix-Push bleibt das Gate also auf gelb, bis jemand von Hand nachfragt, und
+zwar unbegrenzt. Wer darauf wartet, dass es von selbst grün wird, wartet für
+immer; wer das Warten aufgibt und mergt, mergt ungeprüft. Das ist das
+Spiegelbild des «zu schnell mergen» von oben — dieselbe Lücke, von der anderen
+Seite betreten.
+
+Gemessen am 18.9.2026 auf `swiss-environment-mcp#118`: Head `f2f0c0c` bekam
+einen Review (Trigger-Spalte: «Draft marked ready»), danach zwei Fix-Pushes auf
+`6c96b1f` und `958f31e` — und für beide **gar nichts**: keine Summary-Zeile,
+keine Reaktion, keine Ausfallmeldung. Jeder beobachtete Review der PRs #116,
+#117 und #118 trägt in der Trigger-Spalte «Draft marked ready»; kein einziger
+stammt von einem Push.
+
+**Stille und Kontingent lassen sich dabei trennen.** Ein erschöpftes Kontingent
+*schreibt* seine Meldung, sobald ein Review angefordert wird, und zwar sofort:
+Anfrage 13:55:15, Meldung 13:55:26 — elf Sekunden. Auf die beiden Pushes kam
+dagegen nichts. Kein Kommentar heisst hier also nicht «Kontingent weg», sondern
+«es wurde nie etwas angestossen». Wer beides verwechselt, wartet auf ein
+Kontingent, das nie das Problem war.
+
+**Die Anforderung in Prosa zu erwähnen, IST eine Anforderung.** Am 18.9. stand
+in einem erklärenden Kommentar der Satz «sobald Kontingent da ist, die
+Review-Anforderung posten» — mit der Auslöser-Zeichenkette wörtlich darin, in
+Backticks und mitten im Fliesstext. Neun Sekunden später (Kommentar 13:57:27,
+Meldung 13:57:36) schrieb Codex eine zweite Kontingent-Meldung. Der Bot
+unterscheidet nicht zwischen Anfordern und Erklären, und Backticks schützen
+nicht. In Kommentaren also nur schreiben, wenn man es meint; sonst umschreiben.
+Hier war es folgenlos, weil das Kontingent ohnehin leer war — bei vorhandenem
+hätte es einen ungewollten Review zu einem beliebigen Zeitpunkt gestartet und
+aus demselben Topf bezahlt.
+
+**Und ein frisches Gelb ist noch kein Urteil.** `codex-gate` setzt den Status
+sofort beim Laufstart auf `pending`, bevor der Poll etwas gesehen hat. Ein
+gelber Status wenige Sekunden nach einem Auslöser ist deshalb der Startwert und
+kein Befund; das Urteil kommt bis zu `POLL_MAX_SECONDS` später. Am 18.9. sah
+dieses Startgelb nach einem Gate-Defekt aus («Kontingent-Meldung müsste rot
+setzen») — 44 Sekunden später stand es korrekt auf rot. Erst den Lauf abwarten,
+dann den Defekt behaupten.
+
 Das Kontingent hängt am Konto, nicht am Repo, und Code-Reviews haben einen
 eigenen Topf — nur GitHub-getriggerte Reviews zählen hinein. ChatGPT-Pläne
 fahren ein rollendes Fünf-Stunden-Fenster plus Wochenlimits; welches greift,
@@ -501,14 +553,25 @@ Häkchen, das lügt, ist schlimmer als ein rotes Kreuz, das man übersehen soll:
 Beim Kreuz schaut wenigstens noch jemand hin. Der Job heisst jetzt nach seiner
 Tätigkeit (`codex-gate: Status setzen`), nicht nach fremdem Urteil.
 
-Die zweite Richtung derselben Verwechslung: `cancel-in-progress` räumt einen
-laufenden Poll ab, sobald ein neues Signal eintrifft — bei einem Poll-Fenster
-von 900 s trifft fast jeder Codex-Kommentar einen laufenden Job. Der
-abgebrochene Lauf bleibt als `cancelled` in der Liste stehen und sieht aus wie
-eine gescheiterte Prüfung. Das ist kein Fehlschlag, und wegkonfigurieren lässt
-es sich nicht: Mit `cancel-in-progress: false` räumt GitHub den **wartenden**
-Lauf ab statt den laufenden, ein abgebrochener Run steht genauso da. Benannt ist
-besser als wegkonfiguriert geglaubt.
+Die zweite Richtung derselben Verwechslung: `cancel-in-progress: true` räumte
+einen laufenden Poll ab, sobald ein neues Signal eintraf — bei einem
+Poll-Fenster von 900 s traf das fast jeder Codex-Kommentar. Der abgebrochene
+Lauf blieb als `cancelled` in der Liste stehen und sah aus wie eine
+gescheiterte Prüfung.
+
+Hier stand, das sei unvermeidbar: `false` verschiebe den Abbruch nur vom
+laufenden auf den wartenden Lauf. **Auch das war falsch**, aufgedeckt von einem
+Codex-Review auf PR #117 (P2). GitHub räumt einen *wartenden* Lauf erst ab, wenn
+ein weiterer derselben Gruppe dazukommt — bei `false` braucht ein Abbruch also
+**drei** überlappende Läufe, bei `true` genügen **zwei**. Der beobachtete Fall
+auf #116 waren genau zwei (`ready_for_review` plus «Running»-Kommentar); mit
+`false` wäre dort nichts abgebrochen worden.
+
+Zwei Messungen kippten den Rest der Begründung: Die Poll-Schleife liest
+`pr.head.sha` in **jeder** Iteration neu — ein laufender Lauf folgt einem Push
+von selbst, der Grund ihn zu töten fällt weg — und sie bricht ab, sobald ein
+Urteil feststeht. Das Gate steht deshalb auf `cancel-in-progress: false`:
+Anstehen statt töten schliesst die Gleichzeitigkeit genauso aus.
 
 **Was hier kurz als Tatsache stand und falsch war:** dass ein abgebrochener Run
 `mergeable_state` auf `unstable` setzt. Geschlossen aus #116, wo beides
@@ -536,6 +599,16 @@ above settings». Ohne das bleibt der Merge-Button klickbar. Am 28.8.2026 war
 sechs grünen Häkchen waren informativ. Wer die Protection wegnimmt, nimmt
 das Gate weg, ohne dass eine Datei sich ändert.
 
+**Seit dem 18.9.2026 ist sie da:** `main` meldet `protected: true`, und PR #118
+stand mit pendendem `codex-gate` auf `mergeable_state: blocked` statt wie zuvor
+auf `unstable` — der Merge-Button ist also tatsächlich gesperrt. Was die
+Messung **nicht** hergibt: welche Checks required sind. `protected: true` sagt
+nur, dass eine Protection existiert; die Liste liest man über den
+Branch-Protection-Endpunkt, nicht über `list_branches`. Dass `codex-gate`
+darunter ist, ist aus dem `blocked` geschlossen und nicht belegt — für den
+Beleg fehlt die Positivkontrolle, nämlich ein PR, der nur an diesem einen
+Check hängt.
+
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
 wenn *gar kein* Check läuft, gilt dort der Merge-Konflikt-Verdacht. Beide
@@ -549,6 +622,36 @@ ist nicht grün, weil nichts zu beanstanden war, sondern weil nichts gefragt
 wurde. Also erst die Basis prüfen, dann den Merge-Konflikt vermuten.
 
 `draft-release.yml` ist kein Gate — nur `workflow_dispatch`.
+
+**Ein Workflow, der nicht parst, wird nicht rot — er faellt aus.** GitHub
+startet ihn gar nicht, es entsteht kein Check-Run, und in der Liste des PR
+fehlt er einfach; nach Teil 1 sucht man dann zuerst den Merge-Konflikt. Am
+18.9.2026 ist genau das um Haaresbreite passiert: `name: codex-gate: Status
+setzen` ist ungueltiges YAML (unquotierter Skalar mit «: »), und geprueft hat
+es im Repo nichts — `test_dependencies.py` liest die Workflows als *Text*.
+Seither hält `tests/test_workflows.py` beide Halften fest: dass jede Datei
+parst, und dass sie `on:` und `jobs` trägt. Das zweite ist nicht Zierde — eine
+geleerte Datei parst (`yaml.safe_load("")` ist `None`) und käme sonst durch.
+
+Dafür steht `pyyaml` im `[dev]`-Extra, als Spanne und nicht exakt gepinnt: Es
+entscheidet, ob gültiges YAML parst, und daran ändert ein Minor-Update nichts.
+
+**Den `on:`-Block nicht über `safe_load` suchen — in keiner der beiden
+Richtungen.** PyYAML ist YAML **1.1**, dort wird das blanke `on:` zum Boolean
+`True`; die Schlüssel von `ci.yml` sind `['name', True, 'jobs']`. Wer auf
+`"on"` prüft, baut sich also einen Fehlalarm auf jeden Workflow. Die
+naheliegende Gegenrichtung ist aber die gefährliche: `on:`, `true:` und `yes:`
+landen alle auf demselben Schlüssel `True`, `1:` landet auf `1`, und
+`1 == True` ist in Python wahr. Ein Workflow mit `true:` statt `on:` hat für
+GitHub **gar keinen Auslöser** und läuft nie — eine Prüfung auf `True` bliebe
+grün, also blind für genau das lautlose Verschwinden, um das es hier geht.
+Aufgedeckt von einem Codex-Review auf PR #118 (P2), nachdem die
+Fehlalarm-Richtung schon dokumentiert war.
+
+Gelesen wird deshalb die **geschriebene Form** statt des aufgelösten Werts:
+`yaml.compose` hält beim Knotenbaum an, wo ein Schlüssel-Skalar seinen Text
+noch trägt (`'on'`, `'true'`, `'1'`). `oberste_schluessel()` in
+`tests/test_workflows.py` macht genau das.
 
 Die Matrix setzt kein `fail-fast: false`: Eine rote 3.11 bricht 3.12 und 3.13
 ab, bevor sie etwas sagen.
