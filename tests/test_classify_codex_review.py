@@ -92,7 +92,8 @@ def test_befundlos_meldung_zaehlt_als_geprueft():
 
 
 @pytest.mark.parametrize(
-    "schluss", ["Swish!", "Delightful!", "Keep it up!", "More of your lovely PRs please."]
+    "schluss",
+    ["Swish!", "Delightful!", "Keep it up!", "Nice work!", "More of your lovely PRs please."],
 )
 def test_befundlos_erkennt_jeden_schlusssatz(schluss):
     """Der Schlusssatz wechselt bei jedem Lauf; stabil ist nur der Satz davor.
@@ -102,6 +103,40 @@ def test_befundlos_erkennt_jeden_schlusssatz(schluss):
     state, _ = classify(
         _payload(comments=[_comment(f"Codex Review: Didn't find any major issues. {schluss}")])
     )
+    assert state == REVIEWED
+
+
+# Woertlich der Body von swiss-environment-mcp#119, Kommentar 5740328133,
+# 19.9.2026 07:55:17 — nicht nachgebaut, sondern kopiert. Die Schnipsel oben
+# kodieren die Annahme des Autors; dieser hier kann sie widerlegen.
+BEFUNDLOS_ECHT = (
+    "Codex Review: Didn't find any major issues. Keep it up!\n"
+    "\n"
+    "**Reviewed commit:** `32cb7cc1b1`\n"
+    "\n"
+    "<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n"
+    "<br/>\n"
+    "\n"
+    # Im Original eine einzige lange Zeile; hier nur fuer die Zeilenlaenge
+    # zusammengesetzt, der Inhalt bleibt Zeichen fuer Zeichen derselbe.
+    "[Your team has set up Codex to review pull requests in this repo]"
+    "(https://chatgpt.com/codex/cloud/settings/general)."
+    " Reviews are triggered when you\n"
+    "- Open a pull request for review\n"
+    "- Mark a draft as ready\n"
+    '- Comment "@codex review".\n'
+    "\n"
+    "If Codex has suggestions, it will comment; otherwise it will react with \U0001f44d.\n"
+    "</details>"
+)
+
+
+def test_befundlos_echter_body_wird_erkannt():
+    """Die echte Meldung traegt mehr als den Satz: eine Commit-Zeile und einen
+    Infokasten. Eine Erkennung, die auf Prefix oder Gleichheit umgestellt wird,
+    faellt hier — an den Schnipseln oben nicht.
+    """
+    state, _ = classify(_payload(comments=[_comment(BEFUNDLOS_ECHT)]))
     assert state == REVIEWED
 
 

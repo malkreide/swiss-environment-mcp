@@ -7,6 +7,33 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Hinzugefügt
 
+- **Die Befundlos-Meldung ist nicht weggefallen** (`CLAUDE.md` Teil 1,
+  `scripts/classify_codex_review.py`-Kopf). Aus dem neuen Infokasten war
+  geschlossen worden, ein sauberer Codex-Lauf hinterlasse nur noch eine
+  Reaktion und «Didn't find any major issues» schreibe niemand mehr. Gemessen
+  am 19.9.2026: Es ist **beides**. #118 (18.9., 17:05:24) und #119 (19.9.,
+  07:55:17) tragen die Meldung im Text, jeweils zusätzlich zu einer Summary,
+  die für denselben Commit `Completed` meldet.
+
+  Der Fehler war, einen Infokasten als vollständige Beschreibung zu lesen: Er
+  zählt auf, was Codex tut, nicht was er nicht mehr tut. Praktisch hätte er
+  gekostet, dass `MARK_NO_FINDING` als Altlast erscheint — dabei ist es ein
+  aktiver Nachweisweg des Gates.
+
+  Drei Beobachtungen stehen dabei. **Die 👍-Reaktion kommt**, aber auf den
+  **Pull Request**, nicht auf einen Kommentar: je eine auf #118 und #119,
+  sämtliche Kommentar-Reaktionen 0, und als Negativkontrolle #117 — letzter
+  Review mit Befund, keine Reaktion. Wer reagiert hat, ist **nicht** messbar;
+  `issue_read` liefert Zähler, keine Urheber. **Die Meldung nennt den
+  geprüften Commit** («Reviewed commit: `32cb7cc1b1`»), während das Gate ihre
+  Frische weiterhin über `created_at` bestimmt — notiert, nicht geändert. Und
+  **zwei Infokästen laufen nebeneinander**, alter und neuer, Minuten
+  auseinander im selben PR.
+
+  Die ältere Notiz zum 23.8. («Meldung ja, Reaktion nein») steht deshalb unter
+  Vorbehalt: Wo damals gesucht wurde, ist nicht festgehalten, und auf
+  Kommentarebene wäre auch heute nichts zu finden.
+
 - **Die Concurrency-Einstellung wirkt nicht dort, wo sie steht**
   (`CLAUDE.md` Teil 2, `codex-gate.yml`-Kopf). Am 18.9. lag
   `cancel-in-progress: false` bereits im PR, und der Gate-Lauf von #118 wurde
