@@ -77,8 +77,20 @@ und wurde deshalb gestrichen. Inzwischen ist der Fall GEMESSEN — an #122:
     Review-Objekt. Die Tabelle war der einzige Nachweis.
 
 Ein sauberer Lauf kann also beides hinterlassen (#118, #119: Text UND Tabelle)
-oder nur die Tabelle (#122). Beides kommt vor; `MARK_NO_FINDING` und die
-Tabelle sind zwei Wege, und keiner von beiden ist verzichtbar. Wodurch sich die
+oder nur die Tabelle (#122).
+
+Belegt ist damit GENAU EINE Richtung: Die Tabelle ist unverzichtbar, denn auf
+#122 war sie der einzige Nachweis. Fuer `MARK_NO_FINDING` gilt das NICHT — wo
+der Text auftrat, lag die Tabelle daneben, diese Laeufe waeren also auch ohne
+ihn gruen geworden. Ein Lauf, in dem der Text der einzige Nachweis ist, wurde
+unter dem neuen Format nicht beobachtet.
+
+Das heisst nicht, dass er weg kann: Nicht beobachtet ist nicht ausgeschlossen,
+und der Text kommt weiterhin vor. Er bleibt, weil ein zweiter Nachweisweg
+billig ist und sein Fehlen erst auffiele, wenn ein Merge daran haengt — das ist
+eine Abwaegung, keine Messung, und steht deshalb als solche da. Wer ihn
+entfernen will, braucht die Gegenprobe: einen sauberen Lauf ganz ohne Tabelle.
+Wodurch sich die
 Faelle unterscheiden, ist OFFEN: #118 und #119 hatten auf demselben PR zuvor
 Befunde und wurden von Hand angefordert, #122 lief als erster Review des PR auf
 «Draft marked ready». Drei Beobachtungen mit zwei verschiedenen Unterschieden
