@@ -731,10 +731,28 @@ ein PR, bei dem **nur dieser Status** offen ist. Ein Draft liefert ihn frei
 Haus, denn dort beendet sich der Gate-Job sofort («PR ist ein Draft»), sein
 Check-Run wird grün, und der Commit-Status bleibt gelb.
 
-Die Kontrolle dazu ist historisch: PR #117 stand am 18.9. in genau dieser Lage —
-Draft, alle Check-Runs grün, `codex-gate` pending — auf `unstable`. Ein Draft
-ist also nicht von sich aus `blocked`. Wer heute in derselben Lage `blocked`
-misst, hat den Beleg: Das einzige offene Signal ist dann der Status.
+Gemessen am 19.9.2026 an PR #124, zwei Zustände:
+
+| Zustand | Check-Runs | `codex-gate` | `mergeable_state` |
+|---|---|---|---|
+| A — Draft | 6/6 grün | pending | **blocked** |
+| B — ready, nach Review | 6/6 grün | success | **clean** |
+
+**Was B ausschliesst:** eine Genehmigungspflicht und einen required Kontext,
+der auf einem Doku-PR gar nicht berichtet — mit beidem wäre `clean` unmöglich.
+Das ist schon mehr, als `protected: true` je hergab.
+
+**Was A allein nicht trägt**, und ein Codex-Review auf diesem PR hat genau
+darauf gezeigt: Zwischen A und B ändern sich **zwei** Grössen, der Status und
+die Draft-Eigenschaft. Die historische Kontrolle — PR #117 stand am 18.9. in
+Lage A auf `unstable`, ein Draft ist also nicht von sich aus `blocked` — lief
+unter dem **alten** Ruleset und taugt deshalb nicht.
+
+**Die einzelne Variable liefert ein dritter Zustand,** und ihn herzustellen
+kostet nur Geduld: ein **ready** PR nach einem Push. Ein Push löst keinen
+Review aus (Teil 1), der Poll läuft also die vollen `POLL_MAX_SECONDS` = 900 s
+leer, danach ist der Job-Check-Run grün und der Status weiterhin nicht. Gegen B
+unterscheidet sich dann genau eine Grösse.
 
 **Und dabei ist noch etwas anderes passiert.** Seit derselben Änderung melden
 *sämtliche* Branches `protected: true`, nicht nur `main`; am Vormittag standen
