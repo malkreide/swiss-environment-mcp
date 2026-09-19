@@ -55,6 +55,14 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   dritten Mal auftrat, ist der eigentliche Befund: Eine geänderte Tatsache
   nachzuziehen heisst suchen, nicht erinnern.
 
+  **Und ein vierter Befund (#121, P2) zeigte, dass auch das noch zu wenig
+  war.** Meine Suche lief über die *Formulierungen* («keine Commit-Angabe»,
+  «kein Text mehr») und übersah deshalb eine Stelle, die dasselbe anders sagt:
+  «die uebrigen Meldungen nur ein `created_at`». Gesucht werden muss über den
+  **Begriff** — hier `created_at` —, nicht über den Satz, in dem er das letzte
+  Mal stand. Die Zeile sagt jetzt, dass diese Meldungen über `created_at`
+  *datiert werden*, statt zu behaupten, sie nennten keinen Commit.
+
 - **Die Concurrency-Einstellung wirkt nicht dort, wo sie steht**
   (`CLAUDE.md` Teil 2, `codex-gate.yml`-Kopf). Am 18.9. lag
   `cancel-in-progress: false` bereits im PR, und der Gate-Lauf von #118 wurde
