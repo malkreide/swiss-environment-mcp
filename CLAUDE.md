@@ -718,12 +718,30 @@ weil der Job immer mit 0 endet. Erzwungen wird so «der Job ist gelaufen», nich
 Repo-Einstellung statt im Jobnamen. In die Required-Liste gehört der Kontext
 `codex-gate`.
 
-Die Grenze bleibt: Die Messung zeigt, dass dieser eine Kontext required ist,
-nicht dass er der einzige ist. Ob `codex-gate` schon danebensteht, trennt erst
-ein PR, bei dem nur dieser Status rot ist — er war die ganze Zeit grün. Und
-`protected: true` aus `list_branches` sagt weiterhin nur, *dass* eine Protection
-existiert; die Liste selbst liegt hinter dem Branch-Protection-Endpunkt, den das
-hier verfügbare Werkzeug nicht anbietet.
+Die Grenze blieb dabei: Die Messung zeigt, dass dieser eine Kontext required
+ist, nicht dass er der einzige ist. Und `protected: true` aus `list_branches`
+sagt weiterhin nur, *dass* eine Protection existiert; die Liste selbst liegt
+hinter dem Branch-Protection-Endpunkt, den das hier verfügbare Werkzeug nicht
+anbietet.
+
+**Am 19.9.2026 hat der Maintainer `codex-gate` ergänzt.** Das ist zunächst eine
+Aussage und keine Messung — ablesen lässt sich die Required-Liste hier nach wie
+vor nicht. Getrennt wird sie über den Fall, den der Absatz oben schon benennt:
+ein PR, bei dem **nur dieser Status** offen ist. Ein Draft liefert ihn frei
+Haus, denn dort beendet sich der Gate-Job sofort («PR ist ein Draft»), sein
+Check-Run wird grün, und der Commit-Status bleibt gelb.
+
+Die Kontrolle dazu ist historisch: PR #117 stand am 18.9. in genau dieser Lage —
+Draft, alle Check-Runs grün, `codex-gate` pending — auf `unstable`. Ein Draft
+ist also nicht von sich aus `blocked`. Wer heute in derselben Lage `blocked`
+misst, hat den Beleg: Das einzige offene Signal ist dann der Status.
+
+**Und dabei ist noch etwas anderes passiert.** Seit derselben Änderung melden
+*sämtliche* Branches `protected: true`, nicht nur `main`; am Vormittag standen
+die `claude/*`-Branches noch auf `false`. Das Ruleset greift also breiter als
+`main`. Was es dort erzwingt, ist ungemessen — praktisch zu beachten ist, dass
+ein Force-Push auf einen Arbeitsbranch, wie ihn ein Rebase braucht, daran
+scheitern kann.
 
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
