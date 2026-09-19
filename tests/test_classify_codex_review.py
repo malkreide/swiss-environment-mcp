@@ -92,7 +92,8 @@ def test_befundlos_meldung_zaehlt_als_geprueft():
 
 
 @pytest.mark.parametrize(
-    "schluss", ["Swish!", "Delightful!", "Keep it up!", "More of your lovely PRs please."]
+    "schluss",
+    ["Swish!", "Delightful!", "Keep it up!", "Nice work!", "More of your lovely PRs please."],
 )
 def test_befundlos_erkennt_jeden_schlusssatz(schluss):
     """Der Schlusssatz wechselt bei jedem Lauf; stabil ist nur der Satz davor.
@@ -102,6 +103,65 @@ def test_befundlos_erkennt_jeden_schlusssatz(schluss):
     state, _ = classify(
         _payload(comments=[_comment(f"Codex Review: Didn't find any major issues. {schluss}")])
     )
+    assert state == REVIEWED
+
+
+def _befundlos_echt(commit: str = HEAD[:10]) -> str:
+    """Woertlich der Body von swiss-environment-mcp#119, Kommentar 5740328133,
+    19.9.2026 07:55:17 — nicht nachgebaut, sondern kopiert; einsetzbar ist nur
+    der Commit. Die Schnipsel oben kodieren die Annahme ihres Autors.
+    """
+    return (
+        "Codex Review: Didn't find any major issues. Keep it up!\n"
+        "\n"
+        f"**Reviewed commit:** `{commit}`\n"
+        "\n"
+        "<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n"
+        "<br/>\n"
+        "\n"
+        # Im Original eine einzige lange Zeile; hier nur fuer die Zeilenlaenge
+        # zusammengesetzt, der Inhalt bleibt Zeichen fuer Zeichen derselbe.
+        "[Your team has set up Codex to review pull requests in this repo]"
+        "(https://chatgpt.com/codex/cloud/settings/general)."
+        " Reviews are triggered when you\n"
+        "- Open a pull request for review\n"
+        "- Mark a draft as ready\n"
+        '- Comment "@codex review".\n'
+        "\n"
+        "If Codex has suggestions, it will comment; otherwise it will react "
+        "with \U0001f44d.\n"
+        "</details>"
+    )
+
+
+def test_befundlos_echter_body_wird_erkannt():
+    """Die echte Meldung traegt mehr als den Satz: eine Commit-Zeile und einen
+    Infokasten. Eine Erkennung, die auf Prefix oder Gleichheit umgestellt wird,
+    faellt hier — an den Schnipseln oben nicht.
+
+    Der Commit im Text ist hier der Head des Payloads. Der Fall, in dem er es
+    nicht ist, steht bewusst im Test darunter und nicht in diesem.
+    """
+    state, _ = classify(_payload(comments=[_comment(_befundlos_echt())]))
+    assert state == REVIEWED
+
+
+def test_befundlos_fuer_fremden_commit_faellt_heute_nicht_auf():
+    """Bekannte Luecke, festgehalten statt verschwiegen.
+
+    Seit dem 18.9.2026 nennt die Befundlos-Meldung den geprueften Stand. Die
+    Einordnung liest ihn NICHT — sie datiert die Meldung ueber `created_at`
+    gegen den Head-Zeitpunkt. Eine Meldung fuer einen FREMDEN Commit, die nach
+    dem Head eintrifft, gilt deshalb als Nachweis fuer diesen Head.
+
+    Dieser Test behauptet nicht, das sei richtig; er haelt fest, was heute
+    gilt. Wer die Commit-Zeile auswertet, faellt hier und aendert ihn bewusst —
+    so soll eine bekannte Luecke sich melden, statt still zu bleiben.
+    Aufgedeckt von einem Codex-Review auf PR #120 (P2).
+    """
+    fremd = _befundlos_echt("32cb7cc1b1")
+    assert HEAD[:10] not in fremd
+    state, _ = classify(_payload(comments=[_comment(fremd, created_at=T_AFTER)]))
     assert state == REVIEWED
 
 

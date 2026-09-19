@@ -62,12 +62,26 @@ swiss-environment-mcp#104, Head `5147312`: um 06:50:52
 
 und um 06:52:29 derselbe Kommentar mit `✅ **Completed** …`. Der Infokasten sagt
 neu: «Codex reacts with 👀 while any review is running, comments if it has
-suggestions, and reacts with 👍 once all reviews finish with no findings.» Ein
-befundloser Lauf hinterlaesst danach ueberhaupt keinen Text mehr, sondern eine
-Reaktion — die Befundlos-Meldung faellt als Signal weg. Ohne die Tabelle bliebe
-jeder saubere PR ungruen; an #104 hat das Gate den neuen Kommentar als
-unbekannten Text eingeordnet und rot gesetzt, was fuer einen LAUFENDEN Review
-schlicht falsch ist.
+suggestions, and reacts with 👍 once all reviews finish with no findings.» An
+#104 hat das Gate den neuen Kommentar als unbekannten Text eingeordnet und rot
+gesetzt, was fuer einen LAUFENDEN Review schlicht falsch ist — ohne die Tabelle
+bliebe ausserdem jeder saubere PR ungruen.
+
+Hier stand aus diesem Kasten geschlossen, ein befundloser Lauf hinterlasse
+keinen Text mehr, und die Befundlos-Meldung falle als Signal weg. DAS IST
+FALSCH — es ist beides. Gemessen am 19.9.2026: swiss-environment-mcp#118 am
+18.9. um 17:05:24 und #119 am 19.9. um 07:55:17, beide mit «Didn't find any
+major issues» IM TEXT und beide zusaetzlich zu einer Summary, die fuer denselben
+Commit `Completed` meldet. Die 👍-Reaktion kommt auch — aber auf den PULL
+REQUEST, nicht auf einen Kommentar (Kommentar-Reaktionen: 0; Negativkontrolle
+#117 mit Befund: keine Reaktion).
+
+`MARK_NO_FINDING` unten ist also KEIN Altlastpfad, sondern ein aktiver
+Nachweisweg. Wer ihn auf jene Prosa hin entfernt, nimmt dem Gate ein
+funktionierendes Signal. Und die Meldung nennt inzwischen den geprueften Stand
+selbst («Reviewed commit: `32cb7cc1b1`»); ihre Frische haengt hier noch am
+`created_at`-Vergleich, obwohl der Commit im Text steht — ungenutzt, aber
+bekannt.
 
 Die Tabelle ist dabei das bessere Signal als jeder Zeitstempel: Sie nennt den
 geprueften Commit selbst. Die Frische einer Summary haengt deshalb an ihrer

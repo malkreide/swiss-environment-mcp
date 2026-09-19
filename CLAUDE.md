@@ -255,10 +255,18 @@ ohne dass jemand hineingesehen hat, und am 22.8. noch einmal 43.
   ```
 
   Der Schlusssatz wechselt bei jedem Lauf («Delightful!», «Keep it up!»,
-  «More of your lovely PRs please.»); stabil ist nur der Satz davor. Der
-  Infokasten, den Codex unter jeden Review setzt, behauptet weiterhin eine
-  Reaktion («otherwise it will react with 👍») — am 23.8. kam in sechs Repos
-  die Meldung und in keinem die Reaktion. Der Kasten ist keine Quelle.
+  «Nice work!», «More of your lovely PRs please.»); stabil ist nur der Satz
+  davor. Seit dem 18.9.2026 steht darunter zusätzlich der geprüfte Stand
+  («Reviewed commit: `5c08df8ff0`») — damit lässt sich diese Meldung, anders
+  als früher, einem Head zuordnen.
+
+  Der Infokasten behauptet eine Reaktion («otherwise it will react with 👍»);
+  am 23.8. kam in sechs Repos die Meldung und in keinem die Reaktion. Der
+  Kasten ist keine Quelle — aber diese Gegenprobe ist schwächer, als sie
+  aussieht: Die Reaktion steht auf dem **Pull Request**, nicht am Kommentar
+  (gemessen am 19.9., Einzelheiten weiter unten), und wo am 23.8. gesucht
+  wurde, ist nicht festgehalten. Vor einem «kam nicht» also erst prüfen, ob am
+  richtigen Objekt gesucht wurde.
 - **Der PR ist ein Draft** — darauf läuft Codex nicht an.
 - **Das Kontingent ist weg** — dann schreibt er die Meldung oben.
 - **Für das Repo fehlt eine Environment** — dann schreibt er:
@@ -328,9 +336,47 @@ und um 06:52:29 derselbe Kommentar, dieselbe `id`, dasselbe `created_at`:
 
 Der Infokasten sagt neu: «Codex reacts with 👀 while any review is running,
 comments if it has suggestions, and reacts with 👍 once all reviews finish with
-no findings.» Damit fällt die Befundlos-Meldung als Text weg — ein sauberer Lauf
-hinterlässt nur noch eine Reaktion. Wer weiter auf «Didn't find any major
-issues» wartet, wartet auf einen Satz, den niemand mehr schreibt.
+no findings.»
+
+**Hier stand daraus geschlossen, die Befundlos-Meldung falle als Text weg und
+ein sauberer Lauf hinterlasse nur noch eine Reaktion. Das ist falsch — es ist
+beides.** Gemessen am 19.9.2026 an zwei Fällen, beide mit der neuen Summary
+daneben:
+
+| PR | Kommentar | Text |
+|---|---|---|
+| #118 | 18.9., 17:05:24 | «Codex Review: Didn't find any major issues. Nice work!» |
+| #119 | 19.9., 07:55:17 | «Codex Review: Didn't find any major issues. Keep it up!» |
+
+Beide **zusätzlich** zur Summary-Tabelle, die für denselben Commit `Completed`
+meldet. Der Fehler war, einen Infokasten als vollständige Beschreibung zu lesen:
+Er zählt auf, was Codex tut, nicht was er nicht mehr tut. Wer die
+Befundlos-Meldung daraufhin aus dem Klassifikator entfernt, nimmt dem Gate einen
+funktionierenden Nachweisweg weg — `MARK_NO_FINDING` in
+`scripts/classify_codex_review.py`.
+
+Drei Beobachtungen dazu:
+
+- **Die 👍-Reaktion kommt, aber auf den PULL REQUEST, nicht auf einen
+  Kommentar.** Auf #118 und #119 steht sie je einmal auf PR-Ebene, während
+  sämtliche Kommentar-Reaktionen auf 0 stehen. Negativkontrolle ist #117: Dort
+  hatte der letzte Review einen Befund, und der PR trägt **keine** Reaktion.
+  Nicht messbar ist, *wer* reagiert hat — `issue_read` liefert Zähler, keine
+  Urheber; die Zuordnung trägt allein diese Korrelation über drei PRs.
+- **Die Befundlos-Meldung nennt den geprüften Commit** («Reviewed commit:
+  `32cb7cc1b1`»). Das Gate datiert sie bisher über `created_at` gegen
+  `head_seen_at`, also über den schwächeren Zeitstempel, obwohl der Stand im
+  Text steht. Ungenutzt, aber notiert.
+- **Zwei Infokästen laufen nebeneinander.** Die Summary trägt den neuen
+  («reacts with 👀 … 👍»), die Befundlos-Meldung am selben Tag den alten
+  («otherwise it will react with 👍») — Minuten auseinander, im selben PR.
+
+Die ältere Notiz weiter oben, am 23.8. sei in sechs Repos die Meldung und in
+keinem die Reaktion gekommen, steht damit unter Vorbehalt: Wo damals gesucht
+wurde, ist nicht festgehalten, und auf Kommentarebene wäre auch heute nichts zu
+finden. Nachmessen lässt sie sich nicht. «Der Kasten ist keine Quelle» bleibt
+richtig, nur mit anderer Begründung als dort — dieser Absatz hat ihn eben selbst
+zu weit gelesen.
 
 Drei Folgen, und die dritte ist die unangenehme:
 
