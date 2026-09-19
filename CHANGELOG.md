@@ -5,6 +5,31 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.7.0] – 2026-09-19
+
+Dieses Release schliesst die Arbeit seit dem 03.08.2026 ab. **Die 21 Tools sind
+unverändert** — `tool-snapshot.json` ist bitgleich zu v0.6.0, keine Eingabe
+fällt weg, kein Name ändert sich. Geändert hat sich, wie der Server sich am
+Draht vorstellt, wen er aus dem Browser heranlässt und wie er auf Störungen
+antwortet.
+
+**BRECHEND, und der Aufwand ist eine Zeile:** Der CORS-Default stand auf `*` —
+jede Website im Netz durfte diesen Server aus dem Browser eines Besuchers
+aufrufen, und niemand hatte das gewählt. Neu ist fail-closed. **Wer den
+bisherigen Zustand braucht, setzt `MCP_CORS_ALLOW_ORIGINS=*`.** stdio- und
+Nicht-Browser-Clients sind unberührt; CORS regelt ausschliesslich Browser.
+
+Inhaltlich drei Stränge: die Migration auf **Spec 2026-07-28** (Vorstellung am
+Draht, Logging als Opt-in pro Anfrage, Frischehinweise auf den auflistenden
+Methoden), die **Härtung der Fehlerpfade** (Retry-Politik, 2xx ohne JSON, 3xx,
+Redirect-Verhalten) und der **Umbau der Nachweise** — aufgezeichnete Fixtures
+statt handgeschriebener Erfolgsantworten, mit Prüfsummen, die etwas prüfen.
+
+Der umfangreichere Teil des Abschnitts betrifft nicht den Server, sondern das
+Verfahren: ein Merge-Gate, das einen nachweislich geprüften Head verlangt, und
+eine Reihe von Korrekturen, bei denen jeweils eine Messung eine frühere
+Behauptung dieser Dokumentation widerlegt hat.
+
 ### Hinzugefügt
 
 - **Die Required-Liste ist ablesbar — der Agent-Proxy sperrt nicht, er
@@ -328,6 +353,97 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   in a different task» ab — eine Meldung, die nach einem Testfehler aussieht
   und keiner ist.
 
+- **Merge-Gate `codex-gate`.** Am 28.8.2026 lagen bei drei PRs zwischen «ready
+  for review» und Merge drei bis vier Sekunden (#98: 4 s, #99: 4 s,
+  fedlex-mcp#62: 3 s); `get_reviews` und `get_comments` kamen bei allen dreien
+  leer zurück. Codex wird beim Umschalten von Draft auf ready ausgelöst und
+  braucht danach Zeit — das Häkchen im PR-Template war gesetzt, der Review hatte
+  nicht stattgefunden.
+
+  Der neue Workflow setzt einen Commit-Status `codex-gate` auf den PR-Head und
+  wird nur grün, wenn Codex diesen Head nachweislich geprüft hat: Review-Objekt
+  ODER Befundlos-Meldung. Kontingent- und Environment-Meldung lassen ihn rot —
+  beide heissen ausdrücklich «nicht geprüft». Ein Draft steht auf gelb: Er ist
+  ohnehin nicht mergebar, und rot behauptet dort einen Defekt, den es nicht
+  gibt. Diese Unterscheidung stammt aus dem Gate selbst — seine ersten beiden
+  Läufe färbten zwei frische Draft-PRs rot und lösten je ein CI-Fehler-Signal
+  aus.
+
+  Bewusst **kein Timer**: Ein Gate, das nach N Minuten von selbst grün wird,
+  behauptet eine Prüfung, die es nicht gesehen hat — am 21./22.8. war das
+  Kontingent über eine Spanne von mindestens 25 h weg. Die Wartezeit ist die
+  Folge, nicht die Einstellung.
+
+  Die Einordnung steht in `scripts/classify_codex_review.py` neben ihrem Test,
+  nicht im YAML. **Wirksam wird das Gate erst, wenn `codex-gate` in den
+  Repo-Einstellungen als required status check auf `main` steht** — am 28.8.
+  war `main` `protected: false`, es gab überhaupt keinen Required Check.
+
+- **Frischehinweise auf den auflistenden Methoden** (SEP-2549, Spec
+  `2026-07-28`): `ttlMs` 300000, `cacheScope` `public`. Das SDK setzt beides von
+  sich aus auf «sofort veraltet, nie geteilt» — wer nichts übergibt, lässt jeden
+  Client bei jeder Verbindung neu auflisten, für Verzeichnisse, die per
+  Dekorator beim Import feststehen und nicht vom Aufrufer abhängen.
+
+  `resources/read` und `prompts/get` bleiben ohne Hinweis: das wäre eine
+  Zusicherung über den Inhalt statt über das Verzeichnis. Ein Test hält das an
+  der Antwort fest, ein zweiter an der Konfiguration.
+
+- **Protokoll-Gate: beide Spec-Aeren gepinnt und geprueft**
+  (`tests/test_protocol_version.py`). `mcp` 2.x bedient zwei Aeren ueber
+  denselben Server — den `initialize`-Handshake, der bei `2025-11-25`
+  deckelt, und den Pro-Request-Envelope, der `2026-07-28` erreicht.
+  `LATEST_PROTOCOL_VERSION` ist ein Alias auf die **moderne** Aera; wer nur
+  dagegen pinnt, laesst genau die Aera frei wandern, die heutige Clients
+  aushandeln. Beide sind jetzt einzeln gepinnt, ein Dependabot-Bump von
+  `mcp` kann keine davon still verschieben.
+
+  Ohne gemessenen Teil: dieser Server baut keine ASGI-App, durch die sich ein
+  `initialize` schicken liesse. Das Gate haengt deshalb an den SDK-Konstanten —
+  die schwaechere Form, im Docstring benannt statt verschwiegen.
+
+  Beide READMEs beschreiben die Aeren; ein Test haelt jede Sprache einzeln
+  dagegen — im Portfolio sind EN und DE desselben Repos schon dreimal
+  auseinandergelaufen, weil nur eine Fassung nachgezogen wurde.
+
+- **Die Pruefsummen im Fixture-Nachweis waren Zierde.** `PROVENANCE.md` fuehrt
+  je Datei einen SHA-256 — um genau einen Fall zu fangen: eine Aufzeichnung,
+  die nach dem Lauf von Hand nachgebessert wurde. Eine korrigierte Antwort ist
+  wieder eine erfundene, und von aussen ist ihr das nicht anzusehen.
+  Nachgerechnet hat sie kein Test. `test_die_pruefsumme_im_nachweis_stimmt`
+  tut es jetzt, ueber die Bytes auf der Platte statt ueber den Loader — genau
+  die hat der Recorder gehasht.
+
+- **Aufgezeichnete Fixtures statt handgeschriebener Erfolgs-Antworten
+  (`DRIFT-004`).** `tests/fixtures/` hält jetzt 20 echte Antworten, aufgezeichnet
+  mit `scripts/record_fixtures.py` an demselben Ort, an dem der Server sie
+  entgegennimmt (httpx-Response-Hook auf dem geteilten Client aus
+  `api_client.get_client()`) — gleicher User-Agent, gleiches Timeout, gleiche
+  DNS-Pinning-Schicht wie im Betrieb. Herkunft, Schlüssel, Auswahlregel, Grösse
+  und SHA-256 stehen je Datei in `tests/fixtures/PROVENANCE.md`; geladen wird
+  über `tests/fixture_data.py`, gefahren in `tests/test_recorded_fixtures.py`
+  (49 neue Tests).
+
+  Eine Aufzeichnung **je Abfrage**, nicht je Endpunkt: acht der zwanzig Dateien
+  liegen unter derselben Adresse und unterscheiden sich allein im
+  `layers`-Parameter. Zugeordnet wird beim Abspielen nach der Anfrage und nicht
+  nach der Reihenfolge — `env_noise_aircraft_registers` schickt in einem Aufruf
+  acht Abfragen.
+
+  Fünf Werkzeuge (`env_nabel_stations`, `env_hydro_stations`,
+  `env_hazard_overview`, `env_hazard_regions`, `env_hunting_species`) liefern
+  im Quellcode gepflegte Kataloge und schicken keine Anfrage. Sie haben deshalb
+  keine Aufzeichnung — und das ist kein Versehen, sondern eine Zusicherung:
+  `test_die_katalog_werkzeuge_fragen_nichts` fällt, sobald eines von ihnen doch
+  eine Quelle fragt.
+
+  Die Fehlerpfade — Timeout, 5xx, leere Trefferliste — bleiben handgeschrieben.
+  Sie lassen sich nicht auf Zuruf aufzeichnen und sind als Erfindung in Ordnung.
+
+- **`tests/test_retry_policy.py`** — deckt beide Pfade ab, jede Eigenschaft mit
+  Gegenprobe. Dazu ein Test, der die Eigenschaften der vendored copy als Menge
+  festhält: Wer eine davon verliert, hat die Kopien wieder getrennt.
+
 ### Geändert
 
 - **Logging ist unter 2026-07-28 ein Opt-in pro Anfrage (SEP-2577) — der
@@ -351,6 +467,109 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
   Verschwindet der Helfer mit `mcp` 3.x, ist hier ein Ersatz einzusetzen und
   nicht die Zeile zu entfernen; der Test benennt diese Entscheidung.
+
+- **Vendored copy `sparql_client.py` auf v1.2.0, und der `_sleep`-Alias
+  nachgezogen.** Die Kopien waren schon wieder auseinandergelaufen: `fedlex-mcp`
+  hatte den Alias, der `asyncio.sleep` nicht prozessweit entschärft, dieses Repo
+  nicht — bei unverändertem Marker `v1.1.0` auf beiden Seiten. Genau das Muster,
+  das `test_retry_policy.py` schon einmal festhielt. Beide Kopien sind wieder
+  byte-identisch (md5 `b877c137`), und der Kopf der Datei sagt jetzt, dass eine
+  Änderung den Marker mithebt.
+
+- **Eine 2xx-Antwort ohne JSON wurde als «Unerwarteter interner Fehler»
+  gemeldet.** In der nächtlichen Live-Suite vom 23.8.2026 (04:33 UTC) fielen
+  `test_nabel_current` und `test_bafu_datasets`; beide hingen an
+  `opendata.swiss/api/3/action/package_search`, das mit HTTP 2xx und einem Body
+  antwortete, der kein JSON war. `response.json()` stand nackt an fünf
+  Aufrufstellen, der `json.JSONDecodeError` fiel in den Sammelzweig von
+  `handle_http_error` — und der zeigt auf uns.
+
+  Die Meldung war damit nicht bloss unschön, sie verhinderte die Einordnung, die
+  CLAUDE.md bei rotem Live-Test verlangt: Sie nannte weder Status noch
+  Content-Type, an denen «Quelle kaputt» von «wir kaputt» hängt. `_json_body`
+  wirft jetzt `UpstreamContractError` mit Status, Content-Type und Body-Auszug;
+  `handle_http_error` benennt die Quelle. Der Body-Auszug geht vollständig ins
+  strukturierte Log, in die LLM-sichtbare Meldung nur Status und Content-Type —
+  beides Tatsachen der Quelle, kein Leak von Interna (OBS-002).
+
+- **Ein 3xx verschwand in «API-Anfrage fehlgeschlagen».** `follow_redirects=False`
+  ist eine Sicherheitsentscheidung (SEC-004), keine Panne — eine Quelle, die
+  neuerdings weiterleitet, hat den Vertrag geändert und verdient eine eigene
+  Meldung. Gemessen am 28.8.2026: `opendata.swiss/api/3/action/*` beantwortet
+  Browser-User-Agents mit 302 auf `ckan.opendata.swiss`, unseren User-Agent mit
+  200; der Weiterleitungspfad ist aktiv, nicht hypothetisch.
+
+  Eine explizite `is_redirect`-Prüfung in `_get_json` war zwischenzeitlich
+  eingebaut und wurde von der eigenen Gegenprobe wieder entfernt: Sie blieb
+  grün, wenn man sie herausnahm. `raise_for_status()` wirft auf 3xx bereits —
+  gemessen an httpx 0.27.0 und 0.28.1, den beiden Rändern unseres
+  `httpx>=0.27.0`.
+
+- **Die autouse-Fixture in `tests/test_transport_security.py` setzte einen
+  Default, den es nicht mehr gibt.** Sie «setzte zurück» auf
+  `mcp_cors_allow_origins = "*"` — seit der Umstellung auf fail-closed ist der
+  Default aber leer. Damit fuhr jeder Test dieser Datei eine Konfiguration, die
+  niemand hat, und beschrieb sich dabei als Aufräumen. Sie setzt jetzt `""`.
+
+  `test_the_cors_wildcard_default_is_not_copied` hing genau daran: seine
+  Zusicherung hielt nur, weil die Fixture die Wildcard mitlieferte, nicht weil
+  der Test sie prüfte. Er setzt sie jetzt selbst, heisst
+  `test_a_wildcard_origin_is_not_copied` und prüft zusätzlich, dass die echte
+  Origin daneben durchkommt — sonst wäre er auch gegen einen Filter grün, der
+  alles wegwirft.
+
+- **BRECHEND: `MCP_CORS_ALLOW_ORIGINS` stand auf `"*"`.** Jede Website im Netz
+  durfte diesen Server aus dem Browser eines Besuchers aufrufen, und niemand
+  hatte das gewählt — der Default war es, und `.env.example` lieferte die
+  Wildcard zusätzlich ausgeschrieben aus. Wer die Datei kopierte, hatte den
+  Zustand doppelt.
+
+  Gemessen vorher am zusammengebauten ASGI-Stack: ein Preflight von
+  `https://evil.example` bekam dasselbe `Access-Control-Allow-Origin: *` wie
+  `https://client.example`. Danach ohne Konfiguration gar kein
+  `Access-Control-Allow-Origin` mehr.
+
+  Die Wildcard bleibt erreichbar, muss aber verlangt werden. **Wer den
+  bisherigen Zustand behalten will, setzt `MCP_CORS_ALLOW_ORIGINS=*`.** stdio-
+  und Nicht-Browser-Clients sind unberührt — CORS regelt ausschliesslich
+  Browser.
+
+- **Die Wildcard-Warnung prüfte `origins == ["*"]`** — exakte Gleichheit.
+  `MCP_CORS_ALLOW_ORIGINS="https://a.test,*"` erlaubt bei Starlette ebenso jede
+  Origin (`allow_all_origins`), rutschte aber still durch: die Liste war ja
+  nicht *gleich* `["*"]`. Genau diese Mischform schreibt man hin, wenn man eine
+  Origin ergänzt und die Wildcard stehen lässt. Die Prüfung fragt jetzt
+  `"*" in origins`.
+
+- **Der leere Fall war stumm.** Fail-closed ist richtig, aber nicht
+  selbsterklärend; wer einen Browser erwartet und keinen bekommt, findet den
+  Grund jetzt als `cors_no_origins` im Log statt im Quelltext.
+
+- **Retry-Politik des LINDAS-Pfads: begrenzt, gestreut, gehorsam
+  (`ARCH-014`).** `lindas/client.py` hat eine eigene Schleife und war von der
+  Reparatur der vendored copy nicht berührt.
+
+  | Eigenschaft | Vorher | Jetzt |
+  |---|---|---|
+  | Wiederholbare Status | `{429, 502, 503, 504}` — **500 fehlte** | `{429, 500, 502, 503, 504}` |
+  | Netzfehler | `ConnectError`, `ReadError` | zusätzlich die Oberklasse `RequestError` |
+  | Jitter | keiner — feste Leiter 2/4/8 s | gestreut in `[0.5x, 1.5x]` |
+  | `Retry-After` | nicht gelesen | gelesen, schlägt die eigene Kurve |
+  | Deckel | keiner | `MAX_DELAY_S`, **nach** dem Jitter |
+  | Zeitbudget | keines | `TOTAL_BUDGET_S = 45.0` an `asyncio.timeout` |
+
+  Die Helfer kommen aus dem vendorierten `sparql_client` statt aus einer
+  zweiten Kopie — sonst hätte dieser Server jetzt zwei Retry-Kurven, die
+  wieder auseinanderlaufen können.
+
+  **500 fehlte, und das ist kein Detail.** Ein überlastetes Gateway antwortet
+  nicht immer mit 502; `ARCH-014` nennt die wiederholbare Menge als 5xx, 429,
+  Timeout und Verbindungsfehler.
+
+  **`QUERY_TIMEOUT_SECONDS` war nie ein Budget.** httpx begrenzt pro Operation,
+  und sein Read-Timeout beginnt mit jedem Chunk von vorn. Vier Versuche gegen
+  einen Endpunkt, der die vollen 45 s braucht, sind drei Minuten in einem
+  Tool-Aufruf, und `DEFAULT_MAX_ATTEMPTS` sagt das nirgends.
 
 ### Behoben
 
@@ -569,36 +788,6 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   auf `pending`, Codex lief an, und der Befund kam an einem PR heraus, der
   ohne dieses Gate in vier Sekunden gemergt worden waere.
 
-### Hinzugefügt
-
-- **Merge-Gate `codex-gate`.** Am 28.8.2026 lagen bei drei PRs zwischen «ready
-  for review» und Merge drei bis vier Sekunden (#98: 4 s, #99: 4 s,
-  fedlex-mcp#62: 3 s); `get_reviews` und `get_comments` kamen bei allen dreien
-  leer zurück. Codex wird beim Umschalten von Draft auf ready ausgelöst und
-  braucht danach Zeit — das Häkchen im PR-Template war gesetzt, der Review hatte
-  nicht stattgefunden.
-
-  Der neue Workflow setzt einen Commit-Status `codex-gate` auf den PR-Head und
-  wird nur grün, wenn Codex diesen Head nachweislich geprüft hat: Review-Objekt
-  ODER Befundlos-Meldung. Kontingent- und Environment-Meldung lassen ihn rot —
-  beide heissen ausdrücklich «nicht geprüft». Ein Draft steht auf gelb: Er ist
-  ohnehin nicht mergebar, und rot behauptet dort einen Defekt, den es nicht
-  gibt. Diese Unterscheidung stammt aus dem Gate selbst — seine ersten beiden
-  Läufe färbten zwei frische Draft-PRs rot und lösten je ein CI-Fehler-Signal
-  aus.
-
-  Bewusst **kein Timer**: Ein Gate, das nach N Minuten von selbst grün wird,
-  behauptet eine Prüfung, die es nicht gesehen hat — am 21./22.8. war das
-  Kontingent über eine Spanne von mindestens 25 h weg. Die Wartezeit ist die
-  Folge, nicht die Einstellung.
-
-  Die Einordnung steht in `scripts/classify_codex_review.py` neben ihrem Test,
-  nicht im YAML. **Wirksam wird das Gate erst, wenn `codex-gate` in den
-  Repo-Einstellungen als required status check auf `main` steht** — am 28.8.
-  war `main` `protected: false`, es gab überhaupt keinen Required Check.
-
-### Behoben
-
 - **Der Retry-Pfad hatte den Fix vom letzten Mal nicht.** `_get_json_retry`
   (SLF-Schnee, Lawinenbulletin, Jagdstatistik) läuft nicht über `_json_body`,
   sondern über die vendored copy `sparql_client.get_json` — und die rief
@@ -612,89 +801,6 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Basistyp — eine Prüfung für beide Pfade. Dazu ein Guard gegen gültiges JSON in
   der falschen Form (`AttributeError: 'list' object has no attribute 'get'`).
 
-### Geändert
-
-- **Vendored copy `sparql_client.py` auf v1.2.0, und der `_sleep`-Alias
-  nachgezogen.** Die Kopien waren schon wieder auseinandergelaufen: `fedlex-mcp`
-  hatte den Alias, der `asyncio.sleep` nicht prozessweit entschärft, dieses Repo
-  nicht — bei unverändertem Marker `v1.1.0` auf beiden Seiten. Genau das Muster,
-  das `test_retry_policy.py` schon einmal festhielt. Beide Kopien sind wieder
-  byte-identisch (md5 `b877c137`), und der Kopf der Datei sagt jetzt, dass eine
-  Änderung den Marker mithebt.
-
-- **Eine 2xx-Antwort ohne JSON wurde als «Unerwarteter interner Fehler»
-  gemeldet.** In der nächtlichen Live-Suite vom 23.8.2026 (04:33 UTC) fielen
-  `test_nabel_current` und `test_bafu_datasets`; beide hingen an
-  `opendata.swiss/api/3/action/package_search`, das mit HTTP 2xx und einem Body
-  antwortete, der kein JSON war. `response.json()` stand nackt an fünf
-  Aufrufstellen, der `json.JSONDecodeError` fiel in den Sammelzweig von
-  `handle_http_error` — und der zeigt auf uns.
-
-  Die Meldung war damit nicht bloss unschön, sie verhinderte die Einordnung, die
-  CLAUDE.md bei rotem Live-Test verlangt: Sie nannte weder Status noch
-  Content-Type, an denen «Quelle kaputt» von «wir kaputt» hängt. `_json_body`
-  wirft jetzt `UpstreamContractError` mit Status, Content-Type und Body-Auszug;
-  `handle_http_error` benennt die Quelle. Der Body-Auszug geht vollständig ins
-  strukturierte Log, in die LLM-sichtbare Meldung nur Status und Content-Type —
-  beides Tatsachen der Quelle, kein Leak von Interna (OBS-002).
-
-- **Ein 3xx verschwand in «API-Anfrage fehlgeschlagen».** `follow_redirects=False`
-  ist eine Sicherheitsentscheidung (SEC-004), keine Panne — eine Quelle, die
-  neuerdings weiterleitet, hat den Vertrag geändert und verdient eine eigene
-  Meldung. Gemessen am 28.8.2026: `opendata.swiss/api/3/action/*` beantwortet
-  Browser-User-Agents mit 302 auf `ckan.opendata.swiss`, unseren User-Agent mit
-  200; der Weiterleitungspfad ist aktiv, nicht hypothetisch.
-
-  Eine explizite `is_redirect`-Prüfung in `_get_json` war zwischenzeitlich
-  eingebaut und wurde von der eigenen Gegenprobe wieder entfernt: Sie blieb
-  grün, wenn man sie herausnahm. `raise_for_status()` wirft auf 3xx bereits —
-  gemessen an httpx 0.27.0 und 0.28.1, den beiden Rändern unseres
-  `httpx>=0.27.0`.
-
-- **Die autouse-Fixture in `tests/test_transport_security.py` setzte einen
-  Default, den es nicht mehr gibt.** Sie «setzte zurück» auf
-  `mcp_cors_allow_origins = "*"` — seit der Umstellung auf fail-closed ist der
-  Default aber leer. Damit fuhr jeder Test dieser Datei eine Konfiguration, die
-  niemand hat, und beschrieb sich dabei als Aufräumen. Sie setzt jetzt `""`.
-
-  `test_the_cors_wildcard_default_is_not_copied` hing genau daran: seine
-  Zusicherung hielt nur, weil die Fixture die Wildcard mitlieferte, nicht weil
-  der Test sie prüfte. Er setzt sie jetzt selbst, heisst
-  `test_a_wildcard_origin_is_not_copied` und prüft zusätzlich, dass die echte
-  Origin daneben durchkommt — sonst wäre er auch gegen einen Filter grün, der
-  alles wegwirft.
-
-### Geändert
-
-- **BRECHEND: `MCP_CORS_ALLOW_ORIGINS` stand auf `"*"`.** Jede Website im Netz
-  durfte diesen Server aus dem Browser eines Besuchers aufrufen, und niemand
-  hatte das gewählt — der Default war es, und `.env.example` lieferte die
-  Wildcard zusätzlich ausgeschrieben aus. Wer die Datei kopierte, hatte den
-  Zustand doppelt.
-
-  Gemessen vorher am zusammengebauten ASGI-Stack: ein Preflight von
-  `https://evil.example` bekam dasselbe `Access-Control-Allow-Origin: *` wie
-  `https://client.example`. Danach ohne Konfiguration gar kein
-  `Access-Control-Allow-Origin` mehr.
-
-  Die Wildcard bleibt erreichbar, muss aber verlangt werden. **Wer den
-  bisherigen Zustand behalten will, setzt `MCP_CORS_ALLOW_ORIGINS=*`.** stdio-
-  und Nicht-Browser-Clients sind unberührt — CORS regelt ausschliesslich
-  Browser.
-
-- **Die Wildcard-Warnung prüfte `origins == ["*"]`** — exakte Gleichheit.
-  `MCP_CORS_ALLOW_ORIGINS="https://a.test,*"` erlaubt bei Starlette ebenso jede
-  Origin (`allow_all_origins`), rutschte aber still durch: die Liste war ja
-  nicht *gleich* `["*"]`. Genau diese Mischform schreibt man hin, wenn man eine
-  Origin ergänzt und die Wildcard stehen lässt. Die Prüfung fragt jetzt
-  `"*" in origins`.
-
-- **Der leere Fall war stumm.** Fail-closed ist richtig, aber nicht
-  selbsterklärend; wer einen Browser erwartet und keinen bekommt, findet den
-  Grund jetzt als `cors_no_origins` im Log statt im Quelltext.
-
-### Behoben
-
 - **`allow_headers` stand auf `["*", "Mcp-Session-Id"]`,** und die Wildcard
   gewann: Starlette schaltet damit auf `allow_all_headers` und spiegelt im
   Preflight zurück, was der Browser ankündigt — jeder erlaubte Origin durfte
@@ -704,73 +810,6 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   unter der Wildcard nie geprüft: eine Wildcard kann nicht falsch werden und
   sagt deshalb nichts darüber, ob die Header, die das Protokoll braucht,
   freigegeben sind.
-
-### Hinzugefügt
-
-- **Frischehinweise auf den auflistenden Methoden** (SEP-2549, Spec
-  `2026-07-28`): `ttlMs` 300000, `cacheScope` `public`. Das SDK setzt beides von
-  sich aus auf «sofort veraltet, nie geteilt» — wer nichts übergibt, lässt jeden
-  Client bei jeder Verbindung neu auflisten, für Verzeichnisse, die per
-  Dekorator beim Import feststehen und nicht vom Aufrufer abhängen.
-
-  `resources/read` und `prompts/get` bleiben ohne Hinweis: das wäre eine
-  Zusicherung über den Inhalt statt über das Verzeichnis. Ein Test hält das an
-  der Antwort fest, ein zweiter an der Konfiguration.
-
-- **Protokoll-Gate: beide Spec-Aeren gepinnt und geprueft**
-  (`tests/test_protocol_version.py`). `mcp` 2.x bedient zwei Aeren ueber
-  denselben Server — den `initialize`-Handshake, der bei `2025-11-25`
-  deckelt, und den Pro-Request-Envelope, der `2026-07-28` erreicht.
-  `LATEST_PROTOCOL_VERSION` ist ein Alias auf die **moderne** Aera; wer nur
-  dagegen pinnt, laesst genau die Aera frei wandern, die heutige Clients
-  aushandeln. Beide sind jetzt einzeln gepinnt, ein Dependabot-Bump von
-  `mcp` kann keine davon still verschieben.
-
-  Ohne gemessenen Teil: dieser Server baut keine ASGI-App, durch die sich ein
-  `initialize` schicken liesse. Das Gate haengt deshalb an den SDK-Konstanten —
-  die schwaechere Form, im Docstring benannt statt verschwiegen.
-
-  Beide READMEs beschreiben die Aeren; ein Test haelt jede Sprache einzeln
-  dagegen — im Portfolio sind EN und DE desselben Repos schon dreimal
-  auseinandergelaufen, weil nur eine Fassung nachgezogen wurde.
-
-### Hinzugefügt
-
-- **Die Pruefsummen im Fixture-Nachweis waren Zierde.** `PROVENANCE.md` fuehrt
-  je Datei einen SHA-256 — um genau einen Fall zu fangen: eine Aufzeichnung,
-  die nach dem Lauf von Hand nachgebessert wurde. Eine korrigierte Antwort ist
-  wieder eine erfundene, und von aussen ist ihr das nicht anzusehen.
-  Nachgerechnet hat sie kein Test. `test_die_pruefsumme_im_nachweis_stimmt`
-  tut es jetzt, ueber die Bytes auf der Platte statt ueber den Loader — genau
-  die hat der Recorder gehasht.
-
-- **Aufgezeichnete Fixtures statt handgeschriebener Erfolgs-Antworten
-  (`DRIFT-004`).** `tests/fixtures/` hält jetzt 20 echte Antworten, aufgezeichnet
-  mit `scripts/record_fixtures.py` an demselben Ort, an dem der Server sie
-  entgegennimmt (httpx-Response-Hook auf dem geteilten Client aus
-  `api_client.get_client()`) — gleicher User-Agent, gleiches Timeout, gleiche
-  DNS-Pinning-Schicht wie im Betrieb. Herkunft, Schlüssel, Auswahlregel, Grösse
-  und SHA-256 stehen je Datei in `tests/fixtures/PROVENANCE.md`; geladen wird
-  über `tests/fixture_data.py`, gefahren in `tests/test_recorded_fixtures.py`
-  (49 neue Tests).
-
-  Eine Aufzeichnung **je Abfrage**, nicht je Endpunkt: acht der zwanzig Dateien
-  liegen unter derselben Adresse und unterscheiden sich allein im
-  `layers`-Parameter. Zugeordnet wird beim Abspielen nach der Anfrage und nicht
-  nach der Reihenfolge — `env_noise_aircraft_registers` schickt in einem Aufruf
-  acht Abfragen.
-
-  Fünf Werkzeuge (`env_nabel_stations`, `env_hydro_stations`,
-  `env_hazard_overview`, `env_hazard_regions`, `env_hunting_species`) liefern
-  im Quellcode gepflegte Kataloge und schicken keine Anfrage. Sie haben deshalb
-  keine Aufzeichnung — und das ist kein Versehen, sondern eine Zusicherung:
-  `test_die_katalog_werkzeuge_fragen_nichts` fällt, sobald eines von ihnen doch
-  eine Quelle fragt.
-
-  Die Fehlerpfade — Timeout, 5xx, leere Trefferliste — bleiben handgeschrieben.
-  Sie lassen sich nicht auf Zuruf aufzeichnen und sind als Erfindung in Ordnung.
-
-### Behoben
 
 - **Der Nachweis wies jede gekürzte Datei als vollständig aus.** `_kuerze` gab
   seine Zähler als `return vorher, nachher, geh(daten)` zurück. Python wertet
@@ -811,39 +850,20 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
   Die Datei ist jetzt wieder byte-identisch von `fedlex-mcp` übernommen.
 
-### Geändert
+- **Drei Zusicherungen fingen `Exception` statt der konkreten Ausnahme.**
+  `tests/test_noise.py` prüfte den LV95-Validator mit
+  `pytest.raises(Exception)` um eine Pydantic-Konstruktion. Blind waren die
+  Tests nicht — sie prüfen zusätzlich den Meldungstext, und ein `NameError`
+  aus einem Tippfehler im Modellnamen trüge diesen Text nicht. Offen blieb die
+  Klasse darunter: Jede andere Ausnahme aus derselben Zeile hätte gezählt,
+  solange die Meldung zufällig passt. Neu `pytest.raises(ValidationError)`.
 
-- **Retry-Politik des LINDAS-Pfads: begrenzt, gestreut, gehorsam
-  (`ARCH-014`).** `lindas/client.py` hat eine eigene Schleife und war von der
-  Reparatur der vendored copy nicht berührt.
+  Gegenprobe gefahren: Mit neutralisiertem Validator in
+  `geoadmin.validate_lv95` fallen genau diese drei Tests mit
+  «DID NOT RAISE», die übrigen 51 der Datei bleiben grün.
 
-  | Eigenschaft | Vorher | Jetzt |
-  |---|---|---|
-  | Wiederholbare Status | `{429, 502, 503, 504}` — **500 fehlte** | `{429, 500, 502, 503, 504}` |
-  | Netzfehler | `ConnectError`, `ReadError` | zusätzlich die Oberklasse `RequestError` |
-  | Jitter | keiner — feste Leiter 2/4/8 s | gestreut in `[0.5x, 1.5x]` |
-  | `Retry-After` | nicht gelesen | gelesen, schlägt die eigene Kurve |
-  | Deckel | keiner | `MAX_DELAY_S`, **nach** dem Jitter |
-  | Zeitbudget | keines | `TOTAL_BUDGET_S = 45.0` an `asyncio.timeout` |
-
-  Die Helfer kommen aus dem vendorierten `sparql_client` statt aus einer
-  zweiten Kopie — sonst hätte dieser Server jetzt zwei Retry-Kurven, die
-  wieder auseinanderlaufen können.
-
-  **500 fehlte, und das ist kein Detail.** Ein überlastetes Gateway antwortet
-  nicht immer mit 502; `ARCH-014` nennt die wiederholbare Menge als 5xx, 429,
-  Timeout und Verbindungsfehler.
-
-  **`QUERY_TIMEOUT_SECONDS` war nie ein Budget.** httpx begrenzt pro Operation,
-  und sein Read-Timeout beginnt mit jedem Chunk von vorn. Vier Versuche gegen
-  einen Endpunkt, der die vollen 45 s braucht, sind drei Minuten in einem
-  Tool-Aufruf, und `DEFAULT_MAX_ATTEMPTS` sagt das nirgends.
-
-### Hinzugefügt
-
-- **`tests/test_retry_policy.py`** — deckt beide Pfade ab, jede Eigenschaft mit
-  Gegenprobe. Dazu ein Test, der die Eigenschaften der vendored copy als Menge
-  festhält: Wer eine davon verliert, hat die Kopien wieder getrennt.
+  Gefunden vom Release-Gate der `github-repo`-Skill (Regel B3), nicht von der
+  CI — im Repo prüft das nichts.
 
 ## [0.6.0] – 2026-08-03
 
