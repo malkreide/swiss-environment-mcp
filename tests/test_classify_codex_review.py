@@ -636,9 +636,13 @@ def test_review_objekt_braucht_die_warnung_nicht():
 #
 # Der Infokasten sagt dazu neu: «Codex reacts with 👀 while any review is
 # running, comments if it has suggestions, and reacts with 👍 once all reviews
-# finish with no findings.» Ohne die Tabelle bliebe jeder saubere PR ungruen;
-# das Gate hat den neuen Kommentar an #104 als unbekannten Text eingeordnet und
-# rot gesetzt.
+# finish with no findings.» Die Tabelle wird ausgewertet, weil das Gate den
+# neuen Kommentar an #104 als unbekannten Text eingeordnet und rot gesetzt hat
+# — und weil sie den geprueften Commit selbst nennt.
+#
+# NICHT weil ohne sie jeder saubere PR ungruen bliebe; das stand hier und folgte
+# aus der Annahme, die Befundlos-Meldung sei weggefallen. `MARK_NO_FINDING`
+# traegt denselben Nachweis, siehe unten.
 #
 # HIER STAND, ein befundloser Lauf hinterlasse danach gar keinen Text mehr und
 # die Befundlos-Meldung falle als Signal weg. DAS IST FALSCH — es ist beides.

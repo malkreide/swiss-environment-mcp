@@ -64,8 +64,15 @@ und um 06:52:29 derselbe Kommentar mit `✅ **Completed** …`. Der Infokasten s
 neu: «Codex reacts with 👀 while any review is running, comments if it has
 suggestions, and reacts with 👍 once all reviews finish with no findings.» An
 #104 hat das Gate den neuen Kommentar als unbekannten Text eingeordnet und rot
-gesetzt, was fuer einen LAUFENDEN Review schlicht falsch ist — ohne die Tabelle
-bliebe ausserdem jeder saubere PR ungruen.
+gesetzt, was fuer einen LAUFENDEN Review schlicht falsch ist. DAS ist der
+Grund, warum die Tabelle ausgewertet wird: Ein unbekannter Text faerbte das
+Gate rot, und die Tabelle nennt den geprueften Commit selbst.
+
+Nicht der Grund — und hier stand es trotzdem: dass ohne die Tabelle jeder
+saubere PR ungruen bliebe. Das folgte aus der Annahme, die Befundlos-Meldung
+sei weggefallen; sie ist es nicht (unten mehr), und `MARK_NO_FINDING` traegt
+denselben Nachweis. Ob ein sauberer Lauf je NUR die Tabelle hinterlaesst, ist
+ungemessen: Auf #118 und #119 lagen beide vor.
 
 Hier stand aus diesem Kasten geschlossen, ein befundloser Lauf hinterlasse
 keinen Text mehr, und die Befundlos-Meldung falle als Signal weg. DAS IST
