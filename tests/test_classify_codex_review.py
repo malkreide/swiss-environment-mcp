@@ -643,8 +643,10 @@ def test_review_objekt_braucht_die_warnung_nicht():
 # Dass ohne sie ein sauberer PR ungruen bliebe, stand hier ebenfalls — damals
 # als blosse FOLGERUNG aus der widerlegten Annahme, die Befundlos-Meldung sei
 # weggefallen, und deshalb gestrichen. Am 19.9.2026 ist der Fall gemessen: Auf
-# #122 kam NUR die Summary, kein Text und kein Review-Objekt. Beide Wege
-# kommen also vor, und keiner ist verzichtbar.
+# #122 kam NUR die Summary, kein Text und kein Review-Objekt. Belegt ist damit
+# genau eine Richtung: Die Tabelle ist unverzichtbar. Fuer `MARK_NO_FINDING`
+# nicht — wo der Text auftrat, lag die Tabelle daneben. Er bleibt trotzdem,
+# aus Abwaegung und nicht aus Messung; Gruende im Kopf des Skripts.
 #
 # HIER STAND, ein befundloser Lauf hinterlasse danach gar keinen Text mehr und
 # die Befundlos-Meldung falle als Signal weg. DAS IST FALSCH — es ist beides.

@@ -72,8 +72,26 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   je **nur** die Tabelle hinterlässt, war beim Schreiben dieses Eintrags
   ungemessen. **Inzwischen gemessen, an #122 selbst:** Summary `Completed` für
   `ca9b3f2`, keine Befundlos-Meldung im Text, kein Review-Objekt — die Tabelle
-  war der einzige Nachweis. Beide Wege kommen also vor, und keiner ist
-  verzichtbar. Wodurch sich die Fälle unterscheiden, bleibt offen: #118 und
+  war der einzige Nachweis.
+
+  **Was daraus folgt, und was nicht** (nach einem sechsten Codex-Befund, P2):
+  Belegt ist genau eine Richtung — die Tabelle ist unverzichtbar. Für
+  `MARK_NO_FINDING` gilt das nicht: Wo der Text auftrat, lag die Tabelle
+  daneben, jene Läufe wären also auch ohne ihn grün geworden. Ein Lauf, in dem
+  der Text der einzige Nachweis ist, wurde unter dem neuen Format nicht
+  beobachtet. Er bleibt trotzdem — weil nicht beobachtet nicht ausgeschlossen
+  heisst und ein zweiter Nachweisweg billig ist. Das ist eine Abwägung, keine
+  Messung, und steht so da.
+
+  **Siebter Befund (P2), eine Umkehrung.** Dazu stand die Bedingung falsch
+  herum: «Wer ihn entfernen will, braucht einen sauberen Lauf ganz ohne
+  Tabelle.» Ein solcher Lauf zeigte das Gegenteil — dort wäre
+  `MARK_NO_FINDING` der einzige Nachweis, also **nötig**. Für eine Entfernung
+  bräuchte es Vertrauen darauf, dass jeder saubere Lauf ein anderes Signal
+  mitbringt; das ist eine Allaussage, nie belegbar, nur über lange Beobachtung
+  ohne Gegenbeispiel zu stützen.
+
+  Wodurch sich die Fälle unterscheiden, bleibt offen: #118 und
   #119 hatten zuvor Befunde und wurden von Hand angefordert, #122 lief als
   erster Review des PR auf «Draft marked ready» — zwei Unterschiede, drei
   Beobachtungen, kein Beleg.
