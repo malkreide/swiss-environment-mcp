@@ -176,10 +176,22 @@ jobs:
     # immer mit 0, sein Check-Run sagt also nichts ueber Codex. Begruendung
     # oben unter «DER CHECK-RUN DIESES JOBS IST NICHT DAS GATE».
     #
-    # Aendert jemand diesen Namen, aendert sich der Name des Check-Runs. Der
-    # Required Check ist der Commit-Status `codex-gate` und bleibt davon
-    # unberuehrt — steht in der Branch Protection dagegen der Check-Run-Name,
-    # ist er dort mitzuziehen.
+    # Aendert jemand diesen Namen, aendert sich der Name des Check-Runs — und
+    # das ist in diesem Repo heute ein Merge-Blocker. Gemessene Lage und
+    # gewollte Lage fallen naemlich auseinander:
+    #
+    #   GEMESSEN (19.9.2026): Required ist der CHECK-RUN dieses Jobs. Auf #118
+    #   ging genau eine Groesse von `cancelled` auf `success` — dieser
+    #   Check-Run —, und `mergeable_state` kippte von `blocked` auf `clean`.
+    #   Wer also umbenennt, ohne die Branch Protection mitzuziehen, laesst dort
+    #   einen Kontext stehen, der nie wieder berichtet, und sperrt jeden
+    #   folgenden PR.
+    #
+    #   GEWOLLT: Required gehoert der Commit-Status `codex-gate`, weil nur er
+    #   das Urteil traegt; dieser Job endet immer mit 0.
+    #
+    # Solange beides auseinanderfaellt, richtet man sich nach der gemessenen
+    # Lage, nicht nach der gewollten.
     # In Anfuehrungszeichen: Ein unquotierter YAML-Skalar mit «: » darin
     # ist ein Syntaxfehler, und GitHub meldete ihn erst beim Lauf.
     name: "codex-gate: Status setzen"
