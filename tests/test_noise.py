@@ -16,6 +16,7 @@ import sys
 import httpx
 import pytest
 import respx
+from pydantic import ValidationError
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -75,7 +76,7 @@ def _resp(*levels: str) -> httpx.Response:
 
 def test_wgs84_input_fails_fast_with_conversion_hint():
     """Der häufigste LLM-Fehler: WGS84-Grad statt LV95-Meter."""
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(ValidationError) as exc:
         NoiseAircraftAtInput(east=8.54, north=47.37)
     msg = str(exc.value)
     assert "WGS84" in msg
@@ -84,14 +85,14 @@ def test_wgs84_input_fails_fast_with_conversion_hint():
 
 
 def test_coordinates_outside_switzerland_rejected():
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(ValidationError) as exc:
         NoiseAircraftAtInput(east=3_000_000, north=1_200_000)
     assert "ausserhalb der Schweiz" in str(exc.value)
 
 
 def test_swapped_axes_rejected():
     """Vertauschte Achsen: north im Ostwert-Bereich."""
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(ValidationError) as exc:
         NoiseAircraftAtInput(east=1_247_993, north=2_683_146)
     assert "ausserhalb der Schweiz" in str(exc.value)
 
