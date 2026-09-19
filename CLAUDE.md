@@ -100,19 +100,45 @@ geantwortet hat.
   `register-mcp` HTTP 200, während die Label-Abfrage desselben Repos in
   derselben Minute die Sperre meldete. Alle 42 `dependabot.yml` kamen so
   durch, während die Label-Hälfte stand.
-- **Am Token vorbei geht es nicht.** Beide Umwege enden am Agent-Proxy, und
-  jeder mit einer eigenen irreführenden Begründung. `api.github.com` ohne
-  Zugangsdaten:
+- **Hier stand «Am Token vorbei geht es nicht». Das ist falsch, und es war der
+  teuerste Satz dieser Datei.** Am 19.9.2026 nachgemessen: Ein schlichtes
+  `curl` auf `api.github.com` geht durch den Agent-Proxy und kommt
+  **authentifiziert** heraus. `api.github.com/user` liefert `malkreide`,
+  `api.github.com/rate_limit` meldet `core: limit=15000` — das ist kein
+  anonymes Kontingent.
+
+  Was der Proxy wirklich tut, ist nicht sperren, sondern **auf die
+  konfigurierten Repos begrenzen**. Geprüft und mit 200 beantwortet wurden am
+  19.9.:
+
+  ```bash
+  curl -sS https://api.github.com/repos/<owner>/<repo>/branches/main
+  curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
+  curl -sS https://api.github.com/repos/<owner>/<repo>/labels/<name>
+  curl -sS https://api.github.com/rate_limit
+  curl -sS https://api.github.com/user
+  ```
+
+  **Repo-eigen heisst dabei nicht «geht».** Der Proxy entscheidet über die
+  *Route*, das Token über die *Berechtigung* — zwei Schichten, und beide
+  können nein sagen. `repos/<owner>/<repo>/branches/main/protection` liegt auf
+  einer erlaubten Route und fällt trotzdem:
 
   ```
-  GitHub access is not enabled for this session. An org admin must connect
-  the Claude GitHub App for this organization.
+  403 Resource not accessible by integration
   ```
 
-  Das ist keine Aussage über die Organisation, sondern das, was ohne Token
-  kommt. Wer ihr folgt, sucht einen Admin für ein Problem, das keiner hat.
-  Die HTML-Seite `github.com/<owner>/<repo>/labels` fällt ebenfalls, aber
-  anders:
+  Das ist die Token-Schicht, nicht der Proxy. Die beiden Absagen lassen sich am
+  Text auseinanderhalten — «not accessible by integration» kommt von GitHub,
+  «sessions are bound to their configured repositories» vom Proxy. Wer sie
+  verwechselt, hält eine Berechtigungsgrenze für eine Proxy-Sperre und sucht
+  einen Umweg, den es nicht braucht, oder umgekehrt. Aufgedeckt von einem
+  Codex-Review auf PR #125 (P2), nachdem hier pauschal «repo-eigene Pfade
+  antworten mit 200» gestanden hatte — im selben Commit, der den 403 auf
+  `protection` schon dokumentierte.
+
+  Ein Pfad ausserhalb (hier `api.github.com/octocat`) fällt dagegen mit 403 und
+  genau der Meldung, die oben der HTML-Seite zugeschrieben war:
 
   ```
   This GitHub API path is not available: sessions are bound to their
@@ -120,11 +146,21 @@ geantwortet hat.
   (repos/{owner}/{repo}/...).
   ```
 
-  Der Proxy behandelt also auch `github.com` als API-Pfad; die zweite Meldung
-  klingt nach einem Scope-Problem und ist doch nur dieselbe Sackgasse. Den
-  Token aus der Umgebung in einen curl-Header zu setzen, blockiert der
-  Klassifikator. Ob es überhaupt hülfe, ist offen: die Sperre nennt ein
-  Nutzerkonto, und ob der Token zu diesem gehört, wurde nie geprüft.
+  Sie ist also keine Sackgasse, sondern eine **Wegbeschreibung** — und sie
+  stand die ganze Zeit da. Gelesen wurde sie als zweite Variante desselben
+  Neins.
+
+  Die andere zitierte Meldung («GitHub access is not enabled for this
+  session») kam am 19.9. auf keinem der geprüften Pfade. Ob sich die Umgebung
+  geändert hat oder ob damals ein nicht repo-eigener Pfad abgefragt wurde, ist
+  nicht mehr feststellbar; als Beschreibung des heutigen Verhaltens taugt sie
+  nicht.
+
+  **Was das praktisch ändert:** Fehlt eine Auskunft im MCP-Werkzeug, heisst das
+  nicht, dass sie unerreichbar ist. Erst den Pfad direkt probieren. Und die
+  `X-RateLimit`-Frage von oben hat damit eine Antwort — `rate_limit` nennt
+  Topf, Limit und Reset-Zeitpunkt, statt sie aus Beobachtungszeitpunkten zu
+  schätzen.
 - **Die Sperre gilt nicht dem Dienst, sondern dem Zugangspfad.** Unmittelbar
   nachdem eine Abfrage der Checks eines PR sauber durchlief, meldete die
   Label-Abfrage weiter die Sperre. Von einem blockierten Werkzeug also nicht
@@ -721,13 +757,17 @@ Repo-Einstellung statt im Jobnamen. In die Required-Liste gehört der Kontext
 
 Die Grenze blieb dabei: Die Messung zeigt, dass dieser eine Kontext required
 ist, nicht dass er der einzige ist. Und `protected: true` aus `list_branches`
-sagt weiterhin nur, *dass* eine Protection existiert; die Liste selbst liegt
-hinter dem Branch-Protection-Endpunkt, den das hier verfügbare Werkzeug nicht
-anbietet.
+sagt nur, *dass* eine Protection existiert.
 
-**Am 19.9.2026 hat der Maintainer `codex-gate` ergänzt.** Das ist zunächst eine
-Aussage und keine Messung — ablesen lässt sich die Required-Liste hier nach wie
-vor nicht. Getrennt wird sie über den Fall, den der Absatz oben schon benennt:
+**Die Liste ist ablesbar. Dieser Abschnitt hat es drei PRs lang bestritten.**
+Der direkte Weg steht unten unter «Die Required-Liste, direkt gelesen»; was
+jetzt folgt, ist der indirekte, auf dem sie erschlossen wurde. Er bleibt
+stehen, weil er zweimal danebenlag und beide Male aus demselben Grund — das
+ist der lehrreiche Teil, nicht das Ergebnis.
+
+**Am 19.9.2026 hat der Maintainer `codex-gate` ergänzt.** Das war zunächst eine
+Aussage und keine Messung. Getrennt wurde sie über den Fall, den der Absatz
+oben schon benennt:
 ein PR, bei dem **nur dieser Status** offen ist. Ein Draft liefert ihn frei
 Haus, denn dort beendet sich der Gate-Job sofort («PR ist ein Draft»), sein
 Check-Run wird grün, und der Commit-Status bleibt gelb.
@@ -736,8 +776,8 @@ Gemessen am 19.9.2026 an PR #124, zwei Zustände:
 
 | Zustand | Check-Runs | `codex-gate` | `mergeable_state` |
 |---|---|---|---|
-| A — Draft | 6/6 grün | pending | **blocked** |
-| B — ready, nach Review | 6/6 grün | success | **clean** |
+| A — Draft | alle grün | pending | **blocked** |
+| B — ready, nach Review | alle grün | success | **clean** |
 
 **Was B ausschliesst:** eine Genehmigungspflicht und einen required Kontext,
 der auf einem Doku-PR gar nicht berichtet — mit beidem wäre `clean` unmöglich.
@@ -749,34 +789,170 @@ die Draft-Eigenschaft. Die historische Kontrolle — PR #117 stand am 18.9. in
 Lage A auf `unstable`, ein Draft ist also nicht von sich aus `blocked` — lief
 unter dem **alten** Ruleset und taugt deshalb nicht.
 
-**Die einzelne Variable liefert ein dritter Zustand, und er ist gemessen.**
-Herzustellen war er mit Geduld statt mit Rechten: ein **ready** PR nach einem
-Push. Ein Push löst keinen Review aus (Teil 1), der Poll lief also die vollen
+**Ein dritter Zustand sollte die einzelne Variable liefern — er tut es nicht,
+und warum, steht unter der Tabelle.** Herzustellen war er mit Geduld statt mit
+Rechten: ein **ready** PR nach einem Push. Ein Push löst keinen Review aus (Teil 1), der Poll lief also die vollen
 `POLL_MAX_SECONDS` = 900 s leer — zweimal, weil der wartende Lauf der
-Concurrency-Gruppe danach ebenfalls drankam. Erst als beide Job-Check-Runs
-fertig waren, stand der Zustand sauber:
+Concurrency-Gruppe danach ebenfalls drankam. Erst als beide Gate-Läufe fertig
+waren, stand der Zustand sauber:
 
 | Zustand | Draft? | Check-Runs | `codex-gate` | `mergeable_state` |
 |---|---|---|---|---|
-| B | nein | 7/7 grün | success | `clean` |
-| C | nein | 7/7 grün | **pending** | **blocked** |
+| B | nein | alle grün, gleiche Menge | success | `clean` |
+| C | nein | alle grün, gleiche Menge | **pending** | **blocked** |
 
-Gleicher PR, gleiches Ruleset, gleiche Basis, kein Draft-Wechsel: **verändert
-wurde genau eine Grösse.** Der Commit-Status `codex-gate` ist damit ein
-required check — belegt, nicht geschlossen. Die gewollte und die gemessene Lage
-decken sich seit dem 19.9.2026 also erstmals.
+Gleicher PR, gleiches Ruleset, gleiche Basis, kein Draft-Wechsel.
 
-Was weiterhin offen bleibt: ob der Check-Run des Jobs **zusätzlich** required
+**Hier stand «verändert wurde genau eine Grösse». Das war falsch**, aufgedeckt
+von einem Codex-Review auf PR #125 (P2). Zustand C entsteht durch einen
+**Push** — mit dem Status wechseln auch der Head-SHA und der Inhalt des
+Commits. Zwei Beobachtungen an zwei verschiedenen Heads trennen nichts, und
+«dieselbe Menge grüner Check-Runs» schliesst eine andere kopfgebundene Regel
+nicht aus. Das ist derselbe Fehler wie bei der historischen Kontrolle #117 zwei
+Absätze weiter oben, nur eine Runde später bemerkt: Beide Male war die
+Einzelvariable behauptet statt hergestellt.
+
+**Die Messung mit festgehaltenem Head liegt seit dem 19.9.2026 vor**, an PR
+#125, Head `7b548d9` in beiden Zeilen:
+
+| Uhrzeit (UTC) | Draft? | Check-Runs | `codex-gate` | `mergeable_state` |
+|---|---|---|---|---|
+| 14:47:19 | nein | 6, alle grün und fertig | **pending** | **blocked** |
+| 14:50:46 | nein | 7, alle grün | **success** | **clean** |
+
+Der Head steht still, der Inhalt auch. Vom Nicht-Grünen zum Grünen wechselt
+allein der Commit-Status. Was das mit ausschliesst: ein required Kontext, der
+auf einem Doku-PR **gar nicht** berichtet — `image-size` wäre der Kandidat —
+hielte beide Zeilen auf `blocked`; die zweite widerlegt ihn.
+
+**Der Rest, den auch diese Messung nicht ausräumt**, und er gehört genannt
+statt weggelassen: Zwischen den Zeilen kommt ein **siebter** Check-Run dazu,
+ein zweiter Lauf von `codex-gate: Status setzen` (der `ready_for_review`-Lauf
+neben dem `pull_request`-Lauf). Er kann keinen fehlenden Kontext nachliefern,
+weil derselbe Kontext in der ersten Zeile bereits grün und fertig dastand —
+aber eine Grösse ist er. Näher als so kommt man auf diesem Weg nicht heran —
+und das war das Stichwort, die Liste doch noch direkt zu suchen.
+
+**In beiden Tabellen steht bewusst keine Zahl.** Hier standen erst welche —
+6/6 für B in der oberen, 7/7 für dasselbe B in der unteren. Beide Male
+abgelesen, beide Male an einem anderen Moment, und damit eine Tabelle, die
+sich selbst widerspricht, ohne dass eine der beiden Zahlen falsch sein muss.
+Tragend ist ohnehin nicht der Absolutwert, sondern dass B und C **dieselbe**
+Menge zeigten.
+
+Denn die Zahl ist als Variable unbrauchbar, und drei Mechaniken dahinter sind
+gemessen. **Erstens** trugen von den Gate-Läufen zu #124 die aus
+`issue_comment` als `head_sha` den Stand von `main` (`6a3cf1e`), die aus
+`pull_request` und `pull_request_review` dagegen den PR-Head (`cc57770`) — der
+Check-Run eines Kommentar-Laufs landet also gar nicht am PR, während der
+Commit-Status, den derselbe Lauf per API setzt, sehr wohl dort ankommt;
+dieselbe Trennung von Check-Run und Status wie oben, eine Ebene tiefer.
+**Zweitens** hinterlässt der wartend abgeräumte Lauf überhaupt keinen
+Check-Run. **Drittens** — und das ist die Quelle des 6 → 7 auf #125 — trägt
+derselbe Head zwei Check-Runs *gleichen Namens*, sobald zwei PR-Ereignisse den
+Workflow auslösen; `pull_request` und `ready_for_review` taten das um 14:46:05
+und 14:50:38.
+
+Wie viele Check-Runs ein Head trägt, hängt damit an der Auslöser-Mischung des
+Augenblicks und nicht an dem Zustand, den man messen will.
+
+**Und `mergeable_state` ist kein Messgerät mit Sofortanzeige.** GitHub
+berechnet den Wert nachlaufend. Am 19.9. lieferte eine Abfrage um 14:50:38
+`clean`, während der zugehörige Status erst um 14:50:46 auf `success` gesetzt
+wurde — welche der beiden API-Antworten zuerst entstand, geben ihre Laufzeiten
+nicht her. Als Datum zählt deshalb nur, was **stehen bleibt**: Zustand C hielt
+sich rund 30 Minuten auf `blocked`, die `clean`-Zeile wurde nach dem Umschlag
+erneut abgefragt. Ein Einzelwert unmittelbar nach einem Statuswechsel ist ein
+Rauschwert.
+
+Offen blieb auf diesem Weg: ob der Check-Run des Jobs **zusätzlich** required
 ist. Er war in allen drei Zuständen grün, also nie die veränderte Grösse. Der
 Befund vom Vormittag (`cancelled` → `success` kippte `blocked` → `clean`) sagt,
 dass er es damals war; ob die Liste ihn noch führt, sagt er nicht.
 
+### Die Required-Liste, direkt gelesen
+
+**Sie ist abfragbar, und zwar die ganze Zeit gewesen.** Nicht über
+`branches/main/protection` — das antwortet mit 403 «Resource not accessible by
+integration», eine Grenze des App-Tokens — sondern über die **Rulesets**, und
+moderne Branch Protection ist hier genau das:
+
+```bash
+curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
+curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets/<id>
+```
+
+Stand 19.9.2026 laufen hier zwei, beide `enforcement: active`:
+
+| Ruleset | gilt für | Regeln |
+|---|---|---|
+| `main` | `refs/heads/main` | `deletion`, `non_fast_forward`, required status checks (Liste unten) |
+| `codex-gate` | `~ALL` | `deletion`, `non_fast_forward` — **keine** Status-Checks |
+
+Required auf `main` sind sieben Kontexte:
+
+```
+codex-gate
+codex-gate: Status setzen
+gitleaks
+lint
+test (3.11)
+test (3.12)
+test (3.13)
+```
+
+**Vier Dinge, die daraus folgen:**
+
+- **Die offene Frage ist beantwortet: Ja**, der Check-Run des Jobs steht
+  weiterhin daneben. Wer den Jobnamen ändert, ohne das Ruleset mitzuziehen,
+  hinterlässt einen Kontext, der nie wieder berichtet — die Warnung beim
+  Jobnamen ist damit keine Vorsicht mehr, sondern belegt.
+- **`image-size` ist nicht required.** Ein Doku-PR wird davon nicht gehalten,
+  und das ist jetzt abgelesen statt erschlossen.
+- **Es gibt keine `pull_request`-Regel**, also keine Genehmigungspflicht.
+- **Der Force-Push-Stopp ist `non_fast_forward` im Ruleset `~ALL`.** Daher
+  melden sämtliche Branches `protected: true`. Verwirrend ist nur der Name:
+  Das Ruleset heisst `codex-gate` und enthält gerade **keinen** Status-Check;
+  die Gate-Kontexte liegen im Ruleset `main`.
+
+**Und die Lehre ist die unangenehme.** Dieser Abschnitt hat drei PRs lang
+behauptet, die Liste sei nicht abzulesen — geschlossen daraus, dass das
+MCP-Werkzeug den Endpunkt nicht anbietet. Das ist derselbe Fehler wie «ein 403
+ist gar keine Auskunft» in Teil 1, nur in der Variante «ein fehlendes Werkzeug
+ist keine Aussage über die Quelle». Der indirekte Weg oben hat am Ende das
+richtige Ergebnis gebracht, zweimal falsch abgebogen und mehrere Stunden und
+drei Review-Runden gekostet. Zuerst fragen, ob die Quelle direkt antwortet.
+
 **Und dabei ist noch etwas anderes passiert.** Seit derselben Änderung melden
 *sämtliche* Branches `protected: true`, nicht nur `main`; am Vormittag standen
 die `claude/*`-Branches noch auf `false`. Das Ruleset greift also breiter als
-`main`. Was es dort erzwingt, ist ungemessen — praktisch zu beachten ist, dass
-ein Force-Push auf einen Arbeitsbranch, wie ihn ein Rebase braucht, daran
-scheitern kann.
+`main`.
+
+**Was es dort erzwingt, stand hier als ungemessen — und ist es seit dem
+19.9.2026 nicht mehr.** Der Fall kam von selbst: #124 wurde gemergt, während
+ein Korrektur-Commit noch entstand, der damit eine neue Basis brauchte. Der
+übliche Rebase endete an der Sperre:
+
+```
+remote: - Cannot force-push to this branch
+```
+
+Ein *normaler* Push auf denselben Branch lief unmittelbar davor und danach
+durch. Verboten ist also nicht das Schreiben, sondern das Umschreiben.
+
+**Die Regel dahinter steht inzwischen namentlich fest** (siehe «Die
+Required-Liste, direkt gelesen»): Es ist `non_fast_forward` im Ruleset mit dem
+Ziel `~ALL`. Daher auch das `protected: true` auf jedem Branch — dort steckt
+kein einziger Status-Check, nur `deletion` und `non_fast_forward`. Zwei
+Handgriffe daraus:
+
+- **Auf einem Arbeitsbranch dieses Repos ist der Rebase keine Option mehr.**
+  Basis nachziehen heisst hier `git merge origin/main`, auch auf dem eigenen
+  Branch — der Merge-Commit hält den Branch vorwärts-kompatibel und kommt ohne
+  Force-Push aus.
+- **Wer die Sperre für ein Netzproblem hält, verliert den Commit.** Die
+  Meldung nennt eine Regelverletzung (`GH013`), keinen Übertragungsfehler; ein
+  Wiederholungsversuch mit Backoff scheitert beliebig oft gleich.
 
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
