@@ -130,7 +130,9 @@
 # abgelesen, nicht erschlossen:
 #
 #   curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
+#   curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets/<id>
 #
+# Der zweite Aufruf ist der noetige — die Liste liefert nur Zusammenfassungen.
 # Das Ruleset `main` fuehrt beide Kontexte nebeneinander; die vollstaendige
 # Liste steht beim Job-Namen weiter unten. Wer die Protection wegnimmt, nimmt
 # das Gate weg, ohne dass sich an dieser Datei etwas aendert.
@@ -218,6 +220,12 @@ jobs:
     #   test (3.11)                test (3.12)                test (3.13)
     #
     #   curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
+    #   curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets/<id>
+    #
+    # ZWEI Aufrufe, und der zweite ist der noetige: Die Liste liefert nur
+    # Zusammenfassungen (id, name, target), die `rules` mit den Kontexten
+    # stehen erst im Einzel-Ruleset. Wer nur den ersten absetzt, sieht die
+    # sieben Namen nicht.
     #
     # Die Umbenennungs-Warnung ist damit keine Vorsicht mehr, sondern belegt:
     # Wer diesen Namen aendert, ohne das Ruleset mitzuziehen, hinterlaesst

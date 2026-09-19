@@ -108,15 +108,37 @@ geantwortet hat.
   anonymes Kontingent.
 
   Was der Proxy wirklich tut, ist nicht sperren, sondern **auf die
-  konfigurierten Repos begrenzen**. Repo-eigene Pfade antworten mit 200:
+  konfigurierten Repos begrenzen**. Geprüft und mit 200 beantwortet wurden am
+  19.9.:
 
   ```bash
   curl -sS https://api.github.com/repos/<owner>/<repo>/branches/main
+  curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
+  curl -sS https://api.github.com/repos/<owner>/<repo>/labels/<name>
   curl -sS https://api.github.com/rate_limit
+  curl -sS https://api.github.com/user
   ```
 
-  Ein Pfad ausserhalb (hier `api.github.com/octocat`) fällt mit 403 und genau
-  der Meldung, die oben der HTML-Seite zugeschrieben war:
+  **Repo-eigen heisst dabei nicht «geht».** Der Proxy entscheidet über die
+  *Route*, das Token über die *Berechtigung* — zwei Schichten, und beide
+  können nein sagen. `repos/<owner>/<repo>/branches/main/protection` liegt auf
+  einer erlaubten Route und fällt trotzdem:
+
+  ```
+  403 Resource not accessible by integration
+  ```
+
+  Das ist die Token-Schicht, nicht der Proxy. Die beiden Absagen lassen sich am
+  Text auseinanderhalten — «not accessible by integration» kommt von GitHub,
+  «sessions are bound to their configured repositories» vom Proxy. Wer sie
+  verwechselt, hält eine Berechtigungsgrenze für eine Proxy-Sperre und sucht
+  einen Umweg, den es nicht braucht, oder umgekehrt. Aufgedeckt von einem
+  Codex-Review auf PR #125 (P2), nachdem hier pauschal «repo-eigene Pfade
+  antworten mit 200» gestanden hatte — im selben Commit, der den 403 auf
+  `protection` schon dokumentierte.
+
+  Ein Pfad ausserhalb (hier `api.github.com/octocat`) fällt dagegen mit 403 und
+  genau der Meldung, die oben der HTML-Seite zugeschrieben war:
 
   ```
   This GitHub API path is not available: sessions are bound to their

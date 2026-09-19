@@ -17,8 +17,12 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   `core: limit=15000`).
 
   `branches/main/protection` bleibt mit 403 «Resource not accessible by
-  integration» zu — eine Grenze des App-Tokens. Die **Rulesets** antworten
-  dagegen, und moderne Branch Protection ist hier genau das. Stand 19.9.2026
+  integration» zu — eine Grenze des App-Tokens, nicht des Proxys. Die beiden
+  Schichten sind zu trennen: Der Proxy entscheidet über die Route, das Token
+  über die Berechtigung, und die Absagen unterscheiden sich im Text. Die
+  **Rulesets** antworten dagegen, und moderne Branch Protection ist hier genau
+  das; nötig sind zwei Aufrufe, weil `.../rulesets` nur Zusammenfassungen
+  liefert und die Regeln erst in `.../rulesets/<id>` stehen. Stand 19.9.2026
   laufen zwei, beide aktiv: `main` (auf `refs/heads/main`) mit sieben required
   Kontexten — `codex-gate`, `codex-gate: Status setzen`, `gitleaks`, `lint`,
   `test (3.11)`, `test (3.12)`, `test (3.13)` — und ein zweites mit Ziel
