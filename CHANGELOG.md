@@ -34,6 +34,17 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Vorbehalt: Wo damals gesucht wurde, ist nicht festgehalten, und auf
   Kommentarebene wäre auch heute nichts zu finden.
 
+  **Nach einem Codex-Befund auf #120 (P2) getrennt:** Die erste Fassung des
+  Tests nannte im Fixture den Commit `32cb7cc1b1`, während das Payload den Head
+  `b165c905…` trug. Der Test wäre nur deshalb grün gewesen, weil die Einordnung
+  die Commit-Zeile gar nicht liest — er hätte also festgeschrieben, dass eine
+  Meldung für einen **fremden** Commit als Nachweis zählt, und genau die
+  Verbesserung blockiert, die derselbe Eintrag als wünschenswert notiert. Der
+  Erkennungstest nimmt jetzt den Head des Payloads; der Fremd-Commit-Fall steht
+  daneben und hält fest, was heute gilt — mit dem Hinweis, dass er fällt, sobald
+  jemand die Commit-Zeile auswertet. Gegengeprobt: mit einem solchen Eingriff
+  bleibt der Erkennungstest grün und der Lücken-Test fällt.
+
 - **Die Concurrency-Einstellung wirkt nicht dort, wo sie steht**
   (`CLAUDE.md` Teil 2, `codex-gate.yml`-Kopf). Am 18.9. lag
   `cancel-in-progress: false` bereits im PR, und der Gate-Lauf von #118 wurde
