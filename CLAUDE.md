@@ -697,8 +697,9 @@ nicht im YAML — aus demselben Grund wie bei `classify_live_run.py`.
 
 **Das Gate wirkt nur mit Branch Protection.** Der Kontext `codex-gate` muss auf
 `main` als *required status check* stehen, samt «Do not allow bypassing the
-above settings». Das ist die *gewollte* Lage; welche Kontexte heute tatsächlich
-required sind, steht zwei Absätze weiter unten und deckt sich nicht damit. Ohne das bleibt der Merge-Button klickbar. Am 28.8.2026 war
+above settings». Seit dem 19.9.2026 ist das nicht mehr nur die *gewollte*, sondern
+die gemessene Lage — Beleg zwei Absätze weiter unten. Ohne die Protection bleibt
+der Merge-Button klickbar. Am 28.8.2026 war
 `main` hier `protected: false` — es gab überhaupt keinen Required Check, die
 sechs grünen Häkchen waren informativ. Wer die Protection wegnimmt, nimmt
 das Gate weg, ohne dass eine Datei sich ändert.
@@ -707,8 +708,8 @@ das Gate weg, ohne dass eine Datei sich ändert.
 stand mit pendendem `codex-gate` auf `mergeable_state: blocked` statt wie zuvor
 auf `unstable` — der Merge-Button ist also tatsächlich gesperrt.
 
-**Welcher Check required ist, ist seit dem 19.9.2026 gemessen — und es ist der
-falsche.** Die Positivkontrolle, die hier als fehlend notiert stand, ergab sich
+**Welcher Check required ist, war am Vormittag des 19.9.2026 gemessen — und es
+war der falsche.** (Nachmittags kam der richtige dazu, siehe unten.) Die Positivkontrolle, die hier als fehlend notiert stand, ergab sich
 beim Entsperren von #118 von selbst: verändert wurde genau eine Grösse, der
 Check-Run `codex-gate: Status setzen` ging von `cancelled` auf `success`, und
 `mergeable_state` kippte von `blocked` auf `clean`. Required ist damit der
@@ -718,12 +719,64 @@ weil der Job immer mit 0 endet. Erzwungen wird so «der Job ist gelaufen», nich
 Repo-Einstellung statt im Jobnamen. In die Required-Liste gehört der Kontext
 `codex-gate`.
 
-Die Grenze bleibt: Die Messung zeigt, dass dieser eine Kontext required ist,
-nicht dass er der einzige ist. Ob `codex-gate` schon danebensteht, trennt erst
-ein PR, bei dem nur dieser Status rot ist — er war die ganze Zeit grün. Und
-`protected: true` aus `list_branches` sagt weiterhin nur, *dass* eine Protection
-existiert; die Liste selbst liegt hinter dem Branch-Protection-Endpunkt, den das
-hier verfügbare Werkzeug nicht anbietet.
+Die Grenze blieb dabei: Die Messung zeigt, dass dieser eine Kontext required
+ist, nicht dass er der einzige ist. Und `protected: true` aus `list_branches`
+sagt weiterhin nur, *dass* eine Protection existiert; die Liste selbst liegt
+hinter dem Branch-Protection-Endpunkt, den das hier verfügbare Werkzeug nicht
+anbietet.
+
+**Am 19.9.2026 hat der Maintainer `codex-gate` ergänzt.** Das ist zunächst eine
+Aussage und keine Messung — ablesen lässt sich die Required-Liste hier nach wie
+vor nicht. Getrennt wird sie über den Fall, den der Absatz oben schon benennt:
+ein PR, bei dem **nur dieser Status** offen ist. Ein Draft liefert ihn frei
+Haus, denn dort beendet sich der Gate-Job sofort («PR ist ein Draft»), sein
+Check-Run wird grün, und der Commit-Status bleibt gelb.
+
+Gemessen am 19.9.2026 an PR #124, zwei Zustände:
+
+| Zustand | Check-Runs | `codex-gate` | `mergeable_state` |
+|---|---|---|---|
+| A — Draft | 6/6 grün | pending | **blocked** |
+| B — ready, nach Review | 6/6 grün | success | **clean** |
+
+**Was B ausschliesst:** eine Genehmigungspflicht und einen required Kontext,
+der auf einem Doku-PR gar nicht berichtet — mit beidem wäre `clean` unmöglich.
+Das ist schon mehr, als `protected: true` je hergab.
+
+**Was A allein nicht trägt**, und ein Codex-Review auf diesem PR hat genau
+darauf gezeigt: Zwischen A und B ändern sich **zwei** Grössen, der Status und
+die Draft-Eigenschaft. Die historische Kontrolle — PR #117 stand am 18.9. in
+Lage A auf `unstable`, ein Draft ist also nicht von sich aus `blocked` — lief
+unter dem **alten** Ruleset und taugt deshalb nicht.
+
+**Die einzelne Variable liefert ein dritter Zustand, und er ist gemessen.**
+Herzustellen war er mit Geduld statt mit Rechten: ein **ready** PR nach einem
+Push. Ein Push löst keinen Review aus (Teil 1), der Poll lief also die vollen
+`POLL_MAX_SECONDS` = 900 s leer — zweimal, weil der wartende Lauf der
+Concurrency-Gruppe danach ebenfalls drankam. Erst als beide Job-Check-Runs
+fertig waren, stand der Zustand sauber:
+
+| Zustand | Draft? | Check-Runs | `codex-gate` | `mergeable_state` |
+|---|---|---|---|---|
+| B | nein | 7/7 grün | success | `clean` |
+| C | nein | 7/7 grün | **pending** | **blocked** |
+
+Gleicher PR, gleiches Ruleset, gleiche Basis, kein Draft-Wechsel: **verändert
+wurde genau eine Grösse.** Der Commit-Status `codex-gate` ist damit ein
+required check — belegt, nicht geschlossen. Die gewollte und die gemessene Lage
+decken sich seit dem 19.9.2026 also erstmals.
+
+Was weiterhin offen bleibt: ob der Check-Run des Jobs **zusätzlich** required
+ist. Er war in allen drei Zuständen grün, also nie die veränderte Grösse. Der
+Befund vom Vormittag (`cancelled` → `success` kippte `blocked` → `clean`) sagt,
+dass er es damals war; ob die Liste ihn noch führt, sagt er nicht.
+
+**Und dabei ist noch etwas anderes passiert.** Seit derselben Änderung melden
+*sämtliche* Branches `protected: true`, nicht nur `main`; am Vormittag standen
+die `claude/*`-Branches noch auf `false`. Das Ruleset greift also breiter als
+`main`. Was es dort erzwingt, ist ungemessen — praktisch zu beachten ist, dass
+ein Force-Push auf einen Arbeitsbranch, wie ihn ein Rebase braucht, daran
+scheitern kann.
 
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
