@@ -115,14 +115,21 @@
 # Toeten, und verhindert die widerspruechliche Ueberschreibung genauso: Zwei
 # Laeufe derselben Gruppe laufen nie gleichzeitig.
 #
-# WAS NOCH FEHLT, DAMIT ES WIRKT
-# -------------------------------
+# WORAN ES HAENGT, DAMIT ES WIRKT
+# --------------------------------
 # Dieser Workflow allein haelt nichts auf. Der Kontext `codex-gate` muss in den
 # Repo-Einstellungen als *required status check* auf `main` stehen, inklusive
 # «Do not allow bypassing the above settings» — sonst bleibt der Merge-Button
-# klickbar und das Gate ist Dekoration. Stand 28.8.2026 war `main` in beiden
-# Repos ungeschuetzt (`protected: false`), es gab also ueberhaupt keinen
-# Required Check.
+# klickbar und das Gate ist Dekoration.
+#
+# Das war lange nicht so, und die Zeitachse gehoert dazu: Stand 28.8.2026 war
+# `main` ungeschuetzt (`protected: false`) — ueberhaupt kein Required Check,
+# die gruenen Haekchen rein informativ. Am 18.9.2026 kam die Protection, aber
+# required war der Check-Run dieses Jobs statt des Status. Seit dem Nachmittag
+# des 19.9.2026 ist der Kontext `codex-gate` selbst required; belegt ist das
+# mit einer Einzelvariablen-Messung an #124, Einzelheiten beim Job-Namen weiter
+# unten. Wer die Protection wegnimmt, nimmt das Gate weg, ohne dass sich an
+# dieser Datei etwas aendert.
 
 name: Codex-Gate
 

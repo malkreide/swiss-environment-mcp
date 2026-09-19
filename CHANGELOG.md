@@ -157,6 +157,30 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Required-Liste gehört der Kontext `codex-gate`. Die Grenze bleibt: belegt ist,
   dass dieser eine Kontext required ist, nicht dass er der einzige ist.
 
+  **Nachmittags desselben Tages hat der Maintainer ihn ergänzt — und auch das
+  ist gemessen, nicht übernommen.** Die Aussage allein trug nicht: Die
+  Required-Liste ist hier nicht abzulesen, `list_branches` meldet bloss
+  `protected: true`. Getrennt hat es ein dritter Zustand von PR #124, ein
+  **ready** PR nach einem Push. Ein Push löst keinen Review aus, der Status
+  fällt auf `pending` und bleibt dort; der Poll lief die vollen 900 s leer,
+  zweimal. Gegen den Zustand davor — gleicher PR, gleiches Ruleset, gleiche
+  Basis, kein Draft-Wechsel, dieselben grünen Check-Runs — war der Status damit
+  die **einzige** veränderte Grösse, und `mergeable_state` kippte von `clean`
+  auf `blocked`. Der Commit-Status `codex-gate` ist required.
+
+  Zwei Grenzen bleiben. Ob der Check-Run des Jobs **zusätzlich** noch required
+  ist, sagt keine dieser Messungen — er war in allen drei Zuständen grün, also
+  nie die veränderte Grösse. Und die naheliegende Abkürzung trug nicht: Der
+  erste Anlauf stützte sich auf den Draft-Zustand plus PR #117 als historische
+  Kontrolle; ein Codex-Befund auf #124 (P2) hat zu Recht gezeigt, dass #117
+  unter dem **alten** Ruleset lief und zwei Beobachtungen aus zwei Regelwerken
+  nichts trennen.
+
+  **Nebenbefund, ungefragt:** Seit derselben Änderung melden *sämtliche*
+  Branches `protected: true`, nicht nur `main`. Ein normaler Push auf einen
+  Arbeitsbranch läuft durch; was mit dem Force-Push nach einem Rebase
+  geschieht, ist ungemessen.
+
 - **`CLAUDE.md`: die Codex-Auslöserliste — und der Push, der keiner ist**
   (Teil 1, «Dritter Weg, den Prüfer zu verlieren»). Der Abschnitt nannte
   bisher nur einen Auslöser («beim Umschalten von Draft auf ready»). Es sind
