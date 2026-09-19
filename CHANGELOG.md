@@ -63,6 +63,29 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Mal stand. Die Zeile sagt jetzt, dass diese Meldungen über `created_at`
   *datiert werden*, statt zu behaupten, sie nennten keinen Commit.
 
+  **Fünfter Befund (#121, P2), letzte Folgeaussage.** «Ohne die Tabelle bliebe
+  jeder saubere PR ungrün» war kein eigener Fehler, sondern die *Folgerung* aus
+  der widerlegten Annahme — und stand an zwei Stellen, von denen der Befund nur
+  eine nannte; die zweite fand die Begriffssuche. Der Grund für die Tabelle ist
+  ein anderer und bleibt bestehen: Ein unbekannter Text färbte das Gate an #104
+  rot, und die Tabelle nennt den geprüften Commit selbst. Ob ein sauberer Lauf
+  je **nur** die Tabelle hinterlässt, war beim Schreiben dieses Eintrags
+  ungemessen. **Inzwischen gemessen, an #122 selbst:** Summary `Completed` für
+  `ca9b3f2`, keine Befundlos-Meldung im Text, kein Review-Objekt — die Tabelle
+  war der einzige Nachweis. Beide Wege kommen also vor, und keiner ist
+  verzichtbar. Wodurch sich die Fälle unterscheiden, bleibt offen: #118 und
+  #119 hatten zuvor Befunde und wurden von Hand angefordert, #122 lief als
+  erster Review des PR auf «Draft marked ready» — zwei Unterschiede, drei
+  Beobachtungen, kein Beleg.
+
+  Und nebenbei der vollständige Reaktionswechsel, den die Sitzung bis dahin nur
+  halb hatte: auf dem **Pull Request** 10:11:08 `eyes: 1`, 10:13:04 `eyes: 0,
+  +1: 1`. Das 👀 wird durch das 👍 ersetzt, nicht ergänzt.
+
+  Damit ist die Lehre noch einmal enger zu fassen: Eine widerlegte Annahme
+  zieht Folgerungen nach sich, die für sich gelesen plausibel bleiben. Wer nur
+  die Annahme streicht, lässt ihre Schlüsse stehen.
+
 - **Die Concurrency-Einstellung wirkt nicht dort, wo sie steht**
   (`CLAUDE.md` Teil 2, `codex-gate.yml`-Kopf). Am 18.9. lag
   `cancel-in-progress: false` bereits im PR, und der Gate-Lauf von #118 wurde
