@@ -7,6 +7,41 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Hinzugefügt
 
+- **Die Required-Liste ist ablesbar — der Agent-Proxy sperrt nicht, er
+  begrenzt** (`CLAUDE.md` Teil 1 und Teil 2, `.github/workflows/codex-gate.yml`).
+  Drei PRs lang stand hier, welche Kontexte required sind, lasse sich nicht
+  feststellen; das MCP-Werkzeug bietet den Endpunkt nicht an, und daraus war
+  geschlossen worden, die Auskunft sei unerreichbar. Am 19.9.2026 nachgemessen:
+  Ein schlichtes `curl` auf `api.github.com` geht durch den Proxy und kommt
+  **authentifiziert** heraus (`/user` → `malkreide`, `/rate_limit` →
+  `core: limit=15000`).
+
+  `branches/main/protection` bleibt mit 403 «Resource not accessible by
+  integration» zu — eine Grenze des App-Tokens. Die **Rulesets** antworten
+  dagegen, und moderne Branch Protection ist hier genau das. Stand 19.9.2026
+  laufen zwei, beide aktiv: `main` (auf `refs/heads/main`) mit sieben required
+  Kontexten — `codex-gate`, `codex-gate: Status setzen`, `gitleaks`, `lint`,
+  `test (3.11)`, `test (3.12)`, `test (3.13)` — und ein zweites mit Ziel
+  `~ALL`, das `deletion` und `non_fast_forward` setzt und **keinen**
+  Status-Check führt. Verwirrend: Dieses zweite heisst `codex-gate`, während
+  die Gate-Kontexte im Ruleset `main` liegen.
+
+  **Vier offene Punkte fallen damit auf einmal.** Der Check-Run des Jobs ist
+  *zusätzlich* required — die Umbenennungs-Warnung im Workflow ist keine
+  Vorsicht mehr, sondern belegt. `image-size` ist **nicht** required, ein
+  Doku-PR wird davon nicht gehalten. Eine `pull_request`-Regel und damit eine
+  Genehmigungspflicht gibt es nicht. Und der Force-Push-Stopp auf den
+  Arbeitsbranches hat einen Namen: `non_fast_forward` im `~ALL`-Ruleset.
+
+  **Die Lehre ist die unangenehme.** Das ist «ein 403 ist gar keine Auskunft»
+  aus Teil 1, in der Variante «ein fehlendes Werkzeug ist keine Aussage über
+  die Quelle». Die 403-Meldung des Proxys sagt sogar, wo es langgeht («Use
+  repository-scoped endpoints»); gelesen wurde sie als zweite Variante
+  desselben Neins. Der indirekte Weg kam am Ende aufs richtige Ergebnis, bog
+  zweimal falsch ab und kostete drei Review-Runden. Nebenbei hat die
+  `X-RateLimit`-Frage aus Teil 1 damit auch eine Antwort: `rate_limit` nennt
+  Topf, Limit und Reset, statt sie aus Beobachtungszeitpunkten zu schätzen.
+
 - **Die Befundlos-Meldung ist nicht weggefallen** (`CLAUDE.md` Teil 1,
   `scripts/classify_codex_review.py`-Kopf). Aus dem neuen Infokasten war
   geschlossen worden, ein sauberer Codex-Lauf hinterlasse nur noch eine
@@ -158,9 +193,12 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   dass dieser eine Kontext required ist, nicht dass er der einzige ist.
 
   **Nachmittags desselben Tages hat der Maintainer ihn ergänzt — und auch das
-  ist gemessen, nicht übernommen.** Die Aussage allein trug nicht: Die
-  Required-Liste ist hier nicht abzulesen, `list_branches` meldet bloss
-  `protected: true`.
+  ist gemessen, nicht übernommen.** Die Aussage allein trug nicht, und die
+  Required-Liste galt als nicht abzulesen — `list_branches` meldet bloss
+  `protected: true`. **Das war der Fehler des ganzen Vorgangs**, siehe den
+  eigenen Eintrag weiter unten: Die Liste ist über die Rulesets abfragbar, die
+  folgende Erschliessung war also vermeidbar. Sie steht hier trotzdem, weil
+  sie zweimal danebenlag und beide Male aus demselben Grund.
 
   **Der Weg dahin ging über zwei untaugliche Anläufe, beide von einem
   Codex-Review gestoppt.** Der erste stützte sich auf den Draft-Zustand plus

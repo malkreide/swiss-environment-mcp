@@ -126,10 +126,14 @@
 # `main` ungeschuetzt (`protected: false`) — ueberhaupt kein Required Check,
 # die gruenen Haekchen rein informativ. Am 18.9.2026 kam die Protection, aber
 # required war der Check-Run dieses Jobs statt des Status. Seit dem Nachmittag
-# des 19.9.2026 ist der Kontext `codex-gate` selbst required; belegt ist das an
-# #125 mit festgehaltenem Head, Einzelheiten beim Job-Namen weiter unten. Wer
-# die Protection wegnimmt, nimmt das Gate weg, ohne dass sich an dieser Datei
-# etwas aendert.
+# des 19.9.2026 ist der Kontext `codex-gate` selbst required — und zwar
+# abgelesen, nicht erschlossen:
+#
+#   curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
+#
+# Das Ruleset `main` fuehrt beide Kontexte nebeneinander; die vollstaendige
+# Liste steht beim Job-Namen weiter unten. Wer die Protection wegnimmt, nimmt
+# das Gate weg, ohne dass sich an dieser Datei etwas aendert.
 
 name: Codex-Gate
 
@@ -206,11 +210,19 @@ jobs:
     #   fehlenden Kontext liefert er nicht nach — derselbe stand vorher
     #   schon gruen und fertig da —, eine Groesse ist er trotzdem.
     #
-    # OB DER CHECK-RUN NOCH DANEBENSTEHT, IST UNGEMESSEN: Er war in allen
-    # beobachteten Zustaenden gruen, also nie die veraenderte Groesse. Die
-    # Umbenennungs-Warnung bleibt deshalb bestehen — als Vorsicht, nicht als
-    # Gewissheit. Wer umbenennt, zieht die Branch Protection mit, sonst steht
-    # dort womoeglich ein Kontext, der nie wieder berichtet.
+    # DER CHECK-RUN STEHT DANEBEN, UND DAS IST JETZT ABGELESEN statt
+    # erschlossen. Das Ruleset `main` fuehrt sieben required Kontexte:
+    #
+    #   codex-gate                 codex-gate: Status setzen
+    #   gitleaks                   lint
+    #   test (3.11)                test (3.12)                test (3.13)
+    #
+    #   curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
+    #
+    # Die Umbenennungs-Warnung ist damit keine Vorsicht mehr, sondern belegt:
+    # Wer diesen Namen aendert, ohne das Ruleset mitzuziehen, hinterlaesst
+    # dort einen Kontext, der nie wieder berichtet — und der PR bleibt
+    # blockiert, ohne dass ein Check rot waere.
     # In Anfuehrungszeichen: Ein unquotierter YAML-Skalar mit «: » darin
     # ist ein Syntaxfehler, und GitHub meldete ihn erst beim Lauf.
     name: "codex-gate: Status setzen"
