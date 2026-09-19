@@ -697,8 +697,9 @@ nicht im YAML — aus demselben Grund wie bei `classify_live_run.py`.
 
 **Das Gate wirkt nur mit Branch Protection.** Der Kontext `codex-gate` muss auf
 `main` als *required status check* stehen, samt «Do not allow bypassing the
-above settings». Das ist die *gewollte* Lage; welche Kontexte heute tatsächlich
-required sind, steht zwei Absätze weiter unten und deckt sich nicht damit. Ohne das bleibt der Merge-Button klickbar. Am 28.8.2026 war
+above settings». Seit dem 19.9.2026 ist das nicht mehr nur die *gewollte*, sondern
+die gemessene Lage — Beleg zwei Absätze weiter unten. Ohne die Protection bleibt
+der Merge-Button klickbar. Am 28.8.2026 war
 `main` hier `protected: false` — es gab überhaupt keinen Required Check, die
 sechs grünen Häkchen waren informativ. Wer die Protection wegnimmt, nimmt
 das Gate weg, ohne dass eine Datei sich ändert.
@@ -707,8 +708,8 @@ das Gate weg, ohne dass eine Datei sich ändert.
 stand mit pendendem `codex-gate` auf `mergeable_state: blocked` statt wie zuvor
 auf `unstable` — der Merge-Button ist also tatsächlich gesperrt.
 
-**Welcher Check required ist, ist seit dem 19.9.2026 gemessen — und es ist der
-falsche.** Die Positivkontrolle, die hier als fehlend notiert stand, ergab sich
+**Welcher Check required ist, war am Vormittag des 19.9.2026 gemessen — und es
+war der falsche.** (Nachmittags kam der richtige dazu, siehe unten.) Die Positivkontrolle, die hier als fehlend notiert stand, ergab sich
 beim Entsperren von #118 von selbst: verändert wurde genau eine Grösse, der
 Check-Run `codex-gate: Status setzen` ging von `cancelled` auf `success`, und
 `mergeable_state` kippte von `blocked` auf `clean`. Required ist damit der

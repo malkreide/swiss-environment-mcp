@@ -177,21 +177,24 @@ jobs:
     # oben unter «DER CHECK-RUN DIESES JOBS IST NICHT DAS GATE».
     #
     # Aendert jemand diesen Namen, aendert sich der Name des Check-Runs — und
-    # das ist in diesem Repo heute ein Merge-Blocker. Gemessene Lage und
-    # gewollte Lage fallen naemlich auseinander:
+    # das kann ein Merge-Blocker sein. Zur Required-Lage, Stand 19.9.2026:
     #
-    #   GEMESSEN (19.9.2026): Required ist der CHECK-RUN dieses Jobs. Auf #118
+    #   VORMITTAGS GEMESSEN: Required war der CHECK-RUN dieses Jobs. Auf #118
     #   ging genau eine Groesse von `cancelled` auf `success` — dieser
     #   Check-Run —, und `mergeable_state` kippte von `blocked` auf `clean`.
-    #   Wer also umbenennt, ohne die Branch Protection mitzuziehen, laesst dort
-    #   einen Kontext stehen, der nie wieder berichtet, und sperrt jeden
-    #   folgenden PR.
     #
-    #   GEWOLLT: Required gehoert der Commit-Status `codex-gate`, weil nur er
-    #   das Urteil traegt; dieser Job endet immer mit 0.
+    #   NACHMITTAGS GEMESSEN: Der Commit-Status `codex-gate` ist (ebenfalls)
+    #   required. Auf #124 unterschieden sich zwei Zustaende in genau einer
+    #   Groesse — Status `success` -> `clean`, Status `pending` -> `blocked`,
+    #   beide ready, alle Check-Runs gruen. Damit deckt sich die Einstellung
+    #   endlich mit dem, was das Gate leisten soll: Erzwungen wird jetzt
+    #   nachweislich «Codex hat geprueft», nicht nur «der Job ist gelaufen».
     #
-    # Solange beides auseinanderfaellt, richtet man sich nach der gemessenen
-    # Lage, nicht nach der gewollten.
+    # OB DER CHECK-RUN NOCH DANEBENSTEHT, IST UNGEMESSEN: Er war in allen
+    # Zustaenden von #124 gruen, also nie die veraenderte Groesse. Die
+    # Umbenennungs-Warnung bleibt deshalb bestehen — als Vorsicht, nicht als
+    # Gewissheit. Wer umbenennt, zieht die Branch Protection mit, sonst steht
+    # dort womoeglich ein Kontext, der nie wieder berichtet.
     # In Anfuehrungszeichen: Ein unquotierter YAML-Skalar mit «: » darin
     # ist ein Syntaxfehler, und GitHub meldete ihn erst beim Lauf.
     name: "codex-gate: Status setzen"
