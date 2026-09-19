@@ -748,11 +748,27 @@ die Draft-Eigenschaft. Die historische Kontrolle — PR #117 stand am 18.9. in
 Lage A auf `unstable`, ein Draft ist also nicht von sich aus `blocked` — lief
 unter dem **alten** Ruleset und taugt deshalb nicht.
 
-**Die einzelne Variable liefert ein dritter Zustand,** und ihn herzustellen
-kostet nur Geduld: ein **ready** PR nach einem Push. Ein Push löst keinen
-Review aus (Teil 1), der Poll läuft also die vollen `POLL_MAX_SECONDS` = 900 s
-leer, danach ist der Job-Check-Run grün und der Status weiterhin nicht. Gegen B
-unterscheidet sich dann genau eine Grösse.
+**Die einzelne Variable liefert ein dritter Zustand, und er ist gemessen.**
+Herzustellen war er mit Geduld statt mit Rechten: ein **ready** PR nach einem
+Push. Ein Push löst keinen Review aus (Teil 1), der Poll lief also die vollen
+`POLL_MAX_SECONDS` = 900 s leer — zweimal, weil der wartende Lauf der
+Concurrency-Gruppe danach ebenfalls drankam. Erst als beide Job-Check-Runs
+fertig waren, stand der Zustand sauber:
+
+| Zustand | Draft? | Check-Runs | `codex-gate` | `mergeable_state` |
+|---|---|---|---|---|
+| B | nein | 7/7 grün | success | `clean` |
+| C | nein | 7/7 grün | **pending** | **blocked** |
+
+Gleicher PR, gleiches Ruleset, gleiche Basis, kein Draft-Wechsel: **verändert
+wurde genau eine Grösse.** Der Commit-Status `codex-gate` ist damit ein
+required check — belegt, nicht geschlossen. Die gewollte und die gemessene Lage
+decken sich seit dem 19.9.2026 also erstmals.
+
+Was weiterhin offen bleibt: ob der Check-Run des Jobs **zusätzlich** required
+ist. Er war in allen drei Zuständen grün, also nie die veränderte Grösse. Der
+Befund vom Vormittag (`cancelled` → `success` kippte `blocked` → `clean`) sagt,
+dass er es damals war; ob die Liste ihn noch führt, sagt er nicht.
 
 **Und dabei ist noch etwas anderes passiert.** Seit derselben Änderung melden
 *sämtliche* Branches `protected: true`, nicht nur `main`; am Vormittag standen
