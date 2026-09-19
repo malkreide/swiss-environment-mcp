@@ -95,9 +95,19 @@ schlaegt jede Fertigmeldung. Das Gate darf lieber warten als gruen luegen.
 FRISCHE
 -------
 Ein Review zaehlt nur fuer den Head, den er gesehen hat. Review-Objekte tragen
-dafuer `commit_id`. Issue-Kommentare tragen keine Commit-Angabe, also wird ihr
-`created_at` gegen den Zeitstempel des Head-Commits gehalten: Ein Kommentar von
-vor dem letzten Push hat den jetzigen Stand nicht gesehen.
+dafuer `commit_id`, die Summary ihre Commit-Spalte. Alle uebrigen
+Issue-Kommentare werden ueber `created_at` gegen den Zeitstempel des
+Head-Commits gehalten: Ein Kommentar von vor dem letzten Push hat den jetzigen
+Stand nicht gesehen.
+
+EINE AUSNAHME IST SEIT DEM 18.9.2026 SICHTBAR, WIRD ABER NICHT GENUTZT: Die
+Befundlos-Meldung traegt inzwischen selbst eine Zeile «Reviewed commit:
+`<sha>`» (gemessen an #118 und #119). Hier steht sie nur als Text im Body; die
+Frische entscheidet weiterhin `created_at`. Eine Meldung fuer einen FREMDEN
+Commit, die nach dem Head eintrifft, gilt deshalb als Nachweis fuer diesen
+Head. Das ist keine Absicht, sondern eine bekannte Luecke — festgehalten in
+`test_befundlos_fuer_fremden_commit_faellt_heute_nicht_auf`, der faellt, sobald
+jemand die Zeile auswertet.
 
 Aufruf:
     python scripts/classify_codex_review.py --payload gh-payload.json
@@ -325,9 +335,15 @@ def classify(payload: dict[str, Any]) -> tuple[str, str]:
             f"(state={review.get('state', '?')})",
         )
 
-    # 2) Kommentare. Zwei Sorten, und sie werden verschieden datiert: Die
-    #    fortgeschriebene Summary traegt ihren Commit selbst, die uebrigen
-    #    Meldungen nur ein `created_at`.
+    # 2) Kommentare. Zwei Sorten, und sie werden verschieden DATIERT: Die
+    #    fortgeschriebene Summary ueber ihre eigene Commit-Spalte, alle
+    #    uebrigen Meldungen ueber ihr `created_at`.
+    #
+    #    Das heisst NICHT, dass die uebrigen keinen Commit nennen. Die
+    #    Befundlos-Meldung fuehrt seit dem 18.9.2026 eine Zeile «Reviewed
+    #    commit», sie wird hier nur nicht ausgewertet — bekannte Luecke, siehe
+    #    FRISCHE im Kopf und
+    #    `test_befundlos_fuer_fremden_commit_faellt_heute_nicht_auf`.
     summary_rows: list[tuple[str, str, str]] = []
     #    Es gewinnt der NEUESTE Treffer, nicht der erste (Codex-Review vom
     #    28.8.2026, P2). `listComments` liefert chronologisch: Kam zuerst die
