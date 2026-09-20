@@ -1,5 +1,19 @@
 # Tool-Inventar — swiss-environment-mcp (Phase-2-Bestandsaufnahme)
 
+> **Historischer Schnappschuss, keine laufende Referenz.** Dieses Dokument hält
+> den Planungsstand vom 19.07.2026 fest und wird bewusst nicht fortgeschrieben —
+> die Update-Notizen unten tragen die Entwicklung nach. Wer den **heutigen**
+> Stand braucht, liest ihn dort, wo er erzwungen wird:
+>
+> | Frage | Quelle der Wahrheit |
+> |---|---|
+> | Welche Tools gibt es? | `tool-snapshot.json` (CI-Gate `tool_snapshot.py check`) |
+> | Welche Hosts dürfen kontaktiert werden? | `ALLOWED_HOSTS` in `src/swiss_environment_mcp/api_client.py` |
+> | Welche Quelle bedient welches Tool? | Tool-Tabelle in `README.md` / `README.de.md` |
+>
+> **Stand 20.09.2026 (v0.7.0): 21 Tools in 7 Clustern, 3 Resources.** Die
+> Zahlen im Abschnitt 1 unten sind die vom 19.07. und damit überholt.
+
 **Stand:** 2026-07-19
 **Zweck:** Inventar der bestehenden Tools vor der geplanten Erweiterung um die drei
 Phase-1-geprobten Quellen (LINDAS-Hydro, SLF, Jagdstatistik), inkl. Abgrenzung
@@ -62,6 +76,22 @@ noch Text-Link; `env_hazard_*` sind netzwerkfreie Routing-Tools.)
 > Stand jetzt **18 Tools in 6 Clustern** (Budget 18 ausgeschöpft). Der gesamte
 > LINDAS-Zugriff läuft über das extraktionsfähige Modul `lindas/`
 > (`client.py` + `cube.py`, siehe Architektur-Notiz in beiden READMEs).
+>
+> **Update v0.5.0 (2026-07-28):** Neuer Cluster **Fluglärm**
+> (`env_noise_aircraft_at`, `env_noise_aircraft_registers`,
+> `env_noise_limits_check`) über den BAZL-Lärmbelastungskataster auf
+> `api3.geo.admin.ch` — Stand **21 Tools in 7 Clustern**. Damit ist das
+> Tool-Budget ausgeschöpft; weitere Quellen gehören in einen eigenen Server.
+>
+> **Update v0.6.0 (2026-08-03):** `www.hydrodaten.admin.ch` ist **aus der
+> Egress-Allow-List entfernt** (SEC-021). Alle REST-Endpoints unter
+> `/lhg/az/*` sind stillgelegt (404), die Hydrologie kommt vollständig über
+> LINDAS; die Domain erscheint nur noch als Text-Link in der Tool-Ausgabe. Die
+> Liste im Abschnitt oben führt sie noch — sie ist auf den 26.07. datiert.
+> Massgeblich ist `ALLOWED_HOSTS` im Quelltext: `opendata.swiss`,
+> `www.waldbrandgefahr.ch`, `www.bafu.admin.ch`, `map.bafu.admin.ch`,
+> `lindas.admin.ch`, `measurement-api.slf.ch`, `aws.slf.ch`,
+> `www.jagdstatistik.ch`, `api3.geo.admin.ch`.
 
 ## 2. Geplante Erweiterung (Phase-1-Probe abgeschlossen)
 

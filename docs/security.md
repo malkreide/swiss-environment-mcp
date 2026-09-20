@@ -7,7 +7,9 @@ MCP-Audits.
 ## Datenklassifikation & Bedrohungsmodell
 
 - **Datenklasse:** ausschliesslich *Public Open Data* (BAFU/SLF, opendata.swiss).
-- **Schreibzugriff:** keiner — alle 12 Tools sind read-only (`readOnlyHint: true`).
+- **Schreibzugriff:** keiner — alle 21 Tools sind read-only (`readOnlyHint: true`,
+  `destructiveHint: false`). Nachgemessen am 20.09.2026 gegen `list_tools()`:
+  21 von 21.
 - **Auth:** keine. Der Server verarbeitet keine Personendaten und keine Secrets.
 
 Daraus folgt ein bewusst kleines Bedrohungsmodell: Es gibt keine vertraulichen

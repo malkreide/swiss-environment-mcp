@@ -5,6 +5,48 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Behoben
+
+- **Die Dokumentation nannte eine Quelle, die der Server seit v0.6.0 nicht mehr
+  anspricht.** `api_client.py` sagt es im Quelltext: «hydrodaten.admin.ch wird
+  nicht mehr per HTTP kontaktiert … die Domain erscheint nur noch als Text-Link
+  in der Tool-Ausgabe und ist aus der Egress-Allow-List entfernt (SEC-021)».
+  Die Tool-Tabelle beider READMEs führte sie trotzdem als Fallback-Quelle, bei
+  `env_hydro_history` sogar als einzige — während die «Known Limitations»
+  derselben Datei zwei Bildschirme weiter unten korrekt erklären, dass die
+  Endpoints stillgelegt sind und der Wert aus LINDAS kommt. Die Datei
+  widersprach sich also selbst, über einen Release hinweg.
+
+  Korrigiert: Quellenspalte der drei Hydro-Zeilen, die Datenquellen-Tabelle und
+  der Quellenkasten im Architektur-Diagramm. Letzterer war in beide Richtungen
+  falsch — er nannte `hydrodaten.admin.ch`, das nicht kontaktiert wird, und
+  verschwieg `lindas.admin.ch`, die beiden SLF-Hosts, `jagdstatistik.ch` und
+  `api3.geo.admin.ch`, die es werden. Er führt jetzt genau die neun Einträge
+  aus `ALLOWED_HOSTS`.
+
+- **Zwei Referenzdokumente trugen veraltete Tool-Zahlen, eines davon zur
+  Sicherheit.** `docs/security.md` sprach von «alle 12 Tools sind read-only»,
+  `docs/roadmap.md` von 18 — es sind 21. Die Aussage selbst wurde vor der
+  Korrektur geprüft und nicht bloss die Zahl angepasst: `list_tools()` meldet
+  für alle 21 Tools `read_only_hint=True` und `destructive_hint=False`.
+
+  Dabei fast ein Fehlbefund: Eine erste Abfrage auf `readOnlyHint` lieferte
+  **null** read-only Tools. Das SDK führt das Feld auf `ToolAnnotations` als
+  `read_only_hint` (snake_case) — gefragt war der falsche Name, geantwortet
+  hat eine leere Menge, und die sah aus wie ein gravierender Befund. Dieselbe
+  Klasse wie «ein 403 ist gar keine Auskunft»: Erst prüfen, ob die Frage
+  ankam, bevor die Antwort etwas bedeutet.
+
+- **`docs/tool-inventory.md` wurde als das gekennzeichnet, was es ist.** Das
+  Dokument ist ein datierter Schnappschuss («Stand: 2026-07-19») mit
+  angehängten Update-Notizen, wird aber gelesen, als wäre es eine laufende
+  Referenz — und nannte dann 12 bzw. 18 Tools und eine Egress-Liste, die
+  `hydrodaten.admin.ch` noch führt. Der datierte Korpus bleibt **unverändert**,
+  denn er ist ein Nachweis. Neu steht darüber ein Kasten, der auf die Quellen
+  der Wahrheit verweist (`tool-snapshot.json`, `ALLOWED_HOSTS`, die
+  README-Tabelle) und den heutigen Stand nennt; die Update-Spur ist um v0.5.0
+  und v0.6.0 ergänzt.
+
 ## [0.7.0] – 2026-09-19
 
 Dieses Release schliesst die Arbeit seit dem 03.08.2026 ab. **Die 21 Tools sind

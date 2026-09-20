@@ -171,9 +171,9 @@ migrate to MCP resources rather than tools.
 
 | Tool | Description | Data Source |
 |---|---|---|
-| `env_hydro_stations` | Filter hydrological gauging stations by water body (canton filter unavailable — see notes) | **LINDAS SPARQL** → hydrodaten.admin.ch (fallback) |
-| `env_hydro_current` | Current water level, flow rate and temperature at a station | **LINDAS SPARQL** → hydrodaten.admin.ch (fallback) |
-| `env_hydro_history` | Historical hourly values (up to 30 days) with download links ⚠️ | hydrodaten.admin.ch |
+| `env_hydro_stations` | Filter hydrological gauging stations by water body (canton filter unavailable — see notes) | **LINDAS SPARQL** |
+| `env_hydro_current` | Current water level, flow rate and temperature at a station | **LINDAS SPARQL** |
+| `env_hydro_history` | Latest LINDAS value plus the access path for real time series ⚠️ | **LINDAS SPARQL** |
 | `env_flood_warnings` | Active flood warnings filtered by danger level (nationwide — canton filter not applied) | **LINDAS SPARQL** |
 | `env_bathing_water` | Bathing water quality (E.coli, enterococci) per bathing site — multi-year time series | **LINDAS SPARQL** (data cube `ubd0104`) |
 
@@ -292,13 +292,14 @@ swiss-housing-mcp  →  address / EGID  →  LV95 E/N
 ┌─────────────────┐     ┌───────────────────────────┐     ┌──────────────────────────┐
 │   Claude / AI   │────▶│   Swiss Environment MCP   │────▶│  BAFU / Swiss Agencies   │
 │   (MCP Host)    │◀────│   (MCP Server)            │◀────│                          │
-└─────────────────┘     │                           │     │  hydrodaten.admin.ch     │
-                        │  21 Tools · 3 Resources   │     │  naturgefahren.ch        │
-                        │  Stdio | SSE              │     │  waldbrandgefahr.ch      │
-                        │                           │     │  opendata.swiss (CKAN)   │
-                        │  api_client.py            │     └──────────────────────────┘
-                        │  server.py (FastMCP)      │
-                        └───────────────────────────┘
+└─────────────────┘     │                           │     │  lindas.admin.ch (SPARQL)│
+                        │  21 Tools · 3 Resources   │     │  measurement-api.slf.ch  │
+                        │  Stdio | SSE              │     │  aws.slf.ch              │
+                        │                           │     │  waldbrandgefahr.ch      │
+                        │  api_client.py            │     │  jagdstatistik.ch        │
+                        │  server.py (FastMCP)      │     │  api3.geo.admin.ch       │
+                        └───────────────────────────┘     │  opendata.swiss (CKAN)   │
+                                                          └──────────────────────────┘
 ```
 
 ### Architecture note — extractable `lindas/` module
@@ -345,7 +346,7 @@ Full measurements and reasoning: [`docs/probe-fluglaerm.md`](docs/probe-fluglaer
 | Source | Data | Licence |
 |---|---|---|
 | [lindas.admin.ch](https://lindas.admin.ch) | Current hydrology (level, discharge, water temperature) and bathing water quality via SPARQL | BAFU Open-Use / OGD (declared per graph/dataset — each response carries a licence field) |
-| [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Water levels, flow rates, temperatures (REST fallback) | BAFU OGD |
+| [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Not contacted over HTTP since v0.6.0 — the `/lhg/az/*` endpoints are decommissioned and the data comes from LINDAS. Appears only as a link in tool output and was removed from the egress allow-list (SEC-021). | BAFU OGD |
 | [naturgefahren.ch](https://naturgefahren.ch) | Natural hazard bulletin (SLF/BAFU) | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
 | [SLF data service](https://www.slf.ch/en/services-and-products/slf-data-service/) | Snow depth, new snow (IMIS); avalanche bulletin | SLF (WSL) CC BY 4.0 |
