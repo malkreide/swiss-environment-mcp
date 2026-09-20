@@ -21,8 +21,24 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   der Quellenkasten im Architektur-Diagramm. Letzterer war in beide Richtungen
   falsch — er nannte `hydrodaten.admin.ch`, das nicht kontaktiert wird, und
   verschwieg `lindas.admin.ch`, die beiden SLF-Hosts, `jagdstatistik.ch` und
-  `api3.geo.admin.ch`, die es werden. Er führt jetzt genau die neun Einträge
-  aus `ALLOWED_HOSTS`.
+  `api3.geo.admin.ch`, die es werden. Er führt jetzt die **sieben tatsächlich
+  kontaktierten** Upstreams, und der Kastenkopf sagt das auch («Upstreams
+  (kontaktiert)» statt «BAFU / Bundesbehörden»).
+
+  Hier stand zuerst «genau die neun Einträge aus `ALLOWED_HOSTS`». Das war
+  falsch, aufgedeckt von einem Codex-Review auf PR #127 (P2) — der Kasten
+  zeigt sieben. Die Allow-List führt zwei weitere, `www.bafu.admin.ch` und
+  `map.bafu.admin.ch`, und sie nachzutragen wäre genau der Fehler gewesen,
+  den dieser Commit behebt: Beide werden **nicht** kontaktiert. `BAFU_WEB`
+  und `BAFU_GIS` sind in `api_client.py` deklariert und in keinem Request
+  verwendet; die URLs erscheinen ausschliesslich als Text-Links in der
+  Tool-Ausgabe.
+
+  **Daraus ein offener Befund, der nicht in diesen Doku-PR gehört:** Die
+  Allow-List führt damit zwei Hosts, für die es keinen ausgehenden Request
+  gibt — dieselbe Lage, aus der SEC-021 `hydrodaten.admin.ch` entfernt hat.
+  Sie zu streichen ist eine Änderung an der Egress-Richtlinie, kein
+  Doku-Nachtrag, und gehört eigens entschieden.
 
 - **Zwei Referenzdokumente trugen veraltete Tool-Zahlen, eines davon zur
   Sicherheit.** `docs/security.md` sprach von «alle 12 Tools sind read-only»,
