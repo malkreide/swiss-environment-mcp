@@ -5,6 +5,65 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Sicherheit / Security
+
+- **Zwei Hosts standen in der Egress-Allow-List, ohne dass je ein Request an
+  sie ging.** `www.bafu.admin.ch` und `map.bafu.admin.ch` sind entfernt, samt
+  der Konstanten `BAFU_WEB` und `BAFU_GIS` und den zwei FQDN-Zeilen in
+  `deploy/network-policy.example.yaml`.
+
+  Gemessen vor dem Eingriff: Beide Konstanten waren definiert und **nirgends
+  referenziert**; die URLs erscheinen ausschliesslich als Text-Links in der
+  Tool-Ausgabe (`server.py:1181`, `:1237`, `:2074`). Von den neun Einträgen
+  hingen sieben an einer benutzten Basis-URL, zwei an keiner. Das ist
+  dieselbe Lage wie bei `naturgefahren.ch` und `hydrodaten.admin.ch`, nur
+  ohne Vorgeschichte — hier gab es nie einen Aufrufer.
+
+  Aufgefallen ist es nicht durch ein Audit, sondern beim Korrigieren des
+  Architektur-Diagramms (PR #128): Der Kasten zeigte sieben Hosts, die Liste
+  führte neun. Die Differenz sah nach einem Dokumentationsfehler aus und war
+  überzählige Angriffsfläche.
+
+  Keine Verhaltensänderung für Nutzende: Kein Tool verliert eine Funktion,
+  kein Link verschwindet aus der Ausgabe.
+
+- **Der Einzelfall ist abgesichert, und die Klasse auch.** Neu in
+  `tests/test_unit.py`:
+
+  - `test_bafu_web_hosts_are_out_of_the_egress_allowlist` — die zwei Namen,
+    nach dem Muster des bestehenden Tests für `hydrodaten.admin.ch`.
+  - `test_kein_allowed_host_ohne_aufrufer` — die Wurzel: Zu jedem Eintrag
+    muss es eine Konstante geben, deren Wert der Host oder dessen Netloc ist,
+    und dieser Name muss irgendwo **gelesen** werden.
+
+  **Die erste Fassung des zweiten Tests war wertlos, und die Gegenprobe hat
+  es gezeigt, nicht das Nachdenken.** Sie zählte Namensvorkommen per Regex
+  über den Dateitext — und der Quelltext erklärt seit demselben Commit in
+  einem Kommentar, warum `BAFU_WEB` entfernt wurde. Diese Erwähnung liess den
+  Namen als «benutzt» erscheinen: Mit wieder eingetragenem Host und wieder
+  eingefügter unbenutzter Konstante blieb der Test grün. Gezählt wird jetzt
+  über den Syntaxbaum (`ast.Name` und `ast.Attribute` im Load-Kontext);
+  Kommentare und Zeichenketten tauchen dort nicht auf.
+
+  Drei Gegenproben, alle gefahren:
+
+  | Eingriff | erwartet | gemessen |
+  |---|---|---|
+  | nur den Host zurück | Einzelfall, Klasse und Policy-Sync fallen | 3 rot |
+  | Host + unbenutzte Konstante + Policy synchron | Einzelfall und Klasse fallen | 2 rot |
+  | Host + Konstante, die **wirklich** gelesen wird | Klasse bleibt grün | grün |
+
+  Die dritte ist die wichtige: Ein Test, der immer anschlägt, ist so wenig
+  wert wie einer, der nie anschlägt.
+
+- **Das Verfahren in `docs/security.md` deckte nur eine Richtung ab.** Der
+  Abschnitt hiess «Allow-List erweitern». Das Streichen dieser zwei Hosts war
+  die erste Änderung in der anderen Richtung; sie verkleinert die
+  Angriffsfläche, berührt aber dasselbe Artefakt. Er heisst jetzt «ändern»,
+  Schritt 1 nennt beide Fälle, und dass Schritt 4 (Review durch eine zweite
+  Person) bei einer Verkleinerung zur Entscheidung der Projektverantwortung
+  wird, steht ausdrücklich da statt stillschweigend angenommen zu werden.
+
 ### Behoben
 
 - **Die Dokumentation nannte eine Quelle, die der Server seit v0.6.0 nicht mehr

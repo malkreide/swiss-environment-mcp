@@ -111,13 +111,28 @@ SIEM-Alerting zu implementieren und gegen Standard-Angriffsmuster zu testen.
 - **Render/Docker-Compose:** bieten keine hostbasierte Egress-Beschränkung auf
   App-Ebene; dort bleibt der Code-Layer die massgebliche Kontrolle.
 
-### Allow-List erweitern (verbindliches Verfahren)
+**Stand 20.09.2026: sieben Hosts.** `www.bafu.admin.ch` und
+`map.bafu.admin.ch` sind entfernt — für beide gab es eine Basis-URL-Konstante,
+aber nie einen Aufrufer; die URLs stehen ausschliesslich als Text-Links in der
+Tool-Ausgabe. Zwei Hosts standen damit in der Allow-List, ohne dass je ein
+Request an sie ging. `test_kein_allowed_host_ohne_aufrufer` hält das offen:
+Jeder Eintrag braucht eine Konstante, die im Syntaxbaum auch **gelesen** wird.
 
-Eine Änderung an `ALLOWED_HOSTS` ist eine sicherheitsrelevante Erweiterung der
-Angriffsfläche und durchläuft daher:
+### Allow-List ändern (verbindliches Verfahren)
 
-1. **PR mit expliziter Begründung**, welcher neue Host warum nötig ist
-   (Datenquelle, Endpoint, Lizenz).
+Der Abschnitt hiess «erweitern» und regelte damit nur eine Richtung. Das
+Streichen der beiden BAFU-Hosts war die erste Änderung in der anderen — sie
+verkleinert die Angriffsfläche, ändert aber dasselbe sicherheitsrelevante
+Artefakt und läuft deshalb durch dieselben Schritte 1–3. Schritt 4 (zweite
+Person) bleibt für **Erweiterungen** zwingend; bei einer Verkleinerung
+entscheidet die Projektverantwortung, ob sie darauf besteht.
+
+Eine Änderung an `ALLOWED_HOSTS` betrifft das Sicherheitsprofil und durchläuft
+daher:
+
+1. **PR mit expliziter Begründung** — bei einem neuen Host, warum er nötig
+   ist (Datenquelle, Endpoint, Lizenz); bei einem gestrichenen, woran belegt
+   ist, dass kein Aufrufer mehr existiert.
 2. **`deploy/network-policy.example.yaml` im selben PR mitziehen** (FQDN-Liste).
 3. **CHANGELOG-Eintrag** unter Security (neuer Egress-Host = dokumentierte
    Änderung des Sicherheitsprofils).

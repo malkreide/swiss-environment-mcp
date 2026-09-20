@@ -61,8 +61,6 @@ spec:
     - toFQDNs:  # MUSS mit ALLOWED_HOSTS synchron sein
         - matchName: opendata.swiss
         - matchName: www.waldbrandgefahr.ch
-        - matchName: www.bafu.admin.ch
-        - matchName: map.bafu.admin.ch
         - matchName: lindas.admin.ch
         - matchName: measurement-api.slf.ch
         - matchName: aws.slf.ch
