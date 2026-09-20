@@ -290,7 +290,7 @@ swiss-housing-mcp  →  address / EGID  →  LV95 E/N
 
 ```
 ┌─────────────────┐     ┌───────────────────────────┐     ┌──────────────────────────┐
-│   Claude / AI   │────▶│   Swiss Environment MCP   │────▶│  BAFU / Swiss Agencies   │
+│   Claude / AI   │────▶│   Swiss Environment MCP   │────▶│  Upstreams (contacted)   │
 │   (MCP Host)    │◀────│   (MCP Server)            │◀────│                          │
 └─────────────────┘     │                           │     │  lindas.admin.ch (SPARQL)│
                         │  21 Tools · 3 Resources   │     │  measurement-api.slf.ch  │
