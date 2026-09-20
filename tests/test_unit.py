@@ -762,6 +762,83 @@ def test_hydrodaten_is_out_of_the_egress_allowlist():
         api.assert_host_allowed("https://www.hydrodaten.admin.ch/lhg/az/json/2099.json")
 
 
+def test_bafu_web_hosts_are_out_of_the_egress_allowlist():
+    """Zwei Hosts standen in der Allow-List, ohne dass je ein Request an sie ging.
+
+    `BAFU_WEB` und `BAFU_GIS` waren definiert und nirgends referenziert; die
+    URLs stehen ausschliesslich als Text-Links in der Tool-Ausgabe. Das ist
+    dieselbe Lage wie bei naturgefahren.ch und hydrodaten.admin.ch, nur ohne
+    Vorgeschichte — hier gab es nie einen Aufrufer.
+    """
+    for host in ("www.bafu.admin.ch", "map.bafu.admin.ch"):
+        assert host not in api.ALLOWED_HOSTS
+        with pytest.raises(api.SecurityError):
+            api.assert_host_allowed(f"https://{host}/de/themen")
+
+
+def test_kein_allowed_host_ohne_aufrufer():
+    """Jeder Eintrag der Allow-List braucht eine Basis-URL, die benutzt wird.
+
+    Die Wurzel des Befunds oben: Ein Host kommt in die Liste, sein Aufrufer
+    verschwindet später — und die Liste bleibt. Der Einzelfall-Test darüber
+    fängt genau zwei Namen; dieser hier fängt die Klasse.
+
+    Geprüft wird auf Modulebene: Zu jedem erlaubten Host muss es eine
+    Konstante geben, deren Wert der Host selbst ist oder dessen Netloc, und
+    dieser Name muss irgendwo **gelesen** werden. Eine definierte, aber
+    nirgends referenzierte Konstante zählt nicht — das war exakt der Fall von
+    `BAFU_WEB` und `BAFU_GIS`.
+
+    Gezählt wird über den Syntaxbaum, nicht über den Text. Die erste Fassung
+    zählte Vorkommen per Regex und war damit durch einen Kommentar zu
+    besänftigen: Der Quelltext erklärt oben, warum `BAFU_WEB` entfernt wurde —
+    und genau diese Erwähnung liess den Namen als «benutzt» erscheinen. Die
+    Gegenprobe hat es gefunden, nicht das Nachdenken.
+    """
+    import ast
+    from collections import Counter
+    from pathlib import Path
+    from urllib.parse import urlparse
+
+    src = Path(__file__).resolve().parent.parent / "src" / "swiss_environment_mcp"
+    baeume = {f: ast.parse(f.read_text(encoding="utf-8")) for f in sorted(src.rglob("*.py"))}
+
+    konstanten: dict[str, str] = {}
+    gelesen: Counter[str] = Counter()
+    for baum in baeume.values():
+        for node in baum.body:
+            if (
+                isinstance(node, ast.Assign)
+                and isinstance(node.value, ast.Constant)
+                and isinstance(node.value.value, str)
+            ):
+                for ziel in node.targets:
+                    if isinstance(ziel, ast.Name):
+                        konstanten[ziel.id] = node.value.value
+        for node in ast.walk(baum):
+            # Lesender Zugriff: `NAME` oder `modul.NAME`. Kommentare und
+            # Zeichenketten tauchen im Syntaxbaum gar nicht erst auf.
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+                gelesen[node.id] += 1
+            elif isinstance(node, ast.Attribute) and isinstance(node.ctx, ast.Load):
+                gelesen[node.attr] += 1
+
+    ohne_aufrufer = []
+    for host in sorted(api.ALLOWED_HOSTS):
+        passend = [
+            name
+            for name, wert in konstanten.items()
+            if wert == host or urlparse(wert).netloc == host
+        ]
+        benutzt = [n for n in passend if gelesen[n] > 0]
+        if not benutzt:
+            ohne_aufrufer.append((host, passend or ["keine Konstante"]))
+
+    assert not ohne_aufrufer, "Hosts in ALLOWED_HOSTS ohne referenzierte Basis-URL: " + "; ".join(
+        f"{h} (Konstanten: {', '.join(k)})" for h, k in ohne_aufrufer
+    )
+
+
 @respx.mock
 async def test_hydro_stations_lindas_water_body_filter():
     """env_hydro_stations (ohne Kanton) nutzt LINDAS und filtert nach Gewässer."""

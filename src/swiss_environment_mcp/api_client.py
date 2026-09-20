@@ -5,7 +5,6 @@ Quellen:
   - opendata.swiss        – BAFU-Datensätze (CKAN API)
   - naturgefahren.ch      – Naturgefahren-Bulletin (SLF/BAFU)
   - waldbrandgefahr.ch    – Waldbrandgefahr Schweiz
-  - map.bafu.admin.ch     – BAFU Web-GIS (Gefahrenkarten)
   - api3.geo.admin.ch     – BAZL-Fluglärmbelastungskataster (identify)
 
 Sicherheit (siehe Audit SEC-004 / SEC-021):
@@ -50,6 +49,17 @@ _logger = get_logger(component="api_client")
 # Domain erscheint nur noch als Text-Link in der Tool-Ausgabe und ist deshalb —
 # wie zuvor naturgefahren.ch — aus der Egress-Allow-List entfernt (SEC-021).
 
+# www.bafu.admin.ch und map.bafu.admin.ch ebenso, und hier war es nie anders:
+# Fuer beide gab es `BAFU_WEB` / `BAFU_GIS`, aber nie einen Aufrufer — die URLs
+# stehen ausschliesslich als Text-Links in der Tool-Ausgabe. Zwei Hosts standen
+# damit in der Allow-List, ohne dass je ein Request an sie ging. Aufgefallen
+# beim Nachziehen des Architektur-Diagramms (PR #128): Der Kasten zeigte sieben
+# Hosts, die Liste fuehrte neun. Die Differenz war kein Dokumentationsfehler,
+# sondern ueberzaehlige Angriffsflaeche.
+#
+# `tests/test_unit.py::test_kein_allowed_host_ohne_aufrufer` haelt das offen:
+# Jeder Eintrag braucht eine Basis-URL-Konstante, die auch referenziert wird.
+
 OPENDATA_SWISS_API = "https://opendata.swiss/api/3/action"
 
 # CKAN-Slug des BAFU auf opendata.swiss. Nicht «bafu» — dieser Name existiert
@@ -66,8 +76,6 @@ OPENDATA_BAFU_URL = f"https://opendata.swiss/de/organization/{OPENDATA_BAFU_ORG}
 
 WALDBRAND_BASE = "https://www.waldbrandgefahr.ch"
 
-BAFU_WEB = "https://www.bafu.admin.ch"
-BAFU_GIS = "https://map.bafu.admin.ch"
 
 # --- LINDAS (Linked Data Service des Bundes) — SPARQL -------------------------
 # Aktuelle hydrologische Messwerte des BAFU als RDF-Data-Cube (cube.link).
@@ -118,8 +126,6 @@ ALLOWED_HOSTS: frozenset[str] = frozenset(
     {
         "opendata.swiss",
         "www.waldbrandgefahr.ch",
-        "www.bafu.admin.ch",
-        "map.bafu.admin.ch",
         "lindas.admin.ch",
         "measurement-api.slf.ch",
         "aws.slf.ch",

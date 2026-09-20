@@ -89,9 +89,12 @@ noch Text-Link; `env_hazard_*` sind netzwerkfreie Routing-Tools.)
 > LINDAS; die Domain erscheint nur noch als Text-Link in der Tool-Ausgabe. Die
 > Liste im Abschnitt oben führt sie noch — sie ist auf den 26.07. datiert.
 > Massgeblich ist `ALLOWED_HOSTS` im Quelltext: `opendata.swiss`,
-> `www.waldbrandgefahr.ch`, `www.bafu.admin.ch`, `map.bafu.admin.ch`,
-> `lindas.admin.ch`, `measurement-api.slf.ch`, `aws.slf.ch`,
-> `www.jagdstatistik.ch`, `api3.geo.admin.ch`.
+> `www.waldbrandgefahr.ch`, `lindas.admin.ch`, `measurement-api.slf.ch`,
+> `aws.slf.ch`, `www.jagdstatistik.ch`, `api3.geo.admin.ch`.
+>
+> **Update 20.09.2026 (unversioniert):** `www.bafu.admin.ch` und `map.bafu.admin.ch`
+> sind ebenfalls entfernt — sie standen in der Liste, ohne dass je ein Request
+> an sie ging. Sieben Hosts.
 
 ## 2. Geplante Erweiterung (Phase-1-Probe abgeschlossen)
 
