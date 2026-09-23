@@ -5,6 +5,28 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Removed
+
+- **Das Codex-Gate ist entfernt.** Weg sind `.github/workflows/codex-gate.yml`,
+  `scripts/classify_codex_review.py` und `tests/test_classify_codex_review.py`;
+  dazu der Checklisten-Abschnitt im PR-Template und die Gate-Abschnitte in
+  `CLAUDE.md` (drei Abschnitte in Teil 1, 278 Zeilen; der Gate-Block in Teil 2,
+  261 Zeilen).
+
+  `tests/test_workflows.py` bleibt — die Datei sichert zu, dass **jeder**
+  Workflow gueltiges YAML ist, und das gilt weiter. Nur ihr Anker zeigte auf
+  `codex-gate.yml` und zeigt jetzt auf `ci.yml`.
+
+  **Zwei required Kontexte muessen von Hand aus dem Ruleset `main`:**
+  `codex-gate` und `codex-gate: Status setzen`. Mit dem Workflow ist weg, was
+  sie berichtet; ein required Kontext ohne Berichterstatter haelt jeden PR auf.
+  Diese Einstellung sperrt der Agent-Proxy mit HTTP 403.
+
+  **Das gleichnamige Ruleset `codex-gate` darf NICHT geloescht werden.** Es
+  traegt keinen Status-Check, sondern `non_fast_forward` auf `~ALL` — den
+  Force-Push-Stopp fuer saemtliche Branches. Zu streichen sind die zwei
+  Kontexte im Ruleset `main`, nicht das gleichnamige Ruleset.
+
 ### Sicherheit / Security
 
 - **Zwei Hosts standen in der Egress-Allow-List, ohne dass je ein Request an

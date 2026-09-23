@@ -179,8 +179,9 @@ def test_der_scan_findet_die_workflows_ueberhaupt() -> None:
 
     assert len(gefunden) >= 5, f"Workflow-Scan findet fast nichts: {gefunden}"
     namen = {p.name for p in gefunden}
-    assert "codex-gate.yml" in namen, (
-        "der Workflow, dessen Ausfall diese Datei ausgeloest hat, ist nicht im Scan"
+    assert "ci.yml" in namen, (
+        "der Scan findet nicht einmal ci.yml -- dann sagt er ueber die "
+        "uebrigen Workflows auch nichts"
     )
 
 
