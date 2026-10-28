@@ -1620,10 +1620,13 @@ async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = Non
     # ist stillgelegt (404). LINDAS liefert nur den aktuellen Wert; echte
     # historische Zeitreihen sind order-basiert (BAFU-Abfragezentrale).
     latest = None
+    error_msg = None
     try:
         latest = await api.fetch_hydro_current_lindas(params.station_id)
     except Exception as e:
-        await _handle_tool_error("env_hydro_history", e, ctx, station_id=params.station_id)
+        error_msg = await _handle_tool_error(
+            "env_hydro_history", e, ctx, station_id=params.station_id
+        )
 
     portal_url = f"https://www.hydrodaten.admin.ch/de/seen-und-fluesse/{params.station_id}"
     lines = [
@@ -1639,6 +1642,24 @@ async def env_hydro_history(params: HydroHistoryInput, ctx: Context | None = Non
             f"- **Abfluss:** {latest.get('discharge') or '–'} m³/s",
             f"- **Pegel:** {latest.get('level') or '–'} m ü.M.",
             f"- **Wassertemperatur:** {latest.get('temperature') or '–'} °C",
+            "",
+        ]
+    else:
+        # Der Block fiel hier früher stumm weg. Wer die Ausgabe liest, konnte
+        # «kein aktueller Wert» nicht von «Station ohne Live-Messung» trennen —
+        # und der Live-Test nicht von «Tool hat den Wert verschluckt». Zwei
+        # verschiedene Aussagen, je eine eigene Zeile (wie `env_hydro_current`).
+        if error_msg is not None:
+            reason = f"LINDAS nicht abrufbar ({error_msg})"
+        else:
+            reason = (
+                "LINDAS hat geantwortet, führt zu dieser Stationsnummer derzeit aber "
+                "keine Beobachtung"
+            )
+        # Bewusst ohne die Überschrift oben: «### Aktuellster Messwert» steht nur
+        # dort, wo auch ein Wert steht.
+        lines += [
+            f"> **Kein aktueller Messwert:** {reason}. Direktzugang: {portal_url}",
             "",
         ]
 
