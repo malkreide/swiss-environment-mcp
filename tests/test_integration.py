@@ -112,7 +112,7 @@ async def _tool_text(coro) -> str:
         return str(e)
 
 
-async def _upstream_answered(probe) -> None:
+async def _upstream_answered(probe):
     """Holt einen Fehler nach, den ein Tool selbst abgefangen hat.
 
     Einige Tools schlucken den Upstream-Fehler und liefern trotzdem eine
@@ -125,8 +125,13 @@ async def _upstream_answered(probe) -> None:
     auf: wirft sie einen Transportfehler, wird der Lauf übersprungen; antwortet
     sie, ist der fehlende Block ein Befund und die folgende Zusicherung darf ihn
     melden.
+
+    Die Antwort wird zurückgegeben, weil «hat geantwortet» noch nicht heisst
+    «hatte den Wert». Am 17.08. und 17.10.2026 lieferte LINDAS 200 ohne
+    Beobachtung zur Station 2099, und der Test schrieb den fehlenden Block dem
+    Tool zu. Wer den Inhalt nicht ansieht, kann Quelle und Tool nicht trennen.
     """
-    await probe()
+    return await probe()
 
 
 # --- Luft-Tests ---------------------------------------------------------------
@@ -427,14 +432,30 @@ async def test_hydro_history() -> None:
     check("Verlaufsdaten: opendata.swiss erwähnt", "opendata.swiss" in result)
 
     # Beide Links sind statisch — bis hierher prüfte der Test nichts Lebendiges.
-    # Der Live-Anteil ist der aktuelle LINDAS-Wert; fällt LINDAS aus, verschwindet
-    # der Block einfach, und der Test bemerkte es nicht.
+    # Der Live-Anteil ist der aktuelle LINDAS-Wert.
+    #
+    # Fehlt er, liest der Test die Begründung des Tools, statt LINDAS ein
+    # zweites Mal zu fragen: Die zweite Antwort ist nicht die, die das Tool
+    # bekam. Am 17.10.2026 war `test_hydro_current_lindas` Sekunden vorher grün
+    # und das Tool sah trotzdem keine Beobachtung — eine Nachfrage kann den Wert
+    # dann längst wieder haben und schiebt die Lücke der Quelle dem Tool zu.
+    # Genau das stand damals (und am 17.08.) im Issue: «das Tool zeigt den
+    # Messwert aber nicht», obwohl LINDAS ihn nicht geliefert hatte.
     if "### Aktuellster Messwert" not in result:
-        await _upstream_answered(lambda: api.fetch_hydro_current_lindas("2099"))
         check(
-            "Verlaufsdaten: aktueller Messwert der Station 2099",
+            "Verlaufsdaten: Tool begründet den fehlenden Messwert",
+            "Kein aktueller Messwert" in result,
+            "Block fehlt ohne Begründung — das Tool verschluckt den Wert",
+        )
+        if "nicht abrufbar" in result:
+            # Das Tool sah einen Fehler. War es die Leitung, stuft der Hook in
+            # conftest.py den Lauf über diese Probe zu SKIPPED herab.
+            await _upstream_answered(lambda: api.fetch_hydro_current_lindas("2099"))
+        reason = next(z for z in result.splitlines() if "Kein aktueller Messwert" in z)
+        check(
+            "Verlaufsdaten: LINDAS führt einen Messwert der Station 2099",
             False,
-            "LINDAS hat geantwortet, das Tool zeigt den Messwert aber nicht",
+            f"Befund über die Quelle, nicht über das Tool — {reason.lstrip('> ')}",
         )
     check("Verlaufsdaten: aktueller Messwert der Station 2099", True)
     check("Verlaufsdaten: Pegel und Abfluss beziffert", "Abfluss" in result and "Pegel" in result)

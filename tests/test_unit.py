@@ -29,6 +29,7 @@ from swiss_environment_mcp.server import (  # noqa: E402
     HuntingSpeciesInput,
     HuntingStatsInput,
     HydroCurrentInput,
+    HydroHistoryInput,
     HydroStationsInput,
     NabelCurrentInput,
     NabelStationsInput,
@@ -45,6 +46,7 @@ from swiss_environment_mcp.server import (  # noqa: E402
     env_hunting_species,
     env_hunting_stats,
     env_hydro_current,
+    env_hydro_history,
     env_hydro_stations,
     env_nabel_current,
     env_nabel_stations,
@@ -747,6 +749,53 @@ async def test_hydro_current_unknown_station_says_so(monkeypatch):
     assert "LINDAS hat geantwortet" in msg
     assert "env_hydro_stations" in msg  # Weg zu gültigen Nummern
     assert "nicht abrufbar" not in msg
+
+
+# env_hydro_history ist Graceful Degradation: Fehlt der Live-Wert, liefert es
+# trotzdem den Bezugsweg. Der fehlende Wert muss aber in der Ausgabe stehen —
+# vorher fiel der Block stumm weg, und der Live-Test schrieb eine leere
+# LINDAS-Antwort (17.08./17.10.2026) dem Tool zu. Drei Zweige, je ein Test.
+
+
+@respx.mock
+async def test_hydro_history_shows_current_value():
+    respx.get(_LINDAS_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=_sparql_bindings(
+                [{"name": "Zürich Unterhard", "water": "Limmat", "time": "t", "discharge": "24.6"}]
+            ),
+        )
+    )
+    out = await env_hydro_history(HydroHistoryInput(station_id="2099"))
+    assert "### Aktuellster Messwert" in out
+    assert "24.6" in out
+    assert "Kein aktueller Messwert" not in out
+
+
+@respx.mock
+async def test_hydro_history_empty_answer_says_so():
+    """LINDAS antwortet ohne Beobachtung: benennen, nicht verschweigen."""
+    respx.get(_LINDAS_URL).mock(return_value=httpx.Response(200, json=_sparql_bindings([])))
+    out = await env_hydro_history(HydroHistoryInput(station_id="2099"))
+    assert "### Aktuellster Messwert" not in out
+    assert "Kein aktueller Messwert" in out
+    assert "LINDAS hat geantwortet" in out
+    assert "nicht abrufbar" not in out
+    assert "abfragezentrale@bafu.admin.ch" in out  # der Bezugsweg bleibt
+
+
+@respx.mock
+async def test_hydro_history_outage_says_so(monkeypatch):
+    """LINDAS antwortet gar nicht: eine andere Aussage als «keine Beobachtung»."""
+    monkeypatch.setattr(api, "LINDAS_RETRY_BASE_DELAY", 0)
+    respx.get(_LINDAS_URL).mock(side_effect=httpx.ConnectError("boom"))
+    out = await env_hydro_history(HydroHistoryInput(station_id="2099"))
+    assert "### Aktuellster Messwert" not in out
+    assert "Kein aktueller Messwert" in out
+    assert "nicht abrufbar" in out
+    assert "LINDAS hat geantwortet" not in out
+    assert "abfragezentrale@bafu.admin.ch" in out
 
 
 def test_hydrodaten_is_out_of_the_egress_allowlist():
