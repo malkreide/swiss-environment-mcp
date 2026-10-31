@@ -538,6 +538,14 @@ aufzeichnen mit `PYTHONPATH=src python scripts/record_fixtures.py`.
 sondern von `scripts/classify_live_run.py` in `clear` / `finding` / `unknown`
 eingeordnet — ein Lauf, in dem alles übersprungen wurde, gilt nicht als
 Erfolg, und nur ein `finding` öffnet ein Issue. `unknown` schliesst keines.
+`unknown` ist auch ein Lauf, dessen Fehlschläge **alle** Lücken der Quelle
+sind: Die Quelle hat geantwortet, nur ohne den Anker-Datensatz (LINDAS ohne
+Station 2099, 17.08./21.08./17.10.2026). Solche Zusicherungen tragen
+`check(..., quellenluecke=True)`, der Hook in `tests/conftest.py` markiert den
+Testfall im JUnit-XML. Ein einziger unmarkierter Fehlschlag macht den Lauf
+wieder zum `finding`. Der Job bleibt bei `unknown` rot, nur ohne Issue — rot
+über mehrere Nächte heisst also auch hier untersuchen, denn ein dauerhaft
+fehlender Anker (umbenanntes Prädikat) sieht genauso aus.
 `schedule` greift nur auf dem Default-Branch: Eine Änderung an Kadenz oder
 Workflow ist auf einem Branch wirkungslos und wird erst nach dem Merge scharf.
 Vorher von Hand per `workflow_dispatch` prüfen.

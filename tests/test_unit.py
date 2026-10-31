@@ -1290,6 +1290,9 @@ async def test_sc_egress_check_blocks():
 
 from conftest import (  # noqa: E402
     _UPSTREAM_SKIPS,
+    LIVE_BEFUND,
+    QUELLENLUECKE,
+    QuellenLueckeError,
     _describe,
     _transport_cause,
     pytest_runtest_makereport,
@@ -1364,6 +1367,7 @@ class _FakeItem:
         self.location = ("tests/test_integration.py", 228, "test_slf_snow")
         self.nodeid = "tests/test_integration.py::test_slf_snow"
         self.config = type("C", (), {"stash": pytest.Stash()})()
+        self.user_properties: list[tuple[str, object]] = []
 
     def get_closest_marker(self, name):
         return pytest.mark.live if (self._live and name == "live") else None
@@ -1404,6 +1408,32 @@ def test_hook_ignores_tests_without_live_marker():
         _FakeItem(live=False), _FakeCall(httpx.ConnectTimeout("", request=_REQ)), report
     )
     assert result.outcome == "failed"
+
+
+def test_hook_marks_source_gap_but_keeps_it_red():
+    """LINDAS 200 ohne Anker (17.08./21.08./17.10.2026): markiert, nicht übersprungen.
+
+    Die Markierung liest `scripts/classify_live_run.py` aus dem JUnit-XML und
+    ordnet den Lauf als `unknown` ein. Rot bleibt der Test trotzdem.
+    """
+    report = _FakeReport()
+    item = _FakeItem(live=True)
+    result = _run_hook(item, _FakeCall(QuellenLueckeError("keine Beobachtung")), report)
+    assert result.outcome == "failed"
+    assert (LIVE_BEFUND, QUELLENLUECKE) in item.user_properties
+    assert not item.config.stash.get(_UPSTREAM_SKIPS, [])
+
+
+def test_hook_does_not_mark_ordinary_failures():
+    item = _FakeItem(live=True)
+    _run_hook(item, _FakeCall(AssertionError("Schema kaputt")), _FakeReport())
+    assert item.user_properties == []
+
+
+def test_hook_does_not_mark_gaps_outside_live_tests():
+    item = _FakeItem(live=False)
+    _run_hook(item, _FakeCall(QuellenLueckeError("x")), _FakeReport())
+    assert item.user_properties == []
 
 
 def test_hook_ignores_setup_and_teardown_phases():

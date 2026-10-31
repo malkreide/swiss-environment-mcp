@@ -17,7 +17,7 @@ import re
 import sys
 
 import pytest
-from conftest import _transport_cause
+from conftest import QuellenLueckeError, _transport_cause
 from mcp.server.mcpserver.exceptions import ToolError
 
 # Diese Datei trifft echte BAFU-Live-APIs. Alle hier gesammelten Tests werden
@@ -62,7 +62,7 @@ _pass = 0
 _fail = 0
 
 
-def check(name: str, condition: bool, detail: str = "") -> None:
+def check(name: str, condition: bool, detail: str = "", *, quellenluecke: bool = False) -> None:
     """Prüft eine Zusicherung: druckt sie und lässt den Test bei ❌ scheitern.
 
     Der `raise` ist der Punkt (OPS-001). Vorher wurde nur gedruckt und
@@ -75,6 +75,10 @@ def check(name: str, condition: bool, detail: str = "") -> None:
 
     `main()` fängt den Fehler ab, damit der Standalone-Lauf weiterhin alle
     Tests durchläuft und am Ende die Gesamtbilanz zieht.
+
+    `quellenluecke=True` nur dort, wo die Quelle geantwortet hat, aber ohne den
+    erwarteten Datensatz: Der Test fällt dann mit `QuellenLueckeError`, und der
+    nächtliche Lauf wird `unknown` statt `finding` (siehe `conftest.py`).
     """
     global _pass, _fail
     if condition:
@@ -83,7 +87,8 @@ def check(name: str, condition: bool, detail: str = "") -> None:
         return
     print(f"  ❌ {name}" + (f": {detail}" if detail else ""))
     _fail += 1
-    raise AssertionError(f"{name}: {detail}" if detail else name)
+    exc = QuellenLueckeError if quellenluecke else AssertionError
+    raise exc(f"{name}: {detail}" if detail else name)
 
 
 async def _tool_text(coro) -> str:
@@ -270,7 +275,12 @@ async def test_hydro_current_lindas() -> None:
     from swiss_environment_mcp import api_client as api
 
     data = await api.fetch_hydro_current_lindas("2099")
-    check("LINDAS: Station 2099 gefunden", data.get("found") is True)
+    check(
+        "LINDAS: Station 2099 gefunden",
+        data.get("found") is True,
+        "LINDAS hat geantwortet, führt zur Station 2099 aber keine Beobachtung",
+        quellenluecke=True,
+    )
     check("LINDAS: Gewässer Limmat", "limmat" in (data.get("water") or "").lower())
     check("LINDAS: Abfluss-Wert vorhanden", data.get("discharge") is not None)
 
@@ -455,7 +465,10 @@ async def test_hydro_history() -> None:
         check(
             "Verlaufsdaten: LINDAS führt einen Messwert der Station 2099",
             False,
-            f"Befund über die Quelle, nicht über das Tool — {reason.lstrip('> ')}",
+            f"Lücke der Quelle, nicht des Tools — {reason.lstrip('> ')}",
+            # Nur die leere Antwort ist eine Lücke. «nicht abrufbar» ohne
+            # Transportfehler (z.B. ein 5xx) bleibt ein Befund.
+            quellenluecke="LINDAS hat geantwortet" in reason,
         )
     check("Verlaufsdaten: aktueller Messwert der Station 2099", True)
     check("Verlaufsdaten: Pegel und Abfluss beziffert", "Abfluss" in result and "Pegel" in result)
