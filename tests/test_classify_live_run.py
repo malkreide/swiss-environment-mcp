@@ -95,6 +95,75 @@ class ClassifyTest(unittest.TestCase):
         self.assertEqual(state, clr.CLEAR)
 
 
+def cases(*faelle: str) -> str:
+    """Eine testsuite aus Testfaellen: 'ok', 'luecke', 'fehlschlag', 'fehler',
+    'luecke+fehler' (markiert, aber zusaetzlich ein Teardown-Fehler)."""
+    luecke = '<properties><property name="live_befund" value="quellenluecke" /></properties>'
+    koerper = {
+        "ok": "",
+        "luecke": luecke + '<failure message="conftest.QuellenLueckeError: x">x</failure>',
+        "fehlschlag": '<failure message="AssertionError: x">x</failure>',
+        "fehler": '<error message="fixture">x</error>',
+        "luecke+fehler": luecke + '<failure message="x">x</failure><error message="td">x</error>',
+    }
+    failures = sum(1 for f in faelle if f in ("luecke", "fehlschlag", "luecke+fehler"))
+    errors = sum(1 for f in faelle if f in ("fehler", "luecke+fehler"))
+    tcs = "".join(
+        f'<testcase classname="t" name="test_{i}_{f}">{koerper[f]}</testcase>'
+        for i, f in enumerate(faelle)
+    )
+    return (
+        f'<testsuites><testsuite name="pytest" tests="{len(faelle)}" failures="{failures}" '
+        f'errors="{errors}" skipped="0">{tcs}</testsuite></testsuites>'
+    )
+
+
+class QuellenLueckeTest(unittest.TestCase):
+    """LINDAS antwortete am 17.08., 21.08. und 17.10.2026 mit 200 ohne die
+    Ankerstation 2099. Das ist `unknown` — solange nichts anderes fiel."""
+
+    def _state(self, xml: str) -> tuple[str, str]:
+        with tempfile.TemporaryDirectory() as tmp:
+            return clr.classify(write(Path(tmp), xml))
+
+    def test_nur_luecken_ist_unknown(self):
+        state, reason = self._state(cases("ok", "luecke", "ok"))
+        self.assertEqual(state, clr.UNKNOWN)
+        self.assertIn("Luecke der Quelle", reason)
+        self.assertIn("test_1_luecke", reason)
+
+    def test_mehrere_luecken_sind_unknown(self):
+        """17.08.2026: zwei Tests am selben fehlenden Anker."""
+        state, _ = self._state(cases("luecke", "luecke", "ok"))
+        self.assertEqual(state, clr.UNKNOWN)
+
+    def test_luecke_verdeckt_keinen_befund(self):
+        state, reason = self._state(cases("luecke", "fehlschlag", "ok"))
+        self.assertEqual(state, clr.FINDING)
+        self.assertIn("davon 1 Luecke(n)", reason)
+
+    def test_luecke_verdeckt_keinen_fehler(self):
+        state, _ = self._state(cases("luecke", "fehler"))
+        self.assertEqual(state, clr.FINDING)
+
+    def test_markierter_testfall_mit_teardown_fehler_ist_befund(self):
+        state, _ = self._state(cases("luecke+fehler", "ok"))
+        self.assertEqual(state, clr.FINDING)
+
+    def test_fremde_eigenschaft_ist_keine_luecke(self):
+        xml = cases("luecke").replace('value="quellenluecke"', 'value="etwas"')
+        state, _ = self._state(xml)
+        self.assertEqual(state, clr.FINDING)
+
+    def test_namen_passen_zu_conftest(self):
+        """Zwei Kopien desselben Schluessels — auseinanderdriften darf er nicht."""
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import conftest
+
+        self.assertEqual(clr.LIVE_BEFUND, conftest.LIVE_BEFUND)
+        self.assertEqual(clr.QUELLENLUECKE, conftest.QUELLENLUECKE)
+
+
 class MissingReportTest(unittest.TestCase):
     """Kein Report heisst: pytest kam nicht bis zum Schreiben. Nie clear."""
 

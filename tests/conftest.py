@@ -76,6 +76,34 @@ _TRANSPORT_ERRORS: tuple[type[BaseException], ...] = (
 _UPSTREAM_SKIPS: pytest.StashKey[list[str]] = pytest.StashKey()
 
 
+# --- Live-Tests: Lücke der Quelle ist `unknown`, nicht `finding` --------------
+#
+# Zwischen «Leitung tot» (oben, SKIPPED) und «Vertrag gebrochen» (rot, Issue)
+# liegt ein dritter Fall: Die Quelle hat geantwortet, nur fehlte darin der
+# Datensatz, den der Test als Anker erwartet. LINDAS lieferte am 17.08., 21.08.
+# und 17.10.2026 HTTP 200 ohne Beobachtung zur Station 2099; jedes Mal ging ein
+# Issue auf und am Folgetag ohne Codeänderung wieder zu.
+#
+# Ein solcher Test bleibt FAILED — er ist nicht übersprungen, und ein Lauf, in
+# dem nur er fiel, ist nicht grün. Der Hook hängt aber eine Eigenschaft an den
+# Testfall, die im JUnit-XML landet, und `scripts/classify_live_run.py` ordnet
+# einen Lauf, dessen Fehlschläge *alle* so markiert sind, als `unknown` ein:
+# rot, aber ohne Issue. Ein einziger unmarkierter Fehlschlag macht ihn wieder
+# zum `finding`.
+#
+# Die Kehrseite gehört dazu: Fehlt der Anker dauerhaft, weil sich der Vertrag
+# geändert hat (Klasse oder Prädikat umbenannt), sieht das genauso aus. Dann
+# ist der Job jede Nacht rot, ohne dass ein Issue aufgeht — rot über mehrere
+# Nächte heisst also auch hier: untersuchen.
+
+LIVE_BEFUND = "live_befund"
+QUELLENLUECKE = "quellenluecke"
+
+
+class QuellenLueckeError(AssertionError):
+    """Die Quelle hat geantwortet, aber ohne den erwarteten Datensatz."""
+
+
 def _transport_cause(exc: BaseException | None) -> BaseException | None:
     """Sucht in der Exception-Kette den ersten reinen Transportfehler.
 
@@ -115,6 +143,11 @@ def pytest_runtest_makereport(item, call):
     if report.when != "call" or not report.failed:
         return report
     if item.get_closest_marker("live") is None:
+        return report
+    if call.excinfo is not None and isinstance(call.excinfo.value, QuellenLueckeError):
+        # An `item`, nicht an `report`: Das JUnit-XML liest die Eigenschaften
+        # aus dem Teardown-Report, und der kopiert sie erst später vom Item.
+        item.user_properties.append((LIVE_BEFUND, QUELLENLUECKE))
         return report
     cause = _transport_cause(call.excinfo.value if call.excinfo is not None else None)
     if cause is None:

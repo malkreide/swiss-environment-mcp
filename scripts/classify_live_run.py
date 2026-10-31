@@ -9,7 +9,8 @@ drei, und die dritte ist die, die zaehlt:
   clear    Die Suite ist gelaufen und war gruen.
   finding  Die Suite ist gelaufen und etwas ist gefallen.
   unknown  Die Suite ist NICHT gelaufen — und niemand weiss, ob der Vertrag
-           mit der Quelle noch haelt.
+           mit der Quelle noch haelt. Oder sie ist gelaufen, und gefallen
+           ist nur, was an einer Luecke der Quelle scheiterte (unten).
 
 Ein gescheitertes `pip install`, ein Timeout, eine umbenannte Marke: alles
 `unknown`, alles sieht unter `if: failure()` aus wie ein gebrochener Vertrag.
@@ -38,6 +39,19 @@ uebersprungen» dasselbe. Das XML zaehlt Tests, Fehler, Fehlschlaege und
 Uebersprungene getrennt, also wird es gelesen. Fehlt es, ist pytest gar nicht
 bis zum Schreiben gekommen — auch das ist `unknown`, und zwar mit Grund.
 
+DIE LUECKE DER QUELLE
+---------------------
+LINDAS lieferte am 17.08., 21.08. und 17.10.2026 HTTP 200 ohne Beobachtung zur
+Ankerstation 2099. Jedes Mal ging ein Issue auf und am Folgetag ohne
+Codeaenderung wieder zu: Die Quelle hatte geantwortet, nur ohne den Datensatz.
+Ueber den Vertrag sagt das so wenig wie eine tote Leitung.
+
+Solche Tests scheitern mit `QuellenLueckeError` (tests/conftest.py), und der Hook
+dort haengt `live_befund=quellenluecke` an den Testfall. Sind ALLE
+Fehlschlaege so markiert, ist der Lauf `unknown`: rot, aber ohne Issue. Ein
+einziger unmarkierter Fehlschlag oder Fehler macht ihn zum `finding` — eine
+Luecke darf einen echten Befund nicht verdecken.
+
 Aufruf:
     python scripts/classify_live_run.py live-report.xml
     python scripts/classify_live_run.py live-report.xml --pytest-exit 1
@@ -57,6 +71,24 @@ from pathlib import Path
 CLEAR = "clear"
 FINDING = "finding"
 UNKNOWN = "unknown"
+
+# Muss zu LIVE_BEFUND / QUELLENLUECKE in tests/conftest.py passen.
+LIVE_BEFUND = "live_befund"
+QUELLENLUECKE = "quellenluecke"
+
+
+def _ist_luecke(testcase: ET.Element) -> bool:
+    """Gescheitert an einer Luecke der Quelle — und an nichts anderem.
+
+    Ein `<error>` (Setup/Teardown) zaehlt nie als Luecke, auch wenn derselbe
+    Testfall die Markierung traegt: Der Hook setzt sie nur fuer die Call-Phase.
+    """
+    if testcase.find("error") is not None:
+        return False
+    return any(
+        p.get("name") == LIVE_BEFUND and p.get("value") == QUELLENLUECKE
+        for p in testcase.iter("property")
+    )
 
 
 def classify(report: Path, pytest_exit: int | None = None) -> tuple[str, str]:
@@ -87,9 +119,25 @@ def classify(report: Path, pytest_exit: int | None = None) -> tuple[str, str]:
     )
 
     if failures or errors:
+        gescheitert = [
+            tc
+            for s in suites
+            for tc in s.iter("testcase")
+            if tc.find("failure") is not None or tc.find("error") is not None
+        ]
+        luecken = [tc for tc in gescheitert if _ist_luecke(tc)]
+        if gescheitert and len(luecken) == len(gescheitert):
+            namen = ", ".join(tc.get("name") or "?" for tc in luecken)
+            return (
+                UNKNOWN,
+                f"{len(luecken)} von {tests} Test(s) an einer Luecke der Quelle "
+                f"gescheitert ({namen}) — sie hat geantwortet, aber ohne den "
+                "erwarteten Datensatz. Ueber den Vertrag sagt das nichts",
+            )
+        davon = f", davon {len(luecken)} Luecke(n) der Quelle" if luecken else ""
         return (
             FINDING,
-            f"{failures} Fehlschlag/Fehlschlaege und {errors} Fehler von {tests} Test(s)",
+            f"{failures} Fehlschlag/Fehlschlaege und {errors} Fehler von {tests} Test(s){davon}",
         )
     if tests == 0:
         return (
