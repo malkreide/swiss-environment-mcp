@@ -237,7 +237,20 @@ async def test_hydro_stations() -> None:
     )
     check("Stationsliste: Tabellenkopf", "| Station-ID | Name | Gewässer |" in result)
     count = int(re.search(r"\((\d+) Resultate\)", result).group(1))
-    check("Stationsliste: volle Abdeckung (>100)", count > 100, f"nur {count} Stationen")
+    # Am 17.08.2026 führte LINDAS nur 34 Stationen und war am Folgetag wieder
+    # vollständig — eine Lücke der Quelle. Kürzt dagegen das Tool die Liste,
+    # ist es ein Befund. Welches von beiden, sagt nur die rohe Abfrage. Ihr
+    # Wettlauf (Lücke schliesst sich dazwischen) fällt auf die sichere Seite:
+    # Befund statt Lücke.
+    if count <= 100:
+        quelle = len(await _upstream_answered(api.fetch_hydro_stations_lindas))
+        check(
+            "Stationsliste: volle Abdeckung (>100)",
+            False,
+            f"nur {count} Stationen im Tool, {quelle} bei LINDAS",
+            quellenluecke=quelle <= 100,
+        )
+    check("Stationsliste: volle Abdeckung (>100)", True)
     check("Stationsliste: Link zu hydrodaten.admin.ch", "hydrodaten" in result)
 
     # Gewässerfilter — der Pfad, der den Kantonsfilter ersetzt.
@@ -285,7 +298,12 @@ async def test_hydro_current_lindas() -> None:
     check("LINDAS: Abfluss-Wert vorhanden", data.get("discharge") is not None)
 
     stations = await api.fetch_hydro_stations_lindas()
-    check("LINDAS: >200 Stationen", len(stations) > 200)
+    check(
+        "LINDAS: >200 Stationen",
+        len(stations) > 200,
+        f"LINDAS hat geantwortet, führt aber nur {len(stations)} Stationen",
+        quellenluecke=True,
+    )
 
 
 async def test_bathing_water_lindas() -> None:
