@@ -540,7 +540,10 @@ eingeordnet — ein Lauf, in dem alles übersprungen wurde, gilt nicht als
 Erfolg, und nur ein `finding` öffnet ein Issue. `unknown` schliesst keines.
 `unknown` ist auch ein Lauf, dessen Fehlschläge **alle** Lücken der Quelle
 sind: Die Quelle hat geantwortet, nur ohne den Anker-Datensatz (LINDAS ohne
-Station 2099, 17.08./21.08./17.10.2026). Solche Zusicherungen tragen
+Station 2099, 17.08./21.08./17.10.2026) oder mit einem Teilgraphen (34 statt
+über 200 Stationen, 17.08.2026). Wo ein Tool dazwischensteht, entscheidet die
+rohe Abfrage, ob die Lücke bei der Quelle liegt — sonst verdeckte die
+Markierung ein Tool, das selbst kürzt. Solche Zusicherungen tragen
 `check(..., quellenluecke=True)`, der Hook in `tests/conftest.py` markiert den
 Testfall im JUnit-XML. Ein einziger unmarkierter Fehlschlag macht den Lauf
 wieder zum `finding`. Der Job bleibt bei `unknown` rot, nur ohne Issue — rot
