@@ -7,6 +7,25 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Changed
 
+- **Eine hängende Quelle wird als Timeout gemeldet, und früher.** Betrifft den
+  Retry-Pfad von SLF (Schneestationen, Tagesschnee, Lawinenbulletin) und
+  Jagdstatistik. Bisher hielt eine Quelle, die nicht antwortet, den Aufruf
+  45 s — das Budget der vendored copy `sparql_client`, für SPARQL bemessen und
+  länger als der MCP-Client-Default von 30 s — und am Ende fiel der eingebaute
+  `TimeoutError` heraus, den `handle_http_error` auf «Unerwarteter interner
+  Fehler» abbildete. Neu endet der ganze Aufruf nach 25 s mit
+  `UpstreamTimeoutError` (einer `httpx.TimeoutException`) und der Meldung
+  «Anfrage-Timeout». Die vendored copy bleibt unverändert; der Deckel liegt
+  aussen um den Aufruf.
+
+  `handle_http_error` meldet zudem den eingebauten `TimeoutError` generell als
+  Timeout. Das trifft geo.admin.ch (Fluglärm), das direkt über die vendored
+  copy läuft; dessen 45-s-Budget bleibt, weil ein Registerabruf acht Sublayer
+  nacheinander fragt.
+
+  Der Transport-Hook der Live-Tests erkennt beide Typen: Eine hängende Quelle
+  wird nachts übersprungen statt als Befund mit Issue gewertet.
+
 - **`opendata.swiss` wird bei transienten Fehlern wiederholt.** Die vier
   CKAN-Abrufe (`env_bafu_datasets`, `env_bafu_dataset_detail`, NABEL-Stationen
   und -Daten) gingen bisher genau einmal hinaus; ein einzelnes 502 wurde zur
