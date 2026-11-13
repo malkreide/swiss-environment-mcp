@@ -23,11 +23,13 @@ Audit SDK-001). Er wird über startup()/shutdown() im MCPServer-Lifespan
 verwaltet, statt pro Tool-Call neu erzeugt zu werden.
 """
 
+import asyncio
 import html as html_lib
 import ipaddress
 import json
 import re
 import socket
+import time
 from typing import Any
 from urllib.parse import unquote, urlparse
 
@@ -120,6 +122,34 @@ GEOADMIN_RETRY_BASE_DELAY = geoadmin.RETRY_BASE_DELAY
 
 TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 
+# --- opendata.swiss (CKAN) — Retry auf dem direkten Pfad ----------------------
+# Bis zum 13.11.2026 ging jeder CKAN-Abruf genau einmal hinaus: Ein einzelnes
+# 502 der Quelle wurde zur Fehlermeldung des Tools, während SLF, Jagdstatistik,
+# geo.admin.ch und LINDAS denselben Aussetzer wiederholten.
+#
+# Bewusst NICHT über `_get_json_retry`: `sparql_client` setzt das httpx-Timeout
+# jedes Versuchs auf sein Gesamtbudget (45 s, für SPARQL bemessen). Ein
+# hängender CKAN-Abruf dauerte damit 45 s statt 15 s — länger als der
+# MCP-Client-Default von 30 s — und endete in einem nackten `TimeoutError`, den
+# `handle_http_error` nicht kennt («Unerwarteter interner Fehler»). Hier bleibt
+# das Timeout des geteilten Clients; *was* wiederholt wird und *wie lange*
+# gewartet wird, kommt weiter aus `sparql_client` (eine Politik, nicht zwei).
+#
+# Timeouts werden nicht wiederholt: Ein Versuch, der 15 s gehangen hat, lässt
+# im Budget keinen zweiten zu. Wiederholt wird, was schnell scheitert.
+#
+# Nicht abgedeckt, und das gehört gesagt: HTTP 200 mit HTML statt JSON — der
+# Fall vom 23.8. und 11.11.2026. Am 11.11. hielt er über mindestens 80 s an;
+# eine Wiederholung im Sekundenbereich hätte ihn nicht überbrückt.
+CKAN_RETRY_MAX_ATTEMPTS = sparql_client.DEFAULT_MAX_ATTEMPTS
+CKAN_RETRY_BASE_DELAY = sparql_client.DEFAULT_BASE_DELAY  # Sekunden. Tests setzen 0.
+# Unter dem MCP-Client-Default (30 s), wie die Schwester-Server mit 25 s.
+CKAN_TOTAL_BUDGET_S = 25.0
+
+# Modul-Alias, damit Tests die Wartezeit nullen können, ohne `asyncio.sleep`
+# prozessweit stillzulegen (CLAUDE.md, «Tests»).
+_sleep = asyncio.sleep
+
 # Egress-Allow-List (Code-Layer, Audit SEC-021). Nur diese Hosts dürfen
 # kontaktiert werden — frozenset, damit zur Laufzeit nicht mutierbar.
 ALLOWED_HOSTS: frozenset[str] = frozenset(
@@ -145,7 +175,7 @@ class UpstreamContractError(sparql_client.NotJsonError):
     Erbt seit v1.2.0 der vendored copy von `sparql_client.NotJsonError`. Das ist
     kein Schmuck: Der Retry-Pfad (`_get_json_retry` → SLF, Jagdstatistik) läuft
     durch das vendorierte Modul und wirft dessen Typ, der direkte Pfad
-    (`_get_json` → opendata.swiss, waldbrandgefahr.ch) wirft diesen hier.
+    (`_get_ckan`/`_get_json` → opendata.swiss, waldbrandgefahr.ch) wirft diesen hier.
     Über die Vererbung fängt `handle_http_error` beide mit einer Prüfung —
     sonst hätte der eine Pfad die gute Meldung und der andere weiter
     «Unerwarteter interner Fehler», und niemand sähe, welcher gerade dran ist.
@@ -309,6 +339,44 @@ async def _get_json(url: str, params: dict[str, Any] | None = None) -> httpx.Res
     response = await client.get(url, params=params)
     response.raise_for_status()
     return response
+
+
+async def _get_ckan(action: str, params: dict[str, Any]) -> httpx.Response:
+    """GET gegen die CKAN-API von opendata.swiss, mit Retry bei transienten Fehlern.
+
+    Wiederholt wird bei den Statuscodes aus `sparql_client.RETRYABLE_STATUS`
+    sowie bei `ConnectError`/`ReadError`. Alles andere — 4xx, Timeouts, der
+    Egress-Guard — geht beim ersten Mal durch. Ist die Staffel aufgebraucht,
+    fällt der letzte Fehler unverändert heraus, damit `handle_http_error` und
+    der Transport-Hook der Live-Tests dieselben Typen sehen wie bisher.
+    """
+    url = f"{OPENDATA_SWISS_API}/{action}"
+    deadline = time.monotonic() + CKAN_TOTAL_BUDGET_S
+    attempt = 0
+    while True:
+        try:
+            return await _get_json(url, params=params)
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code not in sparql_client.RETRYABLE_STATUS:
+                raise
+            last_exc: Exception = e
+        except (httpx.ConnectError, httpx.ReadError) as e:
+            last_exc = e
+        attempt += 1
+        if attempt >= CKAN_RETRY_MAX_ATTEMPTS:
+            raise last_exc
+        delay = sparql_client.retry_delay(attempt - 1, last_exc, CKAN_RETRY_BASE_DELAY)
+        # Eine Wartezeit über das Budget hinaus wartet für niemanden mehr.
+        if delay >= deadline - time.monotonic():
+            raise last_exc
+        _logger.warning(
+            "upstream_retry",
+            url=url,
+            attempt=attempt,
+            error_type=type(last_exc).__name__,
+            delay_s=round(delay, 2),
+        )
+        await _sleep(delay)
 
 
 def _json_body(response: httpx.Response) -> Any:
@@ -585,13 +653,13 @@ async def search_bafu_datasets(
         "start": start,
         "sort": "score desc, metadata_modified desc",
     }
-    response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
+    response = await _get_ckan("package_search", params)
     return _json_body(response)
 
 
 async def get_bafu_dataset(dataset_id: str) -> dict[str, Any]:
     """Ruft die vollständigen Metadaten eines BAFU-Datensatzes ab."""
-    response = await _get_json(f"{OPENDATA_SWISS_API}/package_show", params={"id": dataset_id})
+    response = await _get_ckan("package_show", {"id": dataset_id})
     return _json_body(response)
 
 
@@ -680,9 +748,9 @@ async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
 
 async def fetch_nabel_stations() -> dict[str, Any]:
     """Ruft die Metadaten der 16 NABEL-Messstationen von opendata.swiss ab."""
-    response = await _get_json(
-        f"{OPENDATA_SWISS_API}/package_show",
-        params={"id": "nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"},
+    response = await _get_ckan(
+        "package_show",
+        {"id": "nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"},
     )
     return _json_body(response)
 
@@ -703,7 +771,7 @@ async def fetch_nabel_data(
         "fq": f"organization:{OPENDATA_BAFU_ORG}",
         "rows": 5,
     }
-    response = await _get_json(f"{OPENDATA_SWISS_API}/package_search", params=params)
+    response = await _get_ckan("package_search", params)
     return _json_body(response)
 
 

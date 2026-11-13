@@ -5,6 +5,26 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **`opendata.swiss` wird bei transienten Fehlern wiederholt.** Die vier
+  CKAN-Abrufe (`env_bafu_datasets`, `env_bafu_dataset_detail`, NABEL-Stationen
+  und -Daten) gingen bisher genau einmal hinaus; ein einzelnes 502 wurde zur
+  Fehlermeldung des Tools. Neu: bis zu drei Versuche bei HTTP 429/502/503/504
+  sowie bei `ConnectError`/`ReadError`, mit derselben Politik wie die übrigen
+  Quellen (`sparql_client.RETRYABLE_STATUS`, `retry_delay`) und einem
+  Gesamtbudget von 25 s.
+
+  Nicht wiederholt werden 4xx, HTTP 500 und Timeouts. **Nicht abgedeckt** ist
+  HTTP 200 mit HTML statt JSON — der Fall der Live-Läufe vom 23.8. und
+  11.11.2026. Am 11.11. hielt er über mindestens 80 s an; eine Wiederholung im
+  Sekundenbereich hätte ihn nicht überbrückt.
+
+  Bewusst nicht über `_get_json_retry` gelöst: Der Pfad setzt das Timeout
+  jedes Versuchs auf 45 s (für SPARQL bemessen) — ein hängender CKAN-Abruf
+  hätte 45 s statt 15 s gedauert und in «Unerwarteter interner Fehler» geendet.
+  waldbrandgefahr.ch bleibt unverändert ohne Wiederholung.
+
 ### Removed
 
 - **Das Codex-Gate ist entfernt.** Weg sind `.github/workflows/codex-gate.yml`,
