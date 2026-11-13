@@ -480,6 +480,8 @@ async def test_ohne_opt_in_sendet_der_server_keine_logmeldung(
     maskierten Meldung, die das Modell lesen soll.
     """
     monkeypatch.setattr(api, "dns_pin_enabled", False)
+    # CKAN wiederholt ein 503; ohne das saesse der Test die Staffel ab.
+    monkeypatch.setattr(api, "CKAN_RETRY_BASE_DELAY", 0)
 
     response = await _failing_tool_call(client, None)
 
@@ -507,6 +509,8 @@ async def test_mit_opt_in_kommt_die_logmeldung_an(
     tatsaechlich entfallen darf.
     """
     monkeypatch.setattr(api, "dns_pin_enabled", False)
+    # CKAN wiederholt ein 503; ohne das saesse der Test die Staffel ab.
+    monkeypatch.setattr(api, "CKAN_RETRY_BASE_DELAY", 0)
 
     response = await _failing_tool_call(client, "warning")
 
