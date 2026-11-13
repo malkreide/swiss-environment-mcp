@@ -36,14 +36,24 @@ IDENTIFY = geoadmin.IDENTIFY_URL
 
 
 @pytest.fixture(autouse=True)
-async def _reset_client(monkeypatch):
-    """Frischer Client je Test; DNS-Pinning aus, Retry-Delay auf 0."""
-    api.dns_pin_enabled = False
-    monkeypatch.setattr(api, "GEOADMIN_RETRY_BASE_DELAY", 0)
+async def _reset_client(request, monkeypatch):
+    """Frischer Client je Test; für Unit-Tests DNS-Pinning aus, Retry-Delay auf 0.
+
+    Live-Tests bleiben bei den Produktionswerten. Bis zum 13.11.2026 galt die
+    Entschärfung auch für sie: Am 10.11.2026 antwortete api3.geo.admin.ch mit
+    HTTP 502, die vier Versuche liefen ohne Wartezeit in unter drei Sekunden
+    durch, und der nächtliche Lauf öffnete ein Issue für eine Störung, die der
+    Server in Produktion mit 2 s/4 s/8 s ausgesessen hätte. Geprüft wurde also
+    eine Wiederholung, die es so nur im Test gab — und ohne das Pinning, auf
+    das die Live-Tests laut `conftest.py` angewiesen sind.
+    """
+    live = request.node.get_closest_marker("live") is not None
+    if not live:
+        monkeypatch.setattr(api, "dns_pin_enabled", False)
+        monkeypatch.setattr(api, "GEOADMIN_RETRY_BASE_DELAY", 0)
     await api.shutdown()
     yield
     await api.shutdown()
-    api.dns_pin_enabled = True
 
 
 def _feature(level: str, register: str = "LBK Zürich", fid: int = 1) -> dict:
@@ -438,6 +448,23 @@ def test_limits_check_carries_legal_reference_and_no_network():
 
 
 # --- Live-Tests (aus der CI ausgeschlossen) -----------------------------------
+
+
+@pytest.mark.live
+def test_live_runs_with_production_transport():
+    """Die Live-Tests fahren den Transport, den auch der Server fährt.
+
+    Braucht kein Netz. Wacht darüber, dass die autouse-Fixture oben die
+    Entschärfung der Unit-Tests nicht wieder auf die Live-Tests ausdehnt.
+    """
+    assert api.GEOADMIN_RETRY_BASE_DELAY == geoadmin.RETRY_BASE_DELAY > 0
+    assert api.dns_pin_enabled is True
+
+
+def test_unit_tests_run_without_backoff_and_pinning():
+    """Gegenstück: Unit-Tests warten nicht und pinnen nicht (respx-Mocks)."""
+    assert api.GEOADMIN_RETRY_BASE_DELAY == 0
+    assert api.dns_pin_enabled is False
 
 
 @pytest.mark.live
