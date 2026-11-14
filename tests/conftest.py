@@ -70,6 +70,13 @@ _TRANSPORT_ERRORS: tuple[type[BaseException], ...] = (
     httpx.ReadError,
     httpx.WriteError,
     httpx.RemoteProtocolError,
+    # Budget des ganzen Aufrufs abgelaufen: Die Quelle hat nicht geantwortet,
+    # also auch nichts über ihren Vertrag gesagt. `UpstreamTimeoutError` kommt
+    # vom Retry-Pfad (SLF, Jagdstatistik) und trägt den Host; der eingebaute
+    # `TimeoutError` kommt aus `asyncio.timeout` der vendored copy
+    # (geo.admin.ch) und trägt keinen.
+    _api.UpstreamTimeoutError,
+    TimeoutError,
 )
 
 # Gesammelte Übersprungen-Meldungen für die Terminal-Zusammenfassung.

@@ -146,6 +146,18 @@ CKAN_RETRY_BASE_DELAY = sparql_client.DEFAULT_BASE_DELAY  # Sekunden. Tests setz
 # Unter dem MCP-Client-Default (30 s), wie die Schwester-Server mit 25 s.
 CKAN_TOTAL_BUDGET_S = 25.0
 
+# --- Budget des Retry-Pfads (SLF, Jagdstatistik) ------------------------------
+# `sparql_client.get_json` deckelt den ganzen Aufruf bei 45 s und setzt das
+# httpx-Timeout jedes Versuchs auf diesen Rest — für SPARQL bemessen, wo eine
+# Abfrage legitim so lange laufen darf. Die JSON-APIs von SLF und
+# Jagdstatistik antworten in unter einer Sekunde oder gar nicht; 45 s sind dort
+# kein Schutz legitimer Abfragen, sondern nur länger als der MCP-Client-Default
+# von 30 s. Der Aufrufer hatte aufgegeben, bevor der Server es merkte.
+#
+# Die vendored copy bleibt unangetastet (sie muss mit `fedlex-mcp`
+# zusammenbleiben); der engere Deckel liegt aussen um den Aufruf.
+RETRY_TOTAL_BUDGET_S = 25.0
+
 # Modul-Alias, damit Tests die Wartezeit nullen können, ohne `asyncio.sleep`
 # prozessweit stillzulegen (CLAUDE.md, «Tests»).
 _sleep = asyncio.sleep
@@ -199,6 +211,19 @@ class UpstreamContractError(sparql_client.NotJsonError):
 
     Die Attribute tragen deshalb die drei Tatsachen, die zur Einordnung nötig
     sind — alle drei stammen von der Quelle, keine aus unserem Prozess (OBS-002).
+    """
+
+
+class UpstreamTimeoutError(httpx.TimeoutException):
+    """Das Budget des ganzen Aufrufs ist aufgebraucht — die Quelle hat nicht geantwortet.
+
+    Unterklasse von `httpx.TimeoutException`, damit `handle_http_error` sie als
+    das meldet, was sie ist. Vorher fiel an dieser Stelle der nackte
+    `TimeoutError` aus `asyncio.timeout` heraus: kein httpx-Typ, also
+    «Unerwarteter interner Fehler» für eine Quelle, die hängt.
+
+    Trägt den Request, damit der Transport-Hook der Live-Tests den Host nennen
+    kann (`tests/conftest.py::_describe`).
     """
 
 
@@ -456,7 +481,11 @@ def handle_http_error(e: Exception) -> str:
         if code == 503:
             return "Fehler: Dienst vorübergehend nicht verfügbar. Bitte später erneut versuchen."
         return f"Fehler: API-Anfrage fehlgeschlagen (HTTP {code})."
-    if isinstance(e, httpx.TimeoutException):
+    # Der eingebaute `TimeoutError` gehört dazu: Ihn wirft `asyncio.timeout`,
+    # wenn das Budget der vendored copy abläuft (geo.admin.ch läuft direkt
+    # darüber). Er ist kein httpx-Typ und fiel bis zum 13.11.2026 auf
+    # «Unerwarteter interner Fehler» durch.
+    if isinstance(e, (httpx.TimeoutException, TimeoutError)):
         return "Fehler: Anfrage-Timeout. Der Server antwortet nicht. Bitte erneut versuchen."
     if isinstance(e, httpx.ConnectError):
         return "Fehler: Verbindung nicht möglich. Netzwerkverbindung oder Dienststatus prüfen."
@@ -783,17 +812,30 @@ async def _get_json_retry(
     params: dict[str, Any] | None = None,
     headers: dict[str, str] | None = None,
 ) -> Any:
-    """GET-JSON mit Egress-Guard + Retry (dünne Bindung an sparql_client)."""
+    """GET-JSON mit Egress-Guard + Retry (dünne Bindung an sparql_client).
+
+    Der ganze Aufruf — alle Versuche und Wartezeiten — endet nach
+    `RETRY_TOTAL_BUDGET_S` mit `UpstreamTimeoutError`. Ein httpx-Timeout aus
+    dem Inneren (z.B. `ConnectTimeout`) ist kein eingebauter `TimeoutError` und
+    geht unverändert durch.
+    """
     _logger.debug("upstream_request", method="GET", url=url)
-    return await sparql_client.get_json(
-        get_client(),
-        url,
-        params=params,
-        headers=headers,
-        base_delay=RETRY_BASE_DELAY,
-        max_attempts=RETRY_MAX_ATTEMPTS,
-        egress_check=assert_host_allowed,
-    )
+    budget = RETRY_TOTAL_BUDGET_S
+    try:
+        async with asyncio.timeout(budget):
+            return await sparql_client.get_json(
+                get_client(),
+                url,
+                params=params,
+                headers=headers,
+                base_delay=RETRY_BASE_DELAY,
+                max_attempts=RETRY_MAX_ATTEMPTS,
+                egress_check=assert_host_allowed,
+            )
+    except TimeoutError as e:
+        raise UpstreamTimeoutError(
+            f"keine Antwort innerhalb von {budget:g} s", request=httpx.Request("GET", url)
+        ) from e
 
 
 async def fetch_slf_snow_stations() -> list[dict[str, Any]]:
