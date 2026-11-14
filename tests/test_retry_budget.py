@@ -1,4 +1,4 @@
-"""Budget und Timeout-Meldung des Retry-Pfads (SLF, Jagdstatistik).
+"""Budget und Timeout-Meldung: SLF, Jagdstatistik und geo.admin.ch.
 
 Zwei Schwächen, beim Bau des CKAN-Retrys (PR #141) aufgefallen und dort
 ausdrücklich liegen gelassen:
@@ -127,12 +127,85 @@ async def test_ein_transienter_status_wird_weiter_wiederholt():
     assert route.call_count == 2
 
 
-# --- geo.admin.ch: läuft direkt über die vendored copy ------------------------
+# --- geo.admin.ch: ein Budget über den ganzen Tool-Aufruf ---------------------
 #
-# Dort gilt weiter deren 45-s-Budget (ein Registerabruf fragt acht Sublayer
-# nacheinander; ein gemeinsamer engerer Deckel wäre eine eigene Entscheidung).
-# Was sich ändert, ist die Einordnung des eingebauten `TimeoutError`, der an
-# dessen Ende herausfällt.
+# Eine Registerübersicht ohne Filter fragt acht Sublayer nacheinander, eine
+# Punktabfrage bis zu zwei Radien. Der Deckel gilt der Summe: Mit dem Budget
+# der vendored copy je Abruf (45 s) waren es im schlimmsten Fall 6 Minuten.
+
+IDENTIFY = api.geoadmin.IDENTIFY_URL
+# Jeder einzelne Abruf bleibt klar unter dem Budget, erst die Summe sprengt es.
+_SLOW_S = 0.1
+_GEO_BUDGET_S = 0.35
+
+
+@pytest.fixture
+def _geo(monkeypatch):
+    monkeypatch.setattr(api, "GEOADMIN_RETRY_BASE_DELAY", 0)
+    monkeypatch.setattr(api, "GEOADMIN_TOTAL_BUDGET_S", _GEO_BUDGET_S)
+
+
+async def _langsam(request: httpx.Request) -> httpx.Response:
+    await asyncio.sleep(_SLOW_S)
+    return httpx.Response(200, json={"results": []})
+
+
+@respx.mock
+async def test_das_budget_gilt_der_summe_der_acht_sublayer(_geo):
+    """Kein Abruf hängt — und trotzdem ist nach dem Budget Schluss."""
+    route = respx.get(IDENTIFY).mock(side_effect=_langsam)
+    assert len(api.geoadmin.PERIODS) * _SLOW_S > _GEO_BUDGET_S, "Testaufbau trägt nicht"
+
+    started = time.monotonic()
+    with pytest.raises(api.UpstreamTimeoutError):
+        await api.fetch_aircraft_noise_registers()
+    elapsed = time.monotonic() - started
+
+    assert elapsed < len(api.geoadmin.PERIODS) * _SLOW_S
+    assert 1 <= route.call_count < len(api.geoadmin.PERIODS)
+
+
+@respx.mock
+async def test_ein_einzelner_sublayer_passt_ins_budget(_geo):
+    """Gegenstück: Das Budget schneidet nicht, was hineinpasst."""
+    respx.get(IDENTIFY).mock(side_effect=_langsam)
+
+    assert await api.fetch_aircraft_noise_registers("day") == []
+
+
+@respx.mock
+async def test_die_punktabfrage_wird_nach_dem_budget_geschnitten(_geo):
+    respx.get(IDENTIFY).mock(side_effect=_haengt)
+
+    started = time.monotonic()
+    with pytest.raises(api.UpstreamTimeoutError) as exc:
+        await api.fetch_aircraft_noise("day", 2685000, 1258000)
+
+    assert time.monotonic() - started < _HANG_S / 2
+    assert "Timeout" in api.handle_http_error(exc.value)
+    assert "api3.geo.admin.ch" in _describe(exc.value)
+
+
+@respx.mock
+async def test_ein_geschnittener_abruf_zaehlt_nicht_als_erfolg(_geo):
+    """`last_success` darf nur nach einer echten Antwort vorrücken."""
+    api._geoadmin_last_success.pop("night_first", None)
+    respx.get(IDENTIFY).mock(side_effect=_haengt)
+
+    with pytest.raises(api.UpstreamTimeoutError):
+        await api.fetch_aircraft_noise_registers("night_first")
+
+    assert api.geoadmin_last_success("night_first") is None
+
+
+def test_das_geoadmin_budget_liegt_unter_dem_mcp_client_default():
+    assert api.GEOADMIN_TOTAL_BUDGET_S < 30.0
+
+
+# --- Das Netz darunter: der eingebaute `TimeoutError` -------------------------
+#
+# Alle heutigen Aufrufer wandeln ihn in `UpstreamTimeoutError`. Die Einordnung
+# bleibt trotzdem, für den nächsten, der `sparql_client` direkt ruft.
 
 
 def test_der_eingebaute_timeouterror_wird_als_timeout_gemeldet():

@@ -7,6 +7,19 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Changed
 
+- **Die Fluglärm-Abfragen (geo.admin.ch) haben ein Budget über den ganzen
+  Tool-Aufruf: 25 s.** Bisher galt das 45-s-Budget der vendored copy je Abruf.
+  Eine Registerübersicht ohne Filter fragt acht Sublayer nacheinander, eine
+  Punktabfrage bis zu zwei Radien — im schlimmsten Fall 6 Minuten bzw. 90 s,
+  während der MCP-Client nach 30 s aufgibt. Neu endet der ganze Aufruf nach
+  25 s mit `UpstreamTimeoutError` und der Meldung «Anfrage-Timeout»; die Tools
+  antworten wie bisher mit `status: degraded`.
+
+  Gemessen am 14.11.2026: alle acht Sublayer 3,9 s kalt und 0,2–0,4 s warm,
+  eine Punktabfrage höchstens 0,2 s. Daneben bleibt Platz für eine volle
+  Backoff-Staffel auf einem Sublayer, nicht auf zweien. Läuft das Budget mitten
+  in der Registerübersicht ab, gibt es kein Teilergebnis.
+
 - **Eine hängende Quelle wird als Timeout gemeldet, und früher.** Betrifft den
   Retry-Pfad von SLF (Schneestationen, Tagesschnee, Lawinenbulletin) und
   Jagdstatistik. Bisher hielt eine Quelle, die nicht antwortet, den Aufruf

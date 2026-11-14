@@ -30,7 +30,8 @@ import json
 import re
 import socket
 import time
-from typing import Any
+from collections.abc import Awaitable
+from typing import Any, TypeVar
 from urllib.parse import unquote, urlparse
 
 import httpx
@@ -43,6 +44,8 @@ from .logging_setup import get_logger
 # Audit OBS-003). Der Correlation-Kontext (request_id/tool) wird vom Tool-Layer
 # via structlog-contextvars gebunden und erscheint hier automatisch mit.
 _logger = get_logger(component="api_client")
+
+_T = TypeVar("_T")
 
 # --- Basis-URLs ---------------------------------------------------------------
 
@@ -157,6 +160,22 @@ CKAN_TOTAL_BUDGET_S = 25.0
 # Die vendored copy bleibt unangetastet (sie muss mit `fedlex-mcp`
 # zusammenbleiben); der engere Deckel liegt aussen um den Aufruf.
 RETRY_TOTAL_BUDGET_S = 25.0
+
+# --- Budget der Fluglärm-Abfragen (geo.admin.ch) ------------------------------
+# Hier gilt der Deckel dem ganzen Tool-Aufruf, nicht dem einzelnen Abruf: Eine
+# Registerübersicht ohne Filter fragt acht Sublayer nacheinander, eine
+# Punktabfrage bis zu zwei Radien. Mit dem 45-s-Budget der vendored copy je
+# Abruf waren das im schlimmsten Fall 6 Minuten bzw. 90 s — der MCP-Client gibt
+# nach 30 s auf, und dessen Uhr läuft über den Tool-Aufruf, nicht über den
+# einzelnen Request.
+#
+# Gemessen am 14.11.2026 gegen die Quelle: alle acht Sublayer 3,9 s kalt und
+# 0,2–0,4 s warm, eine Punktabfrage höchstens 0,2 s. 25 s lassen daneben Platz
+# für eine volle Backoff-Staffel (2 s/4 s/8 s) auf einem Sublayer, nicht auf
+# zweien. Läuft das Budget mitten in der Registerübersicht ab, ist das Ergebnis
+# insgesamt weg — Teilergebnisse gibt es nicht, wie bei jedem anderen Fehler
+# dort auch.
+GEOADMIN_TOTAL_BUDGET_S = 25.0
 
 # Modul-Alias, damit Tests die Wartezeit nullen können, ohne `asyncio.sleep`
 # prozessweit stillzulegen (CLAUDE.md, «Tests»).
@@ -481,10 +500,11 @@ def handle_http_error(e: Exception) -> str:
         if code == 503:
             return "Fehler: Dienst vorübergehend nicht verfügbar. Bitte später erneut versuchen."
         return f"Fehler: API-Anfrage fehlgeschlagen (HTTP {code})."
-    # Der eingebaute `TimeoutError` gehört dazu: Ihn wirft `asyncio.timeout`,
-    # wenn das Budget der vendored copy abläuft (geo.admin.ch läuft direkt
-    # darüber). Er ist kein httpx-Typ und fiel bis zum 13.11.2026 auf
-    # «Unerwarteter interner Fehler» durch.
+    # Der eingebaute `TimeoutError` gehört dazu: Ihn wirft `asyncio.timeout`.
+    # Er ist kein httpx-Typ und fiel bis zum 13.11.2026 auf «Unerwarteter
+    # interner Fehler» durch. Alle heutigen Aufrufer wandeln ihn in
+    # `UpstreamTimeoutError`; die Zeile bleibt als Netz für den nächsten, der
+    # `sparql_client` direkt ruft.
     if isinstance(e, (httpx.TimeoutException, TimeoutError)):
         return "Fehler: Anfrage-Timeout. Der Server antwortet nicht. Bitte erneut versuchen."
     if isinstance(e, httpx.ConnectError):
@@ -807,6 +827,23 @@ async def fetch_nabel_data(
 # --- SLF-Client (Schnee & Lawinen) --------------------------------------------
 
 
+async def _with_budget(awaitable: Awaitable[_T], url: str, budget: float) -> _T:
+    """Wartet höchstens `budget` Sekunden auf `awaitable`.
+
+    Läuft die Zeit ab, fällt `UpstreamTimeoutError` heraus statt des nackten
+    `TimeoutError` aus `asyncio.timeout`. Ein httpx-Timeout aus dem Inneren
+    (z.B. `ConnectTimeout`) ist kein eingebauter `TimeoutError` und geht
+    unverändert durch.
+    """
+    try:
+        async with asyncio.timeout(budget):
+            return await awaitable
+    except TimeoutError as e:
+        raise UpstreamTimeoutError(
+            f"keine Antwort innerhalb von {budget:g} s", request=httpx.Request("GET", url)
+        ) from e
+
+
 async def _get_json_retry(
     url: str,
     params: dict[str, Any] | None = None,
@@ -815,27 +852,22 @@ async def _get_json_retry(
     """GET-JSON mit Egress-Guard + Retry (dünne Bindung an sparql_client).
 
     Der ganze Aufruf — alle Versuche und Wartezeiten — endet nach
-    `RETRY_TOTAL_BUDGET_S` mit `UpstreamTimeoutError`. Ein httpx-Timeout aus
-    dem Inneren (z.B. `ConnectTimeout`) ist kein eingebauter `TimeoutError` und
-    geht unverändert durch.
+    `RETRY_TOTAL_BUDGET_S` mit `UpstreamTimeoutError` (siehe `_with_budget`).
     """
     _logger.debug("upstream_request", method="GET", url=url)
-    budget = RETRY_TOTAL_BUDGET_S
-    try:
-        async with asyncio.timeout(budget):
-            return await sparql_client.get_json(
-                get_client(),
-                url,
-                params=params,
-                headers=headers,
-                base_delay=RETRY_BASE_DELAY,
-                max_attempts=RETRY_MAX_ATTEMPTS,
-                egress_check=assert_host_allowed,
-            )
-    except TimeoutError as e:
-        raise UpstreamTimeoutError(
-            f"keine Antwort innerhalb von {budget:g} s", request=httpx.Request("GET", url)
-        ) from e
+    return await _with_budget(
+        sparql_client.get_json(
+            get_client(),
+            url,
+            params=params,
+            headers=headers,
+            base_delay=RETRY_BASE_DELAY,
+            max_attempts=RETRY_MAX_ATTEMPTS,
+            egress_check=assert_host_allowed,
+        ),
+        url,
+        RETRY_TOTAL_BUDGET_S,
+    )
 
 
 async def fetch_slf_snow_stations() -> list[dict[str, Any]]:
@@ -944,15 +976,19 @@ async def fetch_aircraft_noise(
 ) -> dict[str, Any]:
     """Fluglärmbelastung an einem LV95-Punkt (BAZL-Kataster via identify)."""
     _logger.debug("upstream_request", method="GET", url=geoadmin.IDENTIFY_URL, period=period)
-    result = await geoadmin.noise_at_point(
-        get_client(),
-        period=period,
-        east=east,
-        north=north,
-        radius_m=radius_m,
-        egress_check=assert_host_allowed,
-        base_delay=GEOADMIN_RETRY_BASE_DELAY,
-        max_attempts=GEOADMIN_RETRY_MAX_ATTEMPTS,
+    result = await _with_budget(
+        geoadmin.noise_at_point(
+            get_client(),
+            period=period,
+            east=east,
+            north=north,
+            radius_m=radius_m,
+            egress_check=assert_host_allowed,
+            base_delay=GEOADMIN_RETRY_BASE_DELAY,
+            max_attempts=GEOADMIN_RETRY_MAX_ATTEMPTS,
+        ),
+        geoadmin.IDENTIFY_URL,
+        GEOADMIN_TOTAL_BUDGET_S,
     )
     _note_geoadmin_success(period)
     return result
@@ -964,13 +1000,17 @@ async def fetch_aircraft_noise_registers(
 ) -> list[dict[str, Any]]:
     """Übersicht der publizierten Lärmbelastungskataster (Provenienz-Abfrage)."""
     _logger.debug("upstream_request", method="GET", url=geoadmin.IDENTIFY_URL, period=period)
-    entries = await geoadmin.registers(
-        get_client(),
-        period=period,
-        limit=limit,
-        egress_check=assert_host_allowed,
-        base_delay=GEOADMIN_RETRY_BASE_DELAY,
-        max_attempts=GEOADMIN_RETRY_MAX_ATTEMPTS,
+    entries = await _with_budget(
+        geoadmin.registers(
+            get_client(),
+            period=period,
+            limit=limit,
+            egress_check=assert_host_allowed,
+            base_delay=GEOADMIN_RETRY_BASE_DELAY,
+            max_attempts=GEOADMIN_RETRY_MAX_ATTEMPTS,
+        ),
+        geoadmin.IDENTIFY_URL,
+        GEOADMIN_TOTAL_BUDGET_S,
     )
     _note_geoadmin_success(period or "*")
     return entries
