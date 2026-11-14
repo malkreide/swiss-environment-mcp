@@ -111,6 +111,50 @@ class QuellenLueckeError(AssertionError):
     """Die Quelle hat geantwortet, aber ohne den erwarteten Datensatz."""
 
 
+# Dieselbe Einordnung für einen zweiten, eng umrissenen Fall: opendata.swiss
+# antwortet mit HTTP 200 und einer HTML-Seite statt JSON. Belegt am 23.8. und
+# 11.11.2026; beide Male ging ein Issue auf und am Folgetag ohne Codeänderung
+# wieder zu.
+#
+# Gemessen am 14.11.2026: Die Seite ist ein API-Fehler mit verstecktem Status
+# (siehe `CkanMaskedStatusError`). Daran hängt die Trennung:
+#
+#   Status 4xx im Titel   Die API hat geantwortet und abgelehnt. Fehlt etwa der
+#                         Anker-Datensatz (404), ist das ein Befund — `finding`.
+#   Status 5xx im Titel   Die API ist gestört, nach der Wiederholungsstaffel
+#                         immer noch — `unknown`.
+#   kein Status im Titel  `CkanNotJsonError`, ebenfalls erst nach der Staffel —
+#                         `unknown`.
+#
+# Das gilt nur für opendata.swiss. Für jede andere Quelle bleibt «2xx ohne
+# JSON» ein Vertragsbruch und ein 5xx ein `finding`, wie bisher.
+#
+# Der Preis gehört gesagt: Ist die CKAN-API dauerhaft gestört, ist der Job jede
+# Nacht rot, ohne dass ein Issue aufgeht. Ein Umzug der API fällt dagegen
+# weiter auf — er zeigt sich als 404.
+
+
+def _is_source_gap(exc: BaseException) -> bool:
+    if isinstance(exc, (QuellenLueckeError, _api.CkanNotJsonError)):
+        return True
+    return isinstance(exc, _api.CkanMaskedStatusError) and exc.response.status_code >= 500
+
+
+def _source_gap_cause(exc: BaseException | None) -> BaseException | None:
+    """Sucht in der Exception-Kette eine Lücke oder Störung der Quelle.
+
+    Die Kette wird mitgelaufen wie in `_transport_cause`: Die Tools packen den
+    Fehler in einen `ToolError` ein.
+    """
+    seen: set[int] = set()
+    while exc is not None and id(exc) not in seen:
+        seen.add(id(exc))
+        if _is_source_gap(exc):
+            return exc
+        exc = exc.__cause__ or exc.__context__
+    return None
+
+
 def _transport_cause(exc: BaseException | None) -> BaseException | None:
     """Sucht in der Exception-Kette den ersten reinen Transportfehler.
 
@@ -151,7 +195,7 @@ def pytest_runtest_makereport(item, call):
         return report
     if item.get_closest_marker("live") is None:
         return report
-    if call.excinfo is not None and isinstance(call.excinfo.value, QuellenLueckeError):
+    if call.excinfo is not None and _source_gap_cause(call.excinfo.value) is not None:
         # An `item`, nicht an `report`: Das JUnit-XML liest die Eigenschaften
         # aus dem Teardown-Report, und der kopiert sie erst später vom Item.
         item.user_properties.append((LIVE_BEFUND, QUELLENLUECKE))
