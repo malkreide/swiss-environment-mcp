@@ -1424,6 +1424,56 @@ def test_hook_marks_source_gap_but_keeps_it_red():
     assert not item.config.stash.get(_UPSTREAM_SKIPS, [])
 
 
+def test_hook_marks_ckan_html_outage_but_keeps_it_red():
+    """opendata.swiss mit HTTP 200 und HTML (23.8./11.11.2026): `unknown`, kein Issue."""
+    item = _FakeItem(live=True)
+    exc = api.CkanNotJsonError("https://opendata.swiss/api/3/action/x", 200, "text/html", "<html>")
+    result = _run_hook(item, _FakeCall(exc), _FakeReport())
+    assert result.outcome == "failed"
+    assert (LIVE_BEFUND, QUELLENLUECKE) in item.user_properties
+
+
+def _ckan_masked(status: int) -> api.CkanMaskedStatusError:
+    seite = httpx.Response(
+        200,
+        request=httpx.Request("GET", "https://opendata.swiss/api/3/action/package_show"),
+        headers={"content-type": "text/html"},
+    )
+    return api.CkanMaskedStatusError(status, seite)
+
+
+def test_hook_marks_masked_ckan_5xx_but_keeps_it_red():
+    """Versteckter 5xx nach der Wiederholungsstaffel: die API ist gestört."""
+    item = _FakeItem(live=True)
+    result = _run_hook(item, _FakeCall(_ckan_masked(503)), _FakeReport())
+    assert result.outcome == "failed"
+    assert (LIVE_BEFUND, QUELLENLUECKE) in item.user_properties
+
+
+def test_hook_does_not_mark_masked_ckan_4xx():
+    """Verstecktes 404: Die API hat geantwortet. Ein fehlender Anker ist ein Befund."""
+    item = _FakeItem(live=True)
+    _run_hook(item, _FakeCall(_ckan_masked(404)), _FakeReport())
+    assert item.user_properties == []
+
+
+def test_hook_does_not_mark_real_5xx_from_other_sources():
+    """Ein 502 von geo.admin.ch bleibt ein Befund, wie bisher."""
+    req = httpx.Request("GET", "https://api3.geo.admin.ch/x")
+    exc = httpx.HTTPStatusError("x", request=req, response=httpx.Response(502, request=req))
+    item = _FakeItem(live=True)
+    _run_hook(item, _FakeCall(exc), _FakeReport())
+    assert item.user_properties == []
+
+
+def test_hook_does_not_mark_other_not_json_failures():
+    """«2xx ohne JSON» von jeder anderen Quelle bleibt ein Befund."""
+    item = _FakeItem(live=True)
+    exc = api.UpstreamContractError("https://www.jagdstatistik.ch/x", 200, "text/html", "<html>")
+    _run_hook(item, _FakeCall(exc), _FakeReport())
+    assert item.user_properties == []
+
+
 def test_hook_does_not_mark_ordinary_failures():
     item = _FakeItem(live=True)
     _run_hook(item, _FakeCall(AssertionError("Schema kaputt")), _FakeReport())
