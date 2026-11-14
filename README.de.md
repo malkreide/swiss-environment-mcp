@@ -486,15 +486,20 @@ Skalierungs-/Session-Strategie: [`docs/scaling.md`](docs/scaling.md).
 - **Fluglärm ist ein Stichtagskataster, kein Live-Dienst (`env_noise_*`)**: `validfrom` reicht von **01.03.2009** (CDB Genève) bis **16.04.2024** (LBK St. Gallen-Altenrhein), und jeder Flugplatz wird einzeln und unangekündigt nachgeführt. `source_freshness` behauptet deshalb nie «live» — es trägt das `validfrom` des tatsächlich gefundenen Registers. Die Abdeckung beschränkt sich auf die Umgebung von Flugplätzen; für den grössten Teil der Schweiz existiert kein Kataster, was das Tool ausdrücklich meldet statt eine leere Liste zurückzugeben. Null Treffer bei kleinem Radius ist **zweideutig** (ausserhalb jedes Katasters *oder* innerhalb der innersten Kurve — auf der Piste Kloten sieht beides bei 100 m identisch aus); das Tool fasst deshalb einmal mit Fernradius nach und unterscheidet `no_cadastre` von `wide_area_only`.
 - **Die LSV-Grenzwertprüfung schliesst Militärflugplätze aus**: Anhang 5 der Lärmschutz-Verordnung gilt ausdrücklich für *zivile* Flugplätze. Für Militärflugplätze ist Anhang 8 einschlägig; er wurde nicht verifiziert, weshalb `env_noise_limits_check` die Prüfung für `period="military"` **verweigert** und auf die richtige Grundlage verweist, statt eine plausibel aussehende falsche Tabelle anzuwenden.
 
-### Zuständigkeitsmatrix — Gewässer, Schnee & Niederschlag (Abgrenzung zu `meteoswiss-mcp`)
+### Zuständigkeitsmatrix — Gewässer, Schnee, Niederschlag & Warnungen (Abgrenzung zu `meteoswiss-mcp`)
 
-Damit sich **Gewässer-, Schnee- und Niederschlagsdaten** im Portfolio nicht
-duplizieren, sind die Zuständigkeiten wie folgt aufgeteilt. `meteoswiss-mcp`
-verantwortet den atmosphärischen Niederschlag und das Wetter;
-`swiss-environment-mcp` verantwortet die Oberflächengewässer (BAFU-Domäne:
-Abfluss, Pegel, Wassertemperatur, Badegewässerqualität), Schnee am Boden und
-Lawinengefahr. Gegen die konkreten LINDAS-Cube-Dimensionen geprüft (2026-07-24):
-**keine Überschneidung der Messgrössen**.
+Damit sich **Gewässer-, Schnee- und Niederschlagsdaten** sowie **Warnungen** im
+Portfolio nicht duplizieren, sind die Zuständigkeiten wie folgt aufgeteilt.
+`meteoswiss-mcp` verantwortet den atmosphärischen Niederschlag, das Wetter und
+die Wetterwarnungen; `swiss-environment-mcp` verantwortet die
+Oberflächengewässer (BAFU-Domäne: Abfluss, Pegel, Wassertemperatur,
+Badegewässerqualität), Schnee am Boden, Lawinengefahr und die
+Naturgefahren-Quellen. Dieselbe Matrix, mit vertauschten Spalten, steht im
+README von `meteoswiss-mcp`.
+
+Gegen die konkreten LINDAS-Cube-Dimensionen geprüft (2026-07-24): **keine
+Überschneidung der Messgrössen**. Bei den **Warnungen** gibt es dagegen eine
+Überschneidung: die Waldbrandgefahr (siehe Tabelle und Messung unten).
 
 | Grösse | swiss-environment-mcp (BAFU / SLF) | meteoswiss-mcp (MeteoSchweiz) |
 |---|---|---|
@@ -504,23 +509,40 @@ Lawinengefahr. Gegen die konkreten LINDAS-Cube-Dimensionen geprüft (2026-07-24)
 | Badegewässerqualität (E.coli u. a.) | ✅ `env_bathing_water` (LINDAS `ubd0104`) | ❌ |
 | Schneehöhe am Boden (`HS`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
 | Neuschnee 24 h (`HN_1D`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
-| Lawinenwarnstufe | ✅ `env_avalanche_bulletin` (SLF, EAWS 1–5) | ❌ |
+| Lawinenwarnstufe | ✅ `env_avalanche_bulletin` (SLF, EAWS 1–5) | ❌ — in `meteo_warnings` nicht beobachtet ¹ |
 | Schneefall als aktuelle Wetterlage | ❌ | ✅ `meteo_current` / `meteo_forecast` (Wettercode) |
 | Niederschlagsmenge (mm): Messnetz, Prognose, Klimanormwerte | ❌ | ✅ `meteo_current` / `meteo_forecast` / `meteo_climate_normals` |
 | Niederschlag an SLF-IMIS-Bergstationen | ✅ nur als Schneedecken-Kontext, **kein eigenes Niederschlags-Tool** | (MeteoSchweiz-Messnetz) |
-| Wetterwarnungen (Sturm, Gewitter, Hitze) | ❌ | ✅ `meteo_warnings` |
-| Naturgefahren-Warnungen (Hochwasser, Lawine, Waldbrand) | ✅ `env_flood_warnings`, `env_hazard_*`, `env_wildfire_danger` | ❌ |
+| Wetterwarnungen (Sturm, Gewitter, Regen, Schnee, Frost, Hitze) | ❌ — `env_hazard_*` verweisen nur dorthin | ✅ `meteo_warnings` (MeteoSchweiz-App-API) |
+| Hochwasserwarnungen | ✅ `env_flood_warnings` (hydrodaten.admin.ch) | ❌ — in `meteo_warnings` nicht beobachtet ¹ |
+| Waldbrandgefahr | ✅ `env_wildfire_danger` (waldbrandgefahr.ch, BAFU) — **alle** Warnregionen | ⚠️ **Überschneidung:** `meteo_warnings` liefert dieselbe Stufe als Warnung (`warnType` 10), aber nur für die abgefragte PLZ |
+| Orientierung über alle Gefahren | ✅ `env_hazard_overview` / `env_hazard_regions` — netzwerkfreie Router zu den Zeilen oben | ❌ |
+
+¹ Weder Hochwasser- noch Lawinenwarnungen tauchten in den bisherigen zwei
+Messungen in `meteo_warnings` auf (2026-07-26, 2026-11-14). Dass sie dort nie
+erscheinen, ist damit **nicht** belegt — der Code bildet `warnType` 8/9 ab, die
+Quelle hat sie nur nicht geliefert.
+
+**Gemessene Überschneidung Waldbrand (2026-11-14, 09:23 UTC).** Alle 26
+Kantonshauptort-PLZ haben auf der MeteoSchweiz-App-API geantwortet
+(26 × HTTP 200); einziger aktiver Warntyp war Waldbrand: Chur 4, Altdorf 3,
+Glarus 2, St. Gallen 2. `env_wildfire_danger` zur selben Zeit: Rheintal (GR) 4,
+Uri 3, Glarus 2, St. Gallen 2 — **identisch**. Beide Kanäle tragen dieselbe
+amtliche Stufe; der Unterschied ist die Abdeckung. Regionen der Stufe 4, in denen
+kein Hauptort liegt (Domleschg, Untere Surselva), erscheinen nur in
+`env_wildfire_danger`.
 
 **Regel:** Alles **im und am Gewässer** (Abfluss, Pegel, Wassertemperatur,
-Badegewässerqualität), Schnee **am Boden** und **Lawinengefahr** gehören zu
+Badegewässerqualität), Schnee **am Boden**, **Lawinengefahr** und die
+**Naturgefahren-Karten** (Hochwasser, Waldbrand) gehören zu
 `swiss-environment-mcp` (BAFU/SLF); **atmosphärischer Niederschlag**
-(Regen/Schneefall als mm) sowie Wetter, Prognose, Warnungen und Klimanormwerte
-gehören zu `meteoswiss-mcp`. Der IMIS-Niederschlagssensor des SLF (`RR_10MIN_SUM`)
-wird bewusst **nicht** als Tool angebunden — damit keine Duplikation mit
-MeteoSchweiz. Die Schnee-/Lawinen-Tools sind live (siehe
-[`docs/probe-slf.md`](docs/probe-slf.md)).
-*TODO (hier out of scope): Diese Matrix auch im README von `meteoswiss-mcp`
-spiegeln — jenes Repository ist nicht Teil dieser Änderung.*
+(Regen/Schneefall als mm) sowie Wetter, Prognose, **Wetterwarnungen** und
+Klimanormwerte gehören zu `meteoswiss-mcp`. Beim Waldbrand ist
+`env_wildfire_danger` die Antwort auf «wo ist die Gefahr hoch?»; `meteo_warnings`
+beantwortet «gilt **hier** eine Warnung?» für einen Ort. Der
+IMIS-Niederschlagssensor des SLF (`RR_10MIN_SUM`) wird bewusst **nicht** als Tool
+angebunden — damit keine Duplikation mit MeteoSchweiz. Die Schnee-/Lawinen-Tools
+sind live (siehe [`docs/probe-slf.md`](docs/probe-slf.md)).
 
 ---
 
