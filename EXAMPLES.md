@@ -49,9 +49,9 @@ Warum nützlich: Stärkt die demokratische Teilhabe, da Bürger:innen unkomplizi
 MCP-Enthusiast:innen, Forscher:innen, Prompt Engineers, öffentliche Verwaltung
 
 **Automatisierte Naturgefahren-Warnungen**
-«Ich möchte ein Dashboard bauen. Ruf das aktuelle nationale Naturgefahren-Bulletin auf Deutsch ab, damit ich die Struktur der Warnungen für Lawinen und Hochwasser analysieren kann.»
-→ `env_hazard_overview(language="de")`
-Warum nützlich: Zeigt Entwickler:innen, wie sie offizielle Warnmeldungen des Bundes strukturiert in eigene Automatisierungs-Pipelines oder Dashboards integrieren können.
+«Ich möchte ein Dashboard bauen. Welche Tools liefern die aktuellen Warnungen für Lawinen und Hochwasser — und wie sind die Daten strukturiert?»
+→ `env_hazard_overview(language="de")` zur Orientierung, dann `env_avalanche_bulletin(language="de")` und `env_flood_warnings(min_level=2, response_format="json")`
+Warum nützlich: Zeigt Entwickler:innen, wie sie offizielle Warnmeldungen des Bundes strukturiert in eigene Automatisierungs-Pipelines oder Dashboards integrieren können. Ein gesamtschweizerisches Sammel-Bulletin gibt es nicht mehr (die `naturgefahren.ch`-API ist stillgelegt); `env_hazard_overview` verweist deshalb auf die Live-Tools je Gefahr.
 
 **Portfolio-Synergie: Verkehrsdaten und Luftqualität kombinieren**
 «Korreliert das aktuelle Verkehrsaufkommen auf den Zürcher Strassen mit den heutigen Schadstoffwerten? Lade die Verkehrszählungsdaten der Stadt Zürich herunter und vergleiche sie mit den aktuellen Werten der NABEL-Station Zürich-Kaserne.»
