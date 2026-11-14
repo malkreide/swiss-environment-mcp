@@ -388,18 +388,18 @@ curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets
 curl -sS https://api.github.com/repos/<owner>/<repo>/rulesets/<id>
 ```
 
-Stand 19.9.2026 laufen hier zwei, beide `enforcement: active`:
+Stand **14.11.2026** (gemessen 09:57 UTC) läuft hier genau **ein** Ruleset,
+`enforcement: active`. Vererbte Rulesets aus der Organisation gibt es keine
+(mit `?includes_parents=true` geprüft):
 
 | Ruleset | gilt für | Regeln |
 |---|---|---|
 | `main` | `refs/heads/main` | `deletion`, `non_fast_forward`, required status checks (Liste unten) |
-| `codex-gate` | `~ALL` | `deletion`, `non_fast_forward` — **keine** Status-Checks |
 
-Required auf `main` waren am 19.9.2026 sieben Kontexte:
+Required auf `main` sind fünf Kontexte — genau die Jobs, die auf jedem PR
+gegen `main` berichten:
 
 ```
-codex-gate                  ← zu entfernen, der Workflow ist weg
-codex-gate: Status setzen   ← zu entfernen, der Workflow ist weg
 gitleaks
 lint
 test (3.11)
@@ -407,32 +407,47 @@ test (3.12)
 test (3.13)
 ```
 
-**Die zwei ersten Kontexte hängen jetzt in der Luft.** Mit dem Workflow ist
-weg, was sie berichtet; ein required Kontext ohne Berichterstatter hält jeden
-PR auf. Sie gehören aus dem Ruleset `main` gestrichen — eine Einstellung, die
-der Agent-Proxy mit HTTP 403 sperrt und die deshalb nur ein Mensch vornehmen
-kann.
+**Verlässlicher als die Ruleset-Liste ist die Abfrage pro Branch.** Sie liefert
+die Regeln, die auf einem Branch tatsächlich greifen, gleich aus welchem Ruleset
+sie stammen:
 
-**Das Ruleset `codex-gate` selbst darf dabei NICHT weg.** Es trägt trotz
-seines Namens keinen Status-Check, sondern `non_fast_forward` auf `~ALL` —
-den Force-Push-Stopp für sämtliche Branches. Wer beim Aufräumen dem Namen
-folgt statt dem Inhalt, entfernt den Schutz und merkt es erst, wenn jemand
-Historie überschreibt. Zu streichen sind die zwei **Kontexte** im Ruleset
-`main`, nicht das gleichnamige Ruleset.
+```bash
+curl -sS https://api.github.com/repos/<owner>/<repo>/rules/branches/<branch>
+```
+
+Am 14.11.2026: `main` → 3 Regeln (`deletion`, `non_fast_forward`,
+`required_status_checks`); `claude/bafu-hydrodaten-lindas-145zsg` → **0 Regeln**.
+Die Liste der Rulesets sagt, was konfiguriert ist; diese Abfrage sagt, was auf
+dem Branch ankommt, auf dem man gerade arbeitet.
+
+**Was sich seit dem 19.9.2026 geändert hat.** Damals standen hier zwei Rulesets
+und sieben Kontexte:
+
+- **Die zwei `codex-gate`-Kontexte sind aus dem Ruleset `main` gestrichen.**
+  Mit dem Workflow war weggefallen, was sie berichtete; als required Kontexte
+  ohne Berichterstatter hätten sie jeden PR aufgehalten. Gestrichen hat sie ein
+  Mensch — der Agent-Proxy sperrt diese Einstellung mit HTTP 403.
+- **Das Ruleset `codex-gate` (Ziel `~ALL`) gibt es nicht mehr.** Es trug trotz
+  seines Namens keinen Status-Check, sondern `deletion` und `non_fast_forward`
+  auf sämtlichen Branches — den Force-Push-Stopp ausserhalb von `main`. Hier
+  stand die Warnung, es beim Aufräumen nicht dem Namen nach mitzunehmen. Wann
+  es verschwand und ob bewusst, ist nicht gemessen; belegt ist nur der Zustand
+  vom 14.11.2026. Soll der Schutz zurück, muss ein Mensch das Ruleset in den
+  Einstellungen neu anlegen.
 
 **Vier Dinge, die daraus folgen:**
 
 - **Ein Kontext im Ruleset und der Name des Jobs, der ihn setzt, sind zwei
   Dinge.** Wer den Jobnamen ändert, ohne das Ruleset mitzuziehen, hinterlässt
-  einen Kontext, der nie wieder berichtet — genau der Zustand, in dem die
-  zwei Zeilen oben jetzt stehen.
+  einen Kontext, der nie wieder berichtet — genau so hingen die zwei
+  `codex-gate`-Zeilen bis zu ihrer Streichung in der Luft.
 - **`image-size` ist nicht required.** Ein Doku-PR wird davon nicht gehalten,
-  und das ist jetzt abgelesen statt erschlossen.
+  und das ist abgelesen statt erschlossen.
 - **Es gibt keine `pull_request`-Regel**, also keine Genehmigungspflicht.
-- **Der Force-Push-Stopp ist `non_fast_forward` im Ruleset `~ALL`.** Daher
-  melden sämtliche Branches `protected: true`. Verwirrend ist nur der Name:
-  Das Ruleset heisst `codex-gate` und enthält gerade **keinen** Status-Check;
-  die Gate-Kontexte liegen im Ruleset `main`.
+- **Arbeitsbranches sind ungeschützt.** Sie melden `protected: false`, und
+  `rules/branches/<branch>` liefert für sie eine leere Liste. Dass Force-Push
+  und Löschen dort durchgingen, ist daraus abgelesen, nicht mit einem
+  Force-Push ausprobiert.
 
 **Und die Lehre ist die unangenehme.** Dieser Abschnitt hat drei PRs lang
 behauptet, die Liste sei nicht abzulesen — geschlossen daraus, dass das
@@ -442,36 +457,28 @@ ist keine Aussage über die Quelle». Der indirekte Weg oben hat am Ende das
 richtige Ergebnis gebracht, zweimal falsch abgebogen und mehrere Stunden und
 drei Review-Runden gekostet. Zuerst fragen, ob die Quelle direkt antwortet.
 
-**Und dabei ist noch etwas anderes passiert.** Seit derselben Änderung melden
-*sämtliche* Branches `protected: true`, nicht nur `main`; am Vormittag standen
-die `claude/*`-Branches noch auf `false`. Das Ruleset greift also breiter als
-`main`.
-
-**Was es dort erzwingt, stand hier als ungemessen — und ist es seit dem
-19.9.2026 nicht mehr.** Der Fall kam von selbst: #124 wurde gemergt, während
-ein Korrektur-Commit noch entstand, der damit eine neue Basis brauchte. Der
-übliche Rebase endete an der Sperre:
+**Force-Push: auf `main` gesperrt, auf Arbeitsbranches nur noch Konvention.**
+Am 19.9.2026 endete ein Rebase auf einem Arbeitsbranch an der Sperre — #124 war
+gemergt worden, während ein Korrektur-Commit noch entstand:
 
 ```
 remote: - Cannot force-push to this branch
 ```
 
 Ein *normaler* Push auf denselben Branch lief unmittelbar davor und danach
-durch. Verboten ist also nicht das Schreiben, sondern das Umschreiben.
+durch; verboten war das Umschreiben, nicht das Schreiben. Die Regel dahinter war
+`non_fast_forward` im inzwischen entfernten Ruleset `~ALL`. Auf `main` greift
+dieselbe Regel weiterhin, aus dem Ruleset `main`. Zwei Handgriffe:
 
-**Die Regel dahinter steht inzwischen namentlich fest** (siehe «Die
-Required-Liste, direkt gelesen»): Es ist `non_fast_forward` im Ruleset mit dem
-Ziel `~ALL`. Daher auch das `protected: true` auf jedem Branch — dort steckt
-kein einziger Status-Check, nur `deletion` und `non_fast_forward`. Zwei
-Handgriffe daraus:
-
-- **Auf einem Arbeitsbranch dieses Repos ist der Rebase keine Option mehr.**
-  Basis nachziehen heisst hier `git merge origin/main`, auch auf dem eigenen
-  Branch — der Merge-Commit hält den Branch vorwärts-kompatibel und kommt ohne
-  Force-Push aus.
-- **Wer die Sperre für ein Netzproblem hält, verliert den Commit.** Die
-  Meldung nennt eine Regelverletzung (`GH013`), keinen Übertragungsfehler; ein
-  Wiederholungsversuch mit Backoff scheitert beliebig oft gleich.
+- **Basis nachziehen heisst weiterhin `git merge origin/main`, auch auf dem
+  eigenen Branch.** Nicht mehr, weil die Plattform den Rebase verweigert,
+  sondern weil ein Force-Push die Review-Threads und Check-Runs eines offenen PR
+  von ihren Commits trennt — und weil auf demselben Ref womöglich eine zweite
+  Session schreibt (siehe «Wenn zwei Agenten dasselbe tun»). Dass der Push heute
+  durchginge, ist kein Grund.
+- **Wer die Sperre auf `main` für ein Netzproblem hält, verliert den Commit.**
+  Die Meldung nennt eine Regelverletzung (`GH013`), keinen Übertragungsfehler;
+  ein Wiederholungsversuch mit Backoff scheitert beliebig oft gleich.
 
 Der Pfadfilter ist die Falle: Auf einem reinen Doku-PR fehlt dieser Check in
 der Liste, und das ist der Normalfall, nicht das Symptom aus Teil 1. Erst
