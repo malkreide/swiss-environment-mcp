@@ -46,6 +46,13 @@ Ankerstation 2099. Jedes Mal ging ein Issue auf und am Folgetag ohne
 Codeaenderung wieder zu: Die Quelle hatte geantwortet, nur ohne den Datensatz.
 Ueber den Vertrag sagt das so wenig wie eine tote Leitung.
 
+Derselbe Fall in anderer Gestalt, nur fuer opendata.swiss: Die Quelle verpackt
+jeden Fehler ihrer CKAN-API in eine HTML-Seite mit HTTP 200, der Status steht im
+Seitentitel (gemessen am 14.11.2026). So sahen die Laeufe vom 23.8. und
+11.11.2026 aus. Der Server liest den Status aus; ein versteckter 5xx und eine
+Seite ohne Status werden nach der Wiederholungsstaffel markiert, ein
+versteckter 4xx nicht — er bleibt ein Befund.
+
 Solche Tests scheitern mit `QuellenLueckeError` (tests/conftest.py), und der Hook
 dort haengt `live_befund=quellenluecke` an den Testfall. Sind ALLE
 Fehlschlaege so markiert, ist der Lauf `unknown`: rot, aber ohne Issue. Ein
@@ -132,7 +139,8 @@ def classify(report: Path, pytest_exit: int | None = None) -> tuple[str, str]:
                 UNKNOWN,
                 f"{len(luecken)} von {tests} Test(s) an einer Luecke der Quelle "
                 f"gescheitert ({namen}) — sie hat geantwortet, aber ohne den "
-                "erwarteten Datensatz. Ueber den Vertrag sagt das nichts",
+                "erwarteten Datensatz oder, bei opendata.swiss, mit einer Fehlerseite. "
+                "Ueber den Vertrag sagt das nichts",
             )
         davon = f", davon {len(luecken)} Luecke(n) der Quelle" if luecken else ""
         return (

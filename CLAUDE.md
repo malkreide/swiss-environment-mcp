@@ -549,6 +549,17 @@ Testfall im JUnit-XML. Ein einziger unmarkierter Fehlschlag macht den Lauf
 wieder zum `finding`. Der Job bleibt bei `unknown` rot, nur ohne Issue — rot
 über mehrere Nächte heisst also auch hier untersuchen, denn ein dauerhaft
 fehlender Anker (umbenanntes Prädikat) sieht genauso aus.
+Gleich eingeordnet wird genau ein weiterer Fall, und nur für `opendata.swiss`:
+eine gestörte CKAN-API. Die Quelle verpackt jeden API-Fehler in eine
+HTML-Seite mit **HTTP 200**; der Status steht nur im Seitentitel (gemessen am
+14.11.2026, aufgezeichnet unter `tests/recorded_errors/`). `_get_ckan` liest
+ihn aus. Ein versteckter 5xx und eine Seite ohne Status sind nach der
+Wiederholungsstaffel `unknown`; ein versteckter 4xx bleibt ein `finding` —
+fehlt der Anker-Datensatz, hat die Quelle geantwortet. Für jede andere Quelle
+bleiben «2xx ohne JSON» und ein 5xx ein `finding`. Die Läufe vom 23.8. und
+11.11.2026 («HTTP 200, kein JSON») waren dieser Fall; drei Monate lang galt er
+als Formverletzung, weil nur die ersten 120 Zeichen der Antwort geloggt
+wurden und der Titel bei Zeichen 327 steht.
 `schedule` greift nur auf dem Default-Branch: Eine Änderung an Kadenz oder
 Workflow ist auf einem Branch wirkungslos und wird erst nach dem Merge scharf.
 Vorher von Hand per `workflow_dispatch` prüfen.

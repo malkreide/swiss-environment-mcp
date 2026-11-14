@@ -7,6 +7,43 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Changed
 
+- **`opendata.swiss`: Eine HTML-Fehlerseite mit HTTP 200 wird als der Fehler
+  behandelt, der sie ist.** Gemessen am 14.11.2026: Die CKAN-API liefert JSON
+  nur im Erfolgsfall. Jeden Fehler verpackt das vorgeschaltete Frontend in eine
+  HTML-Seite mit **HTTP 200**; der Status der API steht nur im Seitentitel
+  (`Fehler 404`, `Fehler 409`, `Fehler 400`, auf Französisch `Erreur 404`).
+  Drei solche Seiten sind unter `tests/recorded_errors/` aufgezeichnet.
+
+  Das ist der Fall der Live-Läufe vom 23.8. und 11.11.2026 («HTTP 200, kein
+  JSON»). Welchen Status jene Seiten trugen, ist nicht mehr feststellbar —
+  aufgezeichnet wurden damals nur die ersten 120 Zeichen.
+
+  Im Server: `_get_ckan` liest den Status aus dem Titel und wirft
+  `CkanMaskedStatusError` (eine `httpx.HTTPStatusError`). Danach gilt die
+  gewöhnliche Regel — 429/502/503/504 werden wiederholt, alles andere geht
+  sofort durch. Eine Seite ohne Status wird wiederholt und endet als
+  `CkanNotJsonError`.
+
+  **Sichtbar für Nutzer:** `env_bafu_dataset_detail` mit einer unbekannten ID
+  antwortete bisher «Die Quelle hat mit HTTP 200 geantwortet, aber kein JSON
+  geliefert … Bitte später erneut versuchen» — ein Wiederholungsrat für eine
+  deterministische Absage. Neu: «Ressource nicht gefunden. Bitte
+  Eingabeparameter prüfen.»
+
+  In der Live-Suite, nur für diese Quelle: Ein versteckter **4xx** bleibt ein
+  Befund mit Issue (fehlt der Anker-Datensatz, hat die Quelle geantwortet). Ein
+  versteckter **5xx** und eine Seite ohne Status zählen nach der
+  Wiederholungsstaffel als Störung der Quelle — `unknown`, roter Job, kein
+  Issue. `_tool_text` reicht solche Fehler dafür durch.
+
+  **Was das kostet:** Ist die CKAN-API dauerhaft gestört, ist der Job jede
+  Nacht rot, ohne dass ein Issue aufgeht. Und es weicht von den übrigen Quellen
+  ab, wo ein 5xx ein Befund bleibt.
+
+  Nebenwirkung: `test_bafu_dataset_detail` bestand am 11.11. trotz HTML, weil
+  seine Zusicherung auch den Fehlertext akzeptierte. Er fällt bei einer Störung
+  jetzt mit.
+
 - **Die Fluglärm-Abfragen (geo.admin.ch) haben ein Budget über den ganzen
   Tool-Aufruf: 25 s.** Bisher galt das 45-s-Budget der vendored copy je Abruf.
   Eine Registerübersicht ohne Filter fragt acht Sublayer nacheinander, eine
