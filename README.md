@@ -476,14 +476,19 @@ Scaling/session strategy: [`docs/scaling.md`](docs/scaling.md).
 - **Aircraft noise is a cut-off-date cadastre, not a live service (`env_noise_*`)**: `validfrom` ranges from **01.03.2009** (CDB Genève) to **16.04.2024** (LBK St. Gallen-Altenrhein), and each airfield is revised individually and without notice. `source_freshness` therefore never claims "live" — it carries the `validfrom` of the register actually matched. Coverage is limited to the surroundings of airfields; most of Switzerland has no cadastre at all, which the tool reports explicitly rather than returning an empty list. A zero-hit result at a small radius is **ambiguous** (outside any cadastre *or* inside the innermost contour — on the Kloten runway both look identical at 100 m), so the tool re-queries once at a far radius and distinguishes `no_cadastre` from `wide_area_only`.
 - **LSV limit check excludes military airfields**: Annex 5 of the Noise Abatement Ordinance applies expressly to *civil* airfields. For military airfields Annex 8 governs; it was not verified, so `env_noise_limits_check` **refuses** the check for `period="military"` and points to the correct basis instead of applying a plausible-looking wrong table.
 
-### Responsibility matrix — water, snow & precipitation (delineation vs. `meteoswiss-mcp`)
+### Responsibility matrix — water, snow, precipitation & warnings (delineation vs. `meteoswiss-mcp`)
 
-To avoid duplicating **water, snow and precipitation** data across the portfolio,
-responsibilities are split as follows. `meteoswiss-mcp` owns atmospheric
-precipitation and weather; `swiss-environment-mcp` owns surface waters
-(BAFU domain: discharge, water level, water temperature, bathing quality),
-snow on the ground and avalanche danger. Checked against the actual LINDAS
-cube dimensions (2026-07-24): there is **no overlap in measured quantities**.
+To avoid duplicating **water, snow and precipitation** data and **warnings**
+across the portfolio, responsibilities are split as follows. `meteoswiss-mcp`
+owns atmospheric precipitation, weather and weather warnings;
+`swiss-environment-mcp` owns surface waters (BAFU domain: discharge, water level,
+water temperature, bathing quality), snow on the ground, avalanche danger and the
+natural-hazard sources. The same matrix, with the columns swapped, is in the
+`meteoswiss-mcp` README.
+
+Checked against the actual LINDAS cube dimensions (2026-07-24): there is **no
+overlap in measured quantities**. There **is** one overlap in **warnings**:
+forest-fire danger (see the table and the measurement below).
 
 | Data | swiss-environment-mcp (BAFU / SLF) | meteoswiss-mcp (MeteoSwiss) |
 |---|---|---|
@@ -493,22 +498,38 @@ cube dimensions (2026-07-24): there is **no overlap in measured quantities**.
 | Bathing water quality (E.coli etc.) | ✅ `env_bathing_water` (LINDAS `ubd0104`) | ❌ |
 | Snow depth on the ground (`HS`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
 | Fresh snow 24 h (`HN_1D`) | ✅ `env_snow_current` (SLF IMIS) | ❌ |
-| Avalanche danger level | ✅ `env_avalanche_bulletin` (SLF, EAWS 1–5) | ❌ |
+| Avalanche danger level | ✅ `env_avalanche_bulletin` (SLF, EAWS 1–5) | ❌ — not observed in `meteo_warnings` ¹ |
 | Snowfall as a current weather condition | ❌ | ✅ `meteo_current` / `meteo_forecast` (weather code) |
 | Precipitation amount (mm): measurement network, forecast, climate normals | ❌ | ✅ `meteo_current` / `meteo_forecast` / `meteo_climate_normals` |
 | Precipitation at SLF IMIS mountain stations | ✅ only as snow-cover context, **no standalone precipitation tool** | (MeteoSwiss network) |
-| Weather warnings (storm, thunderstorm, heat) | ❌ | ✅ `meteo_warnings` |
-| Natural-hazard warnings (flood, avalanche, wildfire) | ✅ `env_flood_warnings`, `env_hazard_*`, `env_wildfire_danger` | ❌ |
+| Weather warnings (storm, thunderstorm, rain, snow, frost, heat) | ❌ — `env_hazard_*` only point there | ✅ `meteo_warnings` (MeteoSwiss app API) |
+| Flood warnings | ✅ `env_flood_warnings` (hydrodaten.admin.ch) | ❌ — not observed in `meteo_warnings` ¹ |
+| Forest-fire danger | ✅ `env_wildfire_danger` (waldbrandgefahr.ch, BAFU) — **every** warning region | ⚠️ **overlap:** `meteo_warnings` returns the same level as a warning (`warnType` 10), but only for the PLZ queried |
+| Orientation across all hazards | ✅ `env_hazard_overview` / `env_hazard_regions` — network-free routers to the rows above | ❌ |
+
+¹ Neither flood nor avalanche warnings appeared in `meteo_warnings` in the two
+probes so far (2026-07-26, 2026-11-14). That they never will is **not**
+established — the code maps `warnType` 8/9, the source just did not return them.
+
+**Measured overlap, forest fire (2026-11-14, 09:23 UTC).** All 26 cantonal
+capital PLZ answered the MeteoSwiss app API (26 × HTTP 200); the only active
+warning type was forest fire: Chur 4, Altdorf 3, Glarus 2, St. Gallen 2.
+`env_wildfire_danger` at the same time: Rheintal (GR) 4, Uri 3, Glarus 2,
+St. Gallen 2 — **identical**. Both channels carry the same official level; the
+difference is coverage. Regions at level 4 that no capital lies in (Domleschg,
+Untere Surselva) only show up in `env_wildfire_danger`.
 
 **Rule:** everything **in and on water bodies** (discharge, level, water
-temperature, bathing quality), snow **on the ground** and **avalanche** danger
-belong to `swiss-environment-mcp` (BAFU/SLF); **atmospheric precipitation**
-(rain/snowfall as mm) plus weather, forecast, warnings and climate normals belong
-to `meteoswiss-mcp`. The SLF IMIS precipitation endpoint (`RR_10MIN_SUM`) is
-deliberately **not** wired up as a tool, so it does not duplicate MeteoSwiss. The
-snow/avalanche tools are live (see [`docs/probe-slf.md`](docs/probe-slf.md)).
-*TODO (out of scope here): mirror this matrix in the `meteoswiss-mcp` README —
-that repository is not part of this change.*
+temperature, bathing quality), snow **on the ground**, **avalanche** danger and
+the **natural-hazard maps** (flood, forest fire) belong to
+`swiss-environment-mcp` (BAFU/SLF); **atmospheric precipitation** (rain/snowfall
+as mm) plus weather, forecast, **weather warnings** and climate normals belong to
+`meteoswiss-mcp`. For forest fire, `env_wildfire_danger` is the place to ask
+«where is the danger high?»; `meteo_warnings` answers «is there a warning
+**here**?» for one locality. The SLF IMIS precipitation endpoint
+(`RR_10MIN_SUM`) is deliberately **not** wired up as a tool, so it does not
+duplicate MeteoSwiss. The snow/avalanche tools are live (see
+[`docs/probe-slf.md`](docs/probe-slf.md)).
 
 ---
 
