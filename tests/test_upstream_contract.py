@@ -221,7 +221,7 @@ def test_weiterleitungsseite_ist_kein_json():
 
 
 @respx.mock
-async def test_tool_meldet_quelle_statt_interner_fehler():
+async def test_tool_meldet_quelle_statt_interner_fehler(monkeypatch):
     """Der Live-Fall vom 23.8., End-to-End durch das echte Tool.
 
     Damals: «⚠️ Datensatzsuche fehlgeschlagen: Fehler: Unerwarteter interner
@@ -229,6 +229,8 @@ async def test_tool_meldet_quelle_statt_interner_fehler():
     """
     from mcp.server.mcpserver.exceptions import ToolError
 
+    # CKAN wiederholt «2xx ohne JSON»; ohne das saesse der Test die Staffel ab.
+    monkeypatch.setattr(api, "CKAN_RETRY_BASE_DELAY", 0)
     respx.get(_CKAN).mock(return_value=_response())
 
     with pytest.raises(ToolError) as exc:

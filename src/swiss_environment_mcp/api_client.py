@@ -141,9 +141,16 @@ TIMEOUT = httpx.Timeout(15.0, connect=5.0)
 # Timeouts werden nicht wiederholt: Ein Versuch, der 15 s gehangen hat, lässt
 # im Budget keinen zweiten zu. Wiederholt wird, was schnell scheitert.
 #
-# Nicht abgedeckt, und das gehört gesagt: HTTP 200 mit HTML statt JSON — der
-# Fall vom 23.8. und 11.11.2026. Am 11.11. hielt er über mindestens 80 s an;
-# eine Wiederholung im Sekundenbereich hätte ihn nicht überbrückt.
+# HTTP 200 mit HTML statt JSON — der Fall vom 23.8. und 11.11.2026 — ist bei
+# dieser Quelle ein API-Fehler mit verstecktem Status (`CkanMaskedStatusError`).
+# Der Status wird aus dem Seitentitel gelesen und dann behandelt wie jeder
+# andere: 502/503/504/429 werden wiederholt, 404 und 409 gehen sofort durch.
+# Trägt die Seite keinen Status, wird wiederholt und danach `CkanNotJsonError`
+# geworfen.
+#
+# Welchen Status die Seiten vom 23.8. und 11.11. trugen, ist nicht mehr
+# feststellbar: Aufgezeichnet wurden damals nur die ersten 120 Zeichen, der
+# Titel steht bei Zeichen 327. Dass es ein 5xx war, ist eine Vermutung.
 CKAN_RETRY_MAX_ATTEMPTS = sparql_client.DEFAULT_MAX_ATTEMPTS
 CKAN_RETRY_BASE_DELAY = sparql_client.DEFAULT_BASE_DELAY  # Sekunden. Tests setzen 0.
 # Unter dem MCP-Client-Default (30 s), wie die Schwester-Server mit 25 s.
@@ -230,6 +237,63 @@ class UpstreamContractError(sparql_client.NotJsonError):
 
     Die Attribute tragen deshalb die drei Tatsachen, die zur Einordnung nötig
     sind — alle drei stammen von der Quelle, keine aus unserem Prozess (OBS-002).
+    """
+
+
+class CkanMaskedStatusError(httpx.HTTPStatusError):
+    """opendata.swiss hat einen API-Fehler als HTML-Seite mit HTTP 200 geliefert.
+
+    **Gemessen am 14.11.2026.** Die CKAN-API hinter `opendata.swiss` liefert
+    JSON nur im Erfolgsfall. Jeden Fehler verpackt das vorgeschaltete Frontend
+    (`X-Powered-By: Express`) in eine HTML-Fehlerseite und gibt sie mit
+    **HTTP 200** aus; der Status der API steht nur noch im Seitentitel:
+
+        package_show?id=<gibt es nicht>   200 text/html   <title> Fehler 404 |
+        package_show (ohne id)            200 text/html   <title> Fehler 409 |
+        <unbekannte Action>               200 text/html   <title> Fehler 400 |
+        Accept-Language: fr               200 text/html   <title> Erreur 404 |
+
+    `Accept: application/json` ändert daran nichts. Aufgezeichnet unter
+    `tests/recorded_errors/`.
+
+    Damit ist «HTTP 200 mit HTML statt JSON» bei dieser Quelle keine
+    Formverletzung, sondern eine Absage mit verstecktem Status — und für eine
+    unbekannte Datensatz-ID eine deterministische. Bis dahin meldete der Server
+    dafür «Die Quelle hat mit HTTP 200 geantwortet, aber kein JSON geliefert …
+    Bitte später erneut versuchen»: einer deterministischen Absage einen
+    Wiederholungsrat gegeben (CLAUDE.md, «Ein 4xx ist kein Nein»).
+
+    Die Klasse trägt den Status der API in `response.status_code`, damit
+    `handle_http_error` und die Retry-Regel ihn behandeln wie jeden anderen.
+    Die `response` ist dafür nachgebaut; was über die Leitung kam, steht in
+    `transport_status`.
+    """
+
+    def __init__(self, masked_status: int, response: httpx.Response) -> None:
+        self.transport_status = response.status_code
+        super().__init__(
+            f"opendata.swiss meldet HTTP {masked_status} in einer HTML-Fehlerseite "
+            f"(über die Leitung: HTTP {response.status_code})",
+            request=response.request,
+            response=httpx.Response(
+                masked_status,
+                request=response.request,
+                headers={"content-type": response.headers.get("content-type", "")},
+            ),
+        )
+
+
+class CkanNotJsonError(UpstreamContractError):
+    """opendata.swiss hat über alle Versuche hinweg 2xx ohne JSON geliefert —
+    und ohne einen Status im Seitentitel, an dem sich die Antwort einordnen liesse.
+
+    Der Rest, der nach `CkanMaskedStatusError` übrig bleibt. Der Live-Lauf
+    ordnet ihn als Störung der Quelle ein statt als Vertragsbruch — siehe
+    `tests/conftest.py`. Am Typ und nicht an der URL erkannt: Unter DNS-Pinning
+    steht dort die IP.
+
+    Für alle anderen Quellen bleibt «2xx ohne JSON» ein Vertragsbruch. Bei der
+    Jagdstatistik wäre HTML statt JSON genau die Änderung, die auffallen muss.
     """
 
 
@@ -385,34 +449,76 @@ async def _get_json(url: str, params: dict[str, Any] | None = None) -> httpx.Res
     return response
 
 
-async def _get_ckan(action: str, params: dict[str, Any]) -> httpx.Response:
-    """GET gegen die CKAN-API von opendata.swiss, mit Retry bei transienten Fehlern.
+# `<title> Fehler 404 | …` bzw. `<title> Erreur 404 | …`: ein Wort, dann der
+# Status. Am Wort hängt nichts — es wechselt mit der Sprache der Seite.
+_CKAN_MASKED_STATUS = re.compile(r"<title>\s*\S+\s+([45]\d\d)\b")
+# Der Titel steht bei Zeichen 327 (alle vier Aufzeichnungen vom 14.11.2026).
+_CKAN_TITLE_WINDOW = 2048
 
-    Wiederholt wird bei den Statuscodes aus `sparql_client.RETRYABLE_STATUS`
-    sowie bei `ConnectError`/`ReadError`. Alles andere — 4xx, Timeouts, der
-    Egress-Guard — geht beim ersten Mal durch. Ist die Staffel aufgebraucht,
-    fällt der letzte Fehler unverändert heraus, damit `handle_http_error` und
-    der Transport-Hook der Live-Tests dieselben Typen sehen wie bisher.
+
+def _ckan_masked_status(response: httpx.Response) -> int | None:
+    """Der Status der API, wenn die Antwort eine HTML-Fehlerseite ist — sonst None."""
+    if "json" in response.headers.get("content-type", "").lower():
+        return None
+    treffer = _CKAN_MASKED_STATUS.search(response.text[:_CKAN_TITLE_WINDOW])
+    return int(treffer.group(1)) if treffer else None
+
+
+def _ckan_final(exc: Exception) -> Exception:
+    """Der Fehler, der nach der letzten Wiederholung hinausgeht.
+
+    Alles bleibt, wie es ist — ausser «2xx ohne JSON»: Das wird zu
+    `CkanNotJsonError`, mit dem ursprünglichen Fehler als Ursache.
+    """
+    if isinstance(exc, UpstreamContractError) and not isinstance(exc, CkanNotJsonError):
+        final = CkanNotJsonError(exc.url, exc.status_code, exc.content_type, exc.excerpt)
+        final.__cause__ = exc
+        return final
+    return exc
+
+
+async def _get_ckan(action: str, params: dict[str, Any]) -> Any:
+    """GET gegen die CKAN-API von opendata.swiss; liefert den geparsten Body.
+
+    Eine HTML-Fehlerseite mit HTTP 200 wird zuerst entlarvt: Steht ein Status
+    im Titel, gilt er (`CkanMaskedStatusError`).
+
+    Wiederholt wird bei den Statuscodes aus `sparql_client.RETRYABLE_STATUS` —
+    ob sie über die Leitung kamen oder im Titel standen —, bei
+    `ConnectError`/`ReadError` und bei einem 2xx ohne JSON und ohne Status.
+    Alles andere — 4xx, Timeouts, der Egress-Guard — geht beim ersten Mal
+    durch. Ist die Staffel aufgebraucht, fällt der letzte Fehler heraus:
+    unverändert, ausser «2xx ohne JSON», das zu `CkanNotJsonError` wird.
     """
     url = f"{OPENDATA_SWISS_API}/{action}"
     deadline = time.monotonic() + CKAN_TOTAL_BUDGET_S
     attempt = 0
     while True:
         try:
-            return await _get_json(url, params=params)
+            response = await _get_json(url, params=params)
+            masked = _ckan_masked_status(response)
+            if masked is not None:
+                _logger.warning(
+                    "upstream_masked_status",
+                    url=str(response.request.url),
+                    masked_status=masked,
+                    transport_status=response.status_code,
+                )
+                raise CkanMaskedStatusError(masked, response)
+            return _json_body(response)
         except httpx.HTTPStatusError as e:
             if e.response.status_code not in sparql_client.RETRYABLE_STATUS:
                 raise
             last_exc: Exception = e
-        except (httpx.ConnectError, httpx.ReadError) as e:
+        except (httpx.ConnectError, httpx.ReadError, UpstreamContractError) as e:
             last_exc = e
         attempt += 1
         if attempt >= CKAN_RETRY_MAX_ATTEMPTS:
-            raise last_exc
+            raise _ckan_final(last_exc)
         delay = sparql_client.retry_delay(attempt - 1, last_exc, CKAN_RETRY_BASE_DELAY)
         # Eine Wartezeit über das Budget hinaus wartet für niemanden mehr.
         if delay >= deadline - time.monotonic():
-            raise last_exc
+            raise _ckan_final(last_exc)
         _logger.warning(
             "upstream_retry",
             url=url,
@@ -702,14 +808,12 @@ async def search_bafu_datasets(
         "start": start,
         "sort": "score desc, metadata_modified desc",
     }
-    response = await _get_ckan("package_search", params)
-    return _json_body(response)
+    return await _get_ckan("package_search", params)
 
 
 async def get_bafu_dataset(dataset_id: str) -> dict[str, Any]:
     """Ruft die vollständigen Metadaten eines BAFU-Datensatzes ab."""
-    response = await _get_ckan("package_show", {"id": dataset_id})
-    return _json_body(response)
+    return await _get_ckan("package_show", {"id": dataset_id})
 
 
 # --- Naturgefahren -------------------------------------------------------------
@@ -797,11 +901,10 @@ async def fetch_wildfire_danger(language: str = "de") -> dict[str, Any]:
 
 async def fetch_nabel_stations() -> dict[str, Any]:
     """Ruft die Metadaten der 16 NABEL-Messstationen von opendata.swiss ab."""
-    response = await _get_ckan(
+    return await _get_ckan(
         "package_show",
         {"id": "nationales-beobachtungsnetz-fur-luftfremdstoffe-nabel-stationen"},
     )
-    return _json_body(response)
 
 
 async def fetch_nabel_data(
@@ -820,8 +923,7 @@ async def fetch_nabel_data(
         "fq": f"organization:{OPENDATA_BAFU_ORG}",
         "rows": 5,
     }
-    response = await _get_ckan("package_search", params)
-    return _json_body(response)
+    return await _get_ckan("package_search", params)
 
 
 # --- SLF-Client (Schnee & Lawinen) --------------------------------------------

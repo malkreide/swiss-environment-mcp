@@ -17,7 +17,7 @@ import re
 import sys
 
 import pytest
-from conftest import QuellenLueckeError, _transport_cause
+from conftest import QuellenLueckeError, _source_gap_cause, _transport_cause
 from mcp.server.mcpserver.exceptions import ToolError
 
 # Diese Datei trifft echte BAFU-Live-APIs. Alle hier gesammelten Tests werden
@@ -112,7 +112,10 @@ async def _tool_text(coro) -> str:
     try:
         return await coro
     except ToolError as e:
-        if _transport_cause(e) is not None:
+        # Dasselbe gilt für eine Störung der Quelle (`CkanNotJsonError`): Der
+        # Hook soll sie am Fehler erkennen, nicht an einer Zusicherung, die an
+        # der Fehlermeldung des Tools scheitert.
+        if _transport_cause(e) is not None or _source_gap_cause(e) is not None:
             raise
         return str(e)
 
