@@ -21,7 +21,7 @@
 
 ## Overview
 
-**swiss-environment-mcp** gives AI assistants like Claude direct access to real-time environmental data from Swiss federal authorities – no API keys required. Air quality readings from the national NABEL monitoring network, hydrological gauging stations, natural hazard bulletins, and the full BAFU dataset catalogue are all accessible through a single standardised MCP interface.
+**swiss-environment-mcp** gives AI assistants like Claude direct access to real-time environmental data from Swiss federal authorities – no API keys required. Air quality readings from the national NABEL monitoring network, hydrological gauging stations, natural-hazard data (flood warnings, avalanche bulletin, forest-fire danger), and the full BAFU dataset catalogue are all accessible through a single standardised MCP interface.
 
 The server covers four thematic clusters: air quality (NABEL), hydrology, natural hazards, and the BAFU open data catalogue. Each cluster maps to a group of purpose-built tools that translate raw agency data into clean JSON responses.
 
@@ -35,7 +35,7 @@ The server covers four thematic clusters: air quality (NABEL), hydrology, natura
 - 🌬️ **Air quality monitoring** – 16 NABEL stations, NO₂/O₃/PM10/PM2.5/SO₂/CO, Swiss LRV + WHO 2021 limit checks
 - 💧 **Hydrology** – water levels, flow rates, temperatures across Swiss gauging stations
 - 🚨 **Flood warnings** – active alerts filtered by danger level and canton
-- 🏔️ **Natural hazard bulletin** – SLF/BAFU bulletin in DE/FR/IT/EN, region-specific warnings
+- 🧭 **Natural hazards at a glance** – network-free routers that point each hazard (flood, avalanche, forest fire, snow) to the right live tool and the official portals
 - 🔥 **Wildfire danger** – canton- and region-level fire danger index
 - ❄️ **Snow & avalanches (SLF)** – snow depth, new snow per IMIS station; avalanche danger levels (EAWS)
 - 🦌 **Hunting statistics** – cull & game-loss figures per species, canton and year (federal hunting statistics)
@@ -263,7 +263,7 @@ swiss-housing-mcp  →  address / EGID  →  LV95 E/N
 | *"Current water level of the Limmat in Zurich?"* | `env_hydro_current` |
 | *"Is the water quality at Strandbad Küsnacht safe for swimming?"* | `env_bathing_water` |
 | *"Active flood warnings in Switzerland?"* | `env_flood_warnings` |
-| *"Natural hazard bulletin for Graubünden?"* | `env_hazard_overview` |
+| *"Which tools cover natural hazards in Graubünden?"* | `env_hazard_regions` → then e.g. `env_avalanche_bulletin`, `env_wildfire_danger` |
 | *"Wildfire danger in Canton Valais?"* | `env_wildfire_danger` |
 | *"BAFU biodiversity datasets on opendata.swiss?"* | `env_bafu_datasets` |
 | *"Is the planned school site in an aircraft-noise zone — at which dB level?"* | `env_noise_aircraft_at` |
@@ -347,7 +347,7 @@ Full measurements and reasoning: [`docs/probe-fluglaerm.md`](docs/probe-fluglaer
 |---|---|---|
 | [lindas.admin.ch](https://lindas.admin.ch) | Current hydrology (level, discharge, water temperature) and bathing water quality via SPARQL | BAFU Open-Use / OGD (declared per graph/dataset — each response carries a licence field) |
 | [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Not contacted over HTTP since v0.6.0 — the `/lhg/az/*` endpoints are decommissioned and the data comes from LINDAS. Appears only as a link in tool output and was removed from the egress allow-list (SEC-021). | BAFU OGD |
-| [naturgefahren.ch](https://naturgefahren.ch) | Natural hazard bulletin (SLF/BAFU) | BAFU/SLF |
+| [naturgefahren.ch](https://naturgefahren.ch) | Not contacted over HTTP since v0.4.1 — the aggregated warnings API is decommissioned. Appears only as a portal link in `env_hazard_*` output and was removed from the egress allow-list (SEC-021). | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Wildfire danger index | BAFU |
 | [SLF data service](https://www.slf.ch/en/services-and-products/slf-data-service/) | Snow depth, new snow (IMIS); avalanche bulletin | SLF (WSL) CC BY 4.0 |
 | [jagdstatistik.ch](https://www.jagdstatistik.ch/de/home) | Federal hunting statistics (cull, game loss, population) | BAFU — source attribution required (no explicit licence published) |

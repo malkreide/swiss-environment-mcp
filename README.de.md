@@ -21,7 +21,7 @@
 
 ## Übersicht
 
-**swiss-environment-mcp** gibt KI-Assistenten wie Claude direkten Zugriff auf Echtzeit-Umweltdaten der Schweizer Bundesbehörden – ohne API-Keys. Luftqualitätsmessungen des nationalen NABEL-Messnetzes, hydrologische Messstationen, Naturgefahren-Bulletins und der vollständige BAFU-Datenkatalog sind über eine einzige standardisierte MCP-Schnittstelle zugänglich.
+**swiss-environment-mcp** gibt KI-Assistenten wie Claude direkten Zugriff auf Echtzeit-Umweltdaten der Schweizer Bundesbehörden – ohne API-Keys. Luftqualitätsmessungen des nationalen NABEL-Messnetzes, hydrologische Messstationen, Naturgefahren-Daten (Hochwasserwarnungen, Lawinenbulletin, Waldbrandgefahr) und der vollständige BAFU-Datenkatalog sind über eine einzige standardisierte MCP-Schnittstelle zugänglich.
 
 Der Server deckt vier thematische Cluster ab: Luftqualität (NABEL), Hydrologie, Naturgefahren und den BAFU-Open-Data-Katalog. Jeder Cluster entspricht einer Gruppe zweckgerichteter Tools, die Rohdaten der Bundesbehörden in saubere JSON-Antworten übersetzen.
 
@@ -35,7 +35,7 @@ Der Server deckt vier thematische Cluster ab: Luftqualität (NABEL), Hydrologie,
 - 🌬️ **Luftqualitäts-Monitoring** – 16 NABEL-Stationen, NO₂/O₃/PM10/PM2.5/SO₂/CO, Schweizer LRV- und WHO-2021-Grenzwertprüfung
 - 💧 **Hydrologie** – Pegel, Abfluss, Temperaturen an Schweizer Messstationen
 - 🚨 **Hochwasserwarnungen** – aktive Warnungen nach Gefahrenstufe (schweizweit)
-- 🏔️ **Naturgefahren-Bulletin** – SLF/BAFU-Bulletin auf DE/FR/IT/EN, regionsspezifische Warnungen
+- 🧭 **Naturgefahren im Überblick** – netzwerkfreie Router, die jede Gefahr (Hochwasser, Lawine, Waldbrand, Schnee) an das passende Live-Tool und die offiziellen Portale verweisen
 - 🔥 **Waldbrandgefahr** – Kantons- und Regionalindex für Waldbrandgefahr
 - ❄️ **Schnee & Lawinen (SLF)** – Schneehöhe, Neuschnee je IMIS-Station; Lawinenwarnstufen (EAWS)
 - 🦌 **Jagdstatistik** – Abschuss- & Fallwildzahlen je Tierart, Kanton und Jahr (Eidg. Jagdstatistik)
@@ -266,7 +266,7 @@ swiss-housing-mcp  →  Adresse / EGID  →  LV95 E/N
 | *«Aktueller Wasserstand der Limmat in Zürich?»* | `env_hydro_current` |
 | *«Ist die Wasserqualität im Strandbad Küsnacht zum Baden unbedenklich?»* | `env_bathing_water` |
 | *«Aktive Hochwasserwarnungen in der Schweiz?»* | `env_flood_warnings` |
-| *«Naturgefahren-Bulletin für Graubünden?»* | `env_hazard_overview` |
+| *«Welche Tools decken die Naturgefahren in Graubünden ab?»* | `env_hazard_regions` → dann z. B. `env_avalanche_bulletin`, `env_wildfire_danger` |
 | *«Waldbrandgefahr im Kanton Wallis?»* | `env_wildfire_danger` |
 | *«BAFU-Biodiversitätsdatensätze auf opendata.swiss?»* | `env_bafu_datasets` |
 | *«Liegt der geplante Schulhausstandort in einer Fluglärmzone — in welcher dB-Stufe?»* | `env_noise_aircraft_at` |
@@ -352,7 +352,7 @@ Vollständige Messwerte und Begründung: [`docs/probe-fluglaerm.md`](docs/probe-
 |---|---|---|
 | [lindas.admin.ch](https://lindas.admin.ch) | Aktuelle Hydrologie (Pegel, Abfluss, Wassertemperatur) und Badegewässerqualität via SPARQL | BAFU Open-Use / OGD (je Graph/Datensatz deklariert — jede Antwort trägt ein Lizenzfeld) |
 | [hydrodaten.admin.ch](https://hydrodaten.admin.ch) | Wird seit v0.6.0 nicht mehr per HTTP kontaktiert — die `/lhg/az/*`-Endpoints sind stillgelegt, die Daten kommen über LINDAS. Erscheint nur noch als Link in der Tool-Ausgabe und ist aus der Egress-Allow-List entfernt (SEC-021). | BAFU OGD |
-| [naturgefahren.ch](https://naturgefahren.ch) | Naturgefahren-Bulletin (SLF/BAFU) | BAFU/SLF |
+| [naturgefahren.ch](https://naturgefahren.ch) | Seit v0.4.1 nicht mehr per HTTP kontaktiert — die aggregierte Warnungs-API ist stillgelegt. Erscheint nur noch als Portal-Link in der Ausgabe von `env_hazard_*` und ist aus der Egress-Allow-List entfernt (SEC-021). | BAFU/SLF |
 | [waldbrandgefahr.ch](https://waldbrandgefahr.ch) | Waldbrandgefahren-Index | BAFU |
 | [SLF-Datenservice](https://www.slf.ch/de/services-und-produkte/slf-datenservice/) | Schneehöhe, Neuschnee (IMIS); Lawinenbulletin | SLF (WSL) CC BY 4.0 |
 | [jagdstatistik.ch](https://www.jagdstatistik.ch/de/home) | Eidg. Jagdstatistik (Abschuss, Fallwild, Bestand) | BAFU — Quellenangabe erforderlich (keine explizite Lizenz publiziert) |
