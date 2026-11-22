@@ -5,6 +5,31 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **`publish.yml` kann den Registry-Status einer einzelnen Version setzen.**
+  Handstart mit `action: set-status`, `version` (exakte Zeichenkette, z.B.
+  `V0.7.1`), `status` (`deleted`/`deprecated`/`active`) und optional
+  `message`. Anlass ist der fehlerhafte Eintrag `V0.7.1` vom 22.11.2026.
+  Löschen lässt sich ein Eintrag in der MCP Registry nicht («Server metadata is
+  never permanently removed»); `deleted` versteckt ihn aus den Standardlisten
+  und ist mit `active` umkehrbar. Login wie beim Veröffentlichen per GitHub
+  OIDC.
+
+  Sperren: nur auf `main`; Versionsstring nur aus `A-Z a-z 0-9 . _ + -`; die
+  **aktuelle** Version aus `pyproject.toml` wird nie versteckt (ein Vertipper
+  `V0.7.1` → `0.7.1` würde sonst die gültige Version aus der Registry nehmen);
+  nie `--all-versions`; die Version muss in der Registry stehen. Eingaben
+  gelangen nur über `env:` in die Shell, nie als `${{ inputs.* }}`. Nach dem
+  Aufruf fragt der Job die Registry selbst und ist erst grün, wenn sie den
+  neuen Status meldet.
+
+  Der bisherige Handstart (`action: publish`, Standard) ist unverändert.
+
+  Tests: `tests/test_registry_status.py` führt die Schritte des Jobs mit bash
+  aus — `mcp-publisher` und `sleep` als Attrappen. Gegenprobe mit 9
+  Mutationen, alle rot. `actionlint` 1.7.12 ohne Befund.
+
 ### Behoben
 
 - **`publish.yml` nahm die Version aus dem Tag-Namen und strich nur ein kleines

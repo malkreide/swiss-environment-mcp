@@ -3,10 +3,14 @@ name: Publish to PyPI
 # Zwei Wege:
 #
 # - `release: published` — der normale Weg: Build → PyPI → MCP Registry.
-# - `workflow_dispatch` — NUR der Registry-Job, für eine Version, die schon auf
-#   PyPI liegt. Gedacht zum Nachreichen eines Registry-Eintrags, wenn der
-#   Registry-Schritt eines Releases nicht das Richtige veröffentlicht hat.
-#   Läuft nur auf `main`; Build und PyPI werden übersprungen.
+# - `workflow_dispatch` — manuell, nur auf `main`; Build und PyPI werden immer
+#   übersprungen. Zwei Aktionen:
+#   - `publish` (Standard): NUR der Registry-Job, für eine Version, die schon
+#     auf PyPI liegt — zum Nachreichen eines Registry-Eintrags.
+#   - `set-status`: setzt den Registry-Status GENAU EINER Version
+#     (`deleted`/`deprecated`/`active`). Löschen lässt sich ein Eintrag in der
+#     Registry nicht; `deleted` versteckt ihn aus den Standardlisten und ist mit
+#     `active` umkehrbar. Anlass: der fehlerhafte Eintrag `V0.7.1`.
 #
 # Die Version kommt in beiden Wegen aus `pyproject.toml`, geprüft von
 # `scripts/release_version.py` — nicht mehr aus dem Tag-Namen. Bis v0.7.1 stand
@@ -17,6 +21,25 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      action:
+        description: "publish = Registry-Eintrag für die pyproject-Version nachreichen; set-status = Status einer Version setzen"
+        type: choice
+        options: [publish, set-status]
+        default: publish
+      version:
+        description: "Nur set-status: exakte Versionszeichenkette in der Registry, z.B. V0.7.1"
+        type: string
+        required: false
+      status:
+        description: "Nur set-status: neuer Status"
+        type: choice
+        options: [deleted, deprecated, active]
+        default: deleted
+      message:
+        description: "Nur set-status: Begründung (wird bei active weggelassen)"
+        type: string
+        required: false
 
 permissions:
   id-token: write  # Pflicht für Trusted Publisher
@@ -79,7 +102,8 @@ jobs:
     if: >-
       !cancelled() && (
         (github.event_name == 'release' && needs.publish.result == 'success') ||
-        (github.event_name == 'workflow_dispatch' && needs.publish.result == 'skipped')
+        (github.event_name == 'workflow_dispatch' && inputs.action == 'publish' &&
+         needs.publish.result == 'skipped')
       )
     runs-on: ubuntu-latest
     permissions:
@@ -135,3 +159,79 @@ jobs:
 
       - name: Publish server to MCP Registry
         run: ./mcp-publisher publish
+
+  registry-status:
+    name: Registry-Status einer Version setzen
+    if: github.event_name == 'workflow_dispatch' && inputs.action == 'set-status'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # MCP Registry, Login per GitHub OIDC
+      contents: read
+    # Eingaben nur über env — nie als ${{ inputs.* }} direkt in ein Skript, sonst
+    # wird ein Eingabefeld zur Shell-Injektion.
+    env:
+      VERSION: ${{ inputs.version }}
+      STATUS: ${{ inputs.status }}
+      MESSAGE: ${{ inputs.message }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Eingaben prüfen
+        id: check
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Manuell nur von main aus — gestartet auf $GITHUB_REF."
+            exit 1
+          fi
+          python3 scripts/registry_status_args.py --version "$VERSION" --status "$STATUS"
+          server="$(jq -r .name server.json)"
+          echo "server=$server" >> "$GITHUB_OUTPUT"
+          echo "url=https://registry.modelcontextprotocol.io/v0/servers/$(jq -rn --arg s "$server" '$s|@uri')/versions/$(jq -rn --arg v "$VERSION" '$v|@uri')?include_deleted=true" >> "$GITHUB_OUTPUT"
+
+      - name: Version muss in der Registry stehen
+        env:
+          URL: ${{ steps.check.outputs.url }}
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -o entry.json -w '%{http_code}' "$URL")"
+          if [ "$code" != "200" ]; then
+            echo "::error::$VERSION steht nicht in der Registry (HTTP $code)."
+            exit 1
+          fi
+          echo "Status vorher: $(jq -r '._meta["io.modelcontextprotocol.registry/official"].status' entry.json)"
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate to MCP Registry (GitHub OIDC)
+        run: ./mcp-publisher login github-oidc
+
+      # Genau eine Version — `--all-versions` wird bewusst nie gesetzt.
+      - name: Status setzen
+        env:
+          SERVER: ${{ steps.check.outputs.server }}
+        run: |
+          set -euo pipefail
+          args=(status --status "$STATUS")
+          if [ "$STATUS" != "active" ] && [ -n "$MESSAGE" ]; then
+            args+=(--message "$MESSAGE")
+          fi
+          ./mcp-publisher "${args[@]}" "$SERVER" "$VERSION"
+
+      # Ein grüner Befehl ist noch kein Beleg — die Registry selbst fragen.
+      - name: Ergebnis in der Registry prüfen
+        env:
+          URL: ${{ steps.check.outputs.url }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            now="$(curl -sS "$URL" | jq -r '._meta["io.modelcontextprotocol.registry/official"].status')"
+            echo "Versuch $attempt: Status $now"
+            if [ "$now" = "$STATUS" ]; then exit 0; fi
+            sleep 10
+          done
+          echo "::error::Registry meldet für $VERSION weiterhin '$now' statt '$STATUS'."
+          exit 1
