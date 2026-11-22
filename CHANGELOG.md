@@ -177,6 +177,36 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Behoben
 
+- **`language` in `env_hazard_overview` und `env_hazard_regions` wurde
+  angenommen und nie verwendet** — alle Links waren fest deutsch, obwohl der
+  Docstring von `env_hazard_overview` den Parameter ausdrücklich «für die
+  Portallinks» versprach. Neu kommen die Portal-Links in der gewählten Sprache;
+  der Antworttext bleibt deutsch, und das steht jetzt auch in der Beschreibung.
+  Erlaubt sind genau `de`, `fr`, `it`, `en` (exakte Whitelist statt bisher gar
+  keiner Prüfung bzw. `^[a-z]{2}$` anderswo), weil der Wert eine URL auswählt.
+
+  Die 24 Links (6 Portale × 4 Sprachen) stammen aus den `hreflang`-Alternativen
+  bzw. dem Sprachumschalter der deutschen Seiten und sind am 22.11.2026 alle
+  abgerufen worden: HTTP 200, Seite in der genannten Sprache. Ausnahme:
+  `map.geo.admin.ch` ist eine SPA, die die Sprache erst im Browser setzt — dort
+  ist nur gemessen, dass `lang` in der Adresse erhalten bleibt.
+
+  Dabei fielen zwei kaputte Links auf, die beide Router bisher ausgaben:
+  `meteoschweiz.admin.ch/wetter/warnungen.html` lieferte **HTTP 404** (ersetzt
+  durch die aktuelle Gefahrenseite), und `map.bafu.admin.ch` leitet auf
+  `map.geo.admin.ch` um und verliert dabei `lang` (Link zeigt jetzt direkt
+  dorthin). `hydrodaten …/hochwasserwarnungen` leitete auf `/de/aktuelle-lage`
+  um und zeigt jetzt direkt auf die jeweilige Sprachversion.
+
+  Neu: `tests/test_portal_links.py` ruft alle 24 Links im nächtlichen Live-Job
+  ab. 404/410 ist ein Befund; 403/429/5xx und Netzfehler sagen über den Link
+  nichts und werden übersprungen.
+
+  `tool-snapshot.json` neu geschrieben: geändert haben sich nur
+  `env_hazard_overview` und `env_hazard_regions` (Beschreibung und Muster von
+  `language`). Wer bisher eine andere Sprache schickte, bekommt jetzt eine
+  Validierungsmeldung statt deutscher Links.
+
 - **`env_hazard_regions` schlug für fast jeden Kanton ein falsches Kürzel vor.**
   Das Tool nahm die ersten zwei Buchstaben der Region als Kanton für
   `env_wildfire_danger`. Gemessen am 22.11.2026: «Zürich» → `ZÜ` (dort ein
