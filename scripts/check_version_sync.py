@@ -9,10 +9,11 @@ Stellen, die dieselbe Nummer wiederholen:
     `packages[*].version`
   - die Versions-Badges der READMEs
 
-Hintergrund: `publish.yml` synchronisiert `server.json` beim Veröffentlichen
-aus dem Tag-Namen — die *committete* Version wirkt also nie auf das
-publizierte Artefakt und fällt deshalb nicht auf, wenn sie veraltet. Die
-README-Badges erzwingt überhaupt nichts.
+Hintergrund: `publish.yml` überschreibt `server.json` beim Veröffentlichen mit
+der Version aus `pyproject.toml` (geprüft von `scripts/release_version.py`) —
+die *committete* Version in `server.json` wirkt also nie auf das publizierte
+Artefakt und fällt deshalb nicht auf, wenn sie veraltet. Die README-Badges
+erzwingt überhaupt nichts.
 
 Zweiter Teil: in `src/` darf keine Versionsnummer stehen. Der Laufzeit-Wert
 kommt aus den Paket-Metadaten (`importlib.metadata.version()`); ein wieder

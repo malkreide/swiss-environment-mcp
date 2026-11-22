@@ -1,8 +1,22 @@
 name: Publish to PyPI
 
+# Zwei Wege:
+#
+# - `release: published` — der normale Weg: Build → PyPI → MCP Registry.
+# - `workflow_dispatch` — NUR der Registry-Job, für eine Version, die schon auf
+#   PyPI liegt. Gedacht zum Nachreichen eines Registry-Eintrags, wenn der
+#   Registry-Schritt eines Releases nicht das Richtige veröffentlicht hat.
+#   Läuft nur auf `main`; Build und PyPI werden übersprungen.
+#
+# Die Version kommt in beiden Wegen aus `pyproject.toml`, geprüft von
+# `scripts/release_version.py` — nicht mehr aus dem Tag-Namen. Bis v0.7.1 stand
+# hier `${GITHUB_REF_NAME#v}`; der Tag `V0.7.1` ergab damit einen
+# Registry-Eintrag `V0.7.1`, den die Registry nie als «latest» markierte.
+
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 permissions:
   id-token: write  # Pflicht für Trusted Publisher
@@ -10,6 +24,7 @@ permissions:
 jobs:
   build:
     name: Build distribution
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +34,11 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+
+      # Vor dem Build: Ein Tag, der nicht zu pyproject.toml passt, bricht hier
+      # ab — bevor PyPI oder die Registry etwas bekommen.
+      - name: Tag gegen pyproject.toml prüfen
+        run: python scripts/release_version.py --tag "$GITHUB_REF_NAME"
 
       - name: Install build tools
         run: pip install build
@@ -35,6 +55,7 @@ jobs:
   publish:
     name: Publish to PyPI
     needs: build
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -53,6 +74,13 @@ jobs:
   publish-mcp:
     name: Publish to MCP Registry
     needs: publish
+    # Beim Release: nur nach erfolgreichem PyPI-Upload. Manuell: `publish` ist
+    # dann übersprungen, und genau das ist der einzige zulässige Zustand.
+    if: >-
+      !cancelled() && (
+        (github.event_name == 'release' && needs.publish.result == 'success') ||
+        (github.event_name == 'workflow_dispatch' && needs.publish.result == 'skipped')
+      )
     runs-on: ubuntu-latest
     permissions:
       id-token: write   # required for MCP Registry Trusted Publishing (OIDC)
@@ -61,9 +89,40 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Sync server.json version to the release tag
+      - name: Version bestimmen
+        id: version
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "release" ]; then
+            VERSION="$(python3 scripts/release_version.py --tag "$GITHUB_REF_NAME")"
+          else
+            if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+              echo "::error::Manuell nur von main aus — gestartet auf $GITHUB_REF."
+              exit 1
+            fi
+            VERSION="$(python3 scripts/release_version.py)"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      # Ein Registry-Eintrag darf nicht auf ein Paket zeigen, das es nicht gibt.
+      # Beim Release ist das durch den PyPI-Job davor gesichert, manuell nicht.
+      - name: Version muss auf PyPI liegen (nur manuell)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -o /dev/null -w '%{http_code}' \
+            "https://pypi.org/pypi/swiss-environment-mcp/$VERSION/json")"
+          if [ "$code" != "200" ]; then
+            echo "::error::swiss-environment-mcp $VERSION liegt nicht auf PyPI (HTTP $code)."
+            exit 1
+          fi
+
+      - name: Sync server.json version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
           jq --arg v "$VERSION" '.version = $v | .packages[0].version = $v' \
             server.json > server.tmp && mv server.tmp server.json
 
