@@ -118,7 +118,10 @@ def test_build_and_pypi_only_run_on_release(job):
 def test_registry_job_condition():
     cond = " ".join(_workflow()["jobs"]["publish-mcp"]["if"].split())
     assert "github.event_name == 'release' && needs.publish.result == 'success'" in cond
-    assert "github.event_name == 'workflow_dispatch' && needs.publish.result == 'skipped'" in cond
+    assert (
+        "github.event_name == 'workflow_dispatch' && inputs.action == 'publish' && "
+        "needs.publish.result == 'skipped'"
+    ) in cond
 
 
 def test_manual_run_checks_pypi_before_publishing():
