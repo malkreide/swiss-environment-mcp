@@ -1,11 +1,17 @@
 """
 HTTP-Client für BAFU-Datenquellen.
 
-Quellen:
-  - opendata.swiss        – BAFU-Datensätze (CKAN API)
-  - naturgefahren.ch      – Naturgefahren-Bulletin (SLF/BAFU)
-  - waldbrandgefahr.ch    – Waldbrandgefahr Schweiz
-  - api3.geo.admin.ch     – BAZL-Fluglärmbelastungskataster (identify)
+Quellen (deckungsgleich mit `ALLOWED_HOSTS` unten):
+  - opendata.swiss          – BAFU-Datensätze (CKAN API)
+  - www.waldbrandgefahr.ch  – Waldbrandgefahr Schweiz
+  - lindas.admin.ch         – Hydrologie, Badegewässer (SPARQL)
+  - measurement-api.slf.ch  – SLF-Schneemessungen (IMIS)
+  - aws.slf.ch              – SLF-Lawinenbulletin
+  - www.jagdstatistik.ch    – Eidg. Jagdstatistik
+  - api3.geo.admin.ch       – BAZL-Fluglärmbelastungskataster (identify)
+
+naturgefahren.ch wird seit v0.4.1 nicht mehr abgefragt (Warnungs-API
+stillgelegt); `env_hazard_*` sind netzwerkfreie Router.
 
 Sicherheit (siehe Audit SEC-004 / SEC-021):
   - Egress-Allow-List auf Code-Ebene (nur die fest definierten Gov-Hosts)

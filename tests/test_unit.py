@@ -980,6 +980,96 @@ async def test_hazard_regions_is_network_free_router():
     assert "map.bafu.admin.ch" in out
 
 
+# Vorher wurde der Kanton als die ersten zwei Buchstaben der Region geraten:
+# «Zürich» → 'ZÜ' (ValidationError in env_wildfire_danger), «Wallis» → 'WA'
+# (0 Regionen statt 23, gemessen 2026-11-22). Nur Graubünden traf zufällig.
+@pytest.mark.parametrize(
+    ("region", "code"),
+    [
+        ("Zürich", "ZH"),
+        ("Wallis", "VS"),
+        ("Valais", "VS"),
+        ("Tessin", "TI"),
+        ("Ticino", "TI"),
+        ("St. Gallen", "SG"),
+        ("Basel-Stadt", "BS"),
+        ("Genève", "GE"),
+        ("Graubuenden", "GR"),  # ue-Schreibweise, wie in test_20_scenarios
+        ("vs", "VS"),
+    ],
+)
+async def test_hazard_regions_suggests_correct_canton(region, code):
+    out = await env_hazard_regions(HazardRegionsInput(region=region))
+    assert f"env_wildfire_danger` mit `canton='{code}'`" in out
+    assert f"env_snow_current` mit `canton='{code}'`" in out
+
+
+async def test_hazard_regions_does_not_guess_canton():
+    """Eine Region ohne eindeutigen Kanton bekommt kein geratenes Kürzel."""
+    out = await env_hazard_regions(HazardRegionsInput(region="Engadin"))
+    assert "canton='" not in out
+    assert "keinem Kanton eindeutig zuzuordnen" in out
+
+
+async def test_hazard_regions_without_region_suggests_no_canton():
+    """Ohne Region kein Kürzel — vorher stand hier pauschal canton='ZH'."""
+    out = await env_hazard_regions(HazardRegionsInput())
+    assert "canton='" not in out
+    assert "ganze Schweiz" in out
+
+
+def test_canton_lookup_covers_every_name_and_code():
+    """Jeder Name und jedes Kürzel löst auf seinen Kanton auf.
+
+    Fängt auch Kollisionen der Vergleichsform: Überschriebe ein Eintrag einen
+    anderen, fiele hier genau dieser Kanton auf den falschen Code.
+    """
+    from swiss_environment_mcp.server import _CANTON_ALIASES, JAGD_CANTONS, canton_code
+
+    for code, name in JAGD_CANTONS.items():
+        if code == "CH":
+            continue
+        assert canton_code(name) == code, name
+        assert canton_code(code) == code, code
+    for name, code in _CANTON_ALIASES.items():
+        assert canton_code(name) == code, name
+    assert canton_code("CH") is None  # «Ganze Schweiz» ist kein Kanton
+
+
+async def test_hazard_regions_hazard_type_filters_output():
+    """hazard_type wurde angenommen und ignoriert — jetzt filtert er."""
+    out = await env_hazard_regions(HazardRegionsInput(region="Graubünden", hazard_type="lawinen"))
+    assert "env_avalanche_bulletin" in out
+    assert "env_wildfire_danger" not in out
+    assert "env_flood_warnings" not in out
+    assert "map.bafu.admin.ch" in out  # Karten gelten für jede Gefahr
+
+
+@pytest.mark.parametrize(
+    "hazard_type",
+    ["hochwasser", "lawinen", "waldbrand", "schnee", "unwetter", "steinschlag", "rutschungen"],
+)
+async def test_hazard_regions_each_type_yields_exactly_one_route(hazard_type):
+    out = await env_hazard_regions(HazardRegionsInput(region="Bern", hazard_type=hazard_type))
+    routing = out.split("### Karten & Portale")[0]  # Portal-Links zählen nicht
+    routes = [line for line in routing.splitlines() if line.startswith("- **")]
+    assert len(routes) == 1, routes
+
+
+async def test_hazard_regions_rockfall_says_there_is_no_live_tool():
+    """steinschlag stand in der Beschreibung, hatte aber nie eine Zeile."""
+    out = await env_hazard_regions(HazardRegionsInput(hazard_type="steinschlag"))
+    assert "kein Live-Tool" in out
+
+
+def test_hazard_regions_unknown_type_is_rejected():
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError, match="Gültig: hochwasser"):
+        HazardRegionsInput(hazard_type="erdbeben")
+    assert HazardRegionsInput(hazard_type=" Lawine ").hazard_type == "lawinen"
+
+
 @respx.mock
 async def test_wildfire_danger_happy_filters_canton():
     """env_wildfire_danger: Zwei-Schritt-Zugriff, Stufe + Label, Kanton-Filter.
