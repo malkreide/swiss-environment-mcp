@@ -23,7 +23,7 @@
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "301ce16556b510b817da3586919f7ba745ed2d6d759b31dc49b958a5a49248f5",
+  "sha256": "8d7270cc6df01a345646ed9504fb77520f0668e6839a0ecc7acc61fad17ee736",
   "tools": [
     {
       "name": "env_air_limits_check",
@@ -232,7 +232,7 @@
     },
     {
       "name": "env_hazard_overview",
-      "description": "Orientierungsübersicht zu Schweizer Naturgefahren: welche Gefahr über welches Tool bzw. welche offizielle Warnplattform abrufbar ist. Hintergrund (verifiziert 2026-07-26, docs/probe-naturgefahren-hazards.md): Die frühere aggregierte `naturgefahren.ch`-Bulletin-API ist ersatzlos stillgelegt, und es existiert **kein** stabiler, dokumentierter öffentlicher JSON-Feed für die aggregierten Warnungen (weder MeteoSchweiz-OGD/STAC, opendata.swiss noch die undokumentierte App-API liefern einen sauberen Zugang). Statt eines fragilen Scrapings routet dieses Tool daher auf die **dedizierten, live funktionierenden** Tools dieses Servers und die offiziellen Warnplattformen. Aggregierte Wetter-/Unwetterwarnungen (Sturm/Gewitter/Hitze) sind Domäne von MeteoSchweiz bzw. `meteoswiss-mcp` (Zuständigkeitsmatrix). <use_case>Einstieg in die Schweizer Naturgefahrenlage: zu welcher Gefahr liefert welches Tool Live-Daten, und wo liegen die offiziellen Bulletins.</use_case> <important_notes>Netzwerkfrei/deterministisch. Für Live-Werte die verlinkten Tools nutzen: Hochwasser→env_flood_warnings, Lawine→env_avalanche_bulletin, Waldbrand→env_wildfire_danger, Schnee→env_snow_current.</important_notes> Args: params (HazardOverviewInput): - language: Sprache ('de', 'fr', 'it', 'en') — für die Portallinks Returns: str: Gefahren→Tool-Routing plus offizielle Warnplattform-Links.",
+      "description": "Orientierungsübersicht zu Schweizer Naturgefahren: welche Gefahr über welches Tool bzw. welche offizielle Warnplattform abrufbar ist. Hintergrund (verifiziert 2026-07-26, docs/probe-naturgefahren-hazards.md): Die frühere aggregierte `naturgefahren.ch`-Bulletin-API ist ersatzlos stillgelegt, und es existiert **kein** stabiler, dokumentierter öffentlicher JSON-Feed für die aggregierten Warnungen (weder MeteoSchweiz-OGD/STAC, opendata.swiss noch die undokumentierte App-API liefern einen sauberen Zugang). Statt eines fragilen Scrapings routet dieses Tool daher auf die **dedizierten, live funktionierenden** Tools dieses Servers und die offiziellen Warnplattformen. Aggregierte Wetter-/Unwetterwarnungen (Sturm/Gewitter/Hitze) sind Domäne von MeteoSchweiz bzw. `meteoswiss-mcp` (Zuständigkeitsmatrix). <use_case>Einstieg in die Schweizer Naturgefahrenlage: zu welcher Gefahr liefert welches Tool Live-Daten, und wo liegen die offiziellen Bulletins.</use_case> <important_notes>Netzwerkfrei/deterministisch. Für Live-Werte die verlinkten Tools nutzen: Hochwasser→env_flood_warnings, Lawine→env_avalanche_bulletin, Waldbrand→env_wildfire_danger, Schnee→env_snow_current.</important_notes> Args: params (HazardOverviewInput): - language: Sprache der Portal-Links ('de', 'fr', 'it', 'en'); der Antworttext bleibt deutsch Returns: str: Gefahren→Tool-Routing plus offizielle Warnplattform-Links.",
       "params": [
         "language"
       ],
@@ -241,14 +241,15 @@
         {
           "name": "language",
           "required": false,
-          "description": "Sprache: 'de', 'fr', 'it', 'en'",
-          "default": "de"
+          "description": "Sprache der Portal-Links: 'de', 'fr', 'it' oder 'en'. Der Antworttext selbst bleibt deutsch.",
+          "default": "de",
+          "pattern": "^(de|fr|it|en)$"
         }
       ]
     },
     {
       "name": "env_hazard_regions",
-      "description": "Regionsbezogene Orientierung zu Naturgefahren: verweist für eine Region auf die dedizierten Live-Tools und die offiziellen Gefahrenkarten. Wie `env_hazard_overview` netzwerkfrei: die aggregierte `naturgefahren.ch`-Regionen-API ist stillgelegt (2026), ohne stabilen Ersatz. Für regionsscharfe Live-Werte liefern die verlinkten Tools die Daten (Waldbrand z.B. via `env_wildfire_danger` mit Kanton-Filter). <use_case>Regionsbezogener Einstieg (Event-, Schulausflug-, Infrastruktur- Planung): welches Tool liefert für die Region welche Gefahr.</use_case> <important_notes>Netzwerkfrei/deterministisch. Ist `region` ein Kanton (Name in DE/FR/IT/EN oder Kürzel), steht das Kürzel direkt im vorgeschlagenen Aufruf (`env_wildfire_danger`, `env_snow_current`); sonst wird kein Kürzel geraten. `hazard_type` beschränkt die Ausgabe auf diesen Gefahrentyp. Steinschlag und Rutschungen haben in diesem Server kein Live-Tool, nur Gefahrenkarten. Karten: naturgefahren.ch / BAFU GIS.</important_notes> Args: params (HazardRegionsInput): - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Valais', 'VS') - hazard_type: 'hochwasser', 'lawinen', 'waldbrand', 'schnee', 'unwetter', 'steinschlag', 'rutschungen' – leer = alle - language: Sprache Returns: str: Regionsbezogenes Tool-Routing plus Karten-/Portal-Links.",
+      "description": "Regionsbezogene Orientierung zu Naturgefahren: verweist für eine Region auf die dedizierten Live-Tools und die offiziellen Gefahrenkarten. Wie `env_hazard_overview` netzwerkfrei: die aggregierte `naturgefahren.ch`-Regionen-API ist stillgelegt (2026), ohne stabilen Ersatz. Für regionsscharfe Live-Werte liefern die verlinkten Tools die Daten (Waldbrand z.B. via `env_wildfire_danger` mit Kanton-Filter). <use_case>Regionsbezogener Einstieg (Event-, Schulausflug-, Infrastruktur- Planung): welches Tool liefert für die Region welche Gefahr.</use_case> <important_notes>Netzwerkfrei/deterministisch. Ist `region` ein Kanton (Name in DE/FR/IT/EN oder Kürzel), steht das Kürzel direkt im vorgeschlagenen Aufruf (`env_wildfire_danger`, `env_snow_current`); sonst wird kein Kürzel geraten. `hazard_type` beschränkt die Ausgabe auf diesen Gefahrentyp. Steinschlag und Rutschungen haben in diesem Server kein Live-Tool, nur Gefahrenkarten. Karten: naturgefahren.ch / BAFU GIS.</important_notes> Args: params (HazardRegionsInput): - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Valais', 'VS') - hazard_type: 'hochwasser', 'lawinen', 'waldbrand', 'schnee', 'unwetter', 'steinschlag', 'rutschungen' – leer = alle - language: Sprache der Karten-Links ('de', 'fr', 'it', 'en'); der Antworttext bleibt deutsch Returns: str: Regionsbezogenes Tool-Routing plus Karten-/Portal-Links.",
       "params": [
         "hazard_type",
         "language",
@@ -266,7 +267,9 @@
         {
           "name": "language",
           "required": false,
-          "default": "de"
+          "description": "Sprache der Portal-Links: 'de', 'fr', 'it' oder 'en'. Der Antworttext selbst bleibt deutsch.",
+          "default": "de",
+          "pattern": "^(de|fr|it|en)$"
         },
         {
           "name": "region",

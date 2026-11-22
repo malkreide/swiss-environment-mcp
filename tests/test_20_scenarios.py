@@ -477,7 +477,7 @@ async def scenario_16():
         szenario,
         "Relevanter Inhalt",
         "naturgefahren" in result
-        or "map.bafu" in result
+        or "map.geo.admin.ch" in result
         or "Graub" in result
         or "Warnung" in result,
         f"Inhalt: {result[:200]}",

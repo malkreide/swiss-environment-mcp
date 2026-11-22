@@ -977,7 +977,7 @@ async def test_hazard_regions_is_network_free_router():
     out = await env_hazard_regions(HazardRegionsInput(region="Graubünden"))
     assert "Graubünden" in out  # Region wird gespiegelt
     assert "env_wildfire_danger" in out and "canton=" in out
-    assert "map.bafu.admin.ch" in out
+    assert "map.geo.admin.ch/?topic=bafu" in out
 
 
 # Vorher wurde der Kanton als die ersten zwei Buchstaben der Region geraten:
@@ -1042,7 +1042,7 @@ async def test_hazard_regions_hazard_type_filters_output():
     assert "env_avalanche_bulletin" in out
     assert "env_wildfire_danger" not in out
     assert "env_flood_warnings" not in out
-    assert "map.bafu.admin.ch" in out  # Karten gelten für jede Gefahr
+    assert "map.geo.admin.ch/?topic=bafu" in out  # Karten gelten für jede Gefahr
 
 
 @pytest.mark.parametrize(
@@ -1060,6 +1060,65 @@ async def test_hazard_regions_rockfall_says_there_is_no_live_tool():
     """steinschlag stand in der Beschreibung, hatte aber nie eine Zeile."""
     out = await env_hazard_regions(HazardRegionsInput(hazard_type="steinschlag"))
     assert "kein Live-Tool" in out
+
+
+# `language` wurde von beiden Routern angenommen und nie verwendet; der
+# Overview-Docstring versprach ihn sogar «für die Portallinks».
+_OVERVIEW_PORTALS = ("naturgefahren", "lawinen", "hochwasser", "waldbrand", "wetterwarnungen")
+_REGION_PORTALS = ("naturgefahren", "gefahrenkarten")
+
+
+@pytest.mark.parametrize("lang", ["de", "fr", "it", "en"])
+async def test_hazard_overview_links_follow_language(lang):
+    from swiss_environment_mcp.server import _PORTAL_LINKS
+
+    out = await env_hazard_overview(HazardOverviewInput(language=lang))
+    for portal in _OVERVIEW_PORTALS:
+        assert _PORTAL_LINKS[portal][lang] in out, portal
+        for other, url in _PORTAL_LINKS[portal].items():
+            if other != lang:
+                assert url not in out, (portal, other)
+
+
+@pytest.mark.parametrize("lang", ["de", "fr", "it", "en"])
+async def test_hazard_regions_links_follow_language(lang):
+    from swiss_environment_mcp.server import _PORTAL_LINKS
+
+    out = await env_hazard_regions(HazardRegionsInput(region="Bern", language=lang))
+    for portal in _REGION_PORTALS:
+        assert _PORTAL_LINKS[portal][lang] in out, portal
+        for other, url in _PORTAL_LINKS[portal].items():
+            if other != lang:
+                assert url not in out, (portal, other)
+
+
+@pytest.mark.parametrize("model", ["HazardOverviewInput", "HazardRegionsInput"])
+@pytest.mark.parametrize("bad", ["es", "xx", "DE", "de&lang=fr", ""])
+def test_hazard_language_is_whitelisted(model, bad):
+    """Der Wert wählt eine URL — nur die vier Sprachen mit geprüftem Link."""
+    from pydantic import ValidationError
+
+    from swiss_environment_mcp import server
+
+    with pytest.raises(ValidationError):
+        getattr(server, model)(language=bad)
+
+
+def test_portal_links_cover_every_language():
+    from swiss_environment_mcp.server import _HAZARD_LANGS, _PORTAL_LINKS
+
+    for portal, links in _PORTAL_LINKS.items():
+        assert tuple(links) == _HAZARD_LANGS, portal
+        assert all(url.startswith("https://") for url in links.values()), portal
+
+
+async def test_hazard_routers_no_longer_emit_dead_links():
+    """meteoschweiz …/wetter/warnungen.html lieferte am 2026-11-22 HTTP 404;
+    map.bafu.admin.ch leitet um und verliert dabei `lang`."""
+    overview = await env_hazard_overview(HazardOverviewInput())
+    regions = await env_hazard_regions(HazardRegionsInput())
+    assert "wetter/warnungen.html" not in overview
+    assert "map.bafu.admin.ch" not in regions
 
 
 def test_hazard_regions_unknown_type_is_rejected():

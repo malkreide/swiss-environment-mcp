@@ -5,6 +5,36 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.7.1] – 2026-11-22
+
+Patch-Release über die Arbeit seit v0.7.0 (19.09.2026). **Die 21 Tools behalten
+Namen und Parameter**, keins kommt dazu, keins fällt weg. Gegenüber v0.7.0
+geändert sind in `tool-snapshot.json` genau zwei Definitionen:
+`env_hazard_overview` und `env_hazard_regions`.
+
+**Eine Verschärfung, die Clients bemerken können:** Diese zwei Router weisen
+unbekannte Werte jetzt ab, statt sie still zu ignorieren — `hazard_type` nur
+noch `hochwasser`, `lawinen`, `waldbrand`, `schnee`, `unwetter`,
+`steinschlag`, `rutschungen`; `language` nur noch `de`, `fr`, `it`, `en`. Die
+alte Antwort tat so, als sei gefiltert bzw. übersetzt worden.
+
+Inhaltlich drei Stränge:
+
+- **Naturgefahren-Router repariert.** `env_hazard_regions` schlug für fast jeden
+  Kanton ein falsches Kürzel vor (Wallis → `WA`, 0 Regionen statt 23), ignorierte
+  `hazard_type`, und beide Router ignorierten `language`. Zwei Links, die sie
+  ausgaben, waren kaputt (MeteoSchweiz-Warnungen: HTTP 404).
+- **Fehlerpfade gehärtet.** `opendata.swiss` verpackt API-Fehler in HTML-Seiten
+  mit HTTP 200 — sie werden jetzt als der Fehler erkannt, der sie sind, und
+  transiente Fehler werden wiederholt. Hängen SLF oder die Jagdstatistik, endet
+  der Aufruf nach 25 s mit «Anfrage-Timeout» statt nach 45 s mit «Unerwarteter
+  interner Fehler»; die Fluglärm-Abfragen haben ebenfalls ein Budget von 25 s
+  über den ganzen Aufruf.
+- **Kleinere Angriffsfläche, korrigierte Doku.** Zwei Hosts, an die nie ein
+  Request ging, sind aus der Egress-Allow-List entfernt. Das Codex-Gate ist aus
+  dem Repo entfernt. READMEs und Referenzdokumente nennen keine Quellen und
+  Tool-Zahlen mehr, die nicht stimmen.
+
 ### Changed
 
 - **`opendata.swiss`: Eine HTML-Fehlerseite mit HTTP 200 wird als der Fehler
@@ -116,6 +146,13 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Force-Push-Stopp fuer saemtliche Branches. Zu streichen sind die zwei
   Kontexte im Ruleset `main`, nicht das gleichnamige Ruleset.
 
+  **Stand beim Release (gemessen 14.11.2026):** Die zwei Kontexte sind
+  gestrichen; required auf `main` sind gitleaks, lint und test 3.11/3.12/3.13.
+  Das Ruleset `codex-gate` ist inzwischen **ebenfalls entfernt** — Arbeits-
+  branches haben damit keinen Force-Push-Stopp mehr, nur `main`. Ob das
+  gewollt war, ist nicht gemessen; Details in `CLAUDE.md`, «Die Required-Liste,
+  direkt gelesen».
+
 ### Sicherheit / Security
 
 - **Zwei Hosts standen in der Egress-Allow-List, ohne dass je ein Request an
@@ -176,6 +213,36 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   wird, steht ausdrücklich da statt stillschweigend angenommen zu werden.
 
 ### Behoben
+
+- **`language` in `env_hazard_overview` und `env_hazard_regions` wurde
+  angenommen und nie verwendet** — alle Links waren fest deutsch, obwohl der
+  Docstring von `env_hazard_overview` den Parameter ausdrücklich «für die
+  Portallinks» versprach. Neu kommen die Portal-Links in der gewählten Sprache;
+  der Antworttext bleibt deutsch, und das steht jetzt auch in der Beschreibung.
+  Erlaubt sind genau `de`, `fr`, `it`, `en` (exakte Whitelist statt bisher gar
+  keiner Prüfung bzw. `^[a-z]{2}$` anderswo), weil der Wert eine URL auswählt.
+
+  Die 24 Links (6 Portale × 4 Sprachen) stammen aus den `hreflang`-Alternativen
+  bzw. dem Sprachumschalter der deutschen Seiten und sind am 22.11.2026 alle
+  abgerufen worden: HTTP 200, Seite in der genannten Sprache. Ausnahme:
+  `map.geo.admin.ch` ist eine SPA, die die Sprache erst im Browser setzt — dort
+  ist nur gemessen, dass `lang` in der Adresse erhalten bleibt.
+
+  Dabei fielen zwei kaputte Links auf, die beide Router bisher ausgaben:
+  `meteoschweiz.admin.ch/wetter/warnungen.html` lieferte **HTTP 404** (ersetzt
+  durch die aktuelle Gefahrenseite), und `map.bafu.admin.ch` leitet auf
+  `map.geo.admin.ch` um und verliert dabei `lang` (Link zeigt jetzt direkt
+  dorthin). `hydrodaten …/hochwasserwarnungen` leitete auf `/de/aktuelle-lage`
+  um und zeigt jetzt direkt auf die jeweilige Sprachversion.
+
+  Neu: `tests/test_portal_links.py` ruft alle 24 Links im nächtlichen Live-Job
+  ab. 404/410 ist ein Befund; 403/429/5xx und Netzfehler sagen über den Link
+  nichts und werden übersprungen.
+
+  `tool-snapshot.json` neu geschrieben: geändert haben sich nur
+  `env_hazard_overview` und `env_hazard_regions` (Beschreibung und Muster von
+  `language`). Wer bisher eine andere Sprache schickte, bekommt jetzt eine
+  Validierungsmeldung statt deutscher Links.
 
 - **`env_hazard_regions` schlug für fast jeden Kanton ein falsches Kürzel vor.**
   Das Tool nahm die ersten zwei Buchstaben der Region als Kanton für

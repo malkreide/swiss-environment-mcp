@@ -537,7 +537,7 @@ async def test_hazard_regions() -> None:
 
     result = await _tool_text(env_hazard_regions(HazardRegionsInput(region="Zürich")))
     check("Zürich-Region: Kein Traceback", "Traceback" not in result)
-    check("Zürich-Region: GIS-Link", "map.bafu.admin.ch" in result or "naturgefahren" in result)
+    check("Zürich-Region: GIS-Link", "map.geo.admin.ch" in result or "naturgefahren" in result)
 
 
 async def test_wildfire_danger() -> None:

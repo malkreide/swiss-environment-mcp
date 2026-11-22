@@ -744,12 +744,63 @@ class BathingWaterInput(BaseModel):
     response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN)
 
 
+# Portal-Links der Naturgefahren-Router je Sprache. Alle 24 am 2026-11-22
+# abgerufen: HTTP 200, Seite in der genannten Sprache (`<html lang>`), ausser
+# map.geo.admin.ch — dort bleibt `lang` in der Adresse erhalten, die Seite ist
+# eine SPA und setzt die Sprache erst im Browser (mit curl nicht prüfbar).
+# Die URLs stammen aus den `hreflang`-Alternativen bzw. dem Sprachumschalter
+# der deutschen Seiten, nicht aus Vermutung. Ersetzt wurden dabei zwei Links:
+# meteoschweiz.admin.ch/wetter/warnungen.html (404) und map.bafu.admin.ch, das
+# auf map.geo.admin.ch umleitet und den `lang`-Parameter dabei verliert.
+_HAZARD_LANGS = ("de", "fr", "it", "en")
+_HAZARD_LANG_FIELD = {
+    "default": "de",
+    "description": (
+        "Sprache der Portal-Links: 'de', 'fr', 'it' oder 'en'. Der Antworttext "
+        "selbst bleibt deutsch."
+    ),
+    "pattern": r"^(de|fr|it|en)$",  # Whitelist (SEC-018): der Wert wählt eine URL
+}
+_PORTAL_LINKS: dict[str, dict[str, str]] = {
+    "naturgefahren": {
+        "de": "https://www.naturgefahren.ch/",
+        "fr": "https://www.dangers-naturels.ch/",
+        "it": "https://www.pericoli-naturali.ch/",
+        "en": "https://www.natural-hazards.ch/",
+    },
+    "lawinen": {
+        "de": "https://www.slf.ch/de/lawinenbulletin-und-schneesituation/",
+        "fr": "https://www.slf.ch/fr/bulletin-davalanches-et-situation-nivologique/",
+        "it": "https://www.slf.ch/it/bollettino-valanghe-e-situazione-nivologica/",
+        "en": "https://www.slf.ch/en/avalanche-bulletin-and-snow-situation/",
+    },
+    "hochwasser": {
+        "de": "https://www.hydrodaten.admin.ch/de/aktuelle-lage",
+        "fr": "https://www.hydrodaten.admin.ch/fr/situation-actuelle",
+        "it": "https://www.hydrodaten.admin.ch/it/corrente",
+        "en": "https://www.hydrodaten.admin.ch/en/current-situation",
+    },
+    "waldbrand": {
+        "de": "https://www.waldbrandgefahr.ch/de/aktuelle-lage",
+        "fr": "https://www.waldbrandgefahr.ch/fr/situation-actuelle",
+        "it": "https://www.waldbrandgefahr.ch/it/corrente",
+        "en": "https://www.waldbrandgefahr.ch/en/current-situation",
+    },
+    "wetterwarnungen": {
+        "de": "https://www.meteoschweiz.admin.ch/service-und-publikationen/applikationen/gefahren.html",
+        "fr": "https://www.meteosuisse.admin.ch/services-et-publications/applications/dangers.html",
+        "it": "https://www.meteosvizzera.admin.ch/servizi-e-pubblicazioni/applicazioni/pericoli.html",
+        "en": "https://www.meteoswiss.admin.ch/services-and-publications/applications/hazards.html",
+    },
+    "gefahrenkarten": {
+        lang: f"https://map.geo.admin.ch/?topic=bafu&lang={lang}" for lang in _HAZARD_LANGS
+    },
+}
+
+
 class HazardOverviewInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    language: str = Field(
-        default="de",
-        description="Sprache: 'de', 'fr', 'it', 'en'",
-    )
+    language: str = Field(**_HAZARD_LANG_FIELD)
 
 
 # Gefahrentyp → Ausgabezeile von env_hazard_regions. Dieselbe Tabelle speist
@@ -793,7 +844,7 @@ class HazardRegionsInput(BaseModel):
         ),
         max_length=30,
     )
-    language: str = Field(default="de")
+    language: str = Field(**_HAZARD_LANG_FIELD)
 
     @field_validator("hazard_type")
     @classmethod
@@ -2107,7 +2158,8 @@ async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None =
 
     Args:
         params (HazardOverviewInput):
-            - language: Sprache ('de', 'fr', 'it', 'en') — für die Portallinks
+            - language: Sprache der Portal-Links ('de', 'fr', 'it', 'en'); der
+              Antworttext bleibt deutsch
 
     Returns:
         str: Gefahren→Tool-Routing plus offizielle Warnplattform-Links.
@@ -2128,11 +2180,11 @@ async def env_hazard_overview(params: HazardOverviewInput, ctx: Context | None =
         "| Unwetter (Sturm/Gewitter/Hitze) | → `meteoswiss-mcp` | MeteoSchweiz |",
         "",
         "### Offizielle Warnplattformen",
-        "- **Naturgefahren-Portal:** https://www.naturgefahren.ch",
-        "- **Lawinenbulletin (SLF):** https://www.slf.ch/de/lawinenbulletin-und-schneesituation/",
-        "- **Hochwasserwarnung (BAFU):** https://www.hydrodaten.admin.ch/de/hochwasserwarnungen",
-        "- **Waldbrandgefahr:** https://www.waldbrandgefahr.ch",
-        "- **Wetterwarnungen (MeteoSchweiz):** https://www.meteoschweiz.admin.ch/wetter/warnungen.html",
+        f"- **Naturgefahren-Portal:** {_PORTAL_LINKS['naturgefahren'][params.language]}",
+        f"- **Lawinenbulletin (SLF):** {_PORTAL_LINKS['lawinen'][params.language]}",
+        f"- **Hochwasserwarnung (BAFU):** {_PORTAL_LINKS['hochwasser'][params.language]}",
+        f"- **Waldbrandgefahr:** {_PORTAL_LINKS['waldbrand'][params.language]}",
+        f"- **Wetterwarnungen (MeteoSchweiz):** {_PORTAL_LINKS['wetterwarnungen'][params.language]}",
     ]
     return "\n".join(lines)
 
@@ -2172,7 +2224,8 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
             - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Valais', 'VS')
             - hazard_type: 'hochwasser', 'lawinen', 'waldbrand', 'schnee', 'unwetter',
               'steinschlag', 'rutschungen' – leer = alle
-            - language: Sprache
+            - language: Sprache der Karten-Links ('de', 'fr', 'it', 'en'); der
+              Antworttext bleibt deutsch
 
     Returns:
         str: Regionsbezogenes Tool-Routing plus Karten-/Portal-Links.
@@ -2197,8 +2250,8 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
         *(_HAZARD_ROUTES[h].format(canton=canton) for h in wanted),
         "",
         "### Karten & Portale",
-        "- **Interaktive Naturgefahrenkarte:** https://www.naturgefahren.ch",
-        "- **Gefahrenkarten BAFU (GIS):** https://map.bafu.admin.ch/?topic=bafu&lang=de",
+        f"- **Interaktive Naturgefahrenkarte:** {_PORTAL_LINKS['naturgefahren'][params.language]}",
+        f"- **Gefahrenkarten BAFU (GIS):** {_PORTAL_LINKS['gefahrenkarten'][params.language]}",
     ]
     return "\n".join(lines)
 
