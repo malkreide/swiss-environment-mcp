@@ -23,7 +23,7 @@
     "env_snow_stations",
     "env_wildfire_danger"
   ],
-  "sha256": "e62d89b98973f7f79d4794ec93133827261a859c68a398e5fb2ca9c96cbf5599",
+  "sha256": "301ce16556b510b817da3586919f7ba745ed2d6d759b31dc49b958a5a49248f5",
   "tools": [
     {
       "name": "env_air_limits_check",
@@ -248,7 +248,7 @@
     },
     {
       "name": "env_hazard_regions",
-      "description": "Regionsbezogene Orientierung zu Naturgefahren: verweist für eine Region auf die dedizierten Live-Tools und die offiziellen Gefahrenkarten. Wie `env_hazard_overview` netzwerkfrei: die aggregierte `naturgefahren.ch`-Regionen-API ist stillgelegt (2026), ohne stabilen Ersatz. Für regionsscharfe Live-Werte liefern die verlinkten Tools die Daten (Waldbrand z.B. via `env_wildfire_danger` mit Kanton-Filter). <use_case>Regionsbezogener Einstieg (Event-, Schulausflug-, Infrastruktur- Planung): welches Tool liefert für die Region welche Gefahr.</use_case> <important_notes>Netzwerkfrei/deterministisch. Regionsscharfe Waldbrand-Stufen: `env_wildfire_danger` (canton-Filter). Karten: naturgefahren.ch / BAFU GIS.</important_notes> Args: params (HazardRegionsInput): - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Wallis') - hazard_type: Gefahrentyp ('hochwasser', 'lawinen', 'steinschlag', 'rutschungen') - language: Sprache Returns: str: Regionsbezogenes Tool-Routing plus Karten-/Portal-Links.",
+      "description": "Regionsbezogene Orientierung zu Naturgefahren: verweist für eine Region auf die dedizierten Live-Tools und die offiziellen Gefahrenkarten. Wie `env_hazard_overview` netzwerkfrei: die aggregierte `naturgefahren.ch`-Regionen-API ist stillgelegt (2026), ohne stabilen Ersatz. Für regionsscharfe Live-Werte liefern die verlinkten Tools die Daten (Waldbrand z.B. via `env_wildfire_danger` mit Kanton-Filter). <use_case>Regionsbezogener Einstieg (Event-, Schulausflug-, Infrastruktur- Planung): welches Tool liefert für die Region welche Gefahr.</use_case> <important_notes>Netzwerkfrei/deterministisch. Ist `region` ein Kanton (Name in DE/FR/IT/EN oder Kürzel), steht das Kürzel direkt im vorgeschlagenen Aufruf (`env_wildfire_danger`, `env_snow_current`); sonst wird kein Kürzel geraten. `hazard_type` beschränkt die Ausgabe auf diesen Gefahrentyp. Steinschlag und Rutschungen haben in diesem Server kein Live-Tool, nur Gefahrenkarten. Karten: naturgefahren.ch / BAFU GIS.</important_notes> Args: params (HazardRegionsInput): - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Valais', 'VS') - hazard_type: 'hochwasser', 'lawinen', 'waldbrand', 'schnee', 'unwetter', 'steinschlag', 'rutschungen' – leer = alle - language: Sprache Returns: str: Regionsbezogenes Tool-Routing plus Karten-/Portal-Links.",
       "params": [
         "hazard_type",
         "language",
@@ -259,7 +259,7 @@
         {
           "name": "hazard_type",
           "required": false,
-          "description": "Gefahrentyp: 'hochwasser', 'lawinen', 'steinschlag', 'rutschungen' – leer = alle",
+          "description": "Gefahrentyp: 'hochwasser', 'lawinen', 'waldbrand', 'schnee', 'unwetter', 'steinschlag', 'rutschungen' – leer = alle. Filtert die Ausgabe auf diesen Typ; ein anderer Wert wird abgewiesen.",
           "default": "",
           "maxLength": 30
         },

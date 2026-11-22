@@ -177,6 +177,40 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ### Behoben
 
+- **`env_hazard_regions` schlug für fast jeden Kanton ein falsches Kürzel vor.**
+  Das Tool nahm die ersten zwei Buchstaben der Region als Kanton für
+  `env_wildfire_danger`. Gemessen am 22.11.2026: «Zürich» → `ZÜ` (dort ein
+  Validierungsfehler), «Wallis» → `WA`, «Tessin» → `TE`, «St. Gallen» → `ST`,
+  «Basel-Stadt» → `BA` — jeweils **0 Regionen**, obwohl das Wallis 23 hat. Für
+  das Modell sah das aus wie «keine Waldbrandgefahr». Richtig lag es nur bei
+  Graubünden (zufällig) und bei eingegebenen Kürzeln; ohne Region stand
+  pauschal `ZH`.
+
+  Neu löst `canton_code()` Namen (DE/FR/IT/EN, auch «Graubuenden») und Kürzel
+  auf, gestützt auf `JAGD_CANTONS`. Ohne eindeutigen Treffer («Engadin») wird
+  **kein** Kürzel geraten, und das Tool sagt das. Das Kürzel steht jetzt auch im
+  Vorschlag für `env_snow_current`.
+
+- **`hazard_type` in `env_hazard_regions` wurde angenommen und ignoriert.**
+  `region="Graubünden"` lieferte mit und ohne `hazard_type="lawinen"` denselben
+  Text. Neu beschränkt der Parameter die Ausgabe auf diesen Gefahrentyp; die
+  Karten-Links bleiben. Ein unbekannter Wert wird mit der Liste der gültigen
+  abgewiesen statt still übergangen. Die gültigen Werte sind die, für die das
+  Tool eine Zeile hat: `hochwasser`, `lawinen`, `waldbrand`, `schnee`,
+  `unwetter`, `steinschlag`, `rutschungen`. `steinschlag` und `rutschungen`
+  standen schon in der Beschreibung, hatten aber nie eine Zeile; sie sagen
+  jetzt, dass es in diesem Server kein Live-Tool dafür gibt.
+
+  `tool-snapshot.json` neu geschrieben: geändert hat sich nur
+  `env_hazard_regions` (Beschreibung von `hazard_type`, Docstring). Name und
+  Parameter sind gleich; ein Client, der bisher einen unbekannten Wert schickte,
+  bekommt jetzt eine Validierungsmeldung statt einer ungefilterten Antwort.
+
+- **Der Modul-Docstring von `api_client.py` nannte noch das
+  «Naturgefahren-Bulletin» von `naturgefahren.ch`**, das seit v0.4.1 nicht mehr
+  abgefragt wird. Die Quellenliste entspricht jetzt `ALLOWED_HOSTS`; ergänzt
+  sind LINDAS, beide SLF-Hosts und die Jagdstatistik, die dort fehlten.
+
 - **Die Dokumentation nannte eine Quelle, die der Server seit v0.6.0 nicht mehr
   anspricht.** `api_client.py` sagt es im Quelltext: «hydrodaten.admin.ch wird
   nicht mehr per HTTP kontaktiert … die Domain erscheint nur noch als Text-Link

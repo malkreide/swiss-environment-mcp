@@ -34,6 +34,7 @@ Lizenz der Quelldaten: BAFU-Nutzungsbedingungen / Open Government Data (OGD)
 
 import asyncio
 import json
+import unicodedata
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from enum import Enum
@@ -297,6 +298,57 @@ JAGD_CANTONS: dict[str, str] = {
     "ZG": "Zug",
     "ZH": "Zürich",
 }
+
+# Weitere Schreibweisen (FR/IT/EN, Bindestrich-Varianten), die `JAGD_CANTONS`
+# nicht führt. Kanton-Namen kommen von Modellen in jeder Landessprache.
+_CANTON_ALIASES: dict[str, str] = {
+    "Zurich": "ZH",
+    "Berne": "BE",
+    "Lucerne": "LU",
+    "Fribourg": "FR",
+    "Basel-Stadt": "BS",
+    "Bâle-Ville": "BS",
+    "Basel-Landschaft": "BL",
+    "Bâle-Campagne": "BL",
+    "Appenzell Ausserrhoden": "AR",
+    "Appenzell Innerrhoden": "AI",
+    "St. Gall": "SG",
+    "Grisons": "GR",
+    "Grigioni": "GR",
+    "Ticino": "TI",
+    "Vaud": "VD",
+    "Valais": "VS",
+    "Vallese": "VS",
+    "Neuchâtel": "NE",
+    "Genève": "GE",
+    "Geneva": "GE",
+    "Ginevra": "GE",
+}
+
+
+def _norm_canton(text: str) -> str:
+    """Vergleichsform: ohne Akzente, ohne Satz-/Leerzeichen, 'ue'→'u' (Graubuenden)."""
+    folded = unicodedata.normalize("NFKD", text)
+    folded = "".join(ch for ch in folded if not unicodedata.combining(ch)).casefold()
+    folded = "".join(ch for ch in folded if ch.isalnum())
+    return folded.replace("ae", "a").replace("oe", "o").replace("ue", "u")
+
+
+_CANTON_LOOKUP: dict[str, str] = {
+    **{_norm_canton(name): code for code, name in JAGD_CANTONS.items() if code != "CH"},
+    **{_norm_canton(code): code for code in JAGD_CANTONS if code != "CH"},
+    **{_norm_canton(name): code for name, code in _CANTON_ALIASES.items()},
+}
+
+
+def canton_code(region: str) -> str | None:
+    """Kantonskürzel zu einem Kantonsnamen oder -kürzel; None ohne eindeutigen Treffer.
+
+    Rät bewusst nicht: «Engadin» oder «Zentralschweiz» ergeben None, damit kein
+    Kürzel vorgeschlagen wird, das in `env_wildfire_danger` ins Leere läuft.
+    """
+    return _CANTON_LOOKUP.get(_norm_canton(region)) if region else None
+
 
 # Tierart `sp`-Code → Name (36 Arten)
 JAGD_SPECIES: dict[str, str] = {
@@ -700,6 +752,31 @@ class HazardOverviewInput(BaseModel):
     )
 
 
+# Gefahrentyp → Ausgabezeile von env_hazard_regions. Dieselbe Tabelle speist
+# Validierung und Filter: ein Typ ist genau dann gültig, wenn er eine Zeile hat.
+# `{canton}` wird durch die Kanton-Zeile ersetzt (siehe _canton_hint).
+_HAZARD_ROUTES: dict[str, str] = {
+    "hochwasser": "- **Hochwasser/Pegel:** `env_flood_warnings`, `env_hydro_current`",
+    "lawinen": "- **Lawinen:** `env_avalanche_bulletin`",
+    "waldbrand": "- **Waldbrandgefahr** (regionsscharf): `env_wildfire_danger`{canton}",
+    "schnee": "- **Schneelage:** `env_snow_current`{canton}",
+    "unwetter": "- **Unwetter (Sturm/Gewitter/Hitze):** → `meteoswiss-mcp` (MeteoSchweiz)",
+    "steinschlag": (
+        "- **Steinschlag:** kein Live-Tool in diesem Server — Gefahrenkarten "
+        "(BAFU-GIS, kantonal) siehe unten"
+    ),
+    "rutschungen": (
+        "- **Rutschungen:** kein Live-Tool in diesem Server — Gefahrenkarten "
+        "(BAFU-GIS, kantonal) siehe unten"
+    ),
+}
+_HAZARD_TYPE_ALIASES: dict[str, str] = {
+    "lawine": "lawinen",
+    "rutschung": "rutschungen",
+    "unwetterwarnung": "unwetter",
+}
+
+
 class HazardRegionsInput(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     region: str = Field(
@@ -709,10 +786,28 @@ class HazardRegionsInput(BaseModel):
     )
     hazard_type: str = Field(
         default="",
-        description="Gefahrentyp: 'hochwasser', 'lawinen', 'steinschlag', 'rutschungen' – leer = alle",
+        description=(
+            "Gefahrentyp: 'hochwasser', 'lawinen', 'waldbrand', 'schnee', 'unwetter', "
+            "'steinschlag', 'rutschungen' – leer = alle. Filtert die Ausgabe auf diesen Typ; "
+            "ein anderer Wert wird abgewiesen."
+        ),
         max_length=30,
     )
     language: str = Field(default="de")
+
+    @field_validator("hazard_type")
+    @classmethod
+    def _known_hazard_type(cls, v: str) -> str:
+        key = v.strip().casefold()
+        if not key:
+            return ""
+        key = _HAZARD_TYPE_ALIASES.get(key, key)
+        if key not in _HAZARD_ROUTES:
+            raise ValueError(
+                f"Unbekannter hazard_type {v!r}. Gültig: {', '.join(_HAZARD_ROUTES)} "
+                "(oder leer für alle)."
+            )
+        return key
 
 
 class WildfireDangerInput(BaseModel):
@@ -2065,13 +2160,18 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
 
     <use_case>Regionsbezogener Einstieg (Event-, Schulausflug-, Infrastruktur-
     Planung): welches Tool liefert für die Region welche Gefahr.</use_case>
-    <important_notes>Netzwerkfrei/deterministisch. Regionsscharfe Waldbrand-Stufen:
-    `env_wildfire_danger` (canton-Filter). Karten: naturgefahren.ch / BAFU GIS.</important_notes>
+    <important_notes>Netzwerkfrei/deterministisch. Ist `region` ein Kanton (Name in
+    DE/FR/IT/EN oder Kürzel), steht das Kürzel direkt im vorgeschlagenen Aufruf
+    (`env_wildfire_danger`, `env_snow_current`); sonst wird kein Kürzel geraten.
+    `hazard_type` beschränkt die Ausgabe auf diesen Gefahrentyp. Steinschlag und
+    Rutschungen haben in diesem Server kein Live-Tool, nur Gefahrenkarten.
+    Karten: naturgefahren.ch / BAFU GIS.</important_notes>
 
     Args:
         params (HazardRegionsInput):
-            - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Wallis')
-            - hazard_type: Gefahrentyp ('hochwasser', 'lawinen', 'steinschlag', 'rutschungen')
+            - region: Regionsname/Kanton (z.B. 'Zürich', 'Graubünden', 'Valais', 'VS')
+            - hazard_type: 'hochwasser', 'lawinen', 'waldbrand', 'schnee', 'unwetter',
+              'steinschlag', 'rutschungen' – leer = alle
             - language: Sprache
 
     Returns:
@@ -2079,16 +2179,22 @@ async def env_hazard_regions(params: HazardRegionsInput, ctx: Context | None = N
     """
     region = params.region or "Gesamte Schweiz"
     typ = f", Typ: {params.hazard_type}" if params.hazard_type else ""
+    code = canton_code(params.region)
+    if not params.region:
+        canton = " (ohne `canton`: ganze Schweiz)"
+    elif code:
+        canton = f" mit `canton='{code}'`"
+    else:
+        canton = (
+            f" mit dem Kantonskürzel als `canton` — «{params.region}» ist keinem "
+            "Kanton eindeutig zuzuordnen"
+        )
+    wanted = [params.hazard_type] if params.hazard_type else list(_HAZARD_ROUTES)
     lines = [
         f"## 🗺️ Naturgefahren – {region}{typ}\n",
         "Für regionsscharfe Live-Werte die dedizierten Tools nutzen (die "
         "aggregierte naturgefahren.ch-Regionen-API ist stillgelegt):\n",
-        f"- **Waldbrandgefahr** (regionsscharf): `env_wildfire_danger` mit "
-        f"`canton='{params.region[:2].upper() if params.region else 'ZH'}'`",
-        "- **Hochwasser/Pegel:** `env_flood_warnings`, `env_hydro_current`",
-        "- **Lawinen:** `env_avalanche_bulletin`",
-        "- **Schneelage:** `env_snow_current` (canton-Filter)",
-        "- **Unwetter (Sturm/Gewitter/Hitze):** → `meteoswiss-mcp` (MeteoSchweiz)",
+        *(_HAZARD_ROUTES[h].format(canton=canton) for h in wanted),
         "",
         "### Karten & Portale",
         "- **Interaktive Naturgefahrenkarte:** https://www.naturgefahren.ch",
