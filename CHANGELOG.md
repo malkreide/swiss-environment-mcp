@@ -5,6 +5,36 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.7.1] – 2026-11-22
+
+Patch-Release über die Arbeit seit v0.7.0 (19.09.2026). **Die 21 Tools behalten
+Namen und Parameter**, keins kommt dazu, keins fällt weg. Gegenüber v0.7.0
+geändert sind in `tool-snapshot.json` genau zwei Definitionen:
+`env_hazard_overview` und `env_hazard_regions`.
+
+**Eine Verschärfung, die Clients bemerken können:** Diese zwei Router weisen
+unbekannte Werte jetzt ab, statt sie still zu ignorieren — `hazard_type` nur
+noch `hochwasser`, `lawinen`, `waldbrand`, `schnee`, `unwetter`,
+`steinschlag`, `rutschungen`; `language` nur noch `de`, `fr`, `it`, `en`. Die
+alte Antwort tat so, als sei gefiltert bzw. übersetzt worden.
+
+Inhaltlich drei Stränge:
+
+- **Naturgefahren-Router repariert.** `env_hazard_regions` schlug für fast jeden
+  Kanton ein falsches Kürzel vor (Wallis → `WA`, 0 Regionen statt 23), ignorierte
+  `hazard_type`, und beide Router ignorierten `language`. Zwei Links, die sie
+  ausgaben, waren kaputt (MeteoSchweiz-Warnungen: HTTP 404).
+- **Fehlerpfade gehärtet.** `opendata.swiss` verpackt API-Fehler in HTML-Seiten
+  mit HTTP 200 — sie werden jetzt als der Fehler erkannt, der sie sind, und
+  transiente Fehler werden wiederholt. Hängen SLF oder die Jagdstatistik, endet
+  der Aufruf nach 25 s mit «Anfrage-Timeout» statt nach 45 s mit «Unerwarteter
+  interner Fehler»; die Fluglärm-Abfragen haben ebenfalls ein Budget von 25 s
+  über den ganzen Aufruf.
+- **Kleinere Angriffsfläche, korrigierte Doku.** Zwei Hosts, an die nie ein
+  Request ging, sind aus der Egress-Allow-List entfernt. Das Codex-Gate ist aus
+  dem Repo entfernt. READMEs und Referenzdokumente nennen keine Quellen und
+  Tool-Zahlen mehr, die nicht stimmen.
+
 ### Changed
 
 - **`opendata.swiss`: Eine HTML-Fehlerseite mit HTTP 200 wird als der Fehler
@@ -115,6 +145,13 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   traegt keinen Status-Check, sondern `non_fast_forward` auf `~ALL` — den
   Force-Push-Stopp fuer saemtliche Branches. Zu streichen sind die zwei
   Kontexte im Ruleset `main`, nicht das gleichnamige Ruleset.
+
+  **Stand beim Release (gemessen 14.11.2026):** Die zwei Kontexte sind
+  gestrichen; required auf `main` sind gitleaks, lint und test 3.11/3.12/3.13.
+  Das Ruleset `codex-gate` ist inzwischen **ebenfalls entfernt** — Arbeits-
+  branches haben damit keinen Force-Push-Stopp mehr, nur `main`. Ob das
+  gewollt war, ist nicht gemessen; Details in `CLAUDE.md`, «Die Required-Liste,
+  direkt gelesen».
 
 ### Sicherheit / Security
 
