@@ -5,6 +5,35 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+### Behoben
+
+- **`publish.yml` nahm die Version aus dem Tag-Namen und strich nur ein kleines
+  `v`.** Der Release v0.7.1 trug den Tag `V0.7.1`. Gemessen am 22.11.2026:
+  PyPI bekam korrekt `0.7.1` (der Build liest `pyproject.toml`), die MCP
+  Registry aber einen Eintrag `V0.7.1` mit Paketversion `V0.7.1`. Weil das
+  kein Semver ist, markierte die Registry ihn nicht als «latest» — Clients
+  sahen dort weiter **0.7.0**. Der Job war trotzdem grün.
+
+  Neu kommt die Version in beiden Publish-Jobs aus `pyproject.toml`, geprüft
+  von `scripts/release_version.py`: genau ein führendes `v` oder `V` wird
+  entfernt, der Rest muss exakt passen, und die Version muss `X.Y.Z` sein. Ein
+  abweichender Tag bricht im Build-Job ab, **bevor** PyPI oder die Registry
+  etwas bekommen.
+
+  Dazu ein manueller Start (`workflow_dispatch`), der **nur** den Registry-Job
+  ausführt — nur auf `main` und nur, wenn die Version schon auf PyPI liegt.
+  Damit lässt sich der Eintrag `0.7.1` nachreichen, ohne PyPI anzufassen (ein
+  zweiter Release scheiterte am bereits vorhandenen PyPI-Upload, und der
+  Registry-Job hängt daran).
+
+  Der fehlerhafte Eintrag `V0.7.1` bleibt in der Registry stehen (aktiv, nicht
+  «latest»); entfernen kann ihn dieser Fix nicht.
+
+  Tests: `tests/test_release_version.py` prüft das Skript und führt den
+  `run`-Block «Version bestimmen» aus `publish.yml` selbst mit bash aus.
+  Gegenprobe mit 8 Mutationen, darunter die Wiederherstellung des alten
+  Ausdrucks — alle rot. `actionlint` 1.7.12 ohne Befund.
+
 ## [0.7.1] – 2026-11-22
 
 Patch-Release über die Arbeit seit v0.7.0 (19.09.2026). **Die 21 Tools behalten
