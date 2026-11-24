@@ -492,7 +492,8 @@ drei PR-Gates filtern auf `branches: [main]` (`ci.yml`, `security.yml`,
 ist nicht grün, weil nichts zu beanstanden war, sondern weil nichts gefragt
 wurde. Also erst die Basis prüfen, dann den Merge-Konflikt vermuten.
 
-`draft-release.yml` ist kein Gate — nur `workflow_dispatch`.
+`draft-release.yml` ist kein Gate — nur `workflow_dispatch`. Wie ein Release
+abläuft, steht unten unter «Release».
 
 **Ein Workflow, der nicht parst, wird nicht rot — er faellt aus.** GitHub
 startet ihn gar nicht, es entsteht kein Check-Run, und in der Liste des PR
@@ -570,3 +571,88 @@ wurden und der Titel bei Zeichen 327 steht.
 `schedule` greift nur auf dem Default-Branch: Eine Änderung an Kadenz oder
 Workflow ist auf einem Branch wirkungslos und wird erst nach dem Merge scharf.
 Vorher von Hand per `workflow_dispatch` prüfen.
+
+### Release
+
+**Ablauf, in dieser Reihenfolge:**
+
+1. **Version an allen Stellen anheben:** `pyproject.toml`, `server.json`
+   (`version` und `packages[0].version`), die Versions-Badges in `README.md` und
+   `README.de.md`. `python scripts/check_version_sync.py` prüft genau diese.
+   `__version__` kommt aus den Paket-Metadaten und meldet lokal erst nach
+   `pip install -e ".[dev]"` die neue Nummer.
+2. **CHANGELOG:** Aus `[Unreleased]` wird `## [X.Y.Z] – JJJJ-MM-TT`, darüber
+   ein leeres `## [Unreleased]`. `draft-release.yml` übernimmt den Abschnitt
+   **wörtlich** als Release-Text — alles zwischen `## [X.Y.Z]` und der nächsten
+   `## [`-Zeile. Oben gehört deshalb eine Zusammenfassung hin, die allein steht;
+   der Abschnitt für v0.7.1 war 326 Zeilen lang. Den Extraktionsschritt kann
+   man lokal mit demselben `awk` aus dem Workflow nachfahren.
+3. **Patch oder Minor wird gemessen, nicht erinnert:** `tool-snapshot.json` des
+   letzten Tags gegen `HEAD` vergleichen — welche Tools neu, entfernt, geändert.
+   Für v0.7.1 ergab das am 22.11.2026: 21 Tools, keins neu oder weg, geändert
+   nur `env_hazard_overview` und `env_hazard_regions`.
+4. **Nach dem Merge:** Actions → «Draft Release» starten (Version leer = aus
+   `pyproject.toml`). Das legt nur einen **Entwurf** an, mit Tag `v<version>`.
+   Veröffentlichen ist der unumkehrbare Klick eines Menschen; er startet
+   `publish.yml`, dessen PyPI-Job auf die Freigabe im Environment `pypi` wartet.
+
+**Den Release nicht von Hand im Release-UI anlegen.** Am 22.11.2026 hiess der
+Tag `V0.7.1` — grosses V, angelegt ohne `draft-release.yml`, das den Tag selbst
+aus `pyproject.toml` bildet. `publish.yml` rechnete damals
+`${GITHUB_REF_NAME#v}` und strich nur ein kleines `v`. PyPI bekam korrekt
+`0.7.1` (der Build liest `pyproject.toml`), die MCP Registry einen Eintrag
+`V0.7.1`. Weil das kein Semver ist, wurde er nie «latest»; Clients sahen weiter
+die Vorversion. Seit #150 prüft `scripts/release_version.py` im Build-Job: ein
+`v` oder `V` wird entfernt, der Rest muss exakt `pyproject.toml` entsprechen und
+`X.Y.Z` sein — ein falscher Tag bricht ab, bevor PyPI etwas bekommt.
+
+**Ein grüner Publish-Lauf ist kein Beleg.** Am 22.11.2026 waren alle drei Jobs
+grün, und die Registry führte trotzdem die Vorversion. Nach jedem Release beide
+Ziele selbst abfragen:
+
+```bash
+curl -sS https://pypi.org/pypi/swiss-environment-mcp/json | jq -r .info.version
+curl -sS "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.malkreide/swiss-environment-mcp&version=latest" \
+  | jq -r '.servers[].server.version'
+```
+
+**Reparieren ohne neuen Release** — Handstart von `publish.yml`, nur auf
+`main`; Build und PyPI werden dabei immer übersprungen:
+
+- `action: publish` (Standard): nur der Registry-Job, Version aus
+  `pyproject.toml`, die auf PyPI liegen muss. Ein zweiter Release würde nicht
+  helfen: PyPI lehnt eine vorhandene Version ab (kein `skip-existing`), und der
+  Registry-Job hängt am PyPI-Job.
+- `action: set-status` mit `version`, `status`, `message`: setzt den Status
+  **genau einer** Version (`deleted`/`deprecated`/`active`). Löschen geht in
+  der Registry nicht («Server metadata is never permanently removed»);
+  `deleted` blendet aus den Standardlisten aus, bleibt mit
+  `include_deleted=true` abrufbar und ist mit `active` umkehrbar. Die aktuelle
+  Version aus `pyproject.toml` lässt sich nicht verstecken.
+
+Beides lief: am 22.11.2026 das Nachreichen von `0.7.1` (danach «latest»), am
+24.11.2026 `V0.7.1` → `deleted` (Standardliste ohne den Eintrag, Einzelabfrage
+HTTP 404, mit `include_deleted=true` Status `deleted`).
+
+**Beim Handstart ist die Lauf-Liste die Quittung.** Zweimal, am 22. und am
+24.11.2026, hiess es «gestartet», und es war **kein** Lauf entstanden — weder
+grün noch rot, gar keiner. Ein Lauf, der an einer Sperre scheitert, steht rot in
+der Liste; fehlt er, ist der Start nicht bei GitHub angekommen. Das ist in einer
+Abfrage zu sehen:
+
+```bash
+curl -sS "https://api.github.com/repos/<owner>/<repo>/actions/workflows/publish.yml/runs?event=workflow_dispatch&per_page=3"
+```
+
+Der Agent kann den Handstart selbst auslösen — GitHub-MCP `actions_run_trigger`,
+Methode `run_workflow`, am 24.11.2026 mit HTTP 204 angenommen. Weil das PyPI
+oder die Registry verändert, nur auf ausdrückliche Bitte. Wie `schedule` steht
+auch `workflow_dispatch` erst zur Verfügung, wenn der Workflow mit diesem
+Auslöser auf dem Default-Branch liegt — ein Handstart lässt sich also nicht vor
+dem Merge ausprobieren.
+
+**`mcp-publisher` lokal auszuführen ist kein Weg.** Herunterladen und Starten
+des Binary hat das Berechtigungssystem dieser Umgebung am 22.11.2026 abgelehnt,
+und ohne Login des Maintainers könnte es ohnehin nichts ändern. Die
+Registry-Aktionen laufen über `publish.yml` mit GitHub-OIDC. Die Befehle stehen
+in der [CLI-Referenz](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/cli/commands.md).
