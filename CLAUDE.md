@@ -590,7 +590,10 @@ Vorher von Hand per `workflow_dispatch` prüfen.
 3. **Patch oder Minor wird gemessen, nicht erinnert:** `tool-snapshot.json` des
    letzten Tags gegen `HEAD` vergleichen — welche Tools neu, entfernt, geändert.
    Für v0.7.1 ergab das am 22.11.2026: 21 Tools, keins neu oder weg, geändert
-   nur `env_hazard_overview` und `env_hazard_regions`.
+   nur `env_hazard_overview` und `env_hazard_regions`. Für v0.7.2 am
+   26.11.2026: Snapshot identisch (derselbe Hash), `src/` unverändert. Die
+   Versionsnummer steht nicht im Snapshot — `tool_snapshot.py check` blieb nach
+   dem Bump grün, ein reiner Release-Bump braucht also keinen neuen Snapshot.
 4. **Nach dem Merge:** Actions → «Draft Release» starten (Version leer = aus
    `pyproject.toml`). Das legt nur einen **Entwurf** an, mit Tag `v<version>`.
    Veröffentlichen ist der unumkehrbare Klick eines Menschen; er startet
@@ -605,6 +608,57 @@ aus `pyproject.toml` bildet. `publish.yml` rechnete damals
 die Vorversion. Seit #150 prüft `scripts/release_version.py` im Build-Job: ein
 `v` oder `V` wird entfernt, der Rest muss exakt `pyproject.toml` entsprechen und
 `X.Y.Z` sein — ein falscher Tag bricht ab, bevor PyPI etwas bekommt.
+
+**Der erste Release über den gehärteten Weg, gemessen: v0.7.2 am 26.11.2026.**
+Auch er entstand **nicht** über `draft-release.yml`, sondern im Release-UI —
+wie v0.7.1; der letzte Lauf von `draft-release.yml` ist vom 20.09.2026 (v0.7.0).
+Der Tag war diesmal richtig (`v0.7.2`), deshalb ging alles durch:
+
+| Zeit (UTC) | Schritt |
+|---|---|
+| 03:40:59 | #154 gemergt (`12c020f`) |
+| 03:43:41 | Release `v0.7.2` veröffentlicht |
+| 03:43:45–03:43:56 | Build, darin die Tag-Prüfung |
+| 03:44:05–03:44:24 | PyPI |
+| 03:44:26–03:44:31 | MCP Registry; `registry-status` übersprungen |
+
+Danach PyPI 0.7.2 mit Wheel und sdist, Registry 0.7.2 `active` und «latest»,
+`V0.7.1` weiter `deleted`. In `meteoswiss-mcp` lief v0.7.1 am selben Tag gleich
+(dort hat `draft-release.yml` noch nie gelaufen).
+
+Was daraus folgt:
+
+- **Belegt ist live nur der gute Pfad.** Dass die Tag-Prüfung einen falschen
+  Tag abfängt, zeigen die Tests, kein echter Lauf. Sie ist der Grund, warum der
+  Weg übers UI keinen kaputten Registry-Eintrag mehr erzeugen kann — aber ein
+  Release mit Tippfehler endet jetzt in einem roten Build mit veröffentlichtem
+  Tag, statt in einem Entwurf, den man vor dem Klick korrigiert.
+- **Der UI-Weg verliert den Release-Text, den der Workflow baut.** Der Text von
+  v0.7.2 beginnt mit der Überschrift `## [0.7.2] – 2026-11-26`, die neben dem
+  Titel doppelt steht, und ihm fehlt die Fusszeile mit dem Verweis aufs
+  CHANGELOG. Das Ziel heisst `main` statt eines Commits: Der Tag entsteht auf
+  dem, was im Moment des Klicks auf `main` liegt, nicht auf dem geprüften
+  Merge-Commit. Am 26.11. war das noch derselbe (`12c020f`); garantiert ist es
+  nicht.
+- **Ob ein Release aus dem Workflow stammt, ist abzulesen, nicht zu erinnern.**
+  v0.7.0 (20.09.2026) ist die Positivkontrolle: ein Lauf in der Liste von
+  `draft-release.yml`, Autor `github-actions[bot]`, ein SHA als Ziel, ein Text
+  ohne Überschrift und mit Fusszeile. v0.7.1 und v0.7.2 zeigen das Gegenteil:
+  Autor `malkreide`, Ziel `main`, Überschrift vorn. `created_at` eines Release
+  taugt dafür nicht: GitHub gibt dort das Datum des Commits an, nicht das der
+  Anlage.
+
+```bash
+curl -sS "https://api.github.com/repos/<owner>/<repo>/actions/workflows/draft-release.yml/runs?per_page=3" \
+  | jq -r '.total_count, (.workflow_runs[] | .created_at)'
+curl -sS "https://api.github.com/repos/<owner>/<repo>/releases/tags/v<version>" \
+  | jq -r '.author.login, .target_commitish, (.body | split("\n")[0])'
+```
+
+Bei der Kontrolle nach v0.7.2 wurden nur die Ziele abgefragt — PyPI, Registry,
+Tag —, nicht der Weg; dass der Workflow gar nicht lief, fiel erst beim
+Nachtragen der Erfahrung in `meteoswiss-mcp` auf. Die zwei Abfragen oben
+gehören deshalb mit zur Nachkontrolle.
 
 **Ein grüner Publish-Lauf ist kein Beleg.** Am 22.11.2026 waren alle drei Jobs
 grün, und die Registry führte trotzdem die Vorversion. Nach jedem Release beide
