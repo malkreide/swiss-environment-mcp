@@ -5,6 +5,27 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ## [Unreleased]
 
+## [0.7.2] – 2026-11-26
+
+Patch-Release ohne Änderung am Server. **Code und Tools sind identisch mit
+v0.7.1:** `src/` ist unverändert, `tool-snapshot.json` ebenso (21 Tools,
+derselbe Hash). Wer 0.7.1 installiert hat, verpasst nichts.
+
+Geändert hat sich der Weg, auf dem ein Release entsteht. v0.7.1 trug den Tag
+`V0.7.1` mit grossem V; `publish.yml` las die Version aus dem Tag, und die MCP
+Registry bekam einen Eintrag `V0.7.1`, den sie nie als «latest» führte. Seither
+gilt:
+
+- Die veröffentlichte Version kommt aus `pyproject.toml`. Ein Tag, der nicht
+  passt, bricht im Build-Job ab, bevor PyPI oder die Registry etwas bekommen.
+- `publish.yml` lässt sich von Hand starten, um einen Registry-Eintrag
+  nachzureichen oder den Status einer einzelnen Version zu setzen.
+- `draft-release.yml` nimmt die Versionseingabe nur noch über `env` entgegen.
+
+v0.7.2 ist der erste Release, der durch diese Prüfungen läuft. In der Registry
+ist `0.7.1` seit dem 22.11.2026 «latest», `V0.7.1` seit dem 24.11.2026 auf
+`deleted` gesetzt.
+
 ### Added
 
 - **`publish.yml` kann den Registry-Status einer einzelnen Version setzen.**
@@ -51,8 +72,9 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   zweiter Release scheiterte am bereits vorhandenen PyPI-Upload, und der
   Registry-Job hängt daran).
 
-  Der fehlerhafte Eintrag `V0.7.1` bleibt in der Registry stehen (aktiv, nicht
-  «latest»); entfernen kann ihn dieser Fix nicht.
+  Nachgereicht wurde `0.7.1` damit am 22.11.2026; seither ist es «latest». Den
+  fehlerhaften Eintrag `V0.7.1` entfernt dieser Fix nicht — ihn hat der
+  Handstart `set-status` (oben) am 24.11.2026 auf `deleted` gesetzt.
 
   Tests: `tests/test_release_version.py` prüft das Skript und führt den
   `run`-Block «Version bestimmen» aus `publish.yml` selbst mit bash aus.
