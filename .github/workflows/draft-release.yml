@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version ohne 'v', z.B. 0.5.0. Leer = Version aus pyproject.toml"
+        description: "Version, z.B. 0.7.2 (ein führendes v ist erlaubt). Leer = Version aus pyproject.toml"
         required: false
         type: string
 
@@ -40,22 +40,26 @@ jobs:
           # täuschte Sicherheit vor.
           fetch-depth: 0
 
+      # Dieselbe Prüfung wie in publish.yml (`scripts/release_version.py`):
+      # ein `v`/`V` wird entfernt, der Rest muss exakt pyproject.toml sein und
+      # X.Y.Z. Ein Release, dessen Tag nicht zur paketierten Version passt,
+      # bricht hier ab, nicht erst beim Veröffentlichen.
+      #
+      # Die Eingabe nur über env. Bis hierher stand `${{ inputs.version }}`
+      # direkt im Skript: GitHub setzt den Text ein, bevor bash läuft, und eine
+      # Eingabe wie `$(…)` wäre in einem Job mit `contents: write` ausgeführt
+      # worden.
       - name: Version bestimmen und gegen pyproject.toml prüfen
         id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
-          PYPROJECT_VERSION="$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)"
-          VERSION="${{ inputs.version }}"
-          VERSION="${VERSION#v}"
-          if [ -z "$VERSION" ]; then
-            VERSION="$PYPROJECT_VERSION"
+          if [ -z "$INPUT_VERSION" ]; then
+            VERSION="$(python3 scripts/release_version.py)"
             echo "Keine Version angegeben — nutze pyproject.toml: $VERSION"
-          elif [ "$VERSION" != "$PYPROJECT_VERSION" ]; then
-            # Ein Release, dessen Tag nicht zur paketierten Version passt, würde
-            # in publish.yml ein Artefakt mit abweichender Versionsnummer nach
-            # PyPI schieben. Hier abbrechen, nicht dort.
-            echo "::error::Version '$VERSION' weicht von pyproject.toml ('$PYPROJECT_VERSION') ab. Erst die Version bumpen (oder den Input korrigieren)."
-            exit 1
+          else
+            VERSION="$(python3 scripts/release_version.py --tag "$INPUT_VERSION")"
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"

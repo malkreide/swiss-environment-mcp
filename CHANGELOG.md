@@ -59,6 +59,20 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   Gegenprobe mit 8 Mutationen, darunter die Wiederherstellung des alten
   Ausdrucks — alle rot. `actionlint` 1.7.12 ohne Befund.
 
+- **`draft-release.yml` setzte die Versionseingabe direkt ins Skript.** Im
+  Schritt «Version bestimmen» stand `VERSION="${{ inputs.version }}"`. GitHub
+  setzt diesen Text ein, bevor bash läuft; eine Eingabe wie `$(…)` wäre damit
+  in einem Job mit `contents: write` ausgeführt worden. Auslösen konnte das nur,
+  wer den Workflow starten darf. Jetzt kommt die Eingabe über `env`, und die
+  Version prüft dasselbe `scripts/release_version.py` wie `publish.yml` statt
+  eines eigenen `grep`-Vergleichs. Dabei gleichen sich zwei Regeln an: ein
+  eingegebenes `V0.7.2` gilt wie `v0.7.2`, und eine Version, die nicht `X.Y.Z`
+  ist, bricht schon beim Entwurf ab.
+
+  Tests: `tests/test_draft_release.py` (neu, übernommen aus `meteoswiss-mcp`
+  PR #90) führt die Versionsprüfung und die Extraktion der Release-Notizen
+  mit bash aus, Letztere auch gegen dieses CHANGELOG.
+
 ## [0.7.1] – 2026-11-22
 
 Patch-Release über die Arbeit seit v0.7.0 (19.09.2026). **Die 21 Tools behalten
